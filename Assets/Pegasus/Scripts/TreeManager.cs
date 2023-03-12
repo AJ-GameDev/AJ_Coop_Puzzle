@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Pegasus
 {
@@ -9,6 +9,19 @@ namespace Pegasus
     /// </summary>
     public class TreeManager
     {
+        //What we will store about each tree
+        public struct TreeStruct
+        {
+            public Vector3 position;
+            public int prototypeID;
+        }
+
+        //Tree storage
+        #pragma warning disable 414
+        private List<TreePrototype> m_terrainTrees = new List<TreePrototype>();
+        private Quadtree<TreeStruct> m_terrainTreeLocations = new Quadtree<TreeStruct>(new Rect(0,0, 10f, 10f));
+        #pragma warning restore 414
+
         /// <summary>
         /// Load the trees in from the terrain
         /// </summary>
@@ -42,17 +55,14 @@ namespace Pegasus
                     {
                         minX = terrain.transform.position.x;
                     }
-
                     if (terrain.transform.position.z < minZ)
                     {
                         minZ = terrain.transform.position.z;
                     }
-
                     if ((terrain.transform.position.x + terrain.terrainData.size.x) > maxX)
                     {
                         maxX = terrain.transform.position.x + terrain.terrainData.size.x;
                     }
-
                     if ((terrain.transform.position.z + terrain.terrainData.size.z) > maxZ)
                     {
                         maxZ = terrain.transform.position.z + terrain.terrainData.size.z;
@@ -80,9 +90,7 @@ namespace Pegasus
                     {
                         TreeInstance treeInstance = terrainTreeInstances[treeIdx];
                         TreeStruct newTree = new TreeStruct();
-                        newTree.position = new Vector3(terrainOffsetX + (treeInstance.position.x * terrainWidth),
-                            terrainOffsetY + (treeInstance.position.y * terrainHeight),
-                            terrainOffsetZ + (treeInstance.position.z * terrainDepth));
+                        newTree.position = new Vector3(terrainOffsetX + (treeInstance.position.x * terrainWidth), terrainOffsetY + (treeInstance.position.y * terrainHeight), terrainOffsetZ + (treeInstance.position.z * terrainDepth));
                         newTree.prototypeID = terrainTreeInstances[treeIdx].prototypeIndex;
                         m_terrainTreeLocations.Insert(newTree.position.x, newTree.position.z, newTree);
                     }
@@ -101,7 +109,6 @@ namespace Pegasus
             {
                 return;
             }
-
             m_terrainTreeLocations.Insert(tree.position.x, tree.position.z, tree);
         }
 
@@ -117,7 +124,6 @@ namespace Pegasus
             {
                 return 0;
             }
-
             Rect query = new Rect(position.x - range, position.z - range, range * 2f, range * 2f);
             return m_terrainTreeLocations.Find(query).Count();
         }
@@ -132,7 +138,6 @@ namespace Pegasus
             {
                 return 0;
             }
-
             return m_terrainTreeLocations.Count;
         }
 
@@ -150,23 +155,10 @@ namespace Pegasus
             {
                 return 0;
             }
-
             Rect query = new Rect(position.x - range, position.z - range, range * 2f, range * 2f);
             treeList.AddRange(m_terrainTreeLocations.Find(query));
             return treeList.Count;
         }
-
-        //What we will store about each tree
-        public struct TreeStruct
-        {
-            public Vector3 position;
-            public int prototypeID;
-        }
-
-        //Tree storage
-#pragma warning disable 414
-        private List<TreePrototype> m_terrainTrees = new List<TreePrototype>();
-        private Quadtree<TreeStruct> m_terrainTreeLocations = new Quadtree<TreeStruct>(new Rect(0, 0, 10f, 10f));
-#pragma warning restore 414
     }
 }
+

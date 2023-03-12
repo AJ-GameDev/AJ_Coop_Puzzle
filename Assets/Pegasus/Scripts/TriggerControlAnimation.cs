@@ -9,13 +9,8 @@ namespace Pegasus
     public class TriggerControlAnimation : TriggerBase
     {
         public Animation m_targetAnimation;
-
-        public PegasusConstants.PoiAnimationTriggerAction m_actionOnStart =
-            PegasusConstants.PoiAnimationTriggerAction.PlayAnimation;
-
-        public PegasusConstants.PoiAnimationTriggerAction m_actionOnEnd =
-            PegasusConstants.PoiAnimationTriggerAction.DoNothing;
-
+        public PegasusConstants.PoiAnimationTriggerAction m_actionOnStart = PegasusConstants.PoiAnimationTriggerAction.PlayAnimation;
+        public PegasusConstants.PoiAnimationTriggerAction m_actionOnEnd = PegasusConstants.PoiAnimationTriggerAction.DoNothing;
         public int m_startAnimationIdx = 0;
         public int m_endAnimation = 0;
         private List<AnimationState> m_animations = new List<AnimationState>();

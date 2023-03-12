@@ -1,55 +1,66 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    [Header("Rect References")] public RectTransform containerRect;
+    [System.Serializable]
+    public class Event : UnityEvent<Vector2> { }
 
+    [Header("Rect References")]
+    public RectTransform containerRect;
     public RectTransform handleRect;
 
-    [Header("Settings")] public bool clampToMagnitude;
-
+    [Header("Settings")]
+    public bool clampToMagnitude;
     public float magnitudeMultiplier = 1f;
     public bool invertXOutputValue;
     public bool invertYOutputValue;
 
-    [Header("Output")] public Event touchZoneOutputEvent;
-
-    private Vector2 currentPointerPosition;
-
     //Stored Pointer Values
     private Vector2 pointerDownPosition;
+    private Vector2 currentPointerPosition;
+
+    [Header("Output")]
+    public Event touchZoneOutputEvent;
 
     void Start()
     {
         SetupHandle();
     }
 
-    public void OnDrag(PointerEventData eventData)
+    private void SetupHandle()
     {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position,
-            eventData.pressEventCamera, out currentPointerPosition);
-
-        Vector2 positionDelta = GetDeltaBetweenPositions(pointerDownPosition, currentPointerPosition);
-
-        Vector2 clampedPosition = ClampValuesToMagnitude(positionDelta);
-
-        Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
-
-        OutputPointerEventValue(outputPosition * magnitudeMultiplier);
+        if(handleRect)
+        {
+            SetObjectActiveState(handleRect.gameObject, false); 
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position,
-            eventData.pressEventCamera, out pointerDownPosition);
 
-        if (handleRect)
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position, eventData.pressEventCamera, out pointerDownPosition);
+
+        if(handleRect)
         {
             SetObjectActiveState(handleRect.gameObject, true);
             UpdateHandleRectPosition(pointerDownPosition);
         }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(containerRect, eventData.position, eventData.pressEventCamera, out currentPointerPosition);
+        
+        Vector2 positionDelta = GetDeltaBetweenPositions(pointerDownPosition, currentPointerPosition);
+
+        Vector2 clampedPosition = ClampValuesToMagnitude(positionDelta);
+        
+        Vector2 outputPosition = ApplyInversionFilter(clampedPosition);
+
+        OutputPointerEventValue(outputPosition * magnitudeMultiplier);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -59,18 +70,10 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
 
         OutputPointerEventValue(Vector2.zero);
 
-        if (handleRect)
+        if(handleRect)
         {
             SetObjectActiveState(handleRect.gameObject, false);
             UpdateHandleRectPosition(Vector2.zero);
-        }
-    }
-
-    private void SetupHandle()
-    {
-        if (handleRect)
-        {
-            SetObjectActiveState(handleRect.gameObject, false);
         }
     }
 
@@ -101,12 +104,12 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
 
     Vector2 ApplyInversionFilter(Vector2 position)
     {
-        if (invertXOutputValue)
+        if(invertXOutputValue)
         {
             position.x = InvertValue(position.x);
         }
 
-        if (invertYOutputValue)
+        if(invertYOutputValue)
         {
             position.y = InvertValue(position.y);
         }
@@ -118,9 +121,5 @@ public class UIVirtualTouchZone : MonoBehaviour, IPointerDownHandler, IDragHandl
     {
         return -value;
     }
-
-    [System.Serializable]
-    public class Event : UnityEvent<Vector2>
-    {
-    }
+    
 }

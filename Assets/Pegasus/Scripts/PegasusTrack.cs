@@ -6,7 +6,7 @@ using UnityEngine.Timeline;
 namespace Pegasus
 {
     [TrackColor(0.09f, 0.45f, 0.8f)]
-#if !UNITY_2019_1_OR_NEWER
+ #if !UNITY_2019_1_OR_NEWER
     [TrackMediaType(TimelineAsset.MediaType.Script)]
 #endif
     [TrackClipType(typeof(PegasusClip))]

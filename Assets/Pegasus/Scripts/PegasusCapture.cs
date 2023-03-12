@@ -35,7 +35,6 @@ namespace Pegasus
             {
                 m_reticuleGO = GameObject.Find("Pegasus Capture Reticule");
             }
-
             if (m_reticuleGO != null)
             {
                 m_reticuleGO.SetActive(m_showReticule && m_enableOnStart);
@@ -61,8 +60,8 @@ namespace Pegasus
             }
         }
 
-        // Update called once per frame
-        void Update()
+	    // Update called once per frame
+	    void Update()
         {
             if (Application.isPlaying)
             {
@@ -107,7 +106,6 @@ namespace Pegasus
             {
                 m_reticuleGO = GameObject.Find("Pegasus Capture Reticule");
             }
-
             if (m_reticuleGO != null)
             {
                 m_reticuleGO.SetActive(m_showReticule && m_enableOnStart);
@@ -120,16 +118,14 @@ namespace Pegasus
             {
                 m_reticuleGO = GameObject.Find("Pegasus Capture Reticule");
             }
-
             if (m_reticuleGO != null)
             {
-                Text[] texts = m_reticuleGO.GetComponentsInChildren<Text>();
+                Text [] texts = m_reticuleGO.GetComponentsInChildren<Text>();
 
                 foreach (var text in texts)
                 {
                     text.text = string.Format(
-                        "Play your game and then press {0} to create a POI at the current location.",
-                        m_keyCodeCapture.ToString());
+                        "Play your game and then press {0} to create a POI at the current location.", m_keyCodeCapture.ToString());
                 }
 
                 m_reticuleGO.SetActive(m_showReticule && m_enableOnStart);

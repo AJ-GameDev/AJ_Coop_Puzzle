@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
+﻿ using UnityEngine;
+#if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
 
@@ -9,20 +9,20 @@ using UnityEngine.InputSystem;
 namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM 
     [RequireComponent(typeof(PlayerInput))]
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
-        private const float _threshold = 0.01f;
-
-        [Header("Player")] [Tooltip("Move speed of the character in m/s")]
+        [Header("Player")]
+        [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
-        [Tooltip("How fast the character turns to face movement direction")] [Range(0.0f, 0.3f)]
+        [Tooltip("How fast the character turns to face movement direction")]
+        [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
 
         [Tooltip("Acceleration and deceleration")]
@@ -32,7 +32,8 @@ namespace StarterAssets
         public AudioClip[] FootstepAudioClips;
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
-        [Space(10)] [Tooltip("The height the player can jump")]
+        [Space(10)]
+        [Tooltip("The height the player can jump")]
         public float JumpHeight = 1.2f;
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
@@ -49,7 +50,8 @@ namespace StarterAssets
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
         public bool Grounded = true;
 
-        [Tooltip("Useful for rough ground")] public float GroundedOffset = -0.14f;
+        [Tooltip("Useful for rough ground")]
+        public float GroundedOffset = -0.14f;
 
         [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
         public float GroundedRadius = 0.28f;
@@ -73,39 +75,40 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
-        private float _animationBlend;
-        private Animator _animator;
-        private int _animIDFreeFall;
-        private int _animIDGrounded;
-        private int _animIDJump;
-        private int _animIDMotionSpeed;
-
-        // animation IDs
-        private int _animIDSpeed;
-        private float _cinemachineTargetPitch;
-
         // cinemachine
         private float _cinemachineTargetYaw;
-        private CharacterController _controller;
-        private float _fallTimeoutDelta;
-
-        private bool _hasAnimator;
-        private StarterAssetsInputs _input;
-
-        // timeout deltatime
-        private float _jumpTimeoutDelta;
-        private GameObject _mainCamera;
-
-#if ENABLE_INPUT_SYSTEM
-        private PlayerInput _playerInput;
-#endif
-        private float _rotationVelocity;
+        private float _cinemachineTargetPitch;
 
         // player
         private float _speed;
+        private float _animationBlend;
         private float _targetRotation = 0.0f;
-        private float _terminalVelocity = 53.0f;
+        private float _rotationVelocity;
         private float _verticalVelocity;
+        private float _terminalVelocity = 53.0f;
+
+        // timeout deltatime
+        private float _jumpTimeoutDelta;
+        private float _fallTimeoutDelta;
+
+        // animation IDs
+        private int _animIDSpeed;
+        private int _animIDGrounded;
+        private int _animIDJump;
+        private int _animIDFreeFall;
+        private int _animIDMotionSpeed;
+
+#if ENABLE_INPUT_SYSTEM 
+        private PlayerInput _playerInput;
+#endif
+        private Animator _animator;
+        private CharacterController _controller;
+        private StarterAssetsInputs _input;
+        private GameObject _mainCamera;
+
+        private const float _threshold = 0.01f;
+
+        private bool _hasAnimator;
 
         private bool IsCurrentDeviceMouse
         {
@@ -132,11 +135,11 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
+            
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM 
             _playerInput = GetComponent<PlayerInput>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
@@ -161,20 +164,6 @@ namespace StarterAssets
         private void LateUpdate()
         {
             CameraRotation();
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
-
-            if (Grounded) Gizmos.color = transparentGreen;
-            else Gizmos.color = transparentRed;
-
-            // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-            Gizmos.DrawSphere(
-                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
-                GroundedRadius);
         }
 
         private void AssignAnimationIDs()
@@ -366,6 +355,20 @@ namespace StarterAssets
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
+        private void OnDrawGizmosSelected()
+        {
+            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
+            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
+
+            if (Grounded) Gizmos.color = transparentGreen;
+            else Gizmos.color = transparentRed;
+
+            // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
+            Gizmos.DrawSphere(
+                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
+                GroundedRadius);
+        }
+
         private void OnFootstep(AnimationEvent animationEvent)
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
@@ -373,8 +376,7 @@ namespace StarterAssets
                 if (FootstepAudioClips.Length > 0)
                 {
                     var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center),
-                        FootstepAudioVolume);
+                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
                 }
             }
         }
@@ -383,8 +385,7 @@ namespace StarterAssets
         {
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center),
-                    FootstepAudioVolume);
+                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
     }

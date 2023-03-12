@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -26,8 +26,7 @@ namespace Pegasus
         /// <summary>
         /// What to do when we fet to the end - only relevant on Once through flythroughs
         /// </summary>
-        public PegasusConstants.FlythroughEndAction m_flythroughEndAction =
-            PegasusConstants.FlythroughEndAction.StopFlythrough;
+        public PegasusConstants.FlythroughEndAction m_flythroughEndAction = PegasusConstants.FlythroughEndAction.StopFlythrough;
 
         /// <summary>
         /// Select the targetted frame rate for the fly through
@@ -57,7 +56,7 @@ namespace Pegasus
         /// <summary>
         /// Display debug messages
         /// </summary>
-        public bool m_displayDebug = false; //Set to true if we want debug messages
+        public bool m_displayDebug = false;      //Set to true if we want debug messages
 
         /// <summary>
         /// Always show gizmos
@@ -71,18 +70,19 @@ namespace Pegasus
         public float m_totalDistanceTravelled = 0f;
         public float m_totalDistanceTravelledPct = 0f;
         public float m_totalDistance = 0f;
+        public TimeSpan m_totalDuration = TimeSpan.Zero;
         public float m_currentVelocity = 0f;
         public Vector3 m_currentPosition = Vector3.zero;
         public Quaternion m_currentRotation = Quaternion.identity;
 
         public bool m_canUpdateNow = false; //Used to trigger when the camera and targetLocation can be updated
+        public DateTime m_lastUpdateTime = DateTime.MinValue;
         public float m_frameUpdateTime = 1f / 60f;
         public float m_frameUpdateDistance = 0f;
         public float m_rotationDamping = 0.75f;
         public float m_positionDamping = 0.3f;
 
-        public PegasusManager
-            m_nextPegasus = null; //Used when single shot is assigned and end action is play next pegasus
+        public PegasusManager m_nextPegasus = null; //Used when single shot is assigned and end action is play next pegasus
 
         //Editor related
         public bool m_alwaysShowPath = false;
@@ -99,8 +99,6 @@ namespace Pegasus
         //Autobank settings
         public float m_autoRollMaxSpeed = PegasusConstants.SpeedFast;
         public float m_autoRollMaxAngle = 15f;
-        public DateTime m_lastUpdateTime = DateTime.MinValue;
-        public TimeSpan m_totalDuration = TimeSpan.Zero;
 
         /// <summary>
         /// Scene playback and initialisation
@@ -124,7 +122,6 @@ namespace Pegasus
                     {
                         Debug.Log("Assigning main camera to target : " + Camera.main.name);
                     }
-
                     m_target = Camera.main.gameObject;
                 }
             }
@@ -155,7 +152,7 @@ namespace Pegasus
         public void SetDefaults()
         {
             m_defaults = null;
-#if UNITY_EDITOR
+            #if UNITY_EDITOR
             string[] guids = AssetDatabase.FindAssets("PegasusDefaults");
             for (int idx = 0; idx < guids.Length; idx++)
             {
@@ -166,7 +163,6 @@ namespace Pegasus
                     return;
                 }
             }
-
             if (m_defaults == null)
             {
                 m_defaults = ScriptableObject.CreateInstance<PegasusDefaults>();
@@ -174,9 +170,9 @@ namespace Pegasus
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
-#else
+            #else
             m_defaults = ScriptableObject.CreateInstance<PegasusDefaults>();
-#endif
+            #endif
         }
 
         #region Setup and control routines
@@ -219,7 +215,6 @@ namespace Pegasus
                 {
                     poi.m_isFirstPOI = false;
                 }
-
                 if (idx == m_poiList.Count - 1)
                 {
                     poi.m_isLastPOI = true;
@@ -248,7 +243,6 @@ namespace Pegasus
                     {
                         poi.m_prevPoi = m_poiList[idx - 1];
                     }
-
                     //Next
                     if (poi.m_isLastPOI)
                     {
@@ -277,7 +271,6 @@ namespace Pegasus
                     {
                         poi.m_prevPoi = m_poiList[idx - 1];
                     }
-
                     //Next
                     if (idx == m_poiList.Count - 1)
                     {
@@ -321,7 +314,6 @@ namespace Pegasus
             {
                 m_currentSegment = null;
             }
-
             m_currentSegmentDistanceTravelled = 0f;
 
             //Current time
@@ -355,7 +347,6 @@ namespace Pegasus
             {
                 m_currentSegment = null;
             }
-
             m_currentSegmentDistanceTravelled = 0f;
 
             //Current time
@@ -393,7 +384,6 @@ namespace Pegasus
                 Debug.LogError("Attempting to update null segment!");
                 return;
             }
-
             if (m_flythroughType == PegasusConstants.FlythroughType.SingleShot)
             {
                 int idx = segment.m_segmentIndex;
@@ -437,7 +427,6 @@ namespace Pegasus
                 {
                     idx += m_poiList.Count;
                 }
-
                 m_poiList[idx].Initialise(updateSegments);
             }
         }
@@ -473,8 +462,7 @@ namespace Pegasus
             //Move target to its initial position and location
             if (m_target != null)
             {
-                m_currentSegment.CalculateProgress(0, out m_currentVelocity, out m_currentPosition,
-                    out m_currentRotation);
+                m_currentSegment.CalculateProgress(0, out m_currentVelocity, out m_currentPosition, out m_currentRotation);
                 m_target.transform.rotation = m_currentRotation;
                 m_target.transform.position = m_currentPosition;
             }
@@ -521,7 +509,6 @@ namespace Pegasus
             {
                 Debug.Log("Pausing flythrough");
             }
-
             m_currentState = PegasusConstants.FlythroughState.Paused;
         }
 
@@ -534,7 +521,6 @@ namespace Pegasus
             {
                 Debug.Log("Stopping flythrough");
             }
-
             m_currentState = PegasusConstants.FlythroughState.Stopped;
             m_canUpdateNow = false;
         }
@@ -628,7 +614,6 @@ namespace Pegasus
                 m_poiList[idx].m_startSpeed = speed;
                 m_poiList[idx].m_startSpeedType = PegasusConstants.SpeedType.Custom;
             }
-
             InitialiseFlythrough();
         }
 
@@ -646,7 +631,6 @@ namespace Pegasus
                     m_poiList[idx].transform.localEulerAngles = Vector3.zero;
                 }
             }
-
             InitialiseFlythrough();
         }
 
@@ -664,7 +648,6 @@ namespace Pegasus
             {
                 m_poiList[idx].m_isSelected = false;
             }
-
             if (poi != null)
             {
                 poi.m_isSelected = true;
@@ -679,8 +662,7 @@ namespace Pegasus
         public void MovePoi(PegasusPoi poi, Vector3 movement)
         {
             poi.transform.position = GetValidatedPoiPosition(poi.transform.position + movement, poi.m_heightCheckType);
-            poi.GetRelativeOffsets(poi.transform.position, poi.m_lookatLocation, out poi.m_lookAtDistance,
-                out poi.m_lookAtHeight, out poi.m_lookAtAngle);
+            poi.GetRelativeOffsets(poi.transform.position, poi.m_lookatLocation, out poi.m_lookAtDistance, out poi.m_lookAtHeight, out poi.m_lookAtAngle);
             UpdateSegmentWithDependencies(poi);
         }
 
@@ -696,8 +678,7 @@ namespace Pegasus
             {
                 poi.m_lookatLocation = lookAtLocation;
                 poi.m_lookatType = PegasusConstants.LookatType.Target;
-                poi.GetRelativeOffsets(poi.transform.position, poi.m_lookatLocation, out poi.m_lookAtDistance,
-                    out poi.m_lookAtHeight, out poi.m_lookAtAngle);
+                poi.GetRelativeOffsets(poi.transform.position, poi.m_lookatLocation, out poi.m_lookAtDistance, out poi.m_lookAtHeight, out poi.m_lookAtAngle);
                 UpdateSegmentWithDependencies(poi);
             }
         }
@@ -734,15 +715,13 @@ namespace Pegasus
                 {
                     m_totalDistanceTravelled = targetPoint;
                     m_totalDistanceTravelledPct = m_totalDistanceTravelled / m_totalDistance;
-                    m_currentPosition =
-                        poi.CalculatePositionLinear((targetPoint - segmentStart) / poi.m_segmentDistance);
+                    m_currentPosition = poi.CalculatePositionLinear((targetPoint - segmentStart) / poi.m_segmentDistance);
                     m_currentRotation = poi.CalculateRotation((targetPoint - segmentStart) / poi.m_segmentDistance);
                     m_currentVelocity = poi.CalculateVelocity((targetPoint - segmentStart) / poi.m_segmentDistance);
                     m_target.transform.position = m_currentPosition;
                     m_target.transform.rotation = m_currentRotation;
                     return;
                 }
-
                 segmentStart += poi.m_segmentDistance;
             }
         }
@@ -754,8 +733,7 @@ namespace Pegasus
         /// <param name="position">Calculated position</param>
         /// <param name="rotation">Calculated rotation</param>
         /// <param name="velocity">Calculated velocity</param>
-        public void CalculateTargetAtDistance(float distance, out Vector3 position, out Quaternion rotation,
-            out float velocity)
+        public void CalculateTargetAtDistance(float distance, out Vector3 position, out Quaternion rotation, out float velocity)
         {
             if (m_target == null || m_poiList.Count == 0)
             {
@@ -782,7 +760,6 @@ namespace Pegasus
                     targetPoint += m_totalDistance;
                 }
             }
-
             float segmentStart = 0f;
             float segmentEnd = 0f;
             for (int idx = 0; idx < m_poiList.Count; idx++)
@@ -796,7 +773,6 @@ namespace Pegasus
                     velocity = poi.CalculateVelocity((targetPoint - segmentStart) / poi.m_segmentDistance);
                     return;
                 }
-
                 segmentStart += poi.m_segmentDistance;
             }
 
@@ -812,8 +788,7 @@ namespace Pegasus
         /// <param name="position"></param>
         /// <param name="rotation"></param>
         /// <param name="velocity"></param>
-        public void CalculateTargetAtPercent(float percent, out Vector3 position, out Quaternion rotation,
-            out float velocity)
+        public void CalculateTargetAtPercent(float percent, out Vector3 position, out Quaternion rotation, out float velocity)
         {
             float targetPoint = Mathf.Clamp(percent, 0f, 100f) * m_totalDistance;
             CalculateTargetAtDistance(targetPoint, out position, out rotation, out velocity);
@@ -830,7 +805,6 @@ namespace Pegasus
                 Debug.LogWarning("Can not move target as none has been set");
                 return;
             }
-
             m_totalDistanceTravelled = 0f;
             for (int idx = 0; idx < m_poiList.Count; idx++)
             {
@@ -860,7 +834,6 @@ namespace Pegasus
             {
                 m_totalDistanceTravelled = 0f;
             }
-
             MoveTargetTo(m_totalDistanceTravelled / m_totalDistance);
         }
 
@@ -874,9 +847,9 @@ namespace Pegasus
             {
                 m_totalDistanceTravelled = m_totalDistance;
             }
-
             MoveTargetTo(m_totalDistanceTravelled / m_totalDistance);
         }
+
 
 
         /// <summary>
@@ -931,9 +904,7 @@ namespace Pegasus
         /// <param name="source">Source location being checked</param>
         /// <param name="heightCheckOverride">A height check overide</param>
         /// <returns>Updated position taking into account minimum height</returns>
-        public Vector3 GetValidatedPoiPosition(Vector3 source,
-            PegasusConstants.PoiHeightCheckType heightCheckOverride =
-                PegasusConstants.PoiHeightCheckType.ManagerSettings)
+        public Vector3 GetValidatedPoiPosition(Vector3 source, PegasusConstants.PoiHeightCheckType heightCheckOverride = PegasusConstants.PoiHeightCheckType.ManagerSettings)
         {
             //Update if there is an override
             PegasusConstants.HeightCheckType heightCheckType = m_heightCheckType;
@@ -961,15 +932,13 @@ namespace Pegasus
             else if (heightCheckType == PegasusConstants.HeightCheckType.Collision)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down,
-                        out hit, 10000f))
+                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down, out hit, 10000f))
                 {
                     if ((hit.point.y + m_minHeightAboveTerrain) > source.y)
                     {
                         source.y = hit.point.y + m_minHeightAboveTerrain;
                     }
                 }
-
                 return source;
             }
             else
@@ -983,7 +952,6 @@ namespace Pegasus
                         source.y = height + m_minHeightAboveTerrain;
                     }
                 }
-
                 return source;
             }
         }
@@ -994,9 +962,7 @@ namespace Pegasus
         /// <param name="source">Source location being checked</param>
         /// <param name="heightCheckOverride">A height check overide</param>
         /// <returns>Updated position taking into account minimum height</returns>
-        public Vector3 GetLowestPoiPosition(Vector3 source,
-            PegasusConstants.PoiHeightCheckType heightCheckOverride =
-                PegasusConstants.PoiHeightCheckType.ManagerSettings)
+        public Vector3 GetLowestPoiPosition(Vector3 source, PegasusConstants.PoiHeightCheckType heightCheckOverride = PegasusConstants.PoiHeightCheckType.ManagerSettings)
         {
             //Update if there is an override
             PegasusConstants.HeightCheckType heightCheckType = m_heightCheckType;
@@ -1024,12 +990,10 @@ namespace Pegasus
             else if (heightCheckType == PegasusConstants.HeightCheckType.Collision)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down,
-                        out hit, 10000f))
+                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down, out hit, 10000f))
                 {
                     source.y = hit.point.y + m_minHeightAboveTerrain;
                 }
-
                 return source;
             }
             else
@@ -1039,7 +1003,6 @@ namespace Pegasus
                 {
                     source.y = t.SampleHeight(source) + m_minHeightAboveTerrain;
                 }
-
                 return source;
             }
         }
@@ -1049,9 +1012,7 @@ namespace Pegasus
         /// </summary>
         /// <param name="source">Source location</param>
         /// <returns>Updated position taking into account minimum height</returns>
-        public Vector3 GetValidatedLookatPosition(Vector3 source,
-            PegasusConstants.PoiHeightCheckType heightCheckOverride =
-                PegasusConstants.PoiHeightCheckType.ManagerSettings)
+        public Vector3 GetValidatedLookatPosition(Vector3 source, PegasusConstants.PoiHeightCheckType heightCheckOverride = PegasusConstants.PoiHeightCheckType.ManagerSettings)
         {
             //Update if there is an override
             PegasusConstants.HeightCheckType heightCheckType = m_heightCheckType;
@@ -1079,15 +1040,13 @@ namespace Pegasus
             else if (heightCheckType == PegasusConstants.HeightCheckType.Collision)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down,
-                        out hit, 2000f))
+                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down, out hit, 2000f))
                 {
                     if (hit.point.y > source.y)
                     {
                         source.y = hit.point.y;
                     }
                 }
-
                 return source;
             }
             else
@@ -1101,7 +1060,6 @@ namespace Pegasus
                         source.y = height;
                     }
                 }
-
                 return source;
             }
         }
@@ -1112,9 +1070,7 @@ namespace Pegasus
         /// <param name="source">Source location being checked</param>
         /// <param name="heightCheckOverride">A height check overide</param>
         /// <returns>Updated position taking into account minimum height</returns>
-        public Vector3 GetLowestLookatPosition(Vector3 source,
-            PegasusConstants.PoiHeightCheckType heightCheckOverride =
-                PegasusConstants.PoiHeightCheckType.ManagerSettings)
+        public Vector3 GetLowestLookatPosition(Vector3 source, PegasusConstants.PoiHeightCheckType heightCheckOverride = PegasusConstants.PoiHeightCheckType.ManagerSettings)
         {
             //Update if there is an override
             PegasusConstants.HeightCheckType heightCheckType = m_heightCheckType;
@@ -1142,12 +1098,10 @@ namespace Pegasus
             else if (heightCheckType == PegasusConstants.HeightCheckType.Collision)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down,
-                        out hit, 2000f))
+                if (Physics.Raycast(new Vector3(source.x, source.y + m_collisionHeightOffset, source.z), Vector3.down, out hit, 2000f))
                 {
                     source.y = hit.point.y;
                 }
-
                 return source;
             }
             else
@@ -1157,7 +1111,6 @@ namespace Pegasus
                 {
                     source.y = t.SampleHeight(source);
                 }
-
                 return source;
             }
         }
@@ -1168,9 +1121,7 @@ namespace Pegasus
         /// </summary>
         /// <param name="source">Source location</param>
         /// <returns>Updated position taking into account minimum height</returns>
-        public float GetValidatedLookatHeightRelativeToMinimum(Vector3 source,
-            PegasusConstants.PoiHeightCheckType heightCheckOverride =
-                PegasusConstants.PoiHeightCheckType.ManagerSettings)
+        public float GetValidatedLookatHeightRelativeToMinimum(Vector3 source, PegasusConstants.PoiHeightCheckType heightCheckOverride = PegasusConstants.PoiHeightCheckType.ManagerSettings)
         {
             Vector3 minPosition = GetLowestLookatPosition(source, heightCheckOverride);
             return source.y - minPosition.y;
@@ -1216,9 +1167,9 @@ namespace Pegasus
                     }
                 }
             }
-
             return null;
         }
+
 
         #endregion
 
@@ -1247,11 +1198,11 @@ namespace Pegasus
             //Apply the update into the scene
             if (m_canUpdateNow && m_target != null)
             {
+
                 //Apply the rotation smoothly
                 if (m_rotationDamping > 0f)
                 {
-                    m_target.transform.rotation = Quaternion.Slerp(m_target.transform.rotation, m_currentRotation,
-                        Time.deltaTime * (1f / m_rotationDamping));
+                    m_target.transform.rotation = Quaternion.Slerp(m_target.transform.rotation, m_currentRotation, Time.deltaTime * (1f / m_rotationDamping));
                 }
                 else
                 {
@@ -1261,8 +1212,7 @@ namespace Pegasus
                 //Apply the position update smoothly
                 if (m_positionDamping > 0f)
                 {
-                    m_target.transform.position = Vector3.Slerp(m_target.transform.position, m_currentPosition,
-                        Time.deltaTime * (1f / m_positionDamping));
+                    m_target.transform.position = Vector3.Slerp(m_target.transform.position, m_currentPosition, Time.deltaTime * (1f / m_positionDamping));
                 }
                 else
                 {
@@ -1282,21 +1232,17 @@ namespace Pegasus
             if (m_currentSegment != null)
             {
                 //Calculate progress and update velocity, position and rotation variables (will be physically applied in late update)
-                m_currentSegment.CalculateProgress(
-                    m_currentSegmentDistanceTravelled / m_currentSegment.m_segmentDistance, out m_currentVelocity,
-                    out m_currentPosition, out m_currentRotation);
+                m_currentSegment.CalculateProgress(m_currentSegmentDistanceTravelled / m_currentSegment.m_segmentDistance, out m_currentVelocity, out m_currentPosition, out m_currentRotation);
 
                 //Update the rotation to allow for the rotation offset
                 //m_currentRotation = Quaternion.FromToRotation(Vector3.up, m_targetRotationCorrection) * m_currentRotation;
 
                 //Update distance travelled for next iteration through
-                if (m_targetFramerateType == PegasusConstants.TargetFrameRate.MaxFps ||
-                    m_targetFramerateType == PegasusConstants.TargetFrameRate.LeaveAlone)
+                if (m_targetFramerateType == PegasusConstants.TargetFrameRate.MaxFps || m_targetFramerateType == PegasusConstants.TargetFrameRate.LeaveAlone)
                 {
                     m_frameUpdateTime = (float)((DateTime.Now - m_lastUpdateTime).Milliseconds) / 1000f;
                     m_lastUpdateTime = DateTime.Now;
                 }
-
                 m_frameUpdateDistance = m_frameUpdateTime * m_currentVelocity;
                 m_currentSegmentDistanceTravelled += m_frameUpdateDistance;
                 m_totalDistanceTravelled += m_frameUpdateDistance;
@@ -1352,7 +1298,6 @@ namespace Pegasus
                                 {
                                     Debug.Log("Next Pegasus has not been configured. Can not start.");
                                 }
-
                                 return;
                             }
                         }
@@ -1361,7 +1306,6 @@ namespace Pegasus
                     {
                         m_currentSegmentDistanceTravelled -= m_currentSegment.m_segmentDistance;
                     }
-
                     m_totalDistanceTravelledPct = m_totalDistanceTravelled / m_totalDistance;
                     m_currentSegment = m_poiList[m_currentSegmentIdx];
                     m_currentSegment.OnStartTriggers();
@@ -1386,8 +1330,7 @@ namespace Pegasus
 //                }
 
                 //Call the update for the current segment
-                m_currentSegment.OnUpdateTriggers(
-                    m_currentSegmentDistanceTravelled / m_currentSegment.m_segmentDistance);
+                m_currentSegment.OnUpdateTriggers(m_currentSegmentDistanceTravelled / m_currentSegment.m_segmentDistance);
 
                 //Flag that we can do an update now
                 m_canUpdateNow = true;
@@ -1438,8 +1381,7 @@ namespace Pegasus
             newPoi.m_startSpeedType = m_defaults.m_flyThroughSpeed;
 
             m_poiList.Insert(m_poiList.IndexOf(currentPoi) + 1, newPoi);
-            Vector3 newPoiLocation =
-                GetValidatedPoiPosition(currentPoi.CalculatePositionLinear(0.5f), newPoi.m_heightCheckType);
+            Vector3 newPoiLocation = GetValidatedPoiPosition(currentPoi.CalculatePositionLinear(0.5f), newPoi.m_heightCheckType);
             newPoiGo.transform.position = newPoiLocation;
             newPoiGo.transform.parent = this.transform;
             newPoiGo.transform.SetSiblingIndex(currentPoi.m_segmentIndex + 1);
@@ -1469,7 +1411,6 @@ namespace Pegasus
             {
                 return null;
             }
-
             return m_poiList[0];
         }
 
@@ -1484,7 +1425,6 @@ namespace Pegasus
             {
                 return null;
             }
-
             return m_poiList[poiIndex];
         }
 
@@ -1514,7 +1454,6 @@ namespace Pegasus
                     }
                 }
             }
-
             return null;
         }
 
@@ -1545,7 +1484,6 @@ namespace Pegasus
                     }
                 }
             }
-
             return null;
         }
 
@@ -1558,10 +1496,8 @@ namespace Pegasus
             for (int idx = 0; idx < m_poiList.Count; idx++)
             {
                 poi = m_poiList[idx];
-                poi.transform.position =
-                    poi.m_manager.GetLowestPoiPosition(poi.transform.position, poi.m_heightCheckType);
+                poi.transform.position = poi.m_manager.GetLowestPoiPosition(poi.transform.position, poi.m_heightCheckType);
             }
-
             InitialiseFlythrough();
         }
 

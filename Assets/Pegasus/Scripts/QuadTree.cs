@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace Pegasus
 {
@@ -25,14 +25,23 @@ namespace Pegasus
         private readonly List<QuadtreeNode> nodes;
 
         /// <summary>
+        /// The child trees inside this region.
+        /// </summary>
+        private Quadtree<T>[] children;
+
+        /// <summary>
         /// The boundaries of this region.
         /// </summary>
         private Rect boundaries;
 
         /// <summary>
-        /// The child trees inside this region.
+        /// Gets the number of values inside this tree.
         /// </summary>
-        private Quadtree<T>[] children;
+        public int Count
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Quadtree`1"/> class.
@@ -53,11 +62,6 @@ namespace Pegasus
 
             this.nodes = new List<QuadtreeNode>(nodeCapacity);
         }
-
-        /// <summary>
-        /// Gets the number of values inside this tree.
-        /// </summary>
-        public int Count { get; private set; }
 
         /// <summary>
         /// Inserts a value into the region.
@@ -327,7 +331,7 @@ namespace Pegasus
                     this.boundaries.yMin + height * (index / 2),
                     width,
                     height
-                );
+                    );
 
                 this.children[index] = new Quadtree<T>(boundaries);
             }
@@ -363,6 +367,24 @@ namespace Pegasus
         private class QuadtreeNode
         {
             /// <summary>
+            /// Gets the position of the value.
+            /// </summary>
+            public Vector2 Position
+            {
+                get;
+                private set;
+            }
+
+            /// <summary>
+            /// Gets the value.
+            /// </summary>
+            public T Value
+            {
+                get;
+                private set;
+            }
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="T:QuadtreeNode"/> class.
             /// </summary>
             /// <param name="position">
@@ -376,16 +398,6 @@ namespace Pegasus
                 this.Position = position;
                 this.Value = value;
             }
-
-            /// <summary>
-            /// Gets the position of the value.
-            /// </summary>
-            public Vector2 Position { get; private set; }
-
-            /// <summary>
-            /// Gets the value.
-            /// </summary>
-            public T Value { get; private set; }
         }
     }
 }
