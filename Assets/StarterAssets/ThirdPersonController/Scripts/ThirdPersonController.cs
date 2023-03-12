@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
@@ -9,11 +9,9 @@ using UnityEngine.InputSystem;
 namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
-
-
     public class ThirdPersonController : MonoBehaviour
     {
         private const float _threshold = 0.01f;
@@ -75,10 +73,6 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
-        public float _verticalVelocity;
-
-        [SerializeField] private GameObject _mainCamera;
-
         private float _animationBlend;
         private Animator _animator;
         private int _animIDFreeFall;
@@ -100,8 +94,9 @@ namespace StarterAssets
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
+        private GameObject _mainCamera;
 
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
 #endif
         private float _rotationVelocity;
@@ -110,12 +105,13 @@ namespace StarterAssets
         private float _speed;
         private float _targetRotation = 0.0f;
         private float _terminalVelocity = 53.0f;
+        private float _verticalVelocity;
 
         private bool IsCurrentDeviceMouse
         {
             get
             {
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
 				return false;
@@ -127,6 +123,10 @@ namespace StarterAssets
         private void Awake()
         {
             // get a reference to our main camera
+            if (_mainCamera == null)
+            {
+                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            }
         }
 
         private void Start()
@@ -136,7 +136,7 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
@@ -200,7 +200,6 @@ namespace StarterAssets
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
         }
-
 
         private void CameraRotation()
         {

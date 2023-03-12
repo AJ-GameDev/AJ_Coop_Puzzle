@@ -1,5 +1,5 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
@@ -12,9 +12,6 @@ namespace StarterAssets
         public Vector2 look;
         public bool jump;
         public bool sprint;
-        public bool interact;
-        public float hover;
-        public bool attack;
 
         [Header("Movement Settings")] public bool analogMovement;
 
@@ -43,24 +40,9 @@ namespace StarterAssets
             jump = newJumpState;
         }
 
-        public void InteractInput(bool newInteractState)
-        {
-            interact = newInteractState;
-        }
-
-        public void HoverInput(float newHoverState)
-        {
-            hover = newHoverState;
-        }
-
         public void SprintInput(bool newSprintState)
         {
             sprint = newSprintState;
-        }
-
-        public void AttackInput(bool newAttackState)
-        {
-            attack = newAttackState;
         }
 
         private void SetCursorState(bool newState)
@@ -68,7 +50,7 @@ namespace StarterAssets
             Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+#if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
         {
             MoveInput(value.Get<Vector2>());
@@ -91,23 +73,6 @@ namespace StarterAssets
         {
             SprintInput(value.isPressed);
         }
-
-        public void OnInteract(InputValue value)
-        {
-            InteractInput(value.isPressed);
-        }
-
-        public void OnHover(InputValue value)
-        {
-            HoverInput(value.Get<float>());
-        }
-
-        public void OnAttack(InputValue value)
-        {
-            AttackInput(value.isPressed);
-        }
-
-
 #endif
     }
 }
