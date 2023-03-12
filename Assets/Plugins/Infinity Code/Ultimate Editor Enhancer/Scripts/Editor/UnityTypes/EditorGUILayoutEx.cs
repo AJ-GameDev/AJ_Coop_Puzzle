@@ -23,10 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static Type type
-        {
-            get => typeof(EditorGUILayout);
-        }
+        public static Type type => typeof(EditorGUILayout);
 
         public static string ToolbarSearchField(string value, params GUILayoutOption[] options)
         {

@@ -9,6 +9,7 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
@@ -17,8 +18,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         public delegate void GUIDelegate(Rect position,
             Rect dropRect,
             int id,
-            UnityEngine.Object obj,
-            UnityEngine.Object objBeingEdited,
+            Object obj,
+            Object objBeingEdited,
             Type objType,
             Type additionalType,
             SerializedProperty property,
@@ -36,7 +37,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             {
                 if (_originalMethod == null)
                 {
-                    Type validatorType = typeof(EditorGUI).GetNestedType(
+                    var validatorType = typeof(EditorGUI).GetNestedType(
 #if DECM2
                         "ObjectFieldValidatorOptions"
 #else
@@ -49,8 +50,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                         typeof(Rect),
                         typeof(Rect),
                         typeof(int),
-                        typeof(UnityEngine.Object),
-                        typeof(UnityEngine.Object),
+                        typeof(Object),
+                        typeof(Object),
                         typeof(Type),
 #if DECM2
                         typeof(Type),
@@ -64,11 +65,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 #endif
                     };
 
-                    MethodInfo[] methods = typeof(EditorGUI).GetMethods(Reflection.StaticLookup);
-                    foreach (MethodInfo info in methods)
+                    var methods = typeof(EditorGUI).GetMethods(Reflection.StaticLookup);
+                    foreach (var info in methods)
                     {
                         if (info.Name != "DoObjectField") continue;
-                        ParameterInfo[] ps = info.GetParameters();
+                        var ps = info.GetParameters();
                         if (ps.Length != parameters.Length) continue;
 
                         _originalMethod = info;
@@ -80,22 +81,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             }
         }
 
-        protected override string prefixMethodName
-        {
-            get => nameof(DoObjectFieldPrefix);
-        }
+        protected override string prefixMethodName => nameof(DoObjectFieldPrefix);
 
-        public override bool state
-        {
-            get => Prefs.objectFieldSelector;
-        }
+        public override bool state => Prefs.objectFieldSelector;
 
         private static void DoObjectFieldPrefix(
             Rect position,
             Rect dropRect,
             int id,
-            UnityEngine.Object obj,
-            UnityEngine.Object objBeingEdited,
+            Object obj,
+            Object objBeingEdited,
             Type objType,
 #if DECM2
             Type additionalType,

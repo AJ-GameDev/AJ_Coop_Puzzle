@@ -11,7 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public const float ProLabel = 0.7f;
         public const float ProButton = 0.2f;
         public const float ProButtonHover = 0.25f;
-        public static Color ProLabelColor = new Color(ProLabel, ProLabel, ProLabel);
+        public static Color ProLabelColor = new(ProLabel, ProLabel, ProLabel);
 
         private static GUIStyle _appToolbarButtonLeft;
         private static GUIStyle _buttonAlignLeft;
@@ -55,15 +55,12 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_buttonAlignLeft == null)
-                {
                     _buttonAlignLeft = new GUIStyle(EditorGUIUtility
                         .GetBuiltinSkin(isProSkin ? EditorSkin.Scene : EditorSkin.Inspector).button)
                     {
                         alignment = TextAnchor.MiddleLeft,
-                        fixedHeight = 20,
+                        fixedHeight = 20
                     };
-                }
-
                 return _buttonAlignLeft;
             }
         }
@@ -73,13 +70,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_buttonWithToggleAlignLeft == null)
-                {
                     _buttonWithToggleAlignLeft = new GUIStyle(buttonAlignLeft)
                     {
                         padding = new RectOffset(22, 6, 2, 3)
                     };
-                }
-
                 return _buttonWithToggleAlignLeft;
             }
         }
@@ -89,12 +83,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_centeredHelpbox == null)
-                {
                     _centeredHelpbox = new GUIStyle(EditorStyles.helpBox)
                     {
                         alignment = TextAnchor.MiddleCenter
                     };
-                }
 
                 return _centeredHelpbox;
             }
@@ -105,12 +97,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_centeredLabel == null)
-                {
                     _centeredLabel = new GUIStyle(EditorStyles.label)
                     {
                         alignment = TextAnchor.MiddleCenter
                     };
-                }
 
                 return _centeredLabel;
             }
@@ -121,12 +111,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_colorField == null)
-                {
                     _colorField = new GUIStyle(EditorStyles.colorField)
                     {
                         margin = new RectOffset(4, 4, 4, 4)
                     };
-                }
 
                 return _colorField;
             }
@@ -146,7 +134,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_grayRow == null || _grayRow.normal.background == null)
-                {
                     _grayRow = new GUIStyle(EditorStyles.label)
                     {
                         normal =
@@ -155,7 +142,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         },
                         margin = new RectOffset(0, 0, 0, 0)
                     };
-                }
 
                 return _grayRow;
             }
@@ -166,16 +152,14 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_hierarchyIcon == null)
-                {
                     _hierarchyIcon = new GUIStyle(GUI.skin.button)
                     {
                         alignment = TextAnchor.MiddleCenter,
                         fontSize = 10,
                         margin = new RectOffset(),
                         padding = new RectOffset(),
-                        clipping = TextClipping.Overflow,
+                        clipping = TextClipping.Overflow
                     };
-                }
 
                 return _hierarchyIcon;
             }
@@ -199,22 +183,17 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
         }
 
-        public static bool isProSkin
-        {
-            get { return EditorGUIUtility.isProSkin; }
-        }
+        public static bool isProSkin => EditorGUIUtility.isProSkin;
 
         public static GUIStyle multilineLabel
         {
             get
             {
                 if (_multilineLabel == null)
-                {
                     _multilineLabel = new GUIStyle("Label")
                     {
                         wordWrap = true
                     };
-                }
 
                 return _multilineLabel;
             }
@@ -225,21 +204,19 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_normalRow == null || _normalRow.normal.background == null)
-                {
                     _normalRow = new GUIStyle(EditorStyles.label)
                     {
                         normal =
                         {
                             background =
                                 Resources.CreateSinglePixelTexture(isProSkin
-                                    ? (Color)new Color32(45, 45, 48, 255)
+                                    ? new Color32(45, 45, 48, 255)
                                     : Color.white)
                         },
                         margin = new RectOffset(0, 0, 0, 0),
                         overflow = new RectOffset(0, 0, 0, 0),
-                        fixedHeight = 20,
+                        fixedHeight = 20
                     };
-                }
 
                 return _normalRow;
             }
@@ -250,16 +227,14 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_proRow == null || _proRow.normal.background == null)
-                {
                     _proRow = new GUIStyle(EditorStyles.label)
                     {
                         normal =
                         {
                             background = Resources.CreateSinglePixelTexture(63, 63, 63, 255)
                         },
-                        margin = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(0, 0, 0, 0)
                     };
-                }
 
                 return _proRow;
             }
@@ -270,7 +245,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_selectedRow == null || _selectedRow.normal.background == null)
-                {
                     _selectedRow = new GUIStyle(EditorStyles.label)
                     {
                         normal =
@@ -279,9 +253,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                         },
                         margin = new RectOffset(0, 0, 0, 0),
                         overflow = new RectOffset(0, 0, 0, 0),
-                        fixedHeight = 20,
+                        fixedHeight = 20
                     };
-                }
 
                 return _selectedRow;
             }
@@ -303,12 +276,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_toolbarSelectedButton == null)
-                {
                     _toolbarSelectedButton = new GUIStyle(EditorStyles.toolbarButton)
                     {
                         normal = EditorStyles.toolbarButton.active
                     };
-                }
 
                 return _toolbarSelectedButton;
             }
@@ -318,10 +289,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_tooltip == null)
-                {
-                    _tooltip = GetStyle("Tooltip");
-                }
+                if (_tooltip == null) _tooltip = GetStyle("Tooltip");
 
                 return _tooltip;
             }
@@ -332,12 +300,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_transparentButton == null)
-                {
                     _transparentButton = new GUIStyle
                     {
                         margin = new RectOffset(4, 4, 4, 4)
                     };
-                }
 
                 return _transparentButton;
             }
@@ -348,7 +314,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_transparentRow == null || _transparentRow.normal.background == null)
-                {
                     _transparentRow = new GUIStyle(EditorStyles.label)
                     {
                         normal =
@@ -357,9 +322,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                         },
                         margin = new RectOffset(0, 0, 0, 0),
                         overflow = new RectOffset(0, 0, 0, 0),
-                        fixedHeight = 20,
+                        fixedHeight = 20
                     };
-                }
 
                 return _transparentRow;
             }
@@ -371,12 +335,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_whiteLabel == null)
-                {
                     _whiteLabel = new GUIStyle(EditorStyles.whiteLabel)
                     {
                         margin = new RectOffset(4, 4, 4, 4)
                     };
-                }
 
                 return _whiteLabel;
             }
@@ -387,7 +349,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_whiteRow == null || _whiteRow.normal.background == null)
-                {
                     _whiteRow = new GUIStyle(EditorStyles.label)
                     {
                         normal =
@@ -396,7 +357,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         },
                         margin = new RectOffset(0, 0, 0, 0)
                     };
-                }
 
                 return _whiteRow;
             }

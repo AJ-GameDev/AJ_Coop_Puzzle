@@ -19,10 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (is2D)
-                {
-                    return pivot - Vector3.forward * size;
-                }
+                if (is2D) return pivot - Vector3.forward * size;
 
                 return pivot - rotation * Vector3.forward * GetPerspectiveCameraDistance(size, 60);
             }
@@ -35,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public void SetView(Camera camera)
         {
-            Transform t = camera.transform;
+            var t = camera.transform;
 
             if (!is2D)
             {

@@ -18,7 +18,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_displayObjectContextMenuMethod == null)
-                {
                     _displayObjectContextMenuMethod = Reflection.GetMethod(type, "DisplayObjectContextMenu",
                         new[]
                         {
@@ -26,16 +25,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                             typeof(Object),
                             typeof(int)
                         }, Reflection.StaticLookup);
-                }
 
                 return _displayObjectContextMenuMethod;
             }
         }
 
-        public static Type type
-        {
-            get => typeof(EditorUtility);
-        }
+        public static Type type => typeof(EditorUtility);
 
         public static void DisplayObjectContextMenu(Rect position, Object context, int contextUserData)
         {

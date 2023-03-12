@@ -4,47 +4,48 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
 #if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
+    [InitializeOnLoad]
 #endif
     public class SceneReferences : MonoBehaviour
     {
         public static Action<SceneReferences> OnCreate;
         public static Action OnUpdateInstances;
 
-        public static List<SceneReferences> instances = new List<SceneReferences>();
+        public static List<SceneReferences> instances = new();
 
-        public List<SceneBookmark> bookmarks = new List<SceneBookmark>();
-        public List<HierarchyBackground> hierarchyBackgrounds = new List<HierarchyBackground>();
+        public List<SceneBookmark> bookmarks = new();
+        public List<HierarchyBackground> hierarchyBackgrounds = new();
 
 #if UNITY_EDITOR
         static SceneReferences()
         {
-            UnityEditor.EditorApplication.delayCall += UpdateInstances;
+            EditorApplication.delayCall += UpdateInstances;
         }
 #endif
 
         public static SceneReferences Get(Scene scene, bool createIfMissed = true)
         {
             if (instances == null) return null;
-            SceneReferences r = instances.FirstOrDefault(i => i != null && i.gameObject.scene == scene);
+            var r = instances.FirstOrDefault(i => i != null && i.gameObject.scene == scene);
             if (r != null) return r;
             if (!createIfMissed) return null;
 
-            Scene activeScene = SceneManager.GetActiveScene();
-            bool sceneChanged = false;
+            var activeScene = SceneManager.GetActiveScene();
+            var sceneChanged = false;
             if (activeScene != scene)
             {
                 SceneManager.SetActiveScene(scene);
                 sceneChanged = true;
             }
 
-            GameObject go = new GameObject("Ultimate Editor Enhancer References");
+            var go = new GameObject("Ultimate Editor Enhancer References");
             go.tag = "EditorOnly";
             r = go.AddComponent<SceneReferences>();
             if (OnCreate != null) OnCreate(r);
@@ -56,44 +57,36 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public HierarchyBackground GetBackground(GameObject target, bool useNonRecursive = false)
         {
-            foreach (HierarchyBackground b in hierarchyBackgrounds)
-            {
-                if (b.gameObject == target) return b;
-            }
+            foreach (var b in hierarchyBackgrounds)
+                if (b.gameObject == target)
+                    return b;
 
-            Transform t = target.transform.parent;
+            var t = target.transform.parent;
             if (useNonRecursive)
-            {
                 while (t != null)
                 {
-                    GameObject go = t.gameObject;
+                    var go = t.gameObject;
 
-                    foreach (HierarchyBackground b in hierarchyBackgrounds)
-                    {
-                        if (b.gameObject == go) return b;
-                    }
+                    foreach (var b in hierarchyBackgrounds)
+                        if (b.gameObject == go)
+                            return b;
 
                     t = t.parent;
                 }
-            }
             else
-            {
                 while (t != null)
                 {
-                    GameObject go = t.gameObject;
+                    var go = t.gameObject;
 
-                    foreach (HierarchyBackground b in hierarchyBackgrounds)
-                    {
+                    foreach (var b in hierarchyBackgrounds)
                         if (b.gameObject == go)
                         {
                             if (!b.recursive) return null;
                             return b;
                         }
-                    }
 
                     t = t.parent;
                 }
-            }
 
             return null;
         }
@@ -109,7 +102,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             public GameObject gameObject;
             public Color color;
-            public bool recursive = false;
+            public bool recursive;
         }
     }
 }

@@ -42,12 +42,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 #if UNITY_2021_2_OR_NEWER
             customTypes = new List<Type>();
 
-            IEnumerable types = getCustomEditorToolsForTypeMethod.Invoke(null, new object[] { type }) as IEnumerable;
+            var types = getCustomEditorToolsForTypeMethod.Invoke(null, new object[] { type }) as IEnumerable;
             if (types == null) return customTypes;
 
-            foreach (object t in types)
+            foreach (var t in types)
             {
-                Type value = Reflection.GetPropertyValue<Type>(t, "editor");
+                var value = Reflection.GetPropertyValue<Type>(t, "editor");
                 customTypes.Add(value);
             }
 #else

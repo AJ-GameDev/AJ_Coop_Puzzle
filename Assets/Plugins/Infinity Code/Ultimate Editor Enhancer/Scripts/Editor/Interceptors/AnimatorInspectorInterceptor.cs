@@ -12,20 +12,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         public static Action<Editor> OnInspectorGUI;
 
-        protected override MethodInfo originalMethod
-        {
-            get => AnimatorInspectorRef.onInspectorGUIMethod;
-        }
+        protected override MethodInfo originalMethod => AnimatorInspectorRef.onInspectorGUIMethod;
 
-        public override bool state
-        {
-            get => Prefs.animatorInspectorClips;
-        }
+        public override bool state => Prefs.animatorInspectorClips;
 
-        protected override string postfixMethodName
-        {
-            get => nameof(OnInspectorGUIPostfix);
-        }
+        protected override string postfixMethodName => nameof(OnInspectorGUIPostfix);
 
         private static void OnInspectorGUIPostfix(Editor __instance)
         {

@@ -1,7 +1,6 @@
 /*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +9,6 @@ using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
@@ -18,31 +16,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         private static GUIContent filterByType;
 
-        protected override InitType initType
-        {
-            get => InitType.gui;
-        }
+        protected override InitType initType => InitType.gui;
 
-        protected override MethodInfo originalMethod
-        {
-            get => SearchableEditorWindowRef.searchFieldGUIMethod;
-        }
+        protected override MethodInfo originalMethod => SearchableEditorWindowRef.searchFieldGUIMethod;
 
-        public override bool state
-        {
-            get => Prefs.hierarchyTypeFilter;
-        }
+        public override bool state => Prefs.hierarchyTypeFilter;
 
-        protected override string postfixMethodName
-        {
-            get => nameof(SearchFieldGUI);
-        }
+        protected override string postfixMethodName => nameof(SearchFieldGUI);
 
         private static void SearchFieldGUI(EditorWindow __instance)
         {
             if (__instance.GetType() != SceneHierarchyWindowRef.type) return;
 
-            int mode = SceneHierarchyWindowRef.GetSearchMode(__instance);
+            var mode = SceneHierarchyWindowRef.GetSearchMode(__instance);
             if (filterByType == null)
             {
                 filterByType = EditorGUIUtility.IconContent("FilterByType", "Search by Type");
@@ -51,17 +37,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 
             if (mode != 1 && GUILayoutUtils.Button(filterByType, EditorStyles.toolbarButton) == ButtonEvent.click)
             {
-                Component[] components = Object.FindObjectsOfType<Component>();
-                HashSet<string> types = new HashSet<string>();
-                for (int i = 0; i < components.Length; i++)
+                var components = Object.FindObjectsOfType<Component>();
+                var types = new HashSet<string>();
+                for (var i = 0; i < components.Length; i++)
                 {
-                    Type type = components[i].GetType();
-                    string name = type.Name;
+                    var type = components[i].GetType();
+                    var name = type.Name;
                     if (!types.Contains(name)) types.Add(name);
                 }
 
-                Rect lastRect = GUILayoutUtils.lastRect;
-                GUIContent[] contents = types.OrderBy(t => t).Select(t => new GUIContent(t)).ToArray();
+                var lastRect = GUILayoutUtils.lastRect;
+                var contents = types.OrderBy(t => t).Select(t => new GUIContent(t)).ToArray();
                 FlatSelectorWindow.Show(new Rect(new Vector2(lastRect.x, lastRect.yMax), Vector2.zero), contents, -1)
                     .OnSelect += i =>
                 {
@@ -69,13 +55,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 
                     if (mode == 0)
                     {
-                        string search = SceneHierarchyWindowRef.GetSearchFilter(__instance);
+                        var search = SceneHierarchyWindowRef.GetSearchFilter(__instance);
                         search = Regex.Replace(search, @"t:\w+", "").Trim();
                         if (search.Length > 0) search += " ";
                         search += "t:" + contents[i].text;
                         SceneHierarchyWindowRef.SetSearchFilter(__instance, search, mode);
                     }
-                    else SceneHierarchyWindowRef.SetSearchFilter(__instance, contents[i].text, mode);
+                    else
+                    {
+                        SceneHierarchyWindowRef.SetSearchFilter(__instance, contents[i].text, mode);
+                    }
                 };
             }
         }

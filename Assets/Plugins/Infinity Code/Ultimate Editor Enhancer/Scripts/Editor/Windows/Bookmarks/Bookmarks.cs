@@ -22,7 +22,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             SceneReferences.OnUpdateInstances += OnUpdateSceneReferences;
 
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidate;
             binding.OnPress += () => ShowWindow();
         }
@@ -40,7 +40,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public string filter
         {
-            get { return _filter; }
+            get => _filter;
             set
             {
                 _filter = value;
@@ -54,10 +54,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             get
             {
-                JsonArray jArr = new JsonArray();
-                for (int i = 0; i < projectItems.Count; i++)
+                var jArr = new JsonArray();
+                for (var i = 0; i < projectItems.Count; i++)
                 {
-                    JsonObject obj = new JsonObject();
+                    var obj = new JsonObject();
                     obj.Add("path", AssetDatabase.GetAssetPath(projectItems[i].target), JsonValue.ValueType.STRING);
                     jArr.Add(obj);
                 }
@@ -71,23 +71,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (projectItems.Count > 0)
                 {
                     // 0 - Replace, 1 - Ignore, 2 - Append
-                    int action = EditorUtility.DisplayDialogComplex("Import Bookmarks",
+                    var action = EditorUtility.DisplayDialogComplex("Import Bookmarks",
                         "Bookmarks already contain project items", "Replace", "Ignore", "Append");
                     if (action == 1) return;
-                    if (action == 0)
-                    {
-                        ReferenceManager.bookmarks.Clear();
-                    }
+                    if (action == 0) ReferenceManager.bookmarks.Clear();
                 }
 
-                foreach (JsonItem v in value)
+                foreach (var v in value)
                 {
-                    string path = v.V<string>("path");
+                    var path = v.V<string>("path");
                     if (!File.Exists(path)) continue;
-                    Object obj = AssetDatabase.LoadAssetAtPath<Object>(path);
+                    var obj = AssetDatabase.LoadAssetAtPath<Object>(path);
                     if (projectItems.Any(i => i.target == obj)) continue;
 
-                    ProjectBookmark item = new ProjectBookmark(obj);
+                    var item = new ProjectBookmark(obj);
                     ReferenceManager.bookmarks.Add(item);
                 }
 
@@ -95,10 +92,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
         }
 
-        public static List<ProjectBookmark> projectItems
-        {
-            get { return ReferenceManager.bookmarks; }
-        }
+        public static List<ProjectBookmark> projectItems => ReferenceManager.bookmarks;
 
         public static Dictionary<SceneReferences, List<SceneBookmark>> sceneItems
         {
@@ -106,9 +100,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (_sceneItems == null)
                 {
-                    List<SceneReferences> sceneReferences = SceneReferences.instances;
+                    var sceneReferences = SceneReferences.instances;
                     _sceneItems = new Dictionary<SceneReferences, List<SceneBookmark>>();
-                    foreach (SceneReferences sr in sceneReferences)
+                    foreach (var sr in sceneReferences)
                     {
                         if (sr == null) continue;
                         if (sr.bookmarks.Count > 0) _sceneItems.Add(sr, sr.bookmarks);
@@ -142,14 +136,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (selectedFolderItems != null)
             {
-                foreach (ProjectBookmark item in selectedFolderItems) item.Dispose();
+                foreach (var item in selectedFolderItems) item.Dispose();
                 selectedFolderItems = null;
             }
 
             selectedFoldersStack = null;
             if (_folders != null)
             {
-                foreach (ProjectFolderBookmark folder in _folders) folder.Dispose();
+                foreach (var folder in _folders) folder.Dispose();
                 _folders = null;
             }
 
@@ -179,10 +173,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             ProcessEvents();
             Toolbar();
 
-            if (selectedFoldersStack != null && selectedFoldersStack.Count > 0)
-            {
-                FolderItemsToolbar();
-            }
+            if (selectedFoldersStack != null && selectedFoldersStack.Count > 0) FolderItemsToolbar();
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
@@ -212,13 +203,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (target == null) return;
 
-            Scene? scene = GetScene(target);
+            var scene = GetScene(target);
             if (scene.HasValue && scene.Value.name != null)
             {
-                SceneReferences sceneReferences = SceneReferences.Get(scene.Value);
+                var sceneReferences = SceneReferences.Get(scene.Value);
                 if (sceneReferences.bookmarks.Any(i => i.target == target)) return;
 
-                SceneBookmark item = new SceneBookmark(target);
+                var item = new SceneBookmark(target);
                 sceneReferences.bookmarks.Add(item);
                 EditorUtility.SetDirty(sceneReferences);
                 _sceneItems = null;
@@ -227,7 +218,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else
             {
                 if (projectItems.Any(i => i.target == target)) return;
-                ProjectBookmark item = new ProjectBookmark(target);
+                var item = new ProjectBookmark(target);
                 projectItems.Add(item);
                 cachedLabels = null;
                 _folders = null;
@@ -239,18 +230,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
             EditorGUI.BeginChangeCheck();
-            float maxWidth = position.width - 15;
-            Rect rect = GUILayoutUtility.GetRect(maxWidth, maxWidth, 20, 20);
+            var maxWidth = position.width - 15;
+            var rect = GUILayoutUtility.GetRect(maxWidth, maxWidth, 20, 20);
             rect.xMin = rect.xMax - 100;
             rect.x -= 3;
-            int id = FixedIDs.BOOKMARKS_GRID_SIZE;
+            var id = FixedIDs.BOOKMARKS_GRID_SIZE;
             gridSize = (int)GUI.Slider(rect, gridSize, 0, minGridSize, maxGridSize, GUI.skin.horizontalSlider,
                 GUI.skin.horizontalSliderThumb, true, id);
-            if (EditorGUI.EndChangeCheck())
-            {
-                EditorPrefs.SetInt(GridSizePref, gridSize);
-            }
-
+            if (EditorGUI.EndChangeCheck()) EditorPrefs.SetInt(GridSizePref, gridSize);
             EditorGUILayout.EndHorizontal();
         }
 
@@ -266,10 +253,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (target == null) return false;
 
-            Scene? scene = GetScene(target);
+            var scene = GetScene(target);
             if (scene.HasValue && scene.Value.name != null)
             {
-                SceneReferences sceneReferences = SceneReferences.Get(scene.Value, false);
+                var sceneReferences = SceneReferences.Get(scene.Value, false);
                 return sceneReferences != null && sceneReferences.bookmarks.Any(i => i.target == target);
             }
 
@@ -280,7 +267,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (selectedFolderItems == null) return;
 
-            foreach (ProjectBookmark item in selectedFolderItems) item.Dispose();
+            foreach (var item in selectedFolderItems) item.Dispose();
             selectedFolderItems = null;
         }
 
@@ -296,7 +283,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             ReferenceManager.bookmarks.Clear();
             ReferenceManager.Save();
 
-            foreach (SceneReferences sceneReference in SceneReferences.instances)
+            foreach (var sceneReference in SceneReferences.instances)
             {
                 sceneReference.bookmarks.Clear();
                 EditorUtility.SetDirty(sceneReference);
@@ -313,25 +300,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (cachedLabels == null)
             {
                 var temp = new HashSet<string>();
-                foreach (ProjectBookmark item in projectItems)
+                foreach (var item in projectItems)
                 {
-                    string[] labels = AssetDatabase.GetLabels(item.target);
-                    foreach (string label in labels)
-                    {
-                        if (!temp.Contains(label)) temp.Add(label);
-                    }
+                    var labels = AssetDatabase.GetLabels(item.target);
+                    foreach (var label in labels)
+                        if (!temp.Contains(label))
+                            temp.Add(label);
                 }
 
-                foreach (ProjectFolderBookmark folder in folders)
+                foreach (var folder in folders)
+                foreach (var item in folder.items)
                 {
-                    foreach (ProjectFolderBookmark.Item item in folder.items)
-                    {
-                        string[] labels = item.labels;
-                        foreach (string label in labels)
-                        {
-                            if (!temp.Contains(label)) temp.Add(label);
-                        }
-                    }
+                    var labels = item.labels;
+                    foreach (var label in labels)
+                        if (!temp.Contains(label))
+                            temp.Add(label);
                 }
 
                 cachedLabels = temp.OrderBy(v => v).ToArray();
@@ -345,7 +328,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             filterByLabelContent.text = activeLabel;
             if (!GUILayoutUtils.ToolbarButton(filterByLabelContent)) return;
 
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             menu.Add("None", string.IsNullOrEmpty(activeLabel), () =>
             {
                 activeLabel = null;
@@ -353,9 +336,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             });
             menu.AddSeparator();
 
-            for (int i = 0; i < cachedLabels.Length; i++)
+            for (var i = 0; i < cachedLabels.Length; i++)
             {
-                string label = cachedLabels[i];
+                var label = cachedLabels[i];
                 menu.Add(label, activeLabel == label, () =>
                 {
                     activeLabel = label;
@@ -371,20 +354,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (filterByTypeContent == null) filterByTypeContent = EditorGUIUtility.IconContent("FilterByType");
             if (!GUILayoutUtils.ToolbarButton(filterByTypeContent)) return;
 
-            string[] names = GameObjectUtils.GetTypesDisplayNames();
-            string assetType = "";
-            Match match = Regex.Match(filter, @"(:)(\w*)");
+            var names = GameObjectUtils.GetTypesDisplayNames();
+            var assetType = "";
+            var match = Regex.Match(filter, @"(:)(\w*)");
             if (match.Success)
             {
                 assetType = match.Groups[2].Value.ToUpperInvariant();
                 if (assetType == "PREFAB") assetType = "GAMEOBJECT";
             }
 
-            GenericMenuEx menu = GenericMenuEx.Start();
-            for (int i = 0; i < names.Length; i++)
+            var menu = GenericMenuEx.Start();
+            for (var i = 0; i < names.Length; i++)
             {
-                string name = names[i];
-                bool isSameType = name.ToUpperInvariant() == assetType;
+                var name = names[i];
+                var isSameType = name.ToUpperInvariant() == assetType;
                 menu.Add(name, isSameType, () =>
                 {
                     if (!string.IsNullOrEmpty(assetType))
@@ -392,7 +375,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         if (isSameType) filter = Regex.Replace(filter, @"(:)(\w*)", "");
                         else filter = Regex.Replace(filter, @"(:)(\w*)", ":" + name);
                     }
-                    else filter += ":" + name;
+                    else
+                    {
+                        filter += ":" + name;
+                    }
                 });
             }
 
@@ -419,11 +405,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     if (showSceneItems)
                     {
                         if (sceneItemsList == null) sceneItemsList = new Dictionary<SceneReferences, ReorderableList>();
-                        bool multiScene = sceneItems.Count > 1;
+                        var multiScene = sceneItems.Count > 1;
                         foreach (var pair in sceneItems)
                         {
-                            string label = multiScene ? pair.Key.gameObject.scene.name : string.Empty;
-                            if (gridSize > minGridSize) DrawGridItems(pair.Value, label);
+                            var label = multiScene ? pair.Key.gameObject.scene.name : string.Empty;
+                            if (gridSize > minGridSize)
+                            {
+                                DrawGridItems(pair.Value, label);
+                            }
                             else
                             {
                                 ReorderableList list;
@@ -457,10 +446,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            BookmarkItem current = selectedFoldersStack.Last();
+            var current = selectedFoldersStack.Last();
 
             if (selectedFoldersStack.Count > 1)
-            {
                 if (GUILayoutUtils.ToolbarButton(EditorIconContents.animationFirstKey))
                 {
                     ClearFilter();
@@ -470,7 +458,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     selectedFolderItems = null;
                     return;
                 }
-            }
 
             if (GUILayoutUtils.ToolbarButton(EditorIconContents.animationPrevKey))
             {
@@ -487,35 +474,29 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static Scene? GetScene(Object target)
         {
-            if (target is GameObject)
-            {
-                return (target as GameObject).scene;
-            }
+            if (target is GameObject) return (target as GameObject).scene;
 
-            if (target is Component)
-            {
-                return (target as Component).gameObject.scene;
-            }
+            if (target is Component) return (target as Component).gameObject.scene;
 
             return null;
         }
 
         private static void InitFolderItems(BookmarkItem folderItem)
         {
-            Object target = folderItem.target;
+            var target = folderItem.target;
             DisposeFolderItems();
 
-            string assetPath = AssetDatabase.GetAssetPath(target);
+            var assetPath = AssetDatabase.GetAssetPath(target);
             IEnumerable<string> entries = Directory.GetFileSystemEntries(assetPath);
-            List<ProjectBookmark> tempItems = new List<ProjectBookmark>();
-            foreach (string entry in entries)
+            var tempItems = new List<ProjectBookmark>();
+            foreach (var entry in entries)
             {
                 if (entry.EndsWith(".meta")) continue;
 
-                Object asset = AssetDatabase.LoadAssetAtPath<Object>(entry);
+                var asset = AssetDatabase.LoadAssetAtPath<Object>(entry);
                 if (asset == null) continue;
 
-                ProjectBookmark item = new ProjectBookmark(asset);
+                var item = new ProjectBookmark(asset);
                 tempItems.Add(item);
             }
 
@@ -526,7 +507,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (item.isProjectItem && item.target is GameObject)
             {
-                bool isLoading = AssetPreview.IsLoadingAssetPreview(item.target.GetInstanceID());
+                var isLoading = AssetPreview.IsLoadingAssetPreview(item.target.GetInstanceID());
                 if (isLoading)
                 {
                     item.preview = EditorResources.prefabTexture;
@@ -569,7 +550,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (mouseOverWindow != this) return;
             if (selectedFolderItems != null) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.DragUpdated)
             {
                 DragAndDrop.visualMode = DragAndDropVisualMode.Link;
@@ -580,7 +561,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 DragAndDrop.AcceptDrag();
                 e.Use();
 
-                foreach (Object obj in DragAndDrop.objectReferences) Add(obj);
+                foreach (var obj in DragAndDrop.objectReferences) Add(obj);
             }
             else if (e.type == EventType.KeyDown)
             {
@@ -605,22 +586,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (item.target is AudioClip)
             {
-                AudioClip audioClip = item.target as AudioClip;
+                var audioClip = item.target as AudioClip;
                 if (AudioUtilsRef.IsClipPlaying(audioClip)) AudioUtilsRef.StopClip(audioClip);
                 else AudioUtilsRef.PlayClip(audioClip);
             }
             else if (item.target is SceneAsset)
             {
-                string path = AssetDatabase.GetAssetPath(item.target);
+                var path = AssetDatabase.GetAssetPath(item.target);
 
-                if (SceneManagerHelper.AskForSave(SceneManager.GetActiveScene()))
-                {
-                    EditorSceneManager.OpenScene(path);
-                }
+                if (SceneManagerHelper.AskForSave(SceneManager.GetActiveScene())) EditorSceneManager.OpenScene(path);
             }
             else if (item.target is DefaultAsset)
             {
-                FileAttributes attributes = File.GetAttributes(AssetDatabase.GetAssetPath(item.target));
+                var attributes = File.GetAttributes(AssetDatabase.GetAssetPath(item.target));
                 if ((attributes & FileAttributes.Directory) == FileAttributes.Directory) SelectFolder(item);
             }
             else if (item.target is Component)
@@ -630,11 +608,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else if (item.target is GameObject)
             {
                 if (PrefabUtility.IsPartOfAnyPrefab(item.gameObject))
-                {
                     GameObjectUtils.OpenPrefab(AssetDatabase.GetAssetPath(item.target));
-                }
             }
-            else EditorUtility.OpenWithDefaultApp(AssetDatabase.GetAssetPath(item.target));
+            else
+            {
+                EditorUtility.OpenWithDefaultApp(AssetDatabase.GetAssetPath(item.target));
+            }
         }
 
         public static void Redraw()
@@ -646,10 +625,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (item == null) return;
 
-            Scene? scene = GetScene(item);
+            var scene = GetScene(item);
             if (scene.HasValue && scene.Value.name != null)
             {
-                SceneReferences sceneReferences = SceneReferences.Get(scene.Value, false);
+                var sceneReferences = SceneReferences.Get(scene.Value, false);
                 if (sceneReferences == null) return;
 
                 if (sceneReferences.bookmarks.RemoveAll(i => i.target == item) > 0)
@@ -666,10 +645,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Save();
             }
 
-            if (instance != null)
-            {
-                instance.UpdateFilteredItems();
-            }
+            if (instance != null) instance.UpdateFilteredItems();
         }
 
         private static void RemoveLate(BookmarkItem item)
@@ -679,10 +655,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static void Save()
         {
-            foreach (KeyValuePair<SceneReferences, List<SceneBookmark>> pair in sceneItems)
-            {
-                EditorUtility.SetDirty(pair.Key);
-            }
+            foreach (var pair in sceneItems) EditorUtility.SetDirty(pair.Key);
 
             ReferenceManager.Save();
         }
@@ -715,20 +688,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             else if (item.target is SceneAsset)
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
 
                 menu.Add("Open", () =>
                 {
                     if (SceneManagerHelper.AskForSave(SceneManager.GetActiveScene()))
                     {
-                        string path = AssetDatabase.GetAssetPath(item.target);
+                        var path = AssetDatabase.GetAssetPath(item.target);
                         EditorSceneManager.OpenScene(path);
                     }
                 });
 
                 menu.Add("Open Additive", () =>
                 {
-                    string path = AssetDatabase.GetAssetPath(item.target);
+                    var path = AssetDatabase.GetAssetPath(item.target);
                     EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
                 });
 
@@ -740,17 +713,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 menu.Show();
             }
-            else ShowOtherContextMenu(item);
+            else
+            {
+                ShowOtherContextMenu(item);
+            }
         }
 
         public static EditorWindow ShowDropDownWindow(Vector2? mousePosition = null)
         {
             if (!mousePosition.HasValue) mousePosition = Event.current.mousePosition;
-            Bookmarks wnd = CreateInstance<Bookmarks>();
+            var wnd = CreateInstance<Bookmarks>();
             wnd.titleContent = new GUIContent("Bookmarks");
-            Vector2 position = GUIUtility.GUIToScreenPoint(mousePosition.Value);
+            var position = GUIUtility.GUIToScreenPoint(mousePosition.Value);
             Vector2 size = Prefs.defaultWindowSize;
-            Rect rect = new Rect(position - size / 2, size);
+            var rect = new Rect(position - size / 2, size);
             if (rect.y < 30) rect.y = 30;
 
             wnd.position = rect;
@@ -759,7 +735,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             PinAndClose.Show(wnd, rect, wnd.Close, () =>
             {
-                Rect wRect = wnd.position;
+                var wRect = wnd.position;
                 wRect.yMin -= PinAndClose.HEIGHT;
                 ShowWindow().position = wRect;
                 wnd.Close();
@@ -769,7 +745,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ShowOtherContextMenu(BookmarkItem item)
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             if (item.canBeRemoved) menu.Add("Remove Bookmark", () => RemoveLate(item));
             menu.Show();
         }
@@ -782,7 +758,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static EditorWindow ShowWindow(Vector2? mousePosition)
         {
-            Bookmarks wnd = CreateInstance<Bookmarks>();
+            var wnd = CreateInstance<Bookmarks>();
             wnd.titleContent = new GUIContent("Bookmarks");
             wnd.Show();
 
@@ -792,7 +768,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (mp.HasValue)
             {
-                Vector2 screenPoint = GUIUtility.GUIToScreenPoint(mp.Value);
+                var screenPoint = GUIUtility.GUIToScreenPoint(mp.Value);
                 Vector2 size = Prefs.defaultWindowSize;
                 wnd.position = new Rect(screenPoint - size / 2, size);
             }
@@ -803,7 +779,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         public static EditorWindow ShowUtilityWindow(Vector2? mousePosition = null)
         {
             if (!mousePosition.HasValue) mousePosition = Event.current.mousePosition;
-            Bookmarks wnd = CreateInstance<Bookmarks>();
+            var wnd = CreateInstance<Bookmarks>();
             wnd.titleContent = new GUIContent("Bookmarks");
             wnd.ShowUtility();
             wnd.Focus();
@@ -845,7 +821,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             string assetType;
-            string pattern = SearchableItem.GetPattern(_filter, out assetType);
+            var pattern = SearchableItem.GetPattern(_filter, out assetType);
 
             IEnumerable<BookmarkItem> query;
             if (selectedFolderItems == null)
@@ -854,16 +830,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 query = query.Concat(folders.SelectMany(f => f.items));
                 if (string.IsNullOrEmpty(activeLabel)) query = query.Concat(sceneItems.SelectMany(sr => sr.Value));
             }
-            else query = selectedFolderItems;
-
-            if (string.IsNullOrEmpty(activeLabel))
-            {
-                query = query.Where(i => i.Update(pattern, assetType) > 0);
-            }
             else
             {
-                query = query.Where(i => i.HasLabel(activeLabel) && i.Update(pattern, assetType) > 0);
+                query = selectedFolderItems;
             }
+
+            if (string.IsNullOrEmpty(activeLabel))
+                query = query.Where(i => i.Update(pattern, assetType) > 0);
+            else
+                query = query.Where(i => i.HasLabel(activeLabel) && i.Update(pattern, assetType) > 0);
 
             filteredItems = query.OrderByDescending(i => i.accuracy).ToList();
         }

@@ -14,27 +14,24 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private const int gridMargin = 10;
         private static int gridSize = 47;
         private static GUIStyle selectedStyle;
-        private int maxGridSize = 128;
+        private readonly int maxGridSize = 128;
 
-        private int minGridSize = 47;
+        private readonly int minGridSize = 47;
 
         private bool DrawCell(BookmarkItem item, Rect rect)
         {
-            bool selected = item.target != null && Selection.activeObject == item.target;
+            var selected = item.target != null && Selection.activeObject == item.target;
 
             if (item.preview == null || !item.previewLoaded) InitPreview(item);
 
             ProcessCellEvents(item, rect);
 
-            if (selected)
-            {
-                GUI.Box(new RectOffset(2, 2, 2, 2).Add(rect), GUIContent.none, selectedStyle);
-            }
+            if (selected) GUI.Box(new RectOffset(2, 2, 2, 2).Add(rect), GUIContent.none, selectedStyle);
 
             GUI.DrawTexture(new Rect(rect.x + gridMargin, rect.y, gridSize, gridSize), item.preview);
-            GUIContent content = new GUIContent(item.title);
-            GUIStyle style = new GUIStyle(EditorStyles.miniLabel);
-            Vector2 size = style.CalcSize(content);
+            var content = new GUIContent(item.title);
+            var style = new GUIStyle(EditorStyles.miniLabel);
+            var size = style.CalcSize(content);
             if (size.x < rect.width) style.alignment = TextAnchor.MiddleCenter;
             GUI.Label(new Rect(rect.x, rect.y + gridSize, rect.width, 20), content, style);
 
@@ -43,30 +40,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawGridItems(IEnumerable<BookmarkItem> gridItems, string label = null)
         {
-            if (!string.IsNullOrEmpty(label))
-            {
-                GUILayout.Label(label);
-            }
+            if (!string.IsNullOrEmpty(label)) GUILayout.Label(label);
 
-            int countItems = gridItems.Count();
+            var countItems = gridItems.Count();
 
-            int countCols = Mathf.FloorToInt((position.width - 30) / (gridSize + gridMargin * 2));
-            int countRows = Mathf.CeilToInt(countItems / (float)countCols);
-            int rowHeight = gridSize + 20;
-            int width = Mathf.Min(countCols, countItems) * (gridSize + gridMargin * 2);
-            int height = countRows * (rowHeight);
+            var countCols = Mathf.FloorToInt((position.width - 30) / (gridSize + gridMargin * 2));
+            var countRows = Mathf.CeilToInt(countItems / (float)countCols);
+            var rowHeight = gridSize + 20;
+            var width = Mathf.Min(countCols, countItems) * (gridSize + gridMargin * 2);
+            var height = countRows * rowHeight;
 
-            float marginLeft = (position.width - width) / 2;
+            var marginLeft = (position.width - width) / 2;
 
             GUILayout.Box(GUIContent.none, GUIStyle.none, GUILayout.Width(width), GUILayout.Height(height));
-            Rect rect = GUILayoutUtility.GetLastRect();
+            var rect = GUILayoutUtility.GetLastRect();
 
-            int i = 0;
-            foreach (BookmarkItem item in gridItems)
+            var i = 0;
+            foreach (var item in gridItems)
             {
-                int row = i / countCols;
-                int col = i % countCols;
-                Rect r = new Rect(col * (gridSize + gridMargin * 2) + marginLeft, row * rowHeight + rect.y,
+                var row = i / countCols;
+                var col = i % countCols;
+                var r = new Rect(col * (gridSize + gridMargin * 2) + marginLeft, row * rowHeight + rect.y,
                     gridSize + gridMargin * 2, rowHeight);
                 if (!DrawCell(item, r)) removeItem = item;
                 i++;
@@ -75,7 +69,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ProcessCellEvents(BookmarkItem item, Rect rect)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (!rect.Contains(e.mousePosition)) return;
             if (e.type == EventType.MouseUp)
             {

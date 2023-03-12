@@ -23,24 +23,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (GUILayoutUtils.Button(new GUIContent(Icons.timer, "Timescale"), Styles.appToolbarButtonLeft,
                     GUILayout.Width(30)) == ButtonEvent.click)
             {
-                Event e = Event.current;
+                var e = Event.current;
 
                 if (e.button == 0)
                 {
                     if (OnLeftClick != null) OnLeftClick();
                 }
-                else if (e.button == 1) ShowContextMenu();
+                else if (e.button == 1)
+                {
+                    ShowContextMenu();
+                }
             }
         }
 
         private static void DrawTimer()
         {
-            float time = Time.time;
-            int totalSec = Mathf.FloorToInt(time);
-            int hour = totalSec / 3600;
-            int min = totalSec / 60 % 60;
-            int sec = totalSec % 60;
-            int ms = Mathf.RoundToInt((time - (int)time) * 1000);
+            var time = Time.time;
+            var totalSec = Mathf.FloorToInt(time);
+            var hour = totalSec / 3600;
+            var min = totalSec / 60 % 60;
+            var sec = totalSec % 60;
+            var ms = Mathf.RoundToInt((time - (int)time) * 1000);
 
             float width = 68;
 
@@ -63,10 +66,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 content = new GUIContent(StaticStringBuilder.GetString(true), "Time since the start of the game.");
             else content.text = StaticStringBuilder.GetString(true);
 
-            Rect rect = GUILayoutUtility.GetRect(content, EditorStyles.textField, GUILayout.Width(width));
+            var rect = GUILayoutUtility.GetRect(content, EditorStyles.textField, GUILayout.Width(width));
             GUILayoutUtils.lastRect = rect;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.Repaint)
             {
                 EditorStyles.textField.Draw(rect, content, false, false, false, false);
@@ -80,14 +83,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     {
                         if (OnLeftClick != null) OnLeftClick();
                     }
-                    else if (e.button == 1) ShowContextMenu();
+                    else if (e.button == 1)
+                    {
+                        ShowContextMenu();
+                    }
                 }
             }
         }
 
         private static void OnGUI()
         {
-            if (Prefs.timerMode == TimerMode.icon) DrawIcon();
+            if (Prefs.timerMode == TimerMode.icon)
+            {
+                DrawIcon();
+            }
             else if (Prefs.timerMode == TimerMode.timer)
             {
                 if (EditorApplication.isPlaying) DrawTimer();
@@ -103,7 +112,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         private static void ShowContextMenu()
         {
-            GenericMenu menu = new GenericMenu();
+            var menu = new GenericMenu();
             menu.AddItem(new GUIContent("Timer"), Prefs.timerMode == TimerMode.timer, () => SetMode(TimerMode.timer));
             menu.AddItem(new GUIContent("Icon"), Prefs.timerMode == TimerMode.icon, () => SetMode(TimerMode.icon));
             menu.AddItem(new GUIContent("Hide"), Prefs.timerMode == TimerMode.hide, () => SetMode(TimerMode.hide));

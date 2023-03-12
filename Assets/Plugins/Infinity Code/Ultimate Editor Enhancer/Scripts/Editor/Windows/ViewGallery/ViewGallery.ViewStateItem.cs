@@ -46,15 +46,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            public override bool allowPreview
-            {
-                get { return viewState != null; }
-            }
+            public override bool allowPreview => viewState != null;
 
-            public override string name
-            {
-                get { return title; }
-            }
+            public override string name => title;
 
             public override void PrepareMenu(GenericMenuEx menu)
             {
@@ -65,15 +59,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     menu.Add("Rename", RenameViewState, this);
                     menu.Add("Delete", RemoveViewState, this);
                 }
-                else menu.AddDisabled("Delete");
+                else
+                {
+                    menu.AddDisabled("Delete");
+                }
 
                 if (viewState == null) menu.Add("Create View State", CreateViewState, this);
             }
 
             public void SetView(SceneView view)
             {
-                Camera camera = view.camera;
-                Transform t = camera.transform;
+                var camera = view.camera;
+                var t = camera.transform;
 
                 if (!is2D)
                 {

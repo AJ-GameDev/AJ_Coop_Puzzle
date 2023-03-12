@@ -11,28 +11,28 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     {
         static FrameSelectedBounds()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidate;
             binding.OnPress += OnInvoke;
         }
 
         private static void OnInvoke()
         {
-            GameObject[] gameObjects = Selection.gameObjects;
+            var gameObjects = Selection.gameObjects;
 
-            bool isFirst = true;
-            bool is2D = false;
-            Bounds bounds = new Bounds();
+            var isFirst = true;
+            var is2D = false;
+            var bounds = new Bounds();
 
-            for (int i = 0; i < gameObjects.Length; i++)
+            for (var i = 0; i < gameObjects.Length; i++)
             {
-                GameObject go = gameObjects[i];
+                var go = gameObjects[i];
                 if (go.scene.name == null) continue;
 
-                Renderer[] renderers = go.GetComponentsInChildren<Renderer>();
-                for (int j = 0; j < renderers.Length; j++)
+                var renderers = go.GetComponentsInChildren<Renderer>();
+                for (var j = 0; j < renderers.Length; j++)
                 {
-                    Renderer renderer = renderers[j];
+                    var renderer = renderers[j];
                     if (renderer is ParticleSystemRenderer || renderer is TrailRenderer) continue;
 
                     if (isFirst)
@@ -46,38 +46,31 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     }
                 }
 
-                Vector3[] fourCorners = new Vector3[4];
-                RectTransform[] rectTransforms = go.GetComponentsInChildren<RectTransform>();
-                for (int j = 0; j < rectTransforms.Length; j++)
+                var fourCorners = new Vector3[4];
+                var rectTransforms = go.GetComponentsInChildren<RectTransform>();
+                for (var j = 0; j < rectTransforms.Length; j++)
                 {
-                    RectTransform rt = rectTransforms[j];
+                    var rt = rectTransforms[j];
                     rt.GetWorldCorners(fourCorners);
 
                     if (isFirst)
                     {
                         is2D = true;
                         bounds.center = fourCorners[0];
-                        for (int k = 1; k < 4; k++)
-                        {
-                            bounds.Encapsulate(fourCorners[k]);
-                        }
-
+                        for (var k = 1; k < 4; k++) bounds.Encapsulate(fourCorners[k]);
                         isFirst = false;
                     }
                     else
                     {
-                        for (int k = 0; k < 4; k++)
-                        {
-                            bounds.Encapsulate(fourCorners[k]);
-                        }
+                        for (var k = 0; k < 4; k++) bounds.Encapsulate(fourCorners[k]);
                     }
                 }
 
-                Collider[] colliders = go.GetComponentsInChildren<Collider>();
+                var colliders = go.GetComponentsInChildren<Collider>();
 
-                for (int j = 0; j < colliders.Length; j++)
+                for (var j = 0; j < colliders.Length; j++)
                 {
-                    Collider collider = colliders[j];
+                    var collider = colliders[j];
 
                     if (isFirst)
                     {
@@ -104,7 +97,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!Prefs.frameSelectedBounds) return false;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type != EventType.KeyDown || e.keyCode != KeyCode.F || e.modifiers != EventModifiers.Shift)
                 return false;
             if (SceneView.lastActiveSceneView == null) return false;

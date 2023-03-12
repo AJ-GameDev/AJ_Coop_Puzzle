@@ -11,9 +11,9 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public static bool highlight = true;
         public static bool highlightNoRenderer = true;
-        public static Color highlightColor = new Color(1, 1, 0, 0.2f);
+        public static Color highlightColor = new(1, 1, 0, 0.2f);
         public static Color highlightNoRendererColor = Color.red;
-        public static Color highlightUIColor = new Color(1, 1, 0, 1f);
+        public static Color highlightUIColor = new(1, 1, 0, 1f);
         public static bool highlightOnWaila = true;
         public static bool highlightOnHierarchy = true;
 
@@ -45,10 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -47; }
-            }
+            public override float order => -47;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {

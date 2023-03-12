@@ -15,15 +15,9 @@ namespace InfinityCode.UltimateEditorEnhancer
             public const int modifierLabelWidth = labelWidth - 30;
             public const int spaceBeforeModifiers = 35;
 
-            public virtual IEnumerable<string> keywords
-            {
-                get { return new string[0]; }
-            }
+            public virtual IEnumerable<string> keywords => new string[0];
 
-            public virtual float order
-            {
-                get { return 0; }
-            }
+            public virtual float order => 0;
 
             public virtual void Draw()
             {
@@ -31,19 +25,19 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             protected static EventModifiers DrawModifiers(EventModifiers modifier, bool hideFunction = false)
             {
-                bool control = (modifier & EventModifiers.Control) == EventModifiers.Control;
+                var control = (modifier & EventModifiers.Control) == EventModifiers.Control;
                 control = GUILayout.Toggle(control, "Control", GUILayout.ExpandWidth(false));
 
-                bool shift = (modifier & EventModifiers.Shift) == EventModifiers.Shift;
+                var shift = (modifier & EventModifiers.Shift) == EventModifiers.Shift;
                 shift = GUILayout.Toggle(shift, "Shift", GUILayout.ExpandWidth(false));
 
-                bool alt = (modifier & EventModifiers.Alt) == EventModifiers.Alt;
+                var alt = (modifier & EventModifiers.Alt) == EventModifiers.Alt;
                 alt = GUILayout.Toggle(alt, "Alt", GUILayout.ExpandWidth(false));
 
-                bool function = (modifier & EventModifiers.FunctionKey) == EventModifiers.FunctionKey;
+                var function = (modifier & EventModifiers.FunctionKey) == EventModifiers.FunctionKey;
                 if (!hideFunction) function = GUILayout.Toggle(function, "Function", GUILayout.ExpandWidth(false));
 
-                bool command = (modifier & EventModifiers.Command) == EventModifiers.Command;
+                var command = (modifier & EventModifiers.Command) == EventModifiers.Command;
                 command = GUILayout.Toggle(command, "Command", GUILayout.ExpandWidth(false));
 
                 modifier = 0;

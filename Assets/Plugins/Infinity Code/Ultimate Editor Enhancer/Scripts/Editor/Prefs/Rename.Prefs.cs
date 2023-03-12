@@ -16,7 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 return new[]
                 {
-                    new Shortcut("Rename Selected Items", "Everywhere", "F2"),
+                    new Shortcut("Rename Selected Items", "Everywhere", "F2")
                 };
             }
 

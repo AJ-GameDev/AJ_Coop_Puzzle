@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System.Collections.Generic;
 using System.Reflection;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using InfinityCode.UltimateEditorEnhancer.HierarchyTools;
@@ -21,7 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         static RecordUpgrader()
         {
-            int upgradeID = LocalSettings.upgradeID;
+            var upgradeID = LocalSettings.upgradeID;
             if (upgradeID < 1) InitDefaultQuickAccessItems();
             if (upgradeID < 2)
             {
@@ -29,10 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 TryInsertOpenAction();
             }
 
-            if (upgradeID < 3)
-            {
-                TryAddHeaderRules();
-            }
+            if (upgradeID < 3) TryAddHeaderRules();
 
             ReferenceManager.Save();
             LocalSettings.upgradeID = CurrentUpgradeID;
@@ -40,24 +36,24 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void InitDefaultQuickAccessItems()
         {
-            List<QuickAccessItem> items = ReferenceManager.quickAccessItems;
+            var items = ReferenceManager.quickAccessItems;
             if (items.Count > 0) return;
 
-            QuickAccessItem open = new QuickAccessItem(QuickAccessItemType.action)
+            var open = new QuickAccessItem(QuickAccessItemType.action)
             {
                 settings = new[] { typeof(OpenAction).FullName },
                 tooltip = "Open Scene",
                 expanded = false
             };
 
-            QuickAccessItem save = new QuickAccessItem(QuickAccessItemType.action)
+            var save = new QuickAccessItem(QuickAccessItemType.action)
             {
                 settings = new[] { typeof(SaveAction).FullName },
                 tooltip = "Save Scenes",
                 expanded = false
             };
 
-            QuickAccessItem hierarchy = new QuickAccessItem(QuickAccessItemType.window)
+            var hierarchy = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[] { SceneHierarchyWindowRef.type.AssemblyQualifiedName },
                 icon = QuickAccessItemIcon.texture,
@@ -67,7 +63,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem project = new QuickAccessItem(QuickAccessItemType.window)
+            var project = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[] { ProjectBrowserRef.type.AssemblyQualifiedName },
                 icon = QuickAccessItemIcon.texture,
@@ -77,7 +73,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem inspector = new QuickAccessItem(QuickAccessItemType.window)
+            var inspector = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[] { InspectorWindowRef.type.AssemblyQualifiedName },
                 icon = QuickAccessItemIcon.texture,
@@ -87,7 +83,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem bookmarks = new QuickAccessItem(QuickAccessItemType.window)
+            var bookmarks = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[]
                 {
@@ -99,7 +95,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem viewGallery = new QuickAccessItem(QuickAccessItemType.window)
+            var viewGallery = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[]
                 {
@@ -111,7 +107,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem distanceTool = new QuickAccessItem(QuickAccessItemType.window)
+            var distanceTool = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[]
                 {
@@ -123,7 +119,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem quickAccessSettings = new QuickAccessItem(QuickAccessItemType.settings)
+            var quickAccessSettings = new QuickAccessItem(QuickAccessItemType.settings)
             {
                 settings = new[] { "Project/Ultimate Editor Enhancer/Scene View/Quick Access Bar" },
                 icon = QuickAccessItemIcon.editorIconContent,
@@ -132,7 +128,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 expanded = false
             };
 
-            QuickAccessItem info = new QuickAccessItem(QuickAccessItemType.window)
+            var info = new QuickAccessItem(QuickAccessItemType.window)
             {
                 settings = new[]
                 {
@@ -159,20 +155,18 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void ReplaceSaveQuickAccessItem()
         {
-            List<QuickAccessItem> items = ReferenceManager.quickAccessItems;
+            var items = ReferenceManager.quickAccessItems;
             if (items.Count == 0) return;
 
-            foreach (QuickAccessItem item in items)
-            {
+            foreach (var item in items)
                 if (item.type == QuickAccessItemType.menuItem && item.settings[0] == "File/Save")
                 {
                     item.type = QuickAccessItemType.action;
                     item.settings[0] = typeof(SaveAction).FullName;
-                    TitleAttribute titleAttribute = typeof(SaveAction).GetCustomAttribute<TitleAttribute>();
+                    var titleAttribute = typeof(SaveAction).GetCustomAttribute<TitleAttribute>();
                     item.tooltip = titleAttribute != null ? titleAttribute.displayName : "Save Scenes";
                     item.icon = QuickAccessItemIcon.editorIconContent;
                 }
-            }
         }
 
         private static void TryAddHeaderRules()
@@ -193,13 +187,13 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void TryInsertOpenAction()
         {
-            List<QuickAccessItem> items = ReferenceManager.quickAccessItems;
+            var items = ReferenceManager.quickAccessItems;
             if (items.Count < 1) return;
 
-            QuickAccessItem item = items[0];
+            var item = items[0];
             if (item.type != QuickAccessItemType.action || item.settings[0] != typeof(SaveAction).FullName) return;
 
-            QuickAccessItem open = new QuickAccessItem(QuickAccessItemType.action)
+            var open = new QuickAccessItem(QuickAccessItemType.action)
             {
                 settings = new[] { typeof(OpenAction).FullName },
                 tooltip = "Open Scene",

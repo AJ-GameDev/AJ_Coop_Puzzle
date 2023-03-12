@@ -15,7 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public FavoriteWindowItem(EditorWindow window)
         {
-            Type type = window.GetType();
+            var type = window.GetType();
             className = type.AssemblyQualifiedName;
             title = window.titleContent.text;
         }
@@ -29,7 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             get
             {
-                JsonObject obj = new JsonObject();
+                var obj = new JsonObject();
                 obj.Add("title", title);
                 obj.Add("className", className);
                 return obj;
@@ -43,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public void Open()
         {
-            Type type = Type.GetType(className);
+            var type = Type.GetType(className);
             if (type == null)
                 EditorUtility.DisplayDialog("Error",
                     "Can't find the window class. Please delete the entry and add again.", "OK");

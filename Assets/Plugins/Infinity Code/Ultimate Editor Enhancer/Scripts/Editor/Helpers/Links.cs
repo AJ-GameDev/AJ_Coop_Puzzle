@@ -45,7 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void OpenDocumentation(string anchor)
         {
-            string url = documentation;
+            var url = documentation;
             if (!string.IsNullOrEmpty(anchor)) url += "#" + anchor;
             Open(url);
         }
@@ -62,7 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void OpenLocalDocumentation()
         {
-            string url = Resources.assetFolder + "Documentation/Content/Documentation-Content.html";
+            var url = Resources.assetFolder + "Documentation/Content/Documentation-Content.html";
             Application.OpenURL(url);
         }
 

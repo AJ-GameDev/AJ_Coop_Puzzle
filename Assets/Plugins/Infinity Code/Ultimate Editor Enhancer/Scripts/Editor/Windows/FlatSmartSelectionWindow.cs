@@ -10,6 +10,7 @@ using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using Highlighter = InfinityCode.UltimateEditorEnhancer.SceneTools.Highlighter;
 
 namespace InfinityCode.UltimateEditorEnhancer.Tools
 {
@@ -19,29 +20,25 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         private static bool resetSelection;
         private static List<FlatItem> activeItems;
         private static List<FlatItem> flatItems;
-        private static FlatSmartSelectionWindow _instance;
 
         private static TreeViewState treeViewState;
         private static FlatTreeView treeView;
         private GameObject highlightGO;
         private GameObject lastHighlightGO;
 
-        public static FlatSmartSelectionWindow instance
-        {
-            get { return _instance; }
-        }
+        public static FlatSmartSelectionWindow instance { get; private set; }
 
         private void OnEnable()
         {
             resetSelection = true;
-            SceneTools.Highlighter.Highlight(null);
+            Highlighter.Highlight(null);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            foreach (FlatItem item in flatItems) item.Dispose();
+            foreach (var item in flatItems) item.Dispose();
             flatItems.Clear();
 
             Waila.mode = 0;
@@ -60,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             GUI.SetNextControlName("UEESmartSelectionSearchTextField");
             EditorGUI.BeginChangeCheck();
             filterText = GUILayoutUtils.ToolbarSearchField(filterText);
-            bool changed = EditorGUI.EndChangeCheck();
+            var changed = EditorGUI.EndChangeCheck();
 
             if (resetSelection && Event.current.type == EventType.Repaint)
             {
@@ -73,24 +70,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         protected override void OnContentGUI()
         {
-            Event e = Event.current;
-            EventType type = e.type;
+            var e = Event.current;
+            var type = e.type;
 
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Select GameObject");
             if (GUILayoutUtils.ToolbarButton("?")) Links.OpenDocumentation("smart-selection");
             EditorGUILayout.EndHorizontal();
 
-            bool filterChanged = DrawFilterTextField();
+            var filterChanged = DrawFilterTextField();
 
-            bool needReload = false;
+            var needReload = false;
 
             if (filterChanged || activeItems == null)
             {
-                if (string.IsNullOrEmpty(filterText)) activeItems = flatItems;
+                if (string.IsNullOrEmpty(filterText))
+                {
+                    activeItems = flatItems;
+                }
                 else
                 {
-                    string pattern = SearchableItem.GetPattern(filterText);
+                    var pattern = SearchableItem.GetPattern(filterText);
                     activeItems = flatItems.Where(p => p.UpdateAccuracy(pattern) > 0).OrderByDescending(p => p.accuracy)
                         .ToList();
                 }
@@ -108,21 +108,24 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (needReload) treeView.Reload();
 
             highlightGO = null;
-            Rect lastRect = GUILayoutUtility.GetLastRect();
-            Rect rect = GUILayoutUtility.GetRect(0, 100000, 0,
+            var lastRect = GUILayoutUtility.GetLastRect();
+            var rect = GUILayoutUtility.GetRect(0, 100000, 0,
                 Mathf.Min(Prefs.defaultWindowSize.y - lastRect.y, treeView.totalHeight));
             treeView.OnGUI(rect);
 
             if (highlightGO != lastHighlightGO)
             {
                 lastHighlightGO = highlightGO;
-                SceneTools.Highlighter.Highlight(highlightGO);
+                Highlighter.Highlight(highlightGO);
                 GUI.changed = true;
             }
 
             if (type == EventType.KeyDown)
             {
-                if (e.keyCode == KeyCode.Escape) Close();
+                if (e.keyCode == KeyCode.Escape)
+                {
+                    Close();
+                }
                 else if (e.keyCode == KeyCode.UpArrow || e.keyCode == KeyCode.DownArrow)
                 {
                     if (GUI.GetNameOfFocusedControl() == "UEESmartSelectionSearchTextField")
@@ -133,8 +136,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 }
                 else if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter)
                 {
-                    IList<int> selection = treeView.GetSelection();
-                    int id = selection.Count > 0 ? selection.First() : 0;
+                    var selection = treeView.GetSelection();
+                    var id = selection.Count > 0 ? selection.First() : 0;
                     SelectByDisplayID(id);
                 }
             }
@@ -150,7 +153,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         {
             if (id < treeView.items.Count)
             {
-                GameObject target = treeView.items[id];
+                var target = treeView.items[id];
                 if (Event.current.control || Event.current.shift) SelectionRef.Add(target);
                 else Selection.activeGameObject = target;
             }
@@ -167,20 +170,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (flatItems.Count == 0) return null;
 
             Vector2 size = Prefs.defaultWindowSize;
-            Vector2 position = Event.current.mousePosition - new Vector2(size.x / 2, -30);
+            var position = Event.current.mousePosition - new Vector2(size.x / 2, -30);
 
             position = GUIUtility.GUIToScreenPoint(position);
 
-            Rect rect = new Rect(position, size);
+            var rect = new Rect(position, size);
 
-            _instance = CreateInstance<FlatSmartSelectionWindow>();
-            _instance.minSize = Vector2.zero;
-            _instance.position = rect;
-            _instance.adjustHeight = AutoSize.top;
-            _instance.ShowPopup();
-            _instance.Focus();
-            _instance.wantsMouseMove = true;
-            return _instance;
+            instance = CreateInstance<FlatSmartSelectionWindow>();
+            instance.minSize = Vector2.zero;
+            instance.position = rect;
+            instance.adjustHeight = AutoSize.top;
+            instance.ShowPopup();
+            instance.Focus();
+            instance.wantsMouseMove = true;
+            return instance;
         }
 
         internal class FlatTreeView : TreeView
@@ -203,13 +206,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 var root = new TreeViewItem { id = -1, depth = -1, displayName = "Root" };
                 var allItems = new List<TreeViewItem>();
 
-                int nextID = 0;
+                var nextID = 0;
                 items = new List<GameObject>();
 
-                for (int i = 0; i < activeItems.Count; i++)
+                for (var i = 0; i < activeItems.Count; i++)
                 {
-                    FlatItem flatItem = activeItems[i];
-                    TreeViewItem item = new TreeViewItem
+                    var flatItem = activeItems[i];
+                    var item = new TreeViewItem
                     {
                         id = nextID++, depth = 0, displayName = flatItem.name,
                         icon = BestIconDrawer.GetGameObjectIcon(flatItem.target) as Texture2D
@@ -217,10 +220,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     allItems.Add(item);
                     items.Add(flatItem.target);
 
-                    Transform parent = flatItem.target.transform.parent;
+                    var parent = flatItem.target.transform.parent;
                     while (parent != null)
                     {
-                        GameObject go = parent.gameObject;
+                        var go = parent.gameObject;
                         item = new TreeViewItem
                         {
                             id = nextID++, depth = 1, displayName = go.name,
@@ -255,7 +258,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
             protected override void SetupDragAndDrop(SetupDragAndDropArgs args)
             {
-                GameObject go = instance.Get(args.draggedItemIDs[0]);
+                var go = instance.Get(args.draggedItemIDs[0]);
                 if (go == null) return;
 
                 DragAndDrop.PrepareStartDrag();

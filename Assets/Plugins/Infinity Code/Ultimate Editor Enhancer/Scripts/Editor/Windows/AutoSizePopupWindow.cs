@@ -14,7 +14,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         [SerializeField] public bool closeOnCompileOrPlay = true;
 
-        [SerializeField] public bool drawTitle = false;
+        [SerializeField] public bool drawTitle;
 
         public float maxHeight = 400;
 
@@ -30,7 +30,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         protected Action OnPin;
         public Action<Rect> OnPositionChanged;
-        private float prevBottom = 0;
+        private float prevBottom;
 
         [NonSerialized] public Vector2 scrollPosition;
 
@@ -41,7 +41,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             get
             {
                 if (_contentAreaStyle == null)
-                {
                     _contentAreaStyle = new GUIStyle
                     {
                         margin =
@@ -49,7 +48,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                             left = 12
                         }
                     };
-                }
 
                 return _contentAreaStyle;
             }
@@ -63,13 +61,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         protected override void OnGUI()
         {
             if (closeOnLossFocus && focusedWindow != this && focusedWindow != null)
-            {
                 if (ValidateCloseOnLossFocus())
                 {
                     Close();
                     return;
                 }
-            }
 
             if (drawTitle) DrawTitle();
 
@@ -94,11 +90,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (adjustHeight != AutoSize.ignore)
             {
-                float b = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(0)).yMin;
-                Event e = Event.current;
+                var b = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(0)).yMin;
+                var e = Event.current;
                 if (e.type == EventType.Repaint)
                 {
-                    float bottom = b + 5;
+                    var bottom = b + 5;
                     if (drawTitle) bottom += 20;
 
                     if (Mathf.Abs(bottom - position.height) > 1 && Math.Abs(prevBottom - bottom) > float.Epsilon)
@@ -114,8 +110,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void AdjustHeight(float bottom)
         {
-            Rect pos = position;
-            float currentHeight = pos.height;
+            var pos = position;
+            var currentHeight = pos.height;
 
             if (bottom > maxHeight)
             {
@@ -124,13 +120,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (pos.y < 40) pos.y = 40;
 
                 if (adjustHeight == AutoSize.bottom)
-                {
                     pos.y += currentHeight - maxHeight;
-                }
-                else if (adjustHeight == AutoSize.center)
-                {
-                    pos.y -= (currentHeight - maxHeight) / 2;
-                }
+                else if (adjustHeight == AutoSize.center) pos.y -= (currentHeight - maxHeight) / 2;
 
                 pos.height = maxHeight;
                 position = pos;
@@ -146,13 +137,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (pos.y < 40) pos.y = 40;
 
             if (adjustHeight == AutoSize.bottom)
-            {
                 pos.y += currentHeight - bottom;
-            }
-            else if (adjustHeight == AutoSize.center)
-            {
-                pos.y -= (currentHeight - bottom) / 2;
-            }
+            else if (adjustHeight == AutoSize.center) pos.y -= (currentHeight - bottom) / 2;
 
             pos.height = bottom;
             position = pos;
@@ -161,7 +147,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void DrawLabel()
         {
             if (labelContent == null) labelContent = new GUIContent(titleContent.text);
-            float width = position.width - 35;
+            var width = position.width - 35;
             if (OnPin != null) width -= 20;
 
             GUILayout.Label(labelContent, EditorStyles.whiteLabel, GUILayout.MaxWidth(width), GUILayout.Height(20));
@@ -179,16 +165,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             DrawLabel();
 
             if (OnPin != null && GUILayout.Button(PinAndClose.tabContent, Styles.transparentButton, GUILayout.Width(12),
-                    GUILayout.Height(12)))
-            {
-                OnPin();
-            }
-
+                    GUILayout.Height(12))) OnPin();
             if (GUILayout.Button(PinAndClose.closeContent, Styles.transparentButton, GUILayout.Width(12),
-                    GUILayout.Height(12)))
-            {
-                Close();
-            }
+                    GUILayout.Height(12))) Close();
 
             EditorGUILayout.EndHorizontal();
         }
@@ -201,10 +180,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ProcessLabelEvents(Rect labelRect)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.MouseDown)
             {
-                Rect r = new Rect(0, 0, labelRect.xMax, 20);
+                var r = new Rect(0, 0, labelRect.xMax, 20);
                 if (e.button == 0 && r.Contains(e.mousePosition) && GUIUtility.hotControl == 0)
                 {
                     isDragging = true;
@@ -229,10 +208,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (isDragging)
                 {
-                    Vector2 mousePosition = GUIUtility.GUIToScreenPoint(e.mousePosition);
-                    Vector2 delta = mousePosition - lastMousePosition;
+                    var mousePosition = GUIUtility.GUIToScreenPoint(e.mousePosition);
+                    var delta = mousePosition - lastMousePosition;
 
-                    Rect rect = position;
+                    var rect = position;
                     rect.position += delta;
                     position = rect;
 

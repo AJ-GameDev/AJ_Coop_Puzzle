@@ -31,17 +31,17 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (passiveTexture == null) passiveTexture = Resources.CreateSinglePixelTexture(255, 0, 0, 128);
             if (activeTexture == null) activeTexture = Resources.CreateSinglePixelTexture(0, 255, 0, 128);
 
-            Rect viewRect = SceneViewManager.GetRect(sceneView);
-            Rect freeRect = QuickAccess.GetFreeRect(viewRect);
+            var viewRect = SceneViewManager.GetRect(sceneView);
+            var freeRect = QuickAccess.GetFreeRect(viewRect);
 
-            float width = freeRect.width;
-            float height = freeRect.height;
-            float left = freeRect.x;
+            var width = freeRect.width;
+            var height = freeRect.height;
+            var left = freeRect.x;
 
             Handles.BeginGUI();
 
             // Top left 
-            Texture2D texture = align == ToolbarAlign.topLeft ? activeTexture : passiveTexture;
+            var texture = align == ToolbarAlign.topLeft ? activeTexture : passiveTexture;
             GUI.DrawTexture(new Rect(left, 0, 5, 20), texture, ScaleMode.StretchToFill);
             GUI.DrawTexture(new Rect(left + 5, 0, 15, 5), texture, ScaleMode.StretchToFill);
 
@@ -89,11 +89,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             // Init Top Left
             offset = wndRect.min - sceneRect.min;
-            float minDistance = offset.sqrMagnitude;
+            var minDistance = offset.sqrMagnitude;
 
             // Left
-            Vector2 off = new Vector2(wndRect.x, wndRect.center.y) - new Vector2(sceneRect.x, sceneRect.center.y);
-            float d = off.sqrMagnitude;
+            var off = new Vector2(wndRect.x, wndRect.center.y) - new Vector2(sceneRect.x, sceneRect.center.y);
+            var d = off.sqrMagnitude;
             if (d < minDistance)
             {
                 offset = off;

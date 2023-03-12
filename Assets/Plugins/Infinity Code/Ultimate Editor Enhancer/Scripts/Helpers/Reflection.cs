@@ -42,15 +42,12 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static Assembly GetAssembly(string name)
         {
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            for (int i = 0; i < assemblies.Length; i++)
+            for (var i = 0; i < assemblies.Length; i++)
             {
-                Assembly a = assemblies[i];
-                if (a.GetName().Name == name)
-                {
-                    return a;
-                }
+                var a = assemblies[i];
+                if (a.GetName().Name == name) return a;
             }
 
             return null;
@@ -68,7 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static Type GetEditorTypeFromAssembly(string name, string assemblyName,
             string @namespace = "UnityEditor")
         {
-            Assembly assembly = GetAssembly(assemblyName);
+            var assembly = GetAssembly(assemblyName);
             if (assembly == null) return null;
             return assembly.GetType(@namespace + "." + name);
         }
@@ -83,11 +80,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (type == null) return null;
 
-            FieldInfo[] fields = type.GetFields(bindingAttr);
-            for (int i = 0; i < fields.Length; i++)
-            {
-                if (fields[i].Name == name) return fields[i];
-            }
+            var fields = type.GetFields(bindingAttr);
+            for (var i = 0; i < fields.Length; i++)
+                if (fields[i].Name == name)
+                    return fields[i];
 
             if (searchInParents) return GetField(type.BaseType, name, true, bindingAttr);
             return null;
@@ -96,14 +92,14 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static object GetFieldValue(Type type, string fieldName, object obj,
             BindingFlags bindingAttr = InstanceLookup)
         {
-            FieldInfo field = type.GetField(fieldName, bindingAttr);
+            var field = type.GetField(fieldName, bindingAttr);
             if (field == null) return null;
             return field.GetValue(obj);
         }
 
         public static object GetFieldValue(object obj, string fieldName, BindingFlags bindingAttr = InstanceLookup)
         {
-            FieldInfo field = obj.GetType().GetField(fieldName, bindingAttr);
+            var field = obj.GetType().GetField(fieldName, bindingAttr);
             if (field == null) return null;
             return field.GetValue(obj);
         }
@@ -111,8 +107,8 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static T GetFieldValue<T>(Type type, string fieldName, object obj,
             BindingFlags bindingAttr = InstanceLookup)
         {
-            FieldInfo field = type.GetField(fieldName, bindingAttr);
-            if (field == null) return default(T);
+            var field = type.GetField(fieldName, bindingAttr);
+            if (field == null) return default;
             return (T)field.GetValue(obj);
         }
 
@@ -136,21 +132,20 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static List<T> GetInheritedItems<T>() where T : class
         {
-            List<T> items = new List<T>();
+            var items = new List<T>();
 
-            Type itemType = typeof(T);
-            Assembly assembly = itemType.Assembly;
+            var itemType = typeof(T);
+            var assembly = itemType.Assembly;
 
             GetInheritedItemsFromAssembly(assembly, items, itemType);
 
             string[] extraAssemblies =
             {
                 "Assembly-CSharp-Editor-firstpass",
-                "Assembly-CSharp-Editor",
+                "Assembly-CSharp-Editor"
             };
 
-            foreach (string assemblyName in extraAssemblies)
-            {
+            foreach (var assemblyName in extraAssemblies)
                 try
                 {
                     assembly = Assembly.Load(assemblyName);
@@ -159,7 +154,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 catch
                 {
                 }
-            }
 
             if (typeof(T).GetInterface("ISortableLayoutItem") != null)
                 items = items.OrderBy(i => (i as ISortableLayoutItem).order).ToList();
@@ -175,32 +169,27 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (types == null) return;
 
-            foreach (Type type in types)
-            {
+            foreach (var type in types)
                 if (!type.IsAbstract && type.IsSubclassOf(itemType))
-                {
                     items.Add(Activator.CreateInstance(type, true) as T);
-                }
-            }
         }
 
         public static List<Type> GetInheritedTypes<T>() where T : class
         {
-            List<Type> items = new List<Type>();
+            var items = new List<Type>();
 
-            Type itemType = typeof(T);
-            Assembly assembly = itemType.Assembly;
+            var itemType = typeof(T);
+            var assembly = itemType.Assembly;
 
             GetInheritedTypesFromAssembly(assembly, items, itemType);
 
             string[] extraAssemblies =
             {
                 "Assembly-CSharp-Editor-firstpass",
-                "Assembly-CSharp-Editor",
+                "Assembly-CSharp-Editor"
             };
 
-            foreach (string assemblyName in extraAssemblies)
-            {
+            foreach (var assemblyName in extraAssemblies)
                 try
                 {
                     assembly = Assembly.Load(assemblyName);
@@ -209,7 +198,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 catch
                 {
                 }
-            }
 
             return items;
         }
@@ -222,10 +210,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (types == null) return;
 
-            foreach (Type type in types)
-            {
-                if (!type.IsAbstract && type.IsSubclassOf(itemType)) items.Add(type);
-            }
+            foreach (var type in types)
+                if (!type.IsAbstract && type.IsSubclassOf(itemType))
+                    items.Add(type);
         }
 
         public static IEnumerable<MemberInfo> GetMembers(Type type, BindingFlags bindingAttr = DefaultLookup)
@@ -279,11 +266,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (type == null) return null;
 
-            PropertyInfo[] properties = type.GetProperties(bindingAttr);
-            for (int i = 0; i < properties.Length; i++)
-            {
-                if (properties[i].Name == name) return properties[i];
-            }
+            var properties = type.GetProperties(bindingAttr);
+            for (var i = 0; i < properties.Length; i++)
+                if (properties[i].Name == name)
+                    return properties[i];
 
             if (searchInParents) return GetProperty(type.BaseType, name, true, bindingAttr);
             return null;
@@ -291,29 +277,29 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static T GetPropertyValue<T>(object obj, string propertyName, BindingFlags bindingAttr = InstanceLookup)
         {
-            PropertyInfo field = obj.GetType().GetProperty(propertyName, bindingAttr);
-            if (field == null) return default(T);
+            var field = obj.GetType().GetProperty(propertyName, bindingAttr);
+            if (field == null) return default;
             return (T)field.GetValue(obj, new object[0]);
         }
 
         public static T GetStaticFieldValue<T>(Type type, string fieldName, BindingFlags bindingAttr = StaticLookup)
         {
-            FieldInfo field = type.GetField(fieldName, bindingAttr);
-            if (field == null) return default(T);
+            var field = type.GetField(fieldName, bindingAttr);
+            if (field == null) return default;
             return (T)field.GetValue(null);
         }
 
         public static T GetStaticPropertyValue<T>(Type type, string propertyName,
             BindingFlags bindingAttr = StaticLookup)
         {
-            PropertyInfo field = type.GetProperty(propertyName, bindingAttr);
-            if (field == null) return default(T);
+            var field = type.GetProperty(propertyName, bindingAttr);
+            if (field == null) return default;
             return (T)field.GetValue(null, new object[0]);
         }
 
         public static object InvokeMethod(Type type, string name, object obj, BindingFlags bindingAttr = InstanceLookup)
         {
-            MethodInfo method = type.GetMethod(name, bindingAttr);
+            var method = type.GetMethod(name, bindingAttr);
             if (method != null) return method.Invoke(obj, new object[0]);
             return null;
         }
@@ -321,7 +307,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static object InvokeMethod(Type type, string name, object obj, Type[] types, object[] parameters,
             BindingFlags bindingAttr = InstanceLookup)
         {
-            MethodInfo method = type.GetMethod(name, bindingAttr, null, types, null);
+            var method = type.GetMethod(name, bindingAttr, null, types, null);
             if (method != null) return method.Invoke(obj, parameters);
             return null;
         }
@@ -333,7 +319,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static object InvokeStaticMethod(Type type, string name, BindingFlags bindingAttr = StaticLookup)
         {
-            MethodInfo method = type.GetMethod(name, bindingAttr);
+            var method = type.GetMethod(name, bindingAttr);
             if (method != null) return method.Invoke(null, new object[0]);
             return null;
         }
@@ -341,7 +327,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static object InvokeStaticMethod(Type type, string name, Type[] types, object[] parameters,
             BindingFlags bindingAttr = StaticLookup)
         {
-            MethodInfo method = type.GetMethod(name, bindingAttr, null, types, null);
+            var method = type.GetMethod(name, bindingAttr, null, types, null);
             if (method != null) return method.Invoke(null, parameters);
             return null;
         }
@@ -367,7 +353,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static void SetFieldValue(object obj, string fieldName, object value,
             BindingFlags bindingAttr = InstanceLookup)
         {
-            FieldInfo field = obj.GetType().GetField(fieldName, bindingAttr);
+            var field = obj.GetType().GetField(fieldName, bindingAttr);
             if (field == null) return;
             field.SetValue(obj, value);
         }
@@ -375,14 +361,14 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static void SetPropertyValue(object obj, string propName, object value,
             BindingFlags bindingAttr = InstanceLookup)
         {
-            PropertyInfo prop = obj.GetType().GetProperty(propName, bindingAttr);
+            var prop = obj.GetType().GetProperty(propName, bindingAttr);
             if (prop != null) prop.SetValue(obj, value);
         }
 
         public static void SetStaticFieldValue(Type type, string fieldName, object value,
             BindingFlags bindingAttr = StaticLookup)
         {
-            FieldInfo field = type.GetField(fieldName, bindingAttr);
+            var field = type.GetField(fieldName, bindingAttr);
             if (field != null) field.SetValue(null, value);
         }
     }

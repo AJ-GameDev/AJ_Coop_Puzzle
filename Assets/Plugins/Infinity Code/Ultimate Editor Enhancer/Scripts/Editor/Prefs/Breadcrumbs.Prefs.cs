@@ -26,10 +26,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return new[] { "Breadcrumbs", "Neighbors", "Children", "Parent", "Up", "Show All" }; }
             }
 
-            public override float order
-            {
-                get { return -70; }
-            }
+            public override float order => -70;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -38,7 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return new[]
                 {
                     new Shortcut("Show All Parents", "Context Menu/Breadcrumbs", breadcrumbsParentShowAllModifiers),
-                    new Shortcut("Show Context Menu For GameObject", "Context Menu/Breadcrumbs", "RMB"),
+                    new Shortcut("Show Context Menu For GameObject", "Context Menu/Breadcrumbs", "RMB")
                 };
             }
 
@@ -69,9 +66,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (breadcrumbsParentUp && breadcrumbsParentShowAll &&
                     breadcrumbsParentUpModifiers == breadcrumbsParentShowAllModifiers)
-                {
                     EditorGUILayout.HelpBox("The modifiers for Up and Show All must be different.", MessageType.Error);
-                }
 
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();

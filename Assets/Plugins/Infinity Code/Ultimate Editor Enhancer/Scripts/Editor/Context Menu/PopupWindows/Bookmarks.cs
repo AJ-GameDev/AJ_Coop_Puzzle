@@ -1,27 +1,17 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using UnityEditor;
 using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 {
     public class Bookmarks : PopupWindowItem
     {
-        public override Texture icon
-        {
-            get { return Styles.isProSkin ? Icons.starWhite : Icons.starBlack; }
-        }
+        public override Texture icon => Styles.isProSkin ? Icons.starWhite : Icons.starBlack;
 
-        protected override string label
-        {
-            get { return "Bookmarks"; }
-        }
+        protected override string label => "Bookmarks";
 
-        public override float order
-        {
-            get { return 80; }
-        }
+        public override float order => 80;
 
         protected override void ShowTab(Vector2 mousePosition)
         {
@@ -35,7 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         protected override void ShowPopup(Vector2 mousePosition)
         {
-            EditorWindow wnd = Windows.Bookmarks.ShowDropDownWindow(mousePosition);
+            var wnd = Windows.Bookmarks.ShowDropDownWindow(mousePosition);
             EventManager.AddBinding(EventManager.ClosePopupEvent).OnInvoke += b =>
             {
                 wnd.Close();

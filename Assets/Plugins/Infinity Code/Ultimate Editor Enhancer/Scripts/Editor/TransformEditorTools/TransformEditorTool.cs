@@ -9,15 +9,9 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
     {
         protected GUIContent _content;
 
-        public GUIContent content
-        {
-            get { return _content; }
-        }
+        public GUIContent content => _content;
 
-        public virtual float order
-        {
-            get { return 0; }
-        }
+        public virtual float order => 0;
 
         public virtual void OnDisable()
         {

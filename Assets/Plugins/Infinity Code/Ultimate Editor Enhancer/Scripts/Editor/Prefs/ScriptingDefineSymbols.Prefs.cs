@@ -21,15 +21,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     return new[]
                     {
-                        "Add Scripting Define Symbols",
+                        "Add Scripting Define Symbols"
                     };
                 }
             }
 
-            public override float order
-            {
-                get { return Order.addScriptingDefineSymbols; }
-            }
+            public override float order => Order.addScriptingDefineSymbols;
 
             public override void Draw()
             {
@@ -37,9 +34,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                 addScriptingDefineSymbols =
                     EditorGUILayout.ToggleLeft("Add Scripting Define Symbols", addScriptingDefineSymbols);
                 if (EditorGUI.EndChangeCheck())
-                {
-                    if (OnAddSymbolsChanged != null) OnAddSymbolsChanged();
-                }
+                    if (OnAddSymbolsChanged != null)
+                        OnAddSymbolsChanged();
             }
         }
     }

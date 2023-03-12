@@ -11,7 +11,8 @@ namespace Pegasus
     public class TriggerControlHeliosFade : TriggerBase
     {
         public PegasusConstants.PoiHeliosTriggerAction m_actionOnStart = PegasusConstants.PoiHeliosTriggerAction.FadeIn;
-        public PegasusConstants.PoiHeliosTriggerAction m_actionOnEnd = PegasusConstants.PoiHeliosTriggerAction.DoNothing;
+        public PegasusConstants.PoiHeliosTriggerAction m_actionOnEnd =
+ PegasusConstants.PoiHeliosTriggerAction.DoNothing;
         public Color m_startColour = Color.black;
         public Color m_endColour = Color.black;
         public float m_startDuration = 0.25f;

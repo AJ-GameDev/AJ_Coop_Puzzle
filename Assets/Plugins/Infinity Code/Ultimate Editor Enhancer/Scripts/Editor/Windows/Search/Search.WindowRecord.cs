@@ -28,24 +28,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            public override Object target
-            {
-                get => null;
-            }
+            public override Object target => null;
 
-            public override string tooltip
-            {
-                get => _tooltip;
-            }
+            public override string tooltip => _tooltip;
 
-            public override string type
-            {
-                get => "window";
-            }
+            public override string type => "window";
 
             protected override void ShowContextMenu(int index)
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 menu.Add("Open Window", () => SelectRecord(index, 1));
                 menu.Show();
             }
@@ -57,7 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public override float UpdateAccuracy(string pattern)
             {
-                float v = base.UpdateAccuracy(pattern);
+                var v = base.UpdateAccuracy(pattern);
                 v *= 1.01f;
                 _accuracy = v;
                 return v;

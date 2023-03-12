@@ -13,15 +13,12 @@ namespace InfinityCode.UltimateEditorEnhancer
         protected Vector2 _size;
         protected GameObject[] targets;
 
-        public bool isActive
-        {
-            get { return _isActive; }
-        }
+        public bool isActive => _isActive;
 
         public virtual Vector2 size
         {
-            get { return _size; }
-            set { _size = value; }
+            get => _size;
+            set => _size = value;
         }
 
         protected abstract void CalcSize();
@@ -44,13 +41,13 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
             else
             {
-                object[] attributes = GetType().GetCustomAttributes(typeof(ValidateAttribute), true);
+                var attributes = GetType().GetCustomAttributes(typeof(ValidateAttribute), true);
                 if (attributes.Length > 0)
                 {
                     _isActive = true;
-                    foreach (object a in attributes)
+                    foreach (var a in attributes)
                     {
-                        ValidateAttribute attribute = a as ValidateAttribute;
+                        var attribute = a as ValidateAttribute;
                         _isActive = attribute.Validate();
                         if (!_isActive) break;
                     }
@@ -58,7 +55,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
 
             if (_isActive)
-            {
                 try
                 {
                     Init();
@@ -68,7 +64,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(e);
                 }
-            }
         }
     }
 }

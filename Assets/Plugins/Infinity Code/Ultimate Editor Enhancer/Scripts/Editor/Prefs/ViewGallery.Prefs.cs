@@ -23,11 +23,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 #if !UNITY_EDITOR_OSX
         public static EventModifiers createViewStateFromSelectionModifiers = EventModifiers.Control;
         public static EventModifiers restoreViewStateFromSelectionModifiers =
-            EventModifiers.Control | EventModifiers.Shift;
+ EventModifiers.Control | EventModifiers.Shift;
 #else
         public static EventModifiers createViewStateFromSelectionModifiers = EventModifiers.Command;
         public static EventModifiers restoreViewStateFromSelectionModifiers =
- EventModifiers.Command | EventModifiers.Shift;
+            EventModifiers.Command | EventModifiers.Shift;
 #endif
 
         public class ViewGalleryManager : StandalonePrefManager<ViewGalleryManager>, IHasShortcutPref
@@ -40,15 +40,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         "Create View State For Selection",
                         "Restore View State For Selection",
-                        "View Gallery",
+                        "View Gallery"
                     };
                 }
             }
 
-            public override float order
-            {
-                get { return -40; }
-            }
+            public override float order => -40;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -61,7 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         createViewStateFromSelectionKeyCode),
                     new Shortcut("Restore View State For Selection", "Everywhere",
                         restoreViewStateFromSelectionModifiers, restoreViewStateFromSelectionKeyCode),
-                    new Shortcut("Show ViewState In SceneView", "Scene View", EventModifiers.Alt),
+                    new Shortcut("Show ViewState In SceneView", "Scene View", EventModifiers.Alt)
                 };
             }
 

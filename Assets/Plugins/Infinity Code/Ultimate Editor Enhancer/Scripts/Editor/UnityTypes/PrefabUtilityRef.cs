@@ -18,19 +18,14 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_getOriginalSourceOrVariantRootMethod == null)
-                {
                     _getOriginalSourceOrVariantRootMethod = Reflection.GetMethod(type, "GetOriginalSourceOrVariantRoot",
                         new[] { typeof(Object) }, Reflection.StaticLookup);
-                }
 
                 return _getOriginalSourceOrVariantRootMethod;
             }
         }
 
-        public static Type type
-        {
-            get => typeof(PrefabUtility);
-        }
+        public static Type type => typeof(PrefabUtility);
 
         public static GameObject GetOriginalSourceOrVariantRoot(Object instanceOrAsset)
         {

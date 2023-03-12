@@ -18,7 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static VisualElement GetVisualTree(ScriptableObject scriptableObject)
         {
-            object backend = GUIViewRef.windowBackendProp.GetValue(scriptableObject, null);
+            var backend = GUIViewRef.windowBackendProp.GetValue(scriptableObject, null);
             return (VisualElement)IWindowBackendRef.visualTreeProp.GetValue(backend, null);
         }
     }

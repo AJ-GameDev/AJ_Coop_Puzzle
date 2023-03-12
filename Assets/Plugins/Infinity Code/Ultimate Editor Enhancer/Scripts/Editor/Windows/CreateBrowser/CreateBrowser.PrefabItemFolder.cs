@@ -20,16 +20,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (parts.Length == index + 2)
                 {
-                    string part = parts[index + 1];
+                    var part = parts[index + 1];
                     if (part.Length < 8) return;
 
-                    PrefabItem child = new PrefabItem(part, path);
+                    var child = new PrefabItem(part, path);
                     child.parent = this;
                     children.Add(child);
                 }
                 else
                 {
-                    PrefabItemFolder child = new PrefabItemFolder(parts, index + 1, path);
+                    var child = new PrefabItemFolder(parts, index + 1, path);
                     child.parent = this;
                     children.Add(child);
                 }
@@ -46,26 +46,25 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public void Add(string[] parts, int index, string path)
             {
-                string next = parts[index + 1];
-                int nl = next.Length;
+                var next = parts[index + 1];
+                var nl = next.Length;
 
                 int i;
-                int count = children.Count;
+                var count = children.Count;
                 for (i = 0; i < count; i++)
                 {
-                    Item c = children[i];
-                    string l = c.label;
+                    var c = children[i];
+                    var l = c.label;
                     if (nl != l.Length) continue;
 
                     int j;
                     for (j = 0; j < nl; j++)
-                    {
-                        if (l[j] != next[j]) break;
-                    }
+                        if (l[j] != next[j])
+                            break;
 
                     if (j != nl) continue;
 
-                    PrefabItemFolder f = c as PrefabItemFolder;
+                    var f = c as PrefabItemFolder;
                     if (f != null) f.Add(parts, index + 1, path);
                     break;
                 }
@@ -76,13 +75,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     {
                         if (nl < 8) return;
 
-                        PrefabItem child = new PrefabItem(next, path);
+                        var child = new PrefabItem(next, path);
                         child.parent = this;
                         children.Add(child);
                     }
                     else
                     {
-                        PrefabItemFolder child = new PrefabItemFolder(parts, index + 1, path);
+                        var child = new PrefabItemFolder(parts, index + 1, path);
                         child.parent = this;
                         children.Add(child);
                     }
@@ -101,7 +100,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     StaticStringBuilder.Clear();
 
                     StaticStringBuilder.Append(label);
-                    foreach (string s in skippedLabels) StaticStringBuilder.Append("/").Append(s);
+                    foreach (var s in skippedLabels) StaticStringBuilder.Append("/").Append(s);
                     _content.tooltip = StaticStringBuilder.GetString(true);
                 }
                 else
@@ -115,11 +114,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (children.Count == 1)
                 {
-                    PrefabItemFolder fi = children[0] as PrefabItemFolder;
+                    var fi = children[0] as PrefabItemFolder;
                     if (fi != null)
                     {
                         children = fi.children;
-                        foreach (Item child in children) child.parent = this;
+                        foreach (var child in children) child.parent = this;
                         if (skippedLabels == null) skippedLabels = new List<string>();
                         skippedLabels.Add(fi.label);
                         fi.children = null;
@@ -129,9 +128,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
                 else
                 {
-                    foreach (Item child in children)
+                    foreach (var child in children)
                     {
-                        PrefabItemFolder fi = child as PrefabItemFolder;
+                        var fi = child as PrefabItemFolder;
                         if (fi != null) fi.Simplify();
                     }
                 }

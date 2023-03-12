@@ -8,12 +8,12 @@ using UnityEngine.UI;
 namespace InfinityCode.UltimateEditorEnhancer
 {
     /// <summary>
-    /// Methods for Canvas and Event System
+    ///     Methods for Canvas and Event System
     /// </summary>
     public static class CanvasUtils
     {
         /// <summary>
-        /// Returns the width of the displayed text
+        ///     Returns the width of the displayed text
         /// </summary>
         /// <param name="text">Text</param>
         /// <param name="font">Font</param>
@@ -21,11 +21,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         /// <returns>Width of the displayed text</returns>
         public static int CalculateWidthOfMessage(string text, Font font, int fontSize)
         {
-            int width = 0;
+            var width = 0;
 
-            char[] arr = text.ToCharArray();
+            var arr = text.ToCharArray();
 
-            foreach (char c in arr)
+            foreach (var c in arr)
             {
                 CharacterInfo characterInfo;
                 font.GetCharacterInfo(c, out characterInfo, fontSize);
@@ -36,15 +36,15 @@ namespace InfinityCode.UltimateEditorEnhancer
         }
 
         /// <summary>
-        /// Returns the current canvas or creates a new one
+        ///     Returns the current canvas or creates a new one
         /// </summary>
         /// <returns></returns>
         public static Canvas GetCanvas()
         {
-            Canvas canvas = Object.FindObjectOfType<Canvas>();
+            var canvas = Object.FindObjectOfType<Canvas>();
             if (canvas == null)
             {
-                GameObject canvasGO = new GameObject("Canvas");
+                var canvasGO = new GameObject("Canvas");
                 canvasGO.layer = LayerMask.NameToLayer("UI");
                 canvas = canvasGO.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -58,15 +58,15 @@ namespace InfinityCode.UltimateEditorEnhancer
         }
 
         /// <summary>
-        /// Returns the current event system or creates a new one
+        ///     Returns the current event system or creates a new one
         /// </summary>
         /// <returns></returns>
         public static EventSystem GetEventSystem()
         {
-            EventSystem eventSystem = Object.FindObjectOfType<EventSystem>();
+            var eventSystem = Object.FindObjectOfType<EventSystem>();
             if (eventSystem == null)
             {
-                GameObject es = new GameObject("EventSystem");
+                var es = new GameObject("EventSystem");
                 es.AddComponent<EventSystem>();
                 es.AddComponent<StandaloneInputModule>();
             }

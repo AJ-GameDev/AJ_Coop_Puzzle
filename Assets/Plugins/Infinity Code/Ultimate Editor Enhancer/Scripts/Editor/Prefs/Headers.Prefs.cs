@@ -20,7 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.BeginDisabledGroup(!hierarchyHeaders);
 
                 if (so == null) so = new SerializedObject(ReferenceManager.instance);
-                SerializedProperty prop = so.FindProperty("_headerRules");
+                var prop = so.FindProperty("_headerRules");
                 EditorGUILayout.PropertyField(prop, true);
                 so.ApplyModifiedProperties();
 

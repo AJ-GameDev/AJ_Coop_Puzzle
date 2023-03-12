@@ -18,10 +18,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     [InitializeOnLoad]
     public class ObjectToolbar : FloatToolbar
     {
-        private static ObjectToolbar _instance;
         private static Item showItemLate;
 
-        private static Type[] ignoreTypes =
+        private static readonly Type[] ignoreTypes =
         {
             typeof(DefaultAsset),
             typeof(SceneAsset),
@@ -37,20 +36,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private GUIStyle _relatedContentStyle;
         private GUIStyle _selectedContentStyle;
         private GUIStyle _selectedRelatedContentStyle;
-        private Vector2 _size = new Vector2(200, 20);
+        private Vector2 _size = new(200, 20);
         private int activeIndex = -1;
         private Texture2D background;
         private float componentsWidth;
-        private bool invertVertical = false;
+        private bool invertVertical;
         private bool isMultiple;
         private bool isSelectionChanged;
-        private List<Item> items;
+        private readonly List<Item> items;
         private GUIContent labelContent;
         private string lastTargetName;
         private GUIContent minimizedButtonContent;
         private bool needMoveWindow;
         private GUIContent normalButtonContent;
-        private List<Item> relatedItems;
+        private readonly List<Item> relatedItems;
 
         private Object[] targets;
         private bool visible;
@@ -62,7 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public ObjectToolbar()
         {
-            _instance = this;
+            instance = this;
             items = new List<Item>();
             relatedItems = new List<Item>();
 
@@ -74,7 +73,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 
             OnSelectionChanged();
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidateKey;
             binding.OnPress += OnInvokeKey;
         }
@@ -128,8 +127,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public static bool isMinimized
         {
-            get { return LocalSettings.hideObjectToolbar; }
-            set { LocalSettings.hideObjectToolbar = value; }
+            get => LocalSettings.hideObjectToolbar;
+            set => LocalSettings.hideObjectToolbar = value;
         }
 
         private GUIStyle relatedContentStyle
@@ -138,7 +137,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (_relatedContentStyle == null || _relatedContentStyle.normal.background == null)
                 {
-                    GUIStyle s = EditorStyles.toolbarButton;
+                    var s = EditorStyles.toolbarButton;
                     _relatedContentStyle = new GUIStyle
                     {
                         normal =
@@ -163,7 +162,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (_selectedContentStyle == null || _selectedContentStyle.normal.background == null)
                 {
-                    GUIStyle s = EditorStyles.toolbarButton;
+                    var s = EditorStyles.toolbarButton;
                     _selectedContentStyle = new GUIStyle
                     {
                         normal =
@@ -188,7 +187,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (_selectedRelatedContentStyle == null || _selectedRelatedContentStyle.normal.background == null)
                 {
-                    GUIStyle s = EditorStyles.toolbarButton;
+                    var s = EditorStyles.toolbarButton;
                     _selectedRelatedContentStyle = new GUIStyle
                     {
                         normal =
@@ -207,55 +206,40 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
         }
 
-        public static ObjectToolbar instance
-        {
-            get { return _instance; }
-        }
+        public static ObjectToolbar instance { get; private set; }
 
-        protected override string prefKey
-        {
-            get { return "ObjectToolbar"; }
-        }
+        protected override string prefKey => "ObjectToolbar";
 
-        protected override Vector2 size
-        {
-            get { return _size; }
-        }
+        protected override Vector2 size => _size;
 
-        protected override Rect areaRect
-        {
-            get { return _areaRect; }
-        }
+        protected override Rect areaRect => _areaRect;
 
         public static EditorWindow activeWindow
         {
             get
             {
-                if (_instance == null) return null;
-                return _instance._activeWindow;
+                if (instance == null) return null;
+                return instance._activeWindow;
             }
         }
 
         ~ObjectToolbar()
         {
-            _instance = null;
+            instance = null;
             targets = null;
 
-            if (items != null)
-            {
-                FreeItems();
-            }
+            if (items != null) FreeItems();
         }
 
         public static void CloseActiveWindow()
         {
-            if (_instance == null) return;
-            AutoSizePopupWindow wnd = _instance._activeWindow;
+            if (instance == null) return;
+            var wnd = instance._activeWindow;
             if (wnd == null) return;
 
-            _instance.activeIndex = -1;
+            instance.activeIndex = -1;
             if (EditorMenu.allowCloseWindow) wnd.Close();
-            _instance._activeWindow = null;
+            instance._activeWindow = null;
         }
 
         private void DrawAddComponentButton()
@@ -272,7 +256,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (background == null)
             {
                 background = new Texture2D(1, 1);
-                float v = 0.2f;
+                var v = 0.2f;
                 background.SetPixel(0, 0, new Color(v, v, v, 1));
                 background.Apply();
             }
@@ -296,7 +280,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
                 if (_activeWindow != null && !_activeWindow.wasMoved)
                 {
-                    Rect r = GetWindowRect(_activeWindow.position.size);
+                    var r = GetWindowRect(_activeWindow.position.size);
                     r.x += 1;
                     if (invertVertical) r.y += 14;
                     _activeWindow.SetRect(r);
@@ -305,15 +289,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             EditorGUILayout.BeginHorizontal();
 
-            for (int i = 0; i < items.Count; i++)
-            {
+            for (var i = 0; i < items.Count; i++)
                 DrawItem(items[i], i, EditorStyles.toolbarButton, selectedContentStyle);
-            }
 
-            for (int i = 0; i < relatedItems.Count; i++)
-            {
+            for (var i = 0; i < relatedItems.Count; i++)
                 DrawItem(relatedItems[i], i + items.Count, relatedContentStyle, selectedRelatedContentStyle);
-            }
 
             if (targets.Length == 1 && targets[0] is GameObject) DrawAddComponentButton();
 
@@ -330,10 +310,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 normalButtonContent = new GUIContent("▼", "Minimize Object Toolbar");
             }
 
-            Rect headerRect = GUILayoutUtility.GetRect(labelContent, headerStyle, GUILayout.Width(rect.width + 2),
+            var headerRect = GUILayoutUtility.GetRect(labelContent, headerStyle, GUILayout.Width(rect.width + 2),
                 GUILayout.Height(20));
-            GUIContent buttonContent = isMinimized ? minimizedButtonContent : normalButtonContent;
-            Rect buttonRect = new Rect(headerRect);
+            var buttonContent = isMinimized ? minimizedButtonContent : normalButtonContent;
+            var buttonRect = new Rect(headerRect);
             buttonRect.width = 20;
             headerRect.x += 20;
 
@@ -347,19 +327,16 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 isSelectionChanged = true;
             }
 
-            Rect labelRect = new Rect(headerRect);
+            var labelRect = new Rect(headerRect);
             labelRect.width -= 40;
-            GUIStyle style = labelRect.Contains(Event.current.mousePosition) ? headerHoverStyle : headerStyle;
+            var style = labelRect.Contains(Event.current.mousePosition) ? headerHoverStyle : headerStyle;
             GUI.Label(labelRect, labelContent, style);
 
             buttonRect = new Rect(headerRect);
             buttonRect.xMin = buttonRect.xMax - 40;
             buttonRect.width = 20;
 
-            if (GUI.Button(buttonRect, "?", EditorStyles.toolbarButton))
-            {
-                Links.OpenDocumentation("object-toolbar");
-            }
+            if (GUI.Button(buttonRect, "?", EditorStyles.toolbarButton)) Links.OpenDocumentation("object-toolbar");
 
             buttonRect.x += 20;
             buttonRect.width = 20;
@@ -370,11 +347,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void DrawItem(Item item, int index, GUIStyle normalStyle, GUIStyle selectedStyle)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
-            GUIStyle style = normalStyle;
+            var style = normalStyle;
             if (index == activeIndex) style = selectedStyle;
-            ButtonEvent buttonEvent = GUILayoutUtils.Button(item.content, style, GUILayout.Width(item.width));
+            var buttonEvent = GUILayoutUtils.Button(item.content, style, GUILayout.Width(item.width));
             if (buttonEvent == ButtonEvent.click)
             {
                 if (e.button == 0)
@@ -401,13 +378,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             DrawBackground();
 
-            bool minimized = isMinimized;
+            var minimized = isMinimized;
 
-            Rect viewRect = SceneViewManager.GetRect(sceneView);
+            var viewRect = SceneViewManager.GetRect(sceneView);
 
             if (!invertVertical)
             {
-                Rect headerRect = DrawHeader();
+                var headerRect = DrawHeader();
                 ProcessHeaderEvents(viewRect, headerRect);
                 if (!minimized) DrawContent();
             }
@@ -415,7 +392,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (!minimized) DrawContent();
 
-                Rect headerRect = DrawHeader();
+                var headerRect = DrawHeader();
                 ProcessHeaderEvents(viewRect, headerRect);
             }
         }
@@ -424,10 +401,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             CloseActiveWindow();
             activeIndex = -1;
-            for (int i = 0; i < items.Count; i++) items[i].Dispose();
+            for (var i = 0; i < items.Count; i++) items[i].Dispose();
             items.Clear();
 
-            for (int i = 0; i < relatedItems.Count; i++) relatedItems[i].Dispose();
+            for (var i = 0; i < relatedItems.Count; i++) relatedItems[i].Dispose();
             relatedItems.Clear();
         }
 
@@ -435,38 +412,42 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             isSelectionChanged = false;
 
-            string title = "";
+            var title = "";
             componentsWidth = 0;
 
             FreeItems();
 
             if (targets.Length == 1)
             {
-                Object target = targets[0];
+                var target = targets[0];
                 if (target != null)
                 {
                     title = target.name;
 
                     if (!(target is GameObject))
-                    {
                         title += " (" + ObjectNames.NicifyVariableName(target.GetType().Name) + ")";
-                    }
 
-                    GameObject go = target as GameObject;
+                    var go = target as GameObject;
                     if (go != null)
                     {
-                        if (go.scene.name != null) InitComponents(target as GameObject);
+                        if (go.scene.name != null)
+                        {
+                            InitComponents(target as GameObject);
+                        }
                         else
                         {
-                            string assetPath = AssetDatabase.GetAssetPath(go);
-                            AssetImporter importer = AssetImporter.GetAtPath(assetPath);
+                            var assetPath = AssetDatabase.GetAssetPath(go);
+                            var importer = AssetImporter.GetAtPath(assetPath);
 
                             if (importer == null || importer.GetType() == PrefabImporterRef.type)
                                 InitComponents(target as GameObject);
                             else InitObject(target);
                         }
                     }
-                    else InitObject(target);
+                    else
+                    {
+                        InitObject(target);
+                    }
                 }
             }
             else
@@ -476,7 +457,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             lastTargetName = title;
             labelContent = new GUIContent(title);
-            float labelWidth = EditorStyles.label.CalcSize(labelContent).x + 50;
+            var labelWidth = EditorStyles.label.CalcSize(labelContent).x + 50;
 
             if (isMinimized) _size.x = labelWidth;
             else _size.x = Mathf.Max(labelWidth, componentsWidth);
@@ -486,10 +467,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private Item GetComponentItem(Component component, int index, GUIStyle style)
         {
-            Texture2D thumbnail = AssetPreview.GetMiniThumbnail(component);
-            string tooltip = ObjectNames.NicifyVariableName(component.GetType().Name);
-            GUIContent content = new GUIContent(thumbnail, tooltip);
-            bool useIcon = true;
+            var thumbnail = AssetPreview.GetMiniThumbnail(component);
+            var tooltip = ObjectNames.NicifyVariableName(component.GetType().Name);
+            var content = new GUIContent(thumbnail, tooltip);
+            var useIcon = true;
             if (thumbnail.name == "cs Script Icon" || thumbnail.name == "d_cs Script Icon")
             {
                 GameObjectUtils.GetPsIconContent(content);
@@ -498,14 +479,17 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (index < 9) content.tooltip += " (Alt+" + (index + 1) + ")";
 
-            Vector2 s = new Vector2();
+            var s = new Vector2();
 
             if (!useIcon)
             {
                 s = style.CalcSize(content);
                 if (s.x < 25) s.x = 25;
             }
-            else s.x = 25;
+            else
+            {
+                s.x = 25;
+            }
 
             componentsWidth += s.x;
 
@@ -514,7 +498,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private Rect GetWindowRect(Vector2 windowSize)
         {
-            Rect r = new Rect(GUIUtility.GUIToScreenPoint(new Vector2(-2, 0)), windowSize);
+            var r = new Rect(GUIUtility.GUIToScreenPoint(new Vector2(-2, 0)), windowSize);
             if (invertVertical) r.y -= windowSize.y + 15;
             else r.y += areaRect.height;
 
@@ -525,47 +509,45 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void InitComponents(GameObject target)
         {
-            Component[] components = target.GetComponents<Component>();
+            var components = target.GetComponents<Component>();
 
-            GUIStyle style = EditorStyles.toolbarButton;
+            var style = EditorStyles.toolbarButton;
 
-            for (int i = 0; i < components.Length; i++)
+            for (var i = 0; i < components.Length; i++)
             {
-                Component component = components[i];
+                var component = components[i];
                 if (component == null) continue;
 
-                Item item = GetComponentItem(component, items.Count, style);
+                var item = GetComponentItem(component, items.Count, style);
                 items.Add(item);
             }
 
             relatedItems.Clear();
 
-            List<Component> relatedComponents = new List<Component>();
+            var relatedComponents = new List<Component>();
 
-            foreach (Component component in components)
-            {
+            foreach (var component in components)
                 if (component is Button || component is Toggle || component is InputField)
                 {
-                    Text[] texts = component.gameObject.GetComponentsInChildren<Text>();
+                    var texts = component.gameObject.GetComponentsInChildren<Text>();
                     if (texts.Length > 0) relatedComponents.AddRange(texts);
                 }
                 else if (component is Dropdown)
                 {
-                    Transform labelTransform = component.gameObject.transform.Find("Label");
+                    var labelTransform = component.gameObject.transform.Find("Label");
                     if (labelTransform != null)
                     {
-                        Text text = labelTransform.GetComponent<Text>();
+                        var text = labelTransform.GetComponent<Text>();
                         relatedComponents.Add(text);
                     }
                 }
-            }
 
-            for (int i = 0; i < relatedComponents.Count; i++)
+            for (var i = 0; i < relatedComponents.Count; i++)
             {
-                Component component = relatedComponents[i];
+                var component = relatedComponents[i];
                 if (component == null) continue;
 
-                Item item = GetComponentItem(component, relatedItems.Count + items.Count, style);
+                var item = GetComponentItem(component, relatedItems.Count + items.Count, style);
                 item.related = true;
                 item.content.tooltip = "[Related] " + component.gameObject.name + " / " + item.content.tooltip;
                 relatedItems.Add(item);
@@ -576,18 +558,18 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void InitObject(Object target)
         {
-            Texture2D thumbnail = AssetPreview.GetMiniThumbnail(target);
+            var thumbnail = AssetPreview.GetMiniThumbnail(target);
             GUIContent content;
             if (thumbnail != null) content = new GUIContent(thumbnail, target.name);
             else content = EditorGUIUtility.IconContent("UnityEditor.InspectorWindow", target.name);
 
-            string assetPath = AssetDatabase.GetAssetPath(target);
+            var assetPath = AssetDatabase.GetAssetPath(target);
             if (!string.IsNullOrEmpty(assetPath))
             {
-                AssetImporter importer = AssetImporter.GetAtPath(assetPath);
+                var importer = AssetImporter.GetAtPath(assetPath);
                 if (importer != null)
                 {
-                    Type type = importer.GetType();
+                    var type = importer.GetType();
                     if (type != typeof(AssetImporter) && type != typeof(MonoImporter))
                     {
                         target = importer;
@@ -598,7 +580,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 }
             }
 
-            Item item = new Item(content, target, 0, 25);
+            var item = new Item(content, target, 0, 25);
             items.Add(item);
             componentsWidth += 25;
         }
@@ -614,16 +596,16 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         protected override void OnHeaderClick()
         {
-            ObjectWindow w = activeWindow as ObjectWindow;
-            bool isCloseEvent = w != null && w.targets[0] == targets[0];
+            var w = activeWindow as ObjectWindow;
+            var isCloseEvent = w != null && w.targets[0] == targets[0];
             CloseActiveWindow();
             if (isCloseEvent) return;
 
             activeIndex = -1;
 
-            Rect r = GetWindowRect(Prefs.defaultWindowSize);
+            var r = GetWindowRect(Prefs.defaultWindowSize);
             r.x += 1;
-            AutoSize autoSize = AutoSize.top;
+            var autoSize = AutoSize.top;
             if (invertVertical)
             {
                 if (targets[0] is GameObject) r.y += 2;
@@ -631,8 +613,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 autoSize = AutoSize.bottom;
             }
 
-            EditorWindow focusedWindow = EditorWindow.focusedWindow;
-            ObjectWindow wnd = ObjectWindow.ShowPopup(targets, r);
+            var focusedWindow = EditorWindow.focusedWindow;
+            var wnd = ObjectWindow.ShowPopup(targets, r);
             wnd.adjustHeight = autoSize;
             wnd.closeOnLossFocus = false;
             wnd.drawInspector = false;
@@ -647,9 +629,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void OnInvokeKey()
         {
-            Event e = Event.current;
-            int keyCode = (int)e.keyCode;
-            int key = keyCode - (int)KeyCode.Alpha1;
+            var e = Event.current;
+            var keyCode = (int)e.keyCode;
+            var key = keyCode - (int)KeyCode.Alpha1;
             if (key < 0) key = keyCode - (int)KeyCode.Keypad1;
             if (ShowItem(key)) e.Use();
         }
@@ -713,9 +695,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private bool OnValidateKey()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.modifiers != EventModifiers.Alt) return false;
-            int keyCode = (int)e.keyCode;
+            var keyCode = (int)e.keyCode;
             return (keyCode >= (int)KeyCode.Alpha1 && keyCode <= (int)KeyCode.Alpha9) ||
                    (keyCode >= (int)KeyCode.Keypad1 && keyCode <= (int)KeyCode.Keypad9);
         }
@@ -730,46 +712,44 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (Event.current.type != EventType.Layout || targets.Length != 1) return;
 
-            Object firstTarget = targets[0];
-            GameObject go = firstTarget as GameObject;
+            var firstTarget = targets[0];
+            var go = firstTarget as GameObject;
 
             if (go != null)
             {
                 if (go.scene.name != null)
                 {
-                    Component[] components = go.GetComponents<Component>();
+                    var components = go.GetComponents<Component>();
                     if (components.Length != items.Count)
                     {
-                        bool hasNewComponents = components.Length > items.Count;
+                        var hasNewComponents = components.Length > items.Count;
                         GenerateLayout();
                         UpdateRect(sceneRect);
-                        foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
+                        foreach (var pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
                             pinAndClose.Repaint();
                         if (hasNewComponents && Prefs.objectToolbarOpenBestComponent) ShowItem(items.Count - 1);
                         return;
                     }
 
-                    for (int i = 0; i < components.Length; i++)
-                    {
+                    for (var i = 0; i < components.Length; i++)
                         if (items[i].target != components[i])
                         {
                             GenerateLayout();
                             UpdateRect(sceneRect);
-                            foreach (PinAndClose pinAndClose in
-                                     UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>()) pinAndClose.Repaint();
+                            foreach (var pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
+                                pinAndClose.Repaint();
                             return;
                         }
-                    }
                 }
 
                 if (targets.Length == 1 && firstTarget.name != lastTargetName)
                 {
                     lastTargetName = firstTarget.name;
                     labelContent = new GUIContent(lastTargetName);
-                    float labelWidth = EditorStyles.label.CalcSize(labelContent).x + 10;
+                    var labelWidth = EditorStyles.label.CalcSize(labelContent).x + 10;
                     _size.x = Mathf.Max(labelWidth, componentsWidth);
                     UpdateRect(sceneRect);
-                    foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
+                    foreach (var pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
                         pinAndClose.Repaint();
                 }
             }
@@ -788,7 +768,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void ShowItem(Item item)
         {
-            int prevIndex = activeIndex;
+            var prevIndex = activeIndex;
 
             CloseActiveWindow();
 
@@ -796,31 +776,31 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             activeIndex = item.index;
 
-            Rect r = GetWindowRect(Prefs.defaultWindowSize);
+            var r = GetWindowRect(Prefs.defaultWindowSize);
             r.x += 1;
-            AutoSize autoSize = AutoSize.top;
+            var autoSize = AutoSize.top;
             if (invertVertical)
             {
                 r.y += 14;
                 autoSize = AutoSize.bottom;
             }
 
-            EditorWindow focusedWindow = EditorWindow.focusedWindow;
+            var focusedWindow = EditorWindow.focusedWindow;
 
-            Rect viewRect = SceneViewManager.GetRect(SceneView.lastActiveSceneView);
+            var viewRect = SceneViewManager.GetRect(SceneView.lastActiveSceneView);
 
             AutoSizePopupWindow wnd;
             if (item.target is Component)
             {
-                string title = item.target.GetType().Name;
-                Component component = item.target as Component;
+                var title = item.target.GetType().Name;
+                var component = item.target as Component;
                 if (item.related) title = "[Related] " + component.gameObject.name + " / " + title;
                 wnd = ComponentWindow.ShowPopup(component, r, title);
                 wnd.maxHeight = viewRect.height - 100;
             }
             else
             {
-                string title = item.content.tooltip;
+                var title = item.content.tooltip;
                 if (string.IsNullOrEmpty(title)) title = targets[0].name;
                 wnd = ObjectWindow.ShowPopup(new[] { item.target }, r, title);
                 wnd.maxHeight = viewRect.height - 100;
@@ -839,11 +819,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public static bool ShowItem(int index)
         {
-            if (_instance == null) return false;
-            if (index < 0 || index >= _instance.items.Count + _instance.relatedItems.Count) return false;
+            if (instance == null) return false;
+            if (index < 0 || index >= instance.items.Count + instance.relatedItems.Count) return false;
 
-            if (index < _instance.items.Count) showItemLate = _instance.items[index];
-            else showItemLate = _instance.relatedItems[index - _instance.items.Count];
+            if (index < instance.items.Count) showItemLate = instance.items[index];
+            else showItemLate = instance.relatedItems[index - instance.items.Count];
             SceneView.RepaintAll();
 
             return true;
@@ -870,27 +850,27 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!Prefs.objectToolbarOpenBestComponent || items.Count == 0 || isMinimized) return;
 
-            Component target = items[0].target as Component;
+            var target = items[0].target as Component;
             if (target == null)
             {
-                ObjectToolbar.ShowItem(0);
+                ShowItem(0);
                 return;
             }
 
-            int bestIndex = 0;
+            var bestIndex = 0;
 
             if (items.Count > 1)
             {
                 bestIndex = 1;
 
-                Component second = items[1].target as Component;
+                var second = items[1].target as Component;
                 if (second != null && (second is CanvasRenderer || second is MeshFilter))
                 {
                     bestIndex++;
 
                     if (items.Count > 3)
                     {
-                        Component third = items[2].target as Component;
+                        var third = items[2].target as Component;
                         if (third != null && third is Image) bestIndex++;
                     }
                 }
@@ -898,7 +878,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (bestIndex >= items.Count) bestIndex = 0;
 
-            ObjectToolbar.ShowItem(bestIndex);
+            ShowItem(bestIndex);
         }
 
         protected override void UpdateRect(Rect sceneRect)
@@ -910,12 +890,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         protected override bool Visible()
         {
             if (!Prefs.objectToolbar || Prefs.objectToolbarVisibleRules == SceneViewVisibleRules.hidden) return false;
-            SceneView sceneView = SceneView.lastActiveSceneView;
+            var sceneView = SceneView.lastActiveSceneView;
             if (sceneView == null) return false;
-            bool maximized = WindowsHelper.IsMaximized(sceneView);
+            var maximized = WindowsHelper.IsMaximized(sceneView);
 
-            if (Prefs.objectToolbarVisibleRules == SceneViewVisibleRules.onMaximized && !maximized ||
-                Prefs.objectToolbarVisibleRules == SceneViewVisibleRules.onNormal && maximized) return false;
+            if ((Prefs.objectToolbarVisibleRules == SceneViewVisibleRules.onMaximized && !maximized) ||
+                (Prefs.objectToolbarVisibleRules == SceneViewVisibleRules.onNormal && maximized)) return false;
 
             return visible;
         }

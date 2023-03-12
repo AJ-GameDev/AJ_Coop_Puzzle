@@ -1,10 +1,8 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System.Collections.Generic;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using InfinityCode.UltimateEditorEnhancer.Behaviors;
-using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -22,9 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
             get
             {
                 if (_content == null)
-                {
                     _content = new GUIContent(Icons.open, "Open (Left click - open, right - open additively)");
-                }
 
                 return _content;
             }
@@ -32,16 +28,16 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
 
         public override void OnClick()
         {
-            bool additive = Event.current.button == 1;
-            List<SceneHistoryItem> items = ReferenceManager.sceneHistory;
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var additive = Event.current.button == 1;
+            var items = ReferenceManager.sceneHistory;
+            var menu = GenericMenuEx.Start();
 
-            EditorBuildSettingsScene[] buildScenes = EditorBuildSettings.scenes;
+            var buildScenes = EditorBuildSettings.scenes;
             StaticStringBuilder.Clear();
-            for (int i = 0; i < buildScenes.Length; i++)
+            for (var i = 0; i < buildScenes.Length; i++)
             {
-                EditorBuildSettingsScene buildScene = buildScenes[i];
-                SceneAsset scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(buildScene.path);
+                var buildScene = buildScenes[i];
+                var scene = AssetDatabase.LoadAssetAtPath<SceneAsset>(buildScene.path);
 
                 StaticStringBuilder.Append("Scenes in Build/").Append(scene.name);
                 menu.Add(StaticStringBuilder.GetString(true), () => OpenScene(buildScene.path, additive));
@@ -49,9 +45,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
 
             if (menu.count > 0) menu.AddSeparator();
 
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
-                SceneHistoryItem item = items[i];
+                var item = items[i];
                 menu.Add(item.name, () => OpenScene(item.path, additive));
             }
 

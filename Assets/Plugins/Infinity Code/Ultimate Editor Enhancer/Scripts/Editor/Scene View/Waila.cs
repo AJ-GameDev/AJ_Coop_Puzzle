@@ -73,9 +73,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 tooltipStyle.alignment = TextAnchor.MiddleLeft;
             }
 
-            Vector2 size = tooltipStyle.CalcSize(tooltip);
-            Vector2 position = Event.current.mousePosition - new Vector2(size.x / 2, size.y + 10);
-            Rect rect = new Rect(position, size + new Vector2(4, 0));
+            var size = tooltipStyle.CalcSize(tooltip);
+            var position = Event.current.mousePosition - new Vector2(size.x / 2, size.y + 10);
+            var rect = new Rect(position, size + new Vector2(4, 0));
 
             Handles.BeginGUI();
             GUI.Label(rect, tooltip, tooltipStyle);
@@ -86,13 +86,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!Prefs.highlight || !Prefs.highlightOnWaila) return;
 
-            EditorWindow wnd = EditorWindow.mouseOverWindow;
+            var wnd = EditorWindow.mouseOverWindow;
             if (wnd == null || !(wnd is SceneView)) return;
 
-            if (Highlighter.Highlight(go))
-            {
-                Highlighter.RepaintAllHierarchies();
-            }
+            if (Highlighter.Highlight(go)) Highlighter.RepaintAllHierarchies();
         }
 
         private static void InsertTerrainHeight(TerrainCollider collider, ref string tooltipText)
@@ -101,30 +98,24 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             RaycastHit hit;
             if (collider.Raycast(HandleUtility.GUIPointToWorldRay(Event.current.mousePosition), out hit,
-                    float.PositiveInfinity))
-            {
-                tooltipText += "\nWorld Position: " + hit.point.ToString("F2");
-            }
+                    float.PositiveInfinity)) tooltipText += "\nWorld Position: " + hit.point.ToString("F2");
         }
 
         private static void OnSceneGUI(SceneView sceneview)
         {
             if (EditorWindow.mouseOverWindow != sceneview)
-            {
                 if (mode == 0)
                 {
                     tooltip = null;
                     Highlight(null);
                     return;
                 }
-            }
 
             if (!Prefs.waila) return;
 
-            Event e = Event.current;
+            var e = Event.current;
 
-            if (Preview.isActive || InputManager.GetAnyMouseButton() && tooltip == null)
-            {
+            if (Preview.isActive || (InputManager.GetAnyMouseButton() && tooltip == null))
                 if (mode == 0)
                 {
                     tooltip = null;
@@ -132,16 +123,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     Highlight(null);
                     return;
                 }
-            }
 
             TryStartSmartSelection();
 
             if (mode == 0)
             {
                 if (e.type == EventType.MouseMove || e.type == EventType.KeyUp || e.type == EventType.KeyDown)
-                {
                     UpdateTarget();
-                }
 
                 if (tooltip != null)
                 {
@@ -156,7 +144,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     }
                 }
             }
-            else if (OnDrawModeExternal != null) OnDrawModeExternal();
+            else if (OnDrawModeExternal != null)
+            {
+                OnDrawModeExternal();
+            }
         }
 
         private static void TryStartSmartSelection()
@@ -164,15 +155,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (!Prefs.wailaSmartSelection) return;
             if (mode != 0) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
-            {
                 if (e.keyCode == Prefs.wailaSmartSelectionKeyCode && e.modifiers == Prefs.wailaSmartSelectionModifiers)
                 {
                     SmartSelection.ShowSmartSelection();
                     e.Use();
                 }
-            }
         }
 
         private static void RestoreSelection(SceneView view)
@@ -210,7 +199,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void UpdateTooltip()
         {
-            GameObject go = HandleUtility.PickGameObject(Event.current.mousePosition, false, null);
+            var go = HandleUtility.PickGameObject(Event.current.mousePosition, false, null);
             if (go == null)
             {
                 Highlight(null);
@@ -229,15 +218,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 targets.Add(go);
             }
 
-            string tooltipText = go.name;
-            TerrainCollider terrainCollider = targets[0].GetComponent<TerrainCollider>();
+            var tooltipText = go.name;
+            var terrainCollider = targets[0].GetComponent<TerrainCollider>();
 
             if (terrainCollider != null) InsertTerrainHeight(terrainCollider, ref tooltipText);
 
-            if (OnPrepareTooltip != null)
-            {
-                tooltipText = OnPrepareTooltip(go, tooltipText);
-            }
+            if (OnPrepareTooltip != null) tooltipText = OnPrepareTooltip(go, tooltipText);
 
             tooltip = new GUIContent(tooltipText);
         }

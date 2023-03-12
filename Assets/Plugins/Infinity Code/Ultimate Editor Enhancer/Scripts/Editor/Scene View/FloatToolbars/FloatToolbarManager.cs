@@ -17,8 +17,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     [InitializeOnLoad]
     public static class FloatToolbarManager
     {
-        private static List<FloatToolbar> toolbars = new List<FloatToolbar>();
-        private static Dictionary<int, Rect> sizes;
+        private static readonly List<FloatToolbar> toolbars = new();
+        private static readonly Dictionary<int, Rect> sizes;
         private static PrefabStage lastPrefabStage;
 
         static FloatToolbarManager()
@@ -36,11 +36,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (toolbars == null || toolbars.Count == 0) return;
 
-            bool sizeChanged = false;
+            var sizeChanged = false;
             if (Event.current.type == EventType.Layout && DragAndDrop.objectReferences.Length == 0)
             {
-                int id = sceneView.GetInstanceID();
-                Rect viewRect = SceneViewManager.GetRect(sceneView);
+                var id = sceneView.GetInstanceID();
+                var viewRect = SceneViewManager.GetRect(sceneView);
 
                 Rect rect;
                 if (sizes.TryGetValue(id, out rect))
@@ -57,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     sizes[id] = viewRect;
                 }
 
-                PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+                var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
                 if (prefabStage != lastPrefabStage)
                 {
                     sizeChanged = true;
@@ -65,11 +65,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 }
             }
 
-            for (int i = toolbars.Count - 1; i >= 0; i--)
-            {
+            for (var i = toolbars.Count - 1; i >= 0; i--)
                 try
                 {
-                    FloatToolbar toolbar = toolbars[i];
+                    var toolbar = toolbars[i];
                     if (toolbar == null) continue;
 
                     toolbar.isDirty = sizeChanged;
@@ -79,7 +78,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 {
                     Log.Add(e);
                 }
-            }
         }
 
         public static void Remove(FloatToolbar toolbar)

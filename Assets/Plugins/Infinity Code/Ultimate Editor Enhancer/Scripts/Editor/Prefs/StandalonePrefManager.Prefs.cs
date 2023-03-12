@@ -56,10 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     Log.Add(e);
                 }
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Save();
-                }
+                if (EditorGUI.EndChangeCheck()) Save();
             }
 
             public static void DrawWithToolbar(string filter)

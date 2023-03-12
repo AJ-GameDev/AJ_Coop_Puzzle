@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
     {
         static Cinemachine()
         {
-            Assembly assembly = Reflection.GetAssembly("Cinemachine");
+            var assembly = Reflection.GetAssembly("Cinemachine");
             if (assembly != null) isPresent = true;
         }
 

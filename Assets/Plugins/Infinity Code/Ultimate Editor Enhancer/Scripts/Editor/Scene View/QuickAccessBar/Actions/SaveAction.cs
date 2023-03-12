@@ -18,34 +18,24 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
         {
             get
             {
-                bool isDirty = false;
-                for (int i = 0; i < SceneManager.sceneCount; i++)
-                {
+                var isDirty = false;
+                for (var i = 0; i < SceneManager.sceneCount; i++)
                     if (SceneManager.GetSceneAt(i).isDirty)
                     {
                         isDirty = true;
                         break;
                     }
-                }
 
                 if (isDirty)
                 {
-                    if (_activeContent == null)
-                    {
-                        _activeContent = new GUIContent(Icons.saveActive, "Save Scene(s)");
-                    }
+                    if (_activeContent == null) _activeContent = new GUIContent(Icons.saveActive, "Save Scene(s)");
 
                     return _activeContent;
                 }
-                else
-                {
-                    if (_content == null)
-                    {
-                        _content = new GUIContent(Icons.save, "Save Scene(s)");
-                    }
 
-                    return _content;
-                }
+                if (_content == null) _content = new GUIContent(Icons.save, "Save Scene(s)");
+
+                return _content;
             }
         }
 
@@ -57,7 +47,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
             }
             else
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 menu.Add("Save", () => EditorApplication.ExecuteMenuItem("File/Save"));
                 menu.Add("Save As", () => EditorApplication.ExecuteMenuItem("File/Save As..."));
                 menu.Show();

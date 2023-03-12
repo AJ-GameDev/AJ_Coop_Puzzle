@@ -19,7 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
             else
             {
-                object sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(window);
+                var sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(window);
                 SceneHierarchyRef.SetScenesExpanded(sceneHierarchy,
                     new List<string> { SceneManager.GetActiveScene().name });
             }
@@ -27,16 +27,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static bool IsExpanded(int id)
         {
-            EditorWindow hierarchyWindow = SceneHierarchyWindowRef.GetLastInteractedHierarchy();
+            var hierarchyWindow = SceneHierarchyWindowRef.GetLastInteractedHierarchy();
             if (hierarchyWindow == null) return false;
 
-            object sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(hierarchyWindow);
+            var sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(hierarchyWindow);
             if (sceneHierarchy == null) return false;
 
-            object treeView = SceneHierarchyRef.GetTreeView(sceneHierarchy);
+            var treeView = SceneHierarchyRef.GetTreeView(sceneHierarchy);
             if (treeView == null) return false;
 
-            object data = TreeViewControllerRef.GetData(treeView);
+            var data = TreeViewControllerRef.GetData(treeView);
             if (data == null) return false;
 
             return ITreeViewDataSourceRef.IsExpanded(data, id);
@@ -44,13 +44,13 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void SetDefaultIconsSize(EditorWindow hierarchyWindow, int size = 0)
         {
-            object sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(hierarchyWindow);
+            var sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(hierarchyWindow);
             if (sceneHierarchy == null) return;
 
-            object treeView = SceneHierarchyRef.GetTreeView(sceneHierarchy);
+            var treeView = SceneHierarchyRef.GetTreeView(sceneHierarchy);
             if (treeView == null) return;
 
-            object gui = TreeViewControllerRef.GetGUI(treeView);
+            var gui = TreeViewControllerRef.GetGUI(treeView);
             if (gui == null) return;
 
             TreeViewGUIRef.SetIconWidth(gui, size);

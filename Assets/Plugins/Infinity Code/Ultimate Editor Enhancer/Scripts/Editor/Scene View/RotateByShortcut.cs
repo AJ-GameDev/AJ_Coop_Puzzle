@@ -12,17 +12,17 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     {
         static RotateByShortcut()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnPress += OnInvoke;
             binding.OnValidate += OnValidate;
         }
 
         private static Vector3 GetAxis()
         {
-            KeyCode k = Event.current.keyCode;
+            var k = Event.current.keyCode;
 
-            float ey = SceneView.lastActiveSceneView.rotation.eulerAngles.y;
-            Vector3 axis = Vector3.zero;
+            var ey = SceneView.lastActiveSceneView.rotation.eulerAngles.y;
+            var axis = Vector3.zero;
 
             if (k == KeyCode.UpArrow)
             {
@@ -66,47 +66,37 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnInvoke()
         {
-            Vector3 axis = GetAxis();
+            var axis = GetAxis();
             if (axis == Vector3.zero) return;
 
-            Transform[] transforms = Selection.transforms.Where(t => t.gameObject.scene.name != null).ToArray();
+            var transforms = Selection.transforms.Where(t => t.gameObject.scene.name != null).ToArray();
             if (transforms.Length == 0) return;
 
             Undo.RecordObjects(transforms, "Rotate");
 
-            Vector3 handlePosition = UnityEditor.Tools.handlePosition;
-            Quaternion handleRotation = UnityEditor.Tools.handleRotation;
+            var handlePosition = UnityEditor.Tools.handlePosition;
+            var handleRotation = UnityEditor.Tools.handleRotation;
 
             if (UnityEditor.Tools.pivotMode == PivotMode.Center)
-            {
-                for (int i = 0; i < transforms.Length; i++)
-                {
+                for (var i = 0; i < transforms.Length; i++)
                     transforms[i].RotateAround(handlePosition, handleRotation * axis, 90);
-                }
-            }
             else if (UnityEditor.Tools.pivotRotation == PivotRotation.Local)
-            {
-                for (int i = 0; i < transforms.Length; i++)
+                for (var i = 0; i < transforms.Length; i++)
                 {
-                    Transform t = transforms[i];
+                    var t = transforms[i];
                     t.Rotate(t.rotation * axis, 90, Space.World);
                 }
-            }
             else
-            {
-                for (int i = 0; i < transforms.Length; i++)
-                {
+                for (var i = 0; i < transforms.Length; i++)
                     transforms[i].Rotate(handleRotation * axis, 90, Space.World);
-                }
-            }
 
             Event.current.Use();
         }
 
         private static bool OnValidate()
         {
-            Event e = Event.current;
-            KeyCode k = e.keyCode;
+            var e = Event.current;
+            var k = e.keyCode;
 
             if (EditorWindow.mouseOverWindow is SceneView &&
                 (e.control || e.command) && e.shift &&
@@ -115,9 +105,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     k == KeyCode.LeftArrow || k == KeyCode.RightArrow ||
                     k == KeyCode.PageDown || k == KeyCode.PageUp
                 ))
-            {
                 return true;
-            }
 
             return false;
         }

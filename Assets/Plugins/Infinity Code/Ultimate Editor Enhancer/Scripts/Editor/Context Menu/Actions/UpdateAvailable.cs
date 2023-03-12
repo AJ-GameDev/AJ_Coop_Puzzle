@@ -8,10 +8,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class UpdateAvailable : ActionItem, IValidatableLayoutItem
     {
-        public override float order
-        {
-            get { return 950; }
-        }
+        public override float order => 950;
 
         public bool Validate()
         {

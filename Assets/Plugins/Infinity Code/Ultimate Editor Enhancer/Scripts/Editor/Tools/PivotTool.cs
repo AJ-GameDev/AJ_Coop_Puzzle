@@ -59,52 +59,43 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         private void ChangePivot(Vector3 position, Quaternion rotation)
         {
-            int childCount = Selection.gameObjects.Max(t => t.transform.childCount);
+            var childCount = Selection.gameObjects.Max(t => t.transform.childCount);
             if (oldValues == null)
             {
                 oldValues = new PRS[Mathf.Max(8, Mathf.NextPowerOfTwo(childCount))];
-                for (int i = 0; i < oldValues.Length; i++)
-                {
-                    oldValues[i] = new PRS();
-                }
+                for (var i = 0; i < oldValues.Length; i++) oldValues[i] = new PRS();
             }
             else if (oldValues.Length <= childCount)
             {
-                int oldCount = oldValues.Length;
+                var oldCount = oldValues.Length;
                 oldValues = new PRS[Mathf.NextPowerOfTwo(childCount)];
-                for (int i = oldCount; i < oldValues.Length; i++)
-                {
-                    oldValues[i] = new PRS();
-                }
+                for (var i = oldCount; i < oldValues.Length; i++) oldValues[i] = new PRS();
             }
 
             Undo.SetCurrentGroupName("Change Pivot");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
-            for (int i = 0; i < Selection.gameObjects.Length; i++)
+            for (var i = 0; i < Selection.gameObjects.Length; i++)
             {
-                GameObject go = Selection.gameObjects[i];
-                Transform t = go.transform;
+                var go = Selection.gameObjects[i];
+                var t = go.transform;
 
-                for (int j = 0; j < t.childCount; j++)
-                {
-                    oldValues[j].Save(t.GetChild(j));
-                }
+                for (var j = 0; j < t.childCount; j++) oldValues[j].Save(t.GetChild(j));
 
                 Undo.RecordObject(t, "Change Pivot");
 
                 t.position = position;
                 t.rotation = rotation;
 
-                for (int j = 0; j < t.childCount; j++)
+                for (var j = 0; j < t.childCount; j++)
                 {
-                    Transform child = t.GetChild(j);
+                    var child = t.GetChild(j);
                     Undo.RecordObject(child, "Change Pivot");
                     oldValues[j].Restore(child);
                 }
             }
 
-            Undo.CollapseUndoOperations(@group);
+            Undo.CollapseUndoOperations(group);
         }
 
         public override void OnToolGUI(EditorWindow window)
@@ -112,13 +103,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (Selection.gameObjects.Length == 0) return;
             if (handleIcon == null) handleIcon = EditorIconContents.avatarPivot.image;
 
-            Vector3 position = UnityEditor.Tools.handlePosition;
-            Quaternion rotation = Selection.activeGameObject.transform.rotation;
+            var position = UnityEditor.Tools.handlePosition;
+            var rotation = Selection.activeGameObject.transform.rotation;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.modifiers == EventModifiers.Alt)
             {
-                Color clr = Handles.color;
+                var clr = Handles.color;
 
                 Handles.color = Color.blue;
                 Handles.DrawLine(position - rotation * Vector3.forward * 1000,
@@ -156,9 +147,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 }
             }
 
-            bool changed = false;
+            var changed = false;
             float handleSize;
-            EventType eventType = e.type;
+            var eventType = e.type;
 
             EditorGUI.BeginChangeCheck();
             if (mode == Mode.move)
@@ -199,7 +190,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
                 if (pointIndex == 1)
                 {
-                    Color color = Handles.color;
+                    var color = Handles.color;
                     Handles.color = Color.green;
                     Handles.DrawLine(firstPoint, position);
                     Handles.color = color;
@@ -219,7 +210,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                         mode = Mode.move;
                         e.Use();
 
-                        GenericMenuEx menu = GenericMenuEx.Start();
+                        var menu = GenericMenuEx.Start();
                         menu.Add("X", () => SetOrientation(firstPoint, position, Vector3.right));
                         menu.Add("Y", () => SetOrientation(firstPoint, position, Vector3.up));
                         menu.Add("Z", () => SetOrientation(firstPoint, position, Vector3.forward));
@@ -233,7 +224,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         private void SetOrientation(Vector3 v1, Vector3 v2, Vector3 axis)
         {
-            Quaternion rotation = Quaternion.FromToRotation(axis, v2 - v1);
+            var rotation = Quaternion.FromToRotation(axis, v2 - v1);
             ChangePivot(UnityEditor.Tools.handlePosition, rotation);
         }
 

@@ -53,18 +53,18 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (item == null || item.gameObject == null) return;
             if (!string.IsNullOrEmpty(HierarchyItemDrawer.searchFilter)) return;
 
-            Transform transform = item.gameObject.transform;
-            Transform parent = transform.parent;
+            var transform = item.gameObject.transform;
+            var parent = transform.parent;
             if (parent == null) return;
 
-            Rect rect = item.rect;
+            var rect = item.rect;
 
             rect.width = 36;
             rect.x -= 32;
 
-            Vector4 borderWidths = new Vector4(transform.childCount > 0 ? 8 : 0, 0, 0, 0);
+            var borderWidths = new Vector4(transform.childCount > 0 ? 8 : 0, 0, 0, 0);
 
-            Color color = GetColor(item, transform);
+            var color = GetColor(item, transform);
 
             if (parent.childCount == 1 || transform.GetSiblingIndex() == parent.childCount - 1)
             {
@@ -95,34 +95,26 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
         public static Color GetBackground(SceneReferences reference, GameObject target)
         {
-            foreach (SceneReferences.HierarchyBackground b in reference.hierarchyBackgrounds)
-            {
-                if (b.gameObject == target) return b.color;
-            }
+            foreach (var b in reference.hierarchyBackgrounds)
+                if (b.gameObject == target)
+                    return b.color;
 
-            Transform t = target.transform.parent;
+            var t = target.transform.parent;
             Texture texture = AssetPreview.GetMiniThumbnail(target);
-            string textureName = texture.name;
-            if (textureName.StartsWith("sv_icon_"))
-            {
-                return GetColorFromTexture(textureName);
-            }
+            var textureName = texture.name;
+            if (textureName.StartsWith("sv_icon_")) return GetColorFromTexture(textureName);
 
             while (t != null)
             {
-                GameObject go = t.gameObject;
+                var go = t.gameObject;
 
-                foreach (SceneReferences.HierarchyBackground b in reference.hierarchyBackgrounds)
-                {
-                    if (b.gameObject == go) return b.color;
-                }
+                foreach (var b in reference.hierarchyBackgrounds)
+                    if (b.gameObject == go)
+                        return b.color;
 
                 texture = AssetPreview.GetMiniThumbnail(go);
                 textureName = texture.name;
-                if (textureName.StartsWith("sv_icon_"))
-                {
-                    return GetColorFromTexture(textureName);
-                }
+                if (textureName.StartsWith("sv_icon_")) return GetColorFromTexture(textureName);
 
                 t = t.parent;
             }
@@ -132,18 +124,15 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
         public static Color GetBackground(GameObject target)
         {
-            Transform t = target.transform.parent;
+            var t = target.transform.parent;
 
             while (t != null)
             {
-                GameObject go = t.gameObject;
+                var go = t.gameObject;
 
                 Texture texture = AssetPreview.GetMiniThumbnail(go);
-                string textureName = texture.name;
-                if (textureName.StartsWith("sv_icon_"))
-                {
-                    return GetColorFromTexture(textureName);
-                }
+                var textureName = texture.name;
+                if (textureName.StartsWith("sv_icon_")) return GetColorFromTexture(textureName);
 
                 t = t.parent;
             }
@@ -155,7 +144,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         {
             if (textureName[8] == 'n')
             {
-                int index = textureName[12] - '0';
+                var index = textureName[12] - '0';
                 return GameObjectHierarchySettings.colors[index];
             }
 
@@ -174,7 +163,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
         public static Color GetColor(HierarchyItem item, Transform parent)
         {
-            SceneReferences r = SceneReferences.Get(item.gameObject.scene, false);
+            var r = SceneReferences.Get(item.gameObject.scene, false);
 
             if (r == null) return GetBackground(parent.gameObject);
             return GetBackground(r, parent.gameObject);

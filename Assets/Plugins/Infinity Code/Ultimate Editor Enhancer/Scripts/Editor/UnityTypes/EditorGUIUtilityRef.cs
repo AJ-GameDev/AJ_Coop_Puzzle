@@ -20,10 +20,8 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_drawEditorHeaderItemsMethod == null)
-                {
                     _drawEditorHeaderItemsMethod = Reflection.GetMethod(type, "DrawEditorHeaderItems",
                         new[] { typeof(Rect), typeof(Object[]), typeof(float) }, Reflection.StaticLookup);
-                }
 
                 return _drawEditorHeaderItemsMethod;
             }
@@ -44,19 +42,14 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_setIconForObjectMethod == null)
-                {
                     _setIconForObjectMethod = Reflection.GetMethod(type, "SetIconForObject",
                         new[] { typeof(Object), typeof(Texture2D) }, Reflection.StaticLookup);
-                }
 
                 return _setIconForObjectMethod;
             }
         }
 
-        public static Type type
-        {
-            get => typeof(EditorGUIUtility);
-        }
+        public static Type type => typeof(EditorGUIUtility);
 
         public static void DrawEditorHeaderItems(Rect rect, Object[] objects, int id)
         {

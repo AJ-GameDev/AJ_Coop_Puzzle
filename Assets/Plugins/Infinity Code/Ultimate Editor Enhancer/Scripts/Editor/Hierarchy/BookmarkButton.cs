@@ -24,25 +24,24 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.always) return;
             if (item.gameObject == null) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.modifiers != EventModifiers.None) return;
 
-            bool contain = Bookmarks.Contain(item.gameObject);
+            var contain = Bookmarks.Contain(item.gameObject);
             if (!contain)
-            {
-                if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHover || !item.hovered) return;
-            }
+                if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHover || !item.hovered)
+                    return;
 
             if (offTexture == null)
                 offTexture = Styles.isProSkin ? (Texture2D)Icons.starWhite : (Texture2D)Icons.starBlack;
 
-            Rect rect = item.rect;
-            Rect r = new Rect(rect.xMax - 16, rect.y, 16, rect.height);
+            var rect = item.rect;
+            var r = new Rect(rect.xMax - 16, rect.y, 16, rect.height);
 
             if (Cinemachine.ContainBrain(item.gameObject)) r.x -= 16;
 
-            Texture2D texture = offTexture;
-            string tooltip = "Add Bookmark";
+            var texture = offTexture;
+            var tooltip = "Add Bookmark";
 
             if (contain)
             {
@@ -50,7 +49,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 tooltip = "Remove Bookmark";
             }
 
-            GUIContent content = TempContent.Get(texture, tooltip);
+            var content = TempContent.Get(texture, tooltip);
 
             if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHover)
             {

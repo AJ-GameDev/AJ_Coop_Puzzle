@@ -7,7 +7,6 @@ using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
@@ -32,7 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         [SerializeField] private List<Target> targets;
 
-        private bool hasPrev = false;
+        private bool hasPrev;
 
         private Vector3 prevPosition;
         private ReorderableList reorderableList;
@@ -48,7 +47,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             get
             {
                 if (_distanceStyle == null)
-                {
                     _distanceStyle = new GUIStyle(DistanceStyleID)
                     {
                         fontSize = 10,
@@ -59,9 +57,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         {
                             textColor = Color.white
                         },
-                        padding = new RectOffset(2, 2, 0, 0),
+                        padding = new RectOffset(2, 2, 0, 0)
                     };
-                }
 
                 return _distanceStyle;
             }
@@ -72,7 +69,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             get
             {
                 if (_indexStyle == null)
-                {
                     _indexStyle = new GUIStyle(IndexStyleID)
                     {
                         fontSize = 10,
@@ -83,9 +79,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         {
                             textColor = Color.white
                         },
-                        padding = new RectOffset(2, 2, 0, 0),
+                        padding = new RectOffset(2, 2, 0, 0)
                     };
-                }
 
                 return _indexStyle;
             }
@@ -128,10 +123,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             DrawUseCursorPosition();
 
-            if (pickTarget != null)
-            {
-                EditorGUILayout.HelpBox("Press Enter to finish pick.", MessageType.Info);
-            }
+            if (pickTarget != null) EditorGUILayout.HelpBox("Press Enter to finish pick.", MessageType.Info);
 
             BottomToolbar();
 
@@ -147,7 +139,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public void AddPoint(Vector3 point)
         {
-            Target target = new Target(TargetType.point)
+            var target = new Target(TargetType.point)
             {
                 point = point
             };
@@ -156,7 +148,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void AddItem(ReorderableList list)
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             menu.Add("Transform", () => targets.Add(new Target(TargetType.transform)));
             menu.Add("Point", () => targets.Add(new Target(TargetType.point)));
             menu.Show();
@@ -177,9 +169,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            Target t = targets[index];
+            var t = targets[index];
 
-            Rect r = new Rect(rect);
+            var r = new Rect(rect);
             r.y += 2;
             r.height = LINEHEIGHT - 4;
 
@@ -189,7 +181,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             else
             {
-                Rect r2 = new Rect(r);
+                var r2 = new Rect(r);
 
                 r2.width -= 100;
                 t.point = EditorGUI.Vector3Field(r2, string.Empty, t.point);
@@ -213,7 +205,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            string message = "";
+            var message = "";
 
             if (t.type == TargetType.transform)
             {
@@ -223,7 +215,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     message = position.ToString("F1");
                     if (hasPrev)
                     {
-                        float d = GetDistance(t.position, prevPosition);
+                        var d = GetDistance(t.position, prevPosition);
                         message += ", Distance: " + d.ToString("F1") + "m";
                         totalDistance += d;
                     }
@@ -233,7 +225,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (hasPrev)
                 {
-                    float d = GetDistance(t.point, prevPosition);
+                    var d = GetDistance(t.point, prevPosition);
                     message += "Distance: " + d.ToString("F1") + "m";
                     totalDistance += d;
                 }
@@ -258,7 +250,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static void DrawLine(Vector3 prev, Vector3 p)
         {
             Handles.DrawLine(p, prev);
-            Handles.Label((p + prev) / 2, DistanceTool.GetDistance(p, prev).ToString("F1"), DistanceTool.distanceStyle);
+            Handles.Label((p + prev) / 2, GetDistance(p, prev).ToString("F1"), distanceStyle);
         }
 
         private void DrawUseCursorPosition()
@@ -269,33 +261,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (!lastPointUnderCursor) return;
 
             if (hasPrev)
-            {
                 if (SceneViewManager.lastGameObjectUnderCursor != null)
-                {
                     totalDistance += GetDistance(SceneViewManager.lastWorldPosition, prevPosition);
-                }
-            }
 
             isDirty = true;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
-            {
                 if (e.keyCode == KeyCode.Escape)
                 {
                     lastPointUnderCursor = false;
                     e.Use();
                 }
-            }
         }
 
         private Vector3 GetCurrentPoint()
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (SceneView.lastActiveSceneView.in2DMode)
             {
-                Vector3 p = SceneView.lastActiveSceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x,
+                var p = SceneView.lastActiveSceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x,
                     Screen.height - e.mousePosition.y - 40));
                 p.z = 0;
                 return p;
@@ -320,17 +306,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (!lastPointUnderCursor) return;
 
-            Event e = Event.current;
+            var e = Event.current;
 
-            Vector3 point = GetCurrentPoint();
-            if (hasPrev)
-            {
-                DrawLine(prevPosition, point);
-            }
+            var point = GetCurrentPoint();
+            if (hasPrev) DrawLine(prevPosition, point);
 
             if (!SceneView.lastActiveSceneView.in2DMode && KeyManager.IsKeyDown(KeyCode.V))
             {
-                float handleSize = HandleUtility.GetHandleSize(point);
+                var handleSize = HandleUtility.GetHandleSize(point);
                 Handles.RectangleHandleCap(-1, point, sceneView.camera.transform.rotation, handleSize * 0.125f,
                     Event.current.type);
             }
@@ -362,21 +345,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static float GetDistance(Vector3 p, Vector3 prev)
         {
-            Vector3 d = p - prev;
+            var d = p - prev;
             d.Scale(axisMul);
             return d.magnitude;
         }
 
         private float GetElementHeight(int index)
         {
-            Target t = targets[index];
+            var t = targets[index];
             if (index == 0 && t.type == TargetType.point) return LINEHEIGHT;
             return LINEHEIGHT * 2 - 4;
         }
 
         private void OnPickSceneView(SceneView sceneView)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (pickTarget == null)
             {
                 pickTarget = null;
@@ -388,14 +371,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (SceneViewManager.lastGameObjectUnderCursor != null)
                 {
-                    Vector3 p = SceneViewManager.lastWorldPosition;
-                    float d = (pickTarget.point - p).sqrMagnitude;
+                    var p = SceneViewManager.lastWorldPosition;
+                    var d = (pickTarget.point - p).sqrMagnitude;
                     pickTarget.point = p;
                     if (d > 0) Repaint();
                 }
                 else if (sceneView.in2DMode)
                 {
-                    Vector3 point = sceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x,
+                    var point = sceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x,
                         Screen.height - e.mousePosition.y - 40));
                     point.z = 0;
                     pickTarget.point = point;
@@ -424,41 +407,44 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (targets == null) targets = new List<Target>();
 
-            Color color = Handles.color;
+            var color = Handles.color;
 
             Handles.color = Color.green;
 
-            Vector3 prev = Vector3.zero;
+            var prev = Vector3.zero;
             hasPrev = false;
 
-            foreach (Target t in targets)
+            foreach (var t in targets)
             {
                 if (t == null) continue;
                 if (!t.isValid) continue;
 
-                Vector3 p = t.position;
+                var p = t.position;
 
                 if (hasPrev)
                 {
                     Handles.DrawLine(p, prev);
                     Handles.Label((p + prev) / 2, GetDistance(p, prev).ToString("F1"), distanceStyle);
                 }
-                else hasPrev = true;
+                else
+                {
+                    hasPrev = true;
+                }
 
                 prev = p;
             }
 
-            for (int i = 0; i < targets.Count; i++)
+            for (var i = 0; i < targets.Count; i++)
             {
-                Target t = targets[i];
+                var t = targets[i];
                 if (t == null) continue;
                 if (!t.isValid) continue;
 
-                Vector3 p = t.position;
+                var p = t.position;
 
                 if (t.type == TargetType.point)
                 {
-                    Vector3 newPoint = Handles.PositionHandle(p, Quaternion.identity);
+                    var newPoint = Handles.PositionHandle(p, Quaternion.identity);
                     if (p != newPoint)
                     {
                         t.point = p = newPoint;
@@ -482,13 +468,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ProcessEvents()
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.type == EventType.DragUpdated)
             {
-                for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
+                for (var i = 0; i < DragAndDrop.objectReferences.Length; i++)
                 {
-                    Object obj = DragAndDrop.objectReferences[i];
+                    var obj = DragAndDrop.objectReferences[i];
                     if (!(obj is GameObject || obj is Component)) return;
                 }
 
@@ -499,9 +485,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 DragAndDrop.AcceptDrag();
 
-                for (int i = 0; i < DragAndDrop.objectReferences.Length; i++)
+                for (var i = 0; i < DragAndDrop.objectReferences.Length; i++)
                 {
-                    Object obj = DragAndDrop.objectReferences[i];
+                    var obj = DragAndDrop.objectReferences[i];
                     if (obj is GameObject) targets.Add(new Target((obj as GameObject).transform));
                     else if (obj is Component) targets.Add(new Target((obj as Component).transform));
                 }
@@ -552,10 +538,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            public bool isValid
-            {
-                get { return type != TargetType.transform || transform != null; }
-            }
+            public bool isValid => type != TargetType.transform || transform != null;
         }
     }
 }

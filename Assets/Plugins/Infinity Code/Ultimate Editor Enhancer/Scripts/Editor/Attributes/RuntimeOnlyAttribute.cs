@@ -7,10 +7,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
 {
     public class RuntimeOnlyAttribute : ValidateAttribute
     {
-        public RuntimeOnlyAttribute()
-        {
-        }
-
         public override bool Validate()
         {
             return EditorApplication.isPlaying;

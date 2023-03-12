@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using StarterAssetsPackageChecker;
 using UnityEditor;
@@ -28,11 +29,11 @@ namespace StarterAssets
         private static GameObject _cinemachineVirtualCamera;
 
         /// <summary>
-        /// Deletes the scripting define set by the Package Checker.
-        /// See Assets/Editor/PackageChecker/PackageChecker.cs for more information
+        ///     Deletes the scripting define set by the Package Checker.
+        ///     See Assets/Editor/PackageChecker/PackageChecker.cs for more information
         /// </summary>
         [MenuItem(MenuRoot + "/Reinstall Dependencies", false)]
-        static void ResetPackageChecker()
+        private static void ResetPackageChecker()
         {
             PackageChecker.RemovePackageCheckerScriptingDefine();
         }
@@ -42,12 +43,12 @@ namespace StarterAssets
         {
             CheckMainCamera(prefabFolder);
 
-            GameObject vcam = GameObject.Find(CinemachineVirtualCameraName);
+            var vcam = GameObject.Find(CinemachineVirtualCameraName);
 
             if (!vcam)
             {
-                if (TryLocatePrefab(CinemachineVirtualCameraName, new string[] { prefabFolder },
-                        new[] { typeof(CinemachineVirtualCamera) }, out GameObject vcamPrefab, out string _))
+                if (TryLocatePrefab(CinemachineVirtualCameraName, new[] { prefabFolder },
+                        new[] { typeof(CinemachineVirtualCamera) }, out var vcamPrefab, out var _))
                 {
                     HandleInstantiatingPrefab(vcamPrefab, out vcam);
                     _cinemachineVirtualCamera = vcam;
@@ -62,8 +63,8 @@ namespace StarterAssets
                 _cinemachineVirtualCamera = vcam;
             }
 
-            GameObject[] targets = GameObject.FindGameObjectsWithTag(CinemachineTargetTag);
-            GameObject target = targets.FirstOrDefault(t => t.transform.IsChildOf(targetParent));
+            var targets = GameObject.FindGameObjectsWithTag(CinemachineTargetTag);
+            var target = targets.FirstOrDefault(t => t.transform.IsChildOf(targetParent));
             if (target == null)
             {
                 target = new GameObject("PlayerCameraRoot");
@@ -78,20 +79,16 @@ namespace StarterAssets
 
         private static void CheckMainCamera(string inFolder)
         {
-            GameObject[] mainCameras = GameObject.FindGameObjectsWithTag(MainCameraTag);
+            var mainCameras = GameObject.FindGameObjectsWithTag(MainCameraTag);
 
             if (mainCameras.Length < 1)
             {
                 // if there are no MainCameras, add one
-                if (TryLocatePrefab(MainCameraPrefabName, new string[] { inFolder },
-                        new[] { typeof(CinemachineBrain), typeof(Camera) }, out GameObject camera, out string _))
-                {
+                if (TryLocatePrefab(MainCameraPrefabName, new[] { inFolder },
+                        new[] { typeof(CinemachineBrain), typeof(Camera) }, out var camera, out var _))
                     HandleInstantiatingPrefab(camera, out _);
-                }
                 else
-                {
                     Debug.LogError("Couldn't find Starter Assets Main Camera prefab");
-                }
             }
             else
             {
@@ -111,42 +108,38 @@ namespace StarterAssets
             serializedObject.ApplyModifiedProperties();
         }
 
-        private static bool TryLocatePrefab(string name, string[] inFolders, System.Type[] requiredComponentTypes,
+        private static bool TryLocatePrefab(string name, string[] inFolders, Type[] requiredComponentTypes,
             out GameObject prefab, out string path)
         {
             // Locate the player armature
-            string[] allPrefabs = AssetDatabase.FindAssets("t:Prefab", inFolders);
-            for (int i = 0; i < allPrefabs.Length; ++i)
+            var allPrefabs = AssetDatabase.FindAssets("t:Prefab", inFolders);
+            for (var i = 0; i < allPrefabs.Length; ++i)
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(allPrefabs[i]);
+                var assetPath = AssetDatabase.GUIDToAssetPath(allPrefabs[i]);
 
                 if (assetPath.Contains("/StarterAssets/"))
                 {
-                    Object loadedObj = AssetDatabase.LoadMainAssetAtPath(assetPath);
+                    var loadedObj = AssetDatabase.LoadMainAssetAtPath(assetPath);
 
                     if (PrefabUtility.GetPrefabAssetType(loadedObj) != PrefabAssetType.NotAPrefab &&
                         PrefabUtility.GetPrefabAssetType(loadedObj) != PrefabAssetType.MissingAsset)
                     {
-                        GameObject loadedGo = loadedObj as GameObject;
-                        bool hasRequiredComponents = true;
+                        var loadedGo = loadedObj as GameObject;
+                        var hasRequiredComponents = true;
                         foreach (var componentType in requiredComponentTypes)
-                        {
                             if (!loadedGo.TryGetComponent(componentType, out _))
                             {
                                 hasRequiredComponents = false;
                                 break;
                             }
-                        }
 
                         if (hasRequiredComponents)
-                        {
                             if (loadedGo.name == name)
                             {
                                 prefab = loadedGo;
                                 path = assetPath;
                                 return true;
                             }
-                        }
                     }
                 }
             }

@@ -8,11 +8,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static class StaticStringBuilder
     {
-        private static StringBuilder builder = new StringBuilder();
+        private static readonly StringBuilder builder = new();
 
         public static int Length
         {
-            get { return builder.Length; }
+            get => builder.Length;
             set
             {
                 if (value >= 0 && value < builder.Length) builder.Length = value;
@@ -33,12 +33,12 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (escapeChars == null || escapeChars.Length % 2 != 0)
                 throw new Exception("Length of escapeChars must be N * 2");
-            for (int i = 0; i < value.Length; i++)
+            for (var i = 0; i < value.Length; i++)
             {
-                bool escaped = false;
-                for (int j = 0; j < escapeChars.Length; j += 2)
+                var escaped = false;
+                for (var j = 0; j < escapeChars.Length; j += 2)
                 {
-                    string s = escapeChars[j];
+                    var s = escapeChars[j];
                     if (value[i] == s[0])
                     {
                         builder.Append(escapeChars[j + 1]);
@@ -60,7 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static string GetString(bool clear = false)
         {
-            string s = builder.ToString();
+            var s = builder.ToString();
             if (clear) Clear();
             return s;
         }

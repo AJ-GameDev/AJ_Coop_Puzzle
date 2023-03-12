@@ -1,7 +1,7 @@
 {
-    "EditorFolderRoot": "Assets/StarterAssets/",
-    "PackagesToAdd": [
-        "com.unity.cinemachine",
-        "com.unity.inputsystem"
-    ]
+  "EditorFolderRoot": "Assets/StarterAssets/",
+  "PackagesToAdd": [
+    "com.unity.cinemachine",
+    "com.unity.inputsystem"
+  ]
 }

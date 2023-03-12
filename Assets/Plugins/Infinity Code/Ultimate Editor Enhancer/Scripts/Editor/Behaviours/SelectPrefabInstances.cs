@@ -15,15 +15,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         [MenuItem(MENU_ITEM, false, 85)]
         public static void Select()
         {
-            List<string> prefabPaths = Selection.gameObjects
+            var prefabPaths = Selection.gameObjects
                 .Where(g => g.scene.name != null && PrefabUtility.IsPartOfAnyPrefab(g))
                 .Select(g => PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(g)).Distinct().ToList();
-            GameObject[] allObjects = Object.FindObjectsOfType<GameObject>(true);
-            List<GameObject> result = new List<GameObject>();
+            var allObjects = Object.FindObjectsOfType<GameObject>(true);
+            var result = new List<GameObject>();
 
-            foreach (GameObject go in allObjects)
+            foreach (var go in allObjects)
             {
-                string path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(go);
+                var path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(go);
                 if (string.IsNullOrEmpty(path)) continue;
                 if (prefabPaths.Contains(path)) result.Add(go);
             }

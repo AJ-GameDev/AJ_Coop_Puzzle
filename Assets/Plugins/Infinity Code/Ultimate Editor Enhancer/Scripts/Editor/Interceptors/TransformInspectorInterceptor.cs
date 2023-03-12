@@ -12,20 +12,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         public static Func<Editor, bool> DrawInspector3D;
 
-        protected override MethodInfo originalMethod
-        {
-            get => TransformInspectorRef.inspector3DMethod;
-        }
+        protected override MethodInfo originalMethod => TransformInspectorRef.inspector3DMethod;
 
-        public override bool state
-        {
-            get => true;
-        }
+        public override bool state => true;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(Inspector3DPrefix);
-        }
+        protected override string prefixMethodName => nameof(Inspector3DPrefix);
 
         private static bool Inspector3DPrefix(Editor __instance)
         {

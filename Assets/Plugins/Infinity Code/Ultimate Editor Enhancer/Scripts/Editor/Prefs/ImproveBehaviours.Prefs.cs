@@ -27,42 +27,35 @@ namespace InfinityCode.UltimateEditorEnhancer
                         "Drag And Drop To Canvas",
                         "Maximize Game View By Shortcut (SHIFT + Space)",
                         "Number Fields",
-                        "Curve Editor",
+                        "Curve Editor"
                     };
                 }
             }
 
-            public override float order
-            {
-                get { return Order.improveBehaviors; }
-            }
+            public override float order => Order.improveBehaviors;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
-                List<Shortcut> shortcuts = new List<Shortcut>();
+                var shortcuts = new List<Shortcut>();
                 if (improveAddComponentBehaviour)
-                {
                     shortcuts.Add(new Shortcut("Add Component To Selected GameObject", "Everywhere",
 #if !UNITY_EDITOR_OSX
-                        "CTRL + SHIFT + A"
+                    "CTRL + SHIFT + A"
 #else
                         "CMD + SHIFT + A"
 #endif
                     ));
-                }
 
                 if (improveMaximizeGameViewBehaviour)
-                {
                     shortcuts.Add(new Shortcut("Maximize GameView", "Game View", "SHIFT + SPACE"));
-                }
 
                 if (changeNumberFieldValueByArrow)
                 {
-                    EventModifiers m1 = EventModifiers.Shift;
+                    var m1 = EventModifiers.Shift;
 #if !UNITY_EDITOR_OSX
                     EventModifiers m2 = EventModifiers.Control;
 #else
-                    EventModifiers m2 = EventModifiers.Command;
+                    var m2 = EventModifiers.Command;
 #endif
 
                     shortcuts.Add(new Shortcut("Increase Value By 1", "Number Field", EventModifiers.None,

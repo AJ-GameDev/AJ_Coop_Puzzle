@@ -26,38 +26,32 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 get
                 {
-                    JsonArray jArr = new JsonArray();
-                    for (int i = 0; i < ReferenceManager.favoriteWindows.Count; i++)
-                    {
+                    var jArr = new JsonArray();
+                    for (var i = 0; i < ReferenceManager.favoriteWindows.Count; i++)
                         jArr.Add(ReferenceManager.favoriteWindows[i].json);
-                    }
 
                     return jArr;
                 }
                 set
                 {
                     if (ReferenceManager.favoriteWindows.Count > 0)
-                    {
                         if (!EditorUtility.DisplayDialog("Import Favorite Windows",
-                                "Favorite Windows already contain items", "Replace", "Ignore")) return;
-                    }
+                                "Favorite Windows already contain items", "Replace", "Ignore"))
+                            return;
 
                     ReferenceManager.favoriteWindows.Clear();
 
-                    foreach (JsonItem ji in value)
+                    foreach (var ji in value)
                     {
-                        FavoriteWindowItem item = new FavoriteWindowItem(ji);
+                        var item = new FavoriteWindowItem(ji);
                         item.title = ji.Value<string>("title");
                         item.className = ji.Value<string>("className");
                         if (migrationReplace)
-                        {
                             item.className = item.className.Replace("InfinityCode.uContextPro",
                                     "InfinityCode.UltimateEditorEnhancer")
                                 .Replace("InfinityCode.uContext", "InfinityCode.UltimateEditorEnhancer")
                                 .Replace("uContext-Editor", "UltimateEditorEnhancer-Editor")
                                 .Replace("uContext-Pro-Editor", "UltimateEditorEnhancer-Editor");
-                        }
-
                         ReferenceManager.favoriteWindows.Add(item);
                     }
                 }
@@ -69,7 +63,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     return new[]
                     {
-                        "Favorite Windows In Context Menu",
+                        "Favorite Windows In Context Menu"
                     };
                 }
             }
@@ -118,11 +112,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             private void DrawElement(Rect rect, int index, bool isactive, bool isfocused)
             {
-                FavoriteWindowItem item = ReferenceManager.favoriteWindows[index];
+                var item = ReferenceManager.favoriteWindows[index];
 
                 EditorGUI.BeginChangeCheck();
-                Rect r = new Rect(rect);
-                float lineHeight = rect.height / 2;
+                var r = new Rect(rect);
+                var lineHeight = rect.height / 2;
                 r.height = lineHeight - 2;
                 item.title = EditorGUI.TextField(r, "Title", item.title);
                 if (EditorGUI.EndChangeCheck()) ReferenceManager.Save();
@@ -151,13 +145,13 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             private void WaitWindowChanged()
             {
-                EditorWindow wnd = EditorWindow.focusedWindow;
+                var wnd = EditorWindow.focusedWindow;
 
                 if (wnd == null) return;
                 if (wnd.GetType() == ProjectSettingsWindowRef.type) return;
 
                 EditorApplication.update -= WaitWindowChanged;
-                string className = wnd.GetType().AssemblyQualifiedName;
+                var className = wnd.GetType().AssemblyQualifiedName;
                 if (ReferenceManager.favoriteWindows.All(r => r.className != className))
                 {
                     ReferenceManager.favoriteWindows.Add(new FavoriteWindowItem(wnd));

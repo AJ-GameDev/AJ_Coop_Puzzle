@@ -10,7 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
     [InitializeOnLoad]
     public static class SoloVisibility
     {
-        private static int phase = 0;
+        private static int phase;
 
         static SoloVisibility()
         {
@@ -22,35 +22,29 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (go == null) return false;
             if (SceneVisibilityStateRef.IsGameObjectHidden(go)) return true;
 
-            Transform current = go.transform;
-            Transform parent = current.parent;
+            var current = go.transform;
+            var parent = current.parent;
             while (parent != null)
             {
-                for (int i = 0; i < parent.childCount; i++)
+                for (var i = 0; i < parent.childCount; i++)
                 {
-                    Transform t = parent.GetChild(i);
+                    var t = parent.GetChild(i);
                     if (t == current) continue;
 
-                    GameObject g = t.gameObject;
-                    if (!SceneVisibilityStateRef.IsGameObjectHidden(g))
-                    {
-                        return true;
-                    }
+                    var g = t.gameObject;
+                    if (!SceneVisibilityStateRef.IsGameObjectHidden(g)) return true;
                 }
 
                 current = parent;
                 parent = parent.parent;
             }
 
-            GameObject[] rootObjects = go.scene.GetRootGameObjects();
-            for (int i = 0; i < rootObjects.Length; i++)
+            var rootObjects = go.scene.GetRootGameObjects();
+            for (var i = 0; i < rootObjects.Length; i++)
             {
-                GameObject g = rootObjects[i];
+                var g = rootObjects[i];
                 if (!SceneVisibilityStateRef.IsGameObjectHidden(g) && g.transform != current &&
-                    g.hideFlags != HideFlags.HideInHierarchy && g.hideFlags != HideFlags.HideAndDontSave)
-                {
-                    return true;
-                }
+                    g.hideFlags != HideFlags.HideInHierarchy && g.hideFlags != HideFlags.HideAndDontSave) return true;
             }
 
             return false;
@@ -59,19 +53,19 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private static void HideOther(GameObject go)
         {
             if (go == null) return;
-            object instance = SceneVisibilityManagerRef.GetInstance();
+            var instance = SceneVisibilityManagerRef.GetInstance();
             SceneVisibilityManagerRef.Show(instance, go, true);
 
-            Transform current = go.transform;
-            Transform parent = current.parent;
+            var current = go.transform;
+            var parent = current.parent;
             while (parent != null)
             {
-                for (int i = 0; i < parent.childCount; i++)
+                for (var i = 0; i < parent.childCount; i++)
                 {
-                    Transform t = parent.GetChild(i);
+                    var t = parent.GetChild(i);
                     if (current == t) continue;
 
-                    GameObject g = t.gameObject;
+                    var g = t.gameObject;
                     SceneVisibilityManagerRef.Hide(instance, g, true);
                 }
 
@@ -79,10 +73,10 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 parent = parent.parent;
             }
 
-            GameObject[] rootObjects = go.scene.GetRootGameObjects();
-            for (int i = 0; i < rootObjects.Length; i++)
+            var rootObjects = go.scene.GetRootGameObjects();
+            for (var i = 0; i < rootObjects.Length; i++)
             {
-                GameObject g = rootObjects[i];
+                var g = rootObjects[i];
                 if (g.transform != current) SceneVisibilityManagerRef.Hide(instance, g, true);
             }
         }
@@ -90,19 +84,19 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private static void ShowEverything(GameObject go)
         {
             if (go == null) return;
-            object instance = SceneVisibilityManagerRef.GetInstance();
+            var instance = SceneVisibilityManagerRef.GetInstance();
             SceneVisibilityManagerRef.Show(instance, go, true);
 
-            Transform current = go.transform;
-            Transform parent = current.parent;
+            var current = go.transform;
+            var parent = current.parent;
             while (parent != null)
             {
-                for (int i = 0; i < parent.childCount; i++)
+                for (var i = 0; i < parent.childCount; i++)
                 {
-                    Transform t = parent.GetChild(i);
+                    var t = parent.GetChild(i);
                     if (current == t) continue;
 
-                    GameObject g = t.gameObject;
+                    var g = t.gameObject;
                     SceneVisibilityManagerRef.Show(instance, g, true);
                 }
 
@@ -110,17 +104,17 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 parent = parent.parent;
             }
 
-            GameObject[] rootObjects = go.scene.GetRootGameObjects();
-            for (int i = 0; i < rootObjects.Length; i++)
+            var rootObjects = go.scene.GetRootGameObjects();
+            for (var i = 0; i < rootObjects.Length; i++)
             {
-                GameObject g = rootObjects[i];
+                var g = rootObjects[i];
                 if (g.transform != current) SceneVisibilityManagerRef.Show(instance, g, true);
             }
         }
 
         private static void ToggleSoloVisibility(GameObject go)
         {
-            bool state = GetSoloVisibilityState(go);
+            var state = GetSoloVisibilityState(go);
             if (state) HideOther(go);
             else ShowEverything(go);
         }
@@ -129,12 +123,12 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         {
             if (!Prefs.hierarchySoloVisibility) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (phase == 0)
             {
                 if (e.type != EventType.MouseDown) return;
                 if (e.button != 1) return;
-                Vector2 pos = e.mousePosition;
+                var pos = e.mousePosition;
                 if (pos.x > 16) return;
 
                 phase = 1;
@@ -147,8 +141,8 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
                 if (e.type == EventType.Repaint)
                 {
-                    Vector2 pos = e.mousePosition;
-                    Rect rect = item.rect;
+                    var pos = e.mousePosition;
+                    var rect = item.rect;
                     if (pos.y < rect.y || pos.y > rect.yMax) return;
 
                     ToggleSoloVisibility(item.gameObject);
@@ -161,7 +155,10 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                         e.Use();
                         phase = 0;
                     }
-                    else phase = 2;
+                    else
+                    {
+                        phase = 2;
+                    }
                 }
             }
             else if (phase == 2)

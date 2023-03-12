@@ -33,10 +33,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static Type type
-        {
-            get => typeof(GUIContent);
-        }
+        public static Type type => typeof(GUIContent);
 
         public static GUIContent TempContent(string label)
         {

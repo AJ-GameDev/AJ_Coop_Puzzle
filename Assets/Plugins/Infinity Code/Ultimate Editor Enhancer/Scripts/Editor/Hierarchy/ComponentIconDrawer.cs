@@ -9,6 +9,7 @@ using InfinityCode.UltimateEditorEnhancer.Integration;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 {
@@ -16,7 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
     public static class ComponentIconDrawer
     {
         private static GameObject prevTarget;
-        private static List<Item> prevItems;
+        private static readonly List<Item> prevItems;
         private static Dictionary<int, List<Item>> cache;
         private static bool ehVisible = true;
         private static int ehRightMargin;
@@ -43,7 +44,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         {
             if (!Prefs.hierarchyIcons) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHoverWithModifiers &&
                 e.modifiers != Prefs.hierarchyIconsModifiers)
             {
@@ -63,7 +64,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 ehVisible = false;
             }
 
-            Rect rect = item.rect;
+            var rect = item.rect;
 
             if (Prefs.hierarchyIconsDisplayRule != HierarchyIconsDisplayRule.always)
             {
@@ -73,9 +74,15 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                     {
                         if (item.id == activeID) activeID = -1;
                     }
-                    else activeID = item.id;
+                    else
+                    {
+                        activeID = item.id;
+                    }
                 }
-                else if (activeID != item.id) return;
+                else if (activeID != item.id)
+                {
+                    return;
+                }
 
                 if (item.gameObject != prevTarget)
                 {
@@ -85,34 +92,28 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
                 if (prevTarget == null) return;
 
-                Rect lastRect = new Rect(rect.xMax, rect.y, 0, rect.height);
-                if (prevItems.Any(i => i.content.tooltip == "Cinemachine Brain"))
-                {
-                    lastRect.x -= 20;
-                }
+                var lastRect = new Rect(rect.xMax, rect.y, 0, rect.height);
+                if (prevItems.Any(i => i.content.tooltip == "Cinemachine Brain")) lastRect.x -= 20;
 
-                for (int i = prevItems.Count - 1; i >= 0; i--)
+                for (var i = prevItems.Count - 1; i >= 0; i--)
                 {
-                    Item iconItem = prevItems[i];
-                    float lastX = iconItem.Draw(lastRect);
+                    var iconItem = prevItems[i];
+                    var lastX = iconItem.Draw(lastRect);
                     lastRect.x = lastX;
                 }
             }
             else
             {
-                Rect lastRect = new Rect(rect.xMax, rect.y, 0, rect.height);
+                var lastRect = new Rect(rect.xMax, rect.y, 0, rect.height);
 
-                List<Item> items = GetItemsFromCache(item.gameObject, rect);
+                var items = GetItemsFromCache(item.gameObject, rect);
 
-                if (items.Any(i => i.content.tooltip == "Cinemachine Brain"))
+                if (items.Any(i => i.content.tooltip == "Cinemachine Brain")) lastRect.x -= 20;
+
+                for (var i = items.Count - 1; i >= 0; i--)
                 {
-                    lastRect.x -= 20;
-                }
-
-                for (int i = items.Count - 1; i >= 0; i--)
-                {
-                    Item iconItem = items[i];
-                    float lastX = iconItem.Draw(lastRect);
+                    var iconItem = items[i];
+                    var lastX = iconItem.Draw(lastRect);
                     lastRect.x = lastX;
                 }
             }
@@ -133,21 +134,21 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
         private static void ShowAddComponent(Rect hierarchyRect)
         {
-            Event e = Event.current;
-            Vector2 position = e.mousePosition;
+            var e = Event.current;
+            var position = e.mousePosition;
             position.y = hierarchyRect.yMax;
             if (EditorWindow.focusedWindow != null) position += EditorWindow.focusedWindow.position.position;
             else position = HandleUtility.GUIPointToScreenPixelCoordinate(position);
 
             Vector2 size = Prefs.defaultWindowSize;
-            Rect rect = new Rect(position + new Vector2(-size.x / 2, 36), size);
+            var rect = new Rect(position + new Vector2(-size.x / 2, 36), size);
 
 #if !UNITY_EDITOR_OSX
             if (rect.yMax > Screen.currentResolution.height - 10) rect.y -= rect.height - 50;
 
             if (rect.x < 5) rect.x = 5;
-            else if (rect.xMax > Screen.currentResolution.width - 5)
-                rect.x = Screen.currentResolution.width - 5 - rect.width;
+            else if (rect.xMax > Screen.currentResolution.width - 5) rect.x =
+ Screen.currentResolution.width - 5 - rect.width;
 #endif
 
             Selection.activeGameObject = prevTarget;
@@ -156,14 +157,14 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
         private static void ShowComponent(Component component, Rect hierarchyRect)
         {
-            Event e = Event.current;
-            Vector2 position = e.mousePosition;
+            var e = Event.current;
+            var position = e.mousePosition;
             position.y = hierarchyRect.yMax;
             if (EditorWindow.focusedWindow != null) position += EditorWindow.focusedWindow.position.position;
             else position = HandleUtility.GUIPointToScreenPixelCoordinate(position);
 
             Vector2 size = Prefs.defaultWindowSize;
-            Rect rect = new Rect(position + new Vector2(-size.x / 2, 36), size);
+            var rect = new Rect(position + new Vector2(-size.x / 2, 36), size);
 
 #if !UNITY_EDITOR_OSX
             if (rect.yMax > Screen.currentResolution.height - 10) rect.y -= rect.height - 50;
@@ -181,16 +182,16 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             }
 #endif
 
-            ComponentWindow wnd = ComponentWindow.Show(component);
+            var wnd = ComponentWindow.Show(component);
             wnd.position = rect;
         }
 
         private static void ShowMore(IEnumerable<Component> components, Rect rect)
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
-            bool useSeparator = false;
+            var menu = GenericMenuEx.Start();
+            var useSeparator = false;
 
-            foreach (Component c in components)
+            foreach (var c in components)
             {
                 menu.Add(c.GetType().Name, () =>
                 {
@@ -222,15 +223,15 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
             if (target == null) return;
 
-            Component[] components = target.GetComponents<Component>();
+            var components = target.GetComponents<Component>();
             Item item;
 
-            for (int i = 0; i < Mathf.Min(components.Length, Prefs.hierarchyIconsMaxItems); i++)
+            for (var i = 0; i < Mathf.Min(components.Length, Prefs.hierarchyIconsMaxItems); i++)
             {
-                Component component = components[i];
+                var component = components[i];
                 if (component == null) continue;
-                Texture2D thumbnail = AssetPreview.GetMiniThumbnail(component);
-                GUIContent content = new GUIContent(
+                var thumbnail = AssetPreview.GetMiniThumbnail(component);
+                var content = new GUIContent(
                     thumbnail,
                     ObjectNames.NicifyVariableName(component.GetType().Name)
                 );
@@ -242,14 +243,14 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 item.OnDrag += () =>
                 {
                     DragAndDrop.PrepareStartDrag();
-                    DragAndDrop.objectReferences = new UnityEngine.Object[] { component };
+                    DragAndDrop.objectReferences = new Object[] { component };
                     DragAndDrop.StartDrag("Drag Component");
                 };
                 item.OnRightClick += () => ComponentUtils.ShowContextMenu(component);
                 items.Add(item);
             }
 
-            int moreItems = components.Length - Prefs.hierarchyIconsMaxItems;
+            var moreItems = components.Length - Prefs.hierarchyIconsMaxItems;
 
             item = new Item(new GUIContent(moreItems > 0 ? "+" + moreItems : "...", "More"));
             item.OnClick += () => ShowMore(components.Skip(Prefs.hierarchyIconsMaxItems), rect);
@@ -270,10 +271,10 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
             public float Draw(Rect rect)
             {
-                bool useButton = !string.IsNullOrEmpty(content.text);
+                var useButton = !string.IsNullOrEmpty(content.text);
                 rect.xMin -= useButton ? Styles.hierarchyIcon.CalcSize(content).x + 8 : 18;
                 GUI.Box(rect, content, Styles.hierarchyIcon);
-                Event e = Event.current;
+                var e = Event.current;
                 if (!rect.Contains(e.mousePosition)) return rect.x;
                 if (e.type == EventType.MouseUp)
                 {

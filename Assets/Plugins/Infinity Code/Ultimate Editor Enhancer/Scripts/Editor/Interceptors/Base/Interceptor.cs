@@ -17,22 +17,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         protected static Harmony harmony;
         protected MethodInfo patch;
 
-        protected virtual InitType initType
-        {
-            get => InitType.immediately;
-        }
+        protected virtual InitType initType => InitType.immediately;
 
         protected abstract MethodInfo originalMethod { get; }
 
-        protected virtual string prefixMethodName
-        {
-            get => null;
-        }
+        protected virtual string prefixMethodName => null;
 
-        protected virtual string postfixMethodName
-        {
-            get => null;
-        }
+        protected virtual string postfixMethodName => null;
 
         protected virtual void Init()
         {
@@ -41,23 +32,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         [InitializeOnLoadMethod]
         private static async void InitInterceptors()
         {
-            TypeCache.TypeCollection types = TypeCache.GetTypesDerivedFrom<Interceptor>();
-            List<Interceptor> phaseOne = new List<Interceptor>();
-            List<Interceptor> phaseTwo = new List<Interceptor>();
+            var types = TypeCache.GetTypesDerivedFrom<Interceptor>();
+            var phaseOne = new List<Interceptor>();
+            var phaseTwo = new List<Interceptor>();
 
             harmony = new Harmony("InfinityCode.UltimateEditorEnhancer");
 
-            foreach (Type type in types)
+            foreach (var type in types)
             {
                 if (type.IsAbstract) continue;
-                Interceptor interceptor = Activator.CreateInstance(type) as Interceptor;
+                var interceptor = Activator.CreateInstance(type) as Interceptor;
                 interceptor.Init();
                 if (interceptor.initType == InitType.immediately) phaseOne.Add(interceptor);
                 else phaseTwo.Add(interceptor);
             }
 
-            foreach (Interceptor interceptor in phaseOne)
-            {
+            foreach (var interceptor in phaseOne)
                 try
                 {
                     interceptor.Patch();
@@ -65,13 +55,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                 catch
                 {
                 }
-            }
 
             while (GUISkinRef.GetCurrent() == null) await Task.Delay(1);
 
             Debug.unityLogger.logEnabled = false;
-            foreach (Interceptor interceptor in phaseTwo)
-            {
+            foreach (var interceptor in phaseTwo)
                 try
                 {
                     interceptor.Patch();
@@ -79,7 +67,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                 catch
                 {
                 }
-            }
 
             Debug.unityLogger.logEnabled = true;
         }
@@ -89,7 +76,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             if (!Prefs.unsafeFeatures) return;
             if (patch != null) return;
 
-            MethodInfo original = originalMethod;
+            var original = originalMethod;
             if (original == null) return;
 
             try
@@ -97,17 +84,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                 HarmonyMethod prefix = null;
                 HarmonyMethod postfix = null;
 
-                string _prefixName = prefixMethodName;
+                var _prefixName = prefixMethodName;
                 if (!string.IsNullOrEmpty(_prefixName))
                 {
-                    MethodInfo prefixMethod = AccessTools.Method(GetType(), _prefixName);
+                    var prefixMethod = AccessTools.Method(GetType(), _prefixName);
                     if (prefixMethod != null) prefix = new HarmonyMethod(prefixMethod);
                 }
 
-                string _postfixName = postfixMethodName;
+                var _postfixName = postfixMethodName;
                 if (!string.IsNullOrEmpty(_postfixName))
                 {
-                    MethodInfo postfixMethod = AccessTools.Method(GetType(), _postfixName);
+                    var postfixMethod = AccessTools.Method(GetType(), _postfixName);
                     if (postfixMethod != null) postfix = new HarmonyMethod(postfixMethod);
                 }
 

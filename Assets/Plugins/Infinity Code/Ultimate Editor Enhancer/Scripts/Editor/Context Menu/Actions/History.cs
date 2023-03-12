@@ -1,10 +1,8 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System.Collections.Generic;
 using InfinityCode.UltimateEditorEnhancer.Behaviors;
 using InfinityCode.UltimateEditorEnhancer.Tools;
-using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,15 +11,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class History : ActionItem
     {
-        protected override bool closeOnSelect
-        {
-            get { return false; }
-        }
+        protected override bool closeOnSelect => false;
 
-        public override float order
-        {
-            get { return 800; }
-        }
+        public override float order => 800;
 
         protected override void Init()
         {
@@ -30,15 +22,15 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         public override void Invoke()
         {
-            List<SelectionHistory.SelectionRecord> selectionItems = SelectionHistory.records;
+            var selectionItems = SelectionHistory.records;
 
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
-            List<SceneHistoryItem> sceneRecords = ReferenceManager.sceneHistory;
-            Scene activeScene = SceneManager.GetActiveScene();
-            for (int i = 0; i < sceneRecords.Count; i++)
+            var sceneRecords = ReferenceManager.sceneHistory;
+            var activeScene = SceneManager.GetActiveScene();
+            for (var i = 0; i < sceneRecords.Count; i++)
             {
-                SceneHistoryItem r = sceneRecords[i];
+                var r = sceneRecords[i];
                 if (r.path == activeScene.path) continue;
 
                 menu.Add("Scenes/" + r.name, () =>
@@ -48,10 +40,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                 });
             }
 
-            for (int i = 0; i < selectionItems.Count; i++)
+            for (var i = 0; i < selectionItems.Count; i++)
             {
-                int ci = i;
-                string names = selectionItems[i].GetShortNames();
+                var ci = i;
+                var names = selectionItems[i].GetShortNames();
                 if (string.IsNullOrEmpty(names)) continue;
                 menu.Add("Selection/" + names, SelectionHistory.activeIndex == i, () =>
                 {
@@ -60,10 +52,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                 });
             }
 
-            List<ToolbarWindows.WindowRecord> recentWindows = ToolbarWindows.recent;
-            for (int i = 0; i < recentWindows.Count; i++)
+            var recentWindows = ToolbarWindows.recent;
+            for (var i = 0; i < recentWindows.Count; i++)
             {
-                ToolbarWindows.WindowRecord r = recentWindows[i];
+                var r = recentWindows[i];
                 menu.Add("Windows/" + r.title, () =>
                 {
                     ToolbarWindows.RestoreRecentWindow(r);

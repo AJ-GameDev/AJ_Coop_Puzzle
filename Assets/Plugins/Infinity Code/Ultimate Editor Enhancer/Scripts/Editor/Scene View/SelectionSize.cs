@@ -24,11 +24,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!Event.current.capsLock && !forcedShow) return;
             if (!SelectionBoundsManager.hasBounds) return;
-            GameObject first = SelectionBoundsManager.firstGameObject;
+            var first = SelectionBoundsManager.firstGameObject;
             if (first == null || first.scene.name == null) return;
 
             if (style == null)
-            {
                 style = new GUIStyle(StyleID)
                 {
                     fontSize = 10,
@@ -42,23 +41,22 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     padding = new RectOffset(),
                     stretchWidth = true
                 };
-            }
 
-            Color color = Handles.color;
+            var color = Handles.color;
             Handles.color = Color.red;
 
-            Bounds bounds = SelectionBoundsManager.bounds;
-            Vector3 min = bounds.min;
-            Vector3 max = bounds.max;
+            var bounds = SelectionBoundsManager.bounds;
+            var min = bounds.min;
+            var max = bounds.max;
 
-            Vector3 p1 = min;
-            Vector3 p2 = new Vector3(max.x, min.y, min.z);
-            Vector3 p3 = new Vector3(min.x, max.y, min.z);
-            Vector3 p4 = new Vector3(min.x, min.y, max.z);
-            Vector3 p5 = new Vector3(max.x, max.y, min.z);
-            Vector3 p6 = new Vector3(max.x, min.y, max.z);
-            Vector3 p7 = new Vector3(min.x, max.y, max.z);
-            Vector3 p8 = max;
+            var p1 = min;
+            var p2 = new Vector3(max.x, min.y, min.z);
+            var p3 = new Vector3(min.x, max.y, min.z);
+            var p4 = new Vector3(min.x, min.y, max.z);
+            var p5 = new Vector3(max.x, max.y, min.z);
+            var p6 = new Vector3(max.x, min.y, max.z);
+            var p7 = new Vector3(min.x, max.y, max.z);
+            var p8 = max;
 
             Handles.DrawLine(p1, p2);
             Handles.DrawLine(p1, p3);
@@ -78,29 +76,29 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (points == null)
             {
                 points = new Point[12];
-                for (int i = 0; i < 12; i++) points[i] = new Point();
+                for (var i = 0; i < 12; i++) points[i] = new Point();
             }
 
             if (Event.current.type == EventType.Layout)
             {
-                Vector3 d1 = (p1 + p2) / 2;
-                Vector3 d2 = (p3 + p5) / 2;
-                Vector3 d3 = (p7 + p8) / 2;
-                Vector3 d4 = (p4 + p6) / 2;
+                var d1 = (p1 + p2) / 2;
+                var d2 = (p3 + p5) / 2;
+                var d3 = (p7 + p8) / 2;
+                var d4 = (p4 + p6) / 2;
 
-                Vector3 d5 = (p1 + p3) / 2;
-                Vector3 d6 = (p2 + p5) / 2;
-                Vector3 d7 = (p4 + p7) / 2;
-                Vector3 d8 = (p6 + p8) / 2;
+                var d5 = (p1 + p3) / 2;
+                var d6 = (p2 + p5) / 2;
+                var d7 = (p4 + p7) / 2;
+                var d8 = (p6 + p8) / 2;
 
-                Vector3 d9 = (p1 + p4) / 2;
-                Vector3 d10 = (p2 + p6) / 2;
-                Vector3 d11 = (p3 + p7) / 2;
-                Vector3 d12 = (p5 + p8) / 2;
+                var d9 = (p1 + p4) / 2;
+                var d10 = (p2 + p6) / 2;
+                var d11 = (p3 + p7) / 2;
+                var d12 = (p5 + p8) / 2;
 
-                string m1 = (p1 - p2).magnitude.ToString("F2");
-                string m2 = (p1 - p3).magnitude.ToString("F2");
-                string m3 = (p1 - p4).magnitude.ToString("F2");
+                var m1 = (p1 - p2).magnitude.ToString("F2");
+                var m2 = (p1 - p3).magnitude.ToString("F2");
+                var m3 = (p1 - p4).magnitude.ToString("F2");
 
                 points[0].label = points[1].label = points[2].label = points[3].label = m1;
                 points[4].label = points[5].label = points[6].label = points[7].label = m2;
@@ -119,7 +117,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 points[10].pos = d11;
                 points[11].pos = d12;
 
-                Vector3 camPos = sceneView.camera.transform.position;
+                var camPos = sceneView.camera.transform.position;
 
                 points[0].distance = (d1 - camPos).sqrMagnitude;
                 points[1].distance = (d2 - camPos).sqrMagnitude;
@@ -144,10 +142,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
             else
             {
-                foreach (Point p in points.OrderByDescending(p => p.distance))
-                {
-                    Handles.Label(p.pos, p.label, style);
-                }
+                foreach (var p in points.OrderByDescending(p => p.distance)) Handles.Label(p.pos, p.label, style);
             }
 
             Handles.color = color;

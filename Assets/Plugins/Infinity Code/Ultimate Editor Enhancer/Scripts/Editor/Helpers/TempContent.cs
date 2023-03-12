@@ -7,8 +7,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static class TempContent
     {
-        private static GUIContent _text = new GUIContent();
-        private static GUIContent _image = new GUIContent();
+        private static readonly GUIContent _text = new();
+        private static readonly GUIContent _image = new();
 
         public static GUIContent Get(string text)
         {

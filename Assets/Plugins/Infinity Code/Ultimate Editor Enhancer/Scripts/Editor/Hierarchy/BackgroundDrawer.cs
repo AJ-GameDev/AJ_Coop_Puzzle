@@ -23,7 +23,10 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 backgroundTexture = Resources.Load<Texture2D>("Textures/Other/HierarchyBackground.png");
                 if (backgroundTexture == null) backgroundTexture = Resources.CreateSinglePixelTexture(1, 0.3f);
             }
-            else backgroundTexture = Resources.CreateSinglePixelTexture(1, 0.3f);
+            else
+            {
+                backgroundTexture = Resources.CreateSinglePixelTexture(1, 0.3f);
+            }
         }
 
         private static void OnDrawItem(HierarchyItem item)
@@ -31,20 +34,20 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (!Prefs.hierarchyRowBackground) return;
             if (Event.current.type != EventType.Repaint) return;
 
-            GameObject target = item.gameObject;
+            var target = item.gameObject;
             if (target == null) return;
 
-            SceneReferences r = SceneReferences.Get(item.gameObject.scene, false);
+            var r = SceneReferences.Get(item.gameObject.scene, false);
             if (r == null) return;
 
-            SceneReferences.HierarchyBackground background = r.GetBackground(item.gameObject);
+            var background = r.GetBackground(item.gameObject);
             if (background == null) return;
 
             if (backgroundTexture == null) InitTexture();
 
-            Color guiColor = GUI.color;
+            var guiColor = GUI.color;
             GUI.color = background.color;
-            Rect rect = item.rect;
+            var rect = item.rect;
             rect.xMin += 16;
             GUI.DrawTexture(rect, backgroundTexture, ScaleMode.StretchToFill);
             GUI.color = guiColor;

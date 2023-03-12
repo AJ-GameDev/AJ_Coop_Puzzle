@@ -23,10 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static Type type
-        {
-            get => typeof(Selection);
-        }
+        public static Type type => typeof(Selection);
 
         public static void Add(GameObject go)
         {

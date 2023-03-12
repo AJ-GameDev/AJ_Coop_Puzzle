@@ -17,17 +17,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static IList activeItems;
         private static GUIStyle audioClipButtonStyle;
         private static GUIContent closeContent;
-
-        private static Dictionary<SceneReferences, ReorderableList> sceneItemsList =
-            new Dictionary<SceneReferences, ReorderableList>();
-
+        private static Dictionary<SceneReferences, ReorderableList> sceneItemsList = new();
         private static GUIContent showContent;
         private static GUIStyle showContentStyle;
         private static ReorderableList projectItemsList;
 
         private void DrawListElement(Rect rect, int index, bool isactive, bool isfocused)
         {
-            BookmarkItem item = activeItems[index] as BookmarkItem;
+            var item = activeItems[index] as BookmarkItem;
             DrawRow(item, rect);
         }
 
@@ -36,13 +33,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             DrawRowFirstButton(item, ref rect);
             DrawRowSecondButton(item, ref rect);
 
-            ButtonEvent event1 = DrawRowPreview(item, ref rect);
-            string tooltip = "Click - Select Object";
+            var event1 = DrawRowPreview(item, ref rect);
+            var tooltip = "Click - Select Object";
             if (item.target is DefaultAsset) tooltip += "\nDouble Click - Open Folder";
 
-            Rect r = new Rect(rect);
+            var r = new Rect(rect);
             r.width -= 20;
-            ButtonEvent event2 = GUILayoutUtils.Button(r, TempContent.Get(item.title, tooltip), EditorStyles.label);
+            var event2 = GUILayoutUtils.Button(r, TempContent.Get(item.title, tooltip), EditorStyles.label);
 
             ProcessRowEvents(item, event1, event2);
 
@@ -57,20 +54,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void DrawRowFirstButton(BookmarkItem item, ref Rect rect)
         {
             showContent.tooltip = GetShowTooltip(item);
-            Rect r = new Rect(rect) { width = 20 };
+            var r = new Rect(rect) { width = 20 };
             r.y += 2;
             rect.xMin += 20;
             if (!GUI.Button(r, showContent, showContentStyle)) return;
 
-            if (item.target is Component) ComponentWindow.Show(item.target as Component);
+            if (item.target is Component)
+            {
+                ComponentWindow.Show(item.target as Component);
+            }
             else if (item.target is SceneAsset)
             {
-                string path = AssetDatabase.GetAssetPath(item.target);
+                var path = AssetDatabase.GetAssetPath(item.target);
 
-                if (SceneManagerHelper.AskForSave(SceneManager.GetActiveScene()))
-                {
-                    EditorSceneManager.OpenScene(path);
-                }
+                if (SceneManagerHelper.AskForSave(SceneManager.GetActiveScene())) EditorSceneManager.OpenScene(path);
             }
             else if (item.target as GameObject)
             {
@@ -84,22 +81,25 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     WindowsHelper.ShowInspector();
                 }
             }
-            else EditorUtility.OpenWithDefaultApp(AssetDatabase.GetAssetPath(item.target));
+            else
+            {
+                EditorUtility.OpenWithDefaultApp(AssetDatabase.GetAssetPath(item.target));
+            }
         }
 
         private ButtonEvent DrawRowPreview(BookmarkItem item, ref Rect rect)
         {
             if (item.preview == null || !item.previewLoaded) InitPreview(item);
 
-            Rect r = new Rect(rect) { width = 20 };
+            var r = new Rect(rect) { width = 20 };
             rect.xMin += 20;
-            ButtonEvent event1 = GUILayoutUtils.Button(r, TempContent.Get(item.preview), GUIStyle.none);
+            var event1 = GUILayoutUtils.Button(r, TempContent.Get(item.preview), GUIStyle.none);
             return event1;
         }
 
         private void DrawRowSecondButton(BookmarkItem item, ref Rect rect)
         {
-            Rect r = new Rect(rect)
+            var r = new Rect(rect)
             {
                 width = 20
             };
@@ -111,12 +111,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             else if (item.gameObject != null)
             {
-                bool hidden = SceneVisibilityStateRef.IsGameObjectHidden(item.gameObject);
+                var hidden = SceneVisibilityStateRef.IsGameObjectHidden(item.gameObject);
                 if (GUI.Button(r, hidden ? hiddenContent : visibleContent, Styles.transparentButton))
-                {
                     SceneVisibilityManagerRef.ToggleVisibility(SceneVisibilityManagerRef.GetInstance(), item.gameObject,
                         true);
-                }
             }
 
             rect.xMin += 20;
@@ -124,9 +122,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawTreeItems(IEnumerable<BookmarkItem> treeItems)
         {
-            foreach (BookmarkItem item in treeItems)
+            foreach (var item in treeItems)
             {
-                Rect rect = GUILayoutUtility.GetRect(position.width, position.width, 20, 20);
+                var rect = GUILayoutUtility.GetRect(position.width, position.width, 20, 20);
                 DrawRow(item, rect);
             }
         }
@@ -135,7 +133,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (list == null)
             {
-                bool hasHeader = !string.IsNullOrEmpty(label);
+                var hasHeader = !string.IsNullOrEmpty(label);
                 list = new ReorderableList(treeItems, typeof(BookmarkItem), true, hasHeader, false, false);
                 list.onReorderCallback += OnReorder;
                 list.elementHeight = 20;
@@ -149,7 +147,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private string GetShowTooltip(BookmarkItem item)
         {
-            string tooltip = "Show";
+            var tooltip = "Show";
 
             if (item.isProjectItem)
             {
@@ -175,9 +173,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void PlayStopAudioClipButton(BookmarkItem item, Rect rect)
         {
-            AudioClip audioClip = item.target as AudioClip;
-            bool isPlayed = AudioUtilsRef.IsClipPlaying(audioClip);
-            GUIContent playContent = isPlayed ? EditorIconContents.pauseButtonOn : EditorIconContents.playButtonOn;
+            var audioClip = item.target as AudioClip;
+            var isPlayed = AudioUtilsRef.IsClipPlaying(audioClip);
+            var playContent = isPlayed ? EditorIconContents.pauseButtonOn : EditorIconContents.playButtonOn;
 
             if (audioClipButtonStyle == null)
             {
@@ -194,7 +192,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ProcessRowEvents(BookmarkItem item, ButtonEvent event1, ButtonEvent event2)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (event1 == ButtonEvent.click || event2 == ButtonEvent.click)
             {
                 if (e.button == 0)

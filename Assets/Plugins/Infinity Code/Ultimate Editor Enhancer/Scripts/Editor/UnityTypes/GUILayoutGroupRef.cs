@@ -17,9 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_peekNextMethod == null)
-                {
                     _peekNextMethod = Reflection.GetMethod(type, "PeekNext", new Type[0], Reflection.InstanceLookup);
-                }
 
                 return _peekNextMethod;
             }

@@ -38,7 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return new[]
                 {
-                    new Shortcut("Ungroup GameObjects", "Everywhere", ungroupModifiers, ungroupKeyCode),
+                    new Shortcut("Ungroup GameObjects", "Everywhere", ungroupModifiers, ungroupKeyCode)
                 };
             }
 

@@ -1,6 +1,7 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using UnityEditor;
 using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
@@ -14,14 +15,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static GameObject GetContainer()
         {
-            TemporaryContainer temporaryContainer = FindObjectOfType<TemporaryContainer>();
+            var temporaryContainer = FindObjectOfType<TemporaryContainer>();
             if (temporaryContainer == null)
             {
-                GameObject go = new GameObject("Temporary Container");
+                var go = new GameObject("Temporary Container");
                 go.tag = "EditorOnly";
                 temporaryContainer = go.AddComponent<TemporaryContainer>();
 #if UNITY_EDITOR
-                UnityEditor.Undo.RegisterCreatedObjectUndo(go, "Create Temporary Container");
+                Undo.RegisterCreatedObjectUndo(go, "Create Temporary Container");
 #endif
             }
 

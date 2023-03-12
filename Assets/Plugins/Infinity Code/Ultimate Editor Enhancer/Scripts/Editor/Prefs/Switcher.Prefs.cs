@@ -37,10 +37,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return Order.switcher; }
-            }
+            public override float order => Order.switcher;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -49,7 +46,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return new[]
                 {
                     new Shortcut("Switch Between Scene View and Game View", "Scene View or Game View",
-                        switcherWindowsModifiers, switcherWindowsKeyCode),
+                        switcherWindowsModifiers, switcherWindowsKeyCode)
                 };
             }
 

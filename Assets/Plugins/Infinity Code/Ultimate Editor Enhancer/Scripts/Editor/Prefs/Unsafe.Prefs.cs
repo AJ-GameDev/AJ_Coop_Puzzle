@@ -21,40 +21,21 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static int hasUnsafeBlock = -1; // -1 - unknown, 0 - no block, 1 - has block
 
-        public static bool changeNumberFieldValueByArrow
-        {
-            get => _changeNumberFieldValueByArrow && unsafeFeatures;
-        }
+        public static bool changeNumberFieldValueByArrow => _changeNumberFieldValueByArrow && unsafeFeatures;
 
-        public static bool expandLongTextFields
-        {
-            get => _expandLongTextFields && unsafeFeatures;
-        }
+        public static bool expandLongTextFields => _expandLongTextFields && unsafeFeatures;
 
-        public static bool hierarchyTypeFilter
-        {
-            get => _hierarchyTypeFilter && unsafeFeatures;
-        }
+        public static bool hierarchyTypeFilter => _hierarchyTypeFilter && unsafeFeatures;
 
-        public static bool improveCurveEditor
-        {
-            get => _improveCurveEditor && unsafeFeatures;
-        }
+        public static bool improveCurveEditor => _improveCurveEditor && unsafeFeatures;
 
-        public static bool searchInEnumFields
-        {
-            get => _searchInEnumFields && unsafeFeatures;
-        }
+        public static bool searchInEnumFields => _searchInEnumFields && unsafeFeatures;
 
         public static bool unsafeFeatures
         {
             get
             {
-                if (hasUnsafeBlock == -1)
-                {
-                    hasUnsafeBlock = File.Exists("UEENoUnsafe.txt") ? 1 : 0;
-                }
-
+                if (hasUnsafeBlock == -1) hasUnsafeBlock = File.Exists("UEENoUnsafe.txt") ? 1 : 0;
                 return _unsafeFeatures && hasUnsafeBlock == 0;
             }
         }

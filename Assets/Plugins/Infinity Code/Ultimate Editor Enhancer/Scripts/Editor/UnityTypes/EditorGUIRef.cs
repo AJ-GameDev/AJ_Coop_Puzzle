@@ -71,11 +71,9 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_doObjectFoldoutMethod == null)
-                {
                     _doObjectFoldoutMethod = Reflection.GetMethod(type, "DoObjectFoldout",
                         new[] { typeof(bool), typeof(Rect), typeof(Rect), typeof(Object[]), typeof(int) },
                         Reflection.StaticLookup);
-                }
 
                 return _doObjectFoldoutMethod;
             }
@@ -108,7 +106,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_doTextFieldMethod == null)
-                {
                     _doTextFieldMethod = type.GetMethod(
                         "DoTextField",
                         Reflection.StaticLookup,
@@ -132,8 +129,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         },
                         null
                     );
-                }
-
                 return _doTextFieldMethod;
             }
         }
@@ -143,7 +138,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_dragNumberValueMethod == null)
-                {
                     _dragNumberValueMethod = type.GetMethod(
                         "DragNumberValue",
                         Reflection.StaticLookup,
@@ -159,8 +153,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         },
                         null
                     );
-                }
-
                 return _dragNumberValueMethod;
             }
         }
@@ -182,15 +174,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_hasKeyboardFocusMethod == null)
-                {
                     _hasKeyboardFocusMethod = type.GetMethod(
                         "HasKeyboardFocus",
                         Reflection.StaticLookup,
                         null,
                         new[] { typeof(int) },
                         null);
-                }
-
                 return _hasKeyboardFocusMethod;
             }
         }
@@ -219,10 +208,8 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_isEditingTextFieldMethod == null)
-                {
                     _isEditingTextFieldMethod =
                         Reflection.GetMethod(type, "IsEditingTextField", Reflection.StaticLookup);
-                }
 
                 return _isEditingTextFieldMethod;
             }
@@ -238,10 +225,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        private static Type type
-        {
-            get => typeof(EditorGUI);
-        }
+        private static Type type => typeof(EditorGUI);
 
         public static object GetRecycledEditor()
         {
@@ -264,26 +248,23 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
             public NumberFieldValue(double v)
             {
-                this.isDouble = true;
-                this.doubleVal = v;
-                this.longVal = 0L;
-                this.expression = null;
-                this.success = false;
+                isDouble = true;
+                doubleVal = v;
+                longVal = 0L;
+                expression = null;
+                success = false;
             }
 
             public NumberFieldValue(long v)
             {
-                this.isDouble = false;
-                this.doubleVal = 0.0;
-                this.longVal = v;
-                this.expression = null;
-                this.success = false;
+                isDouble = false;
+                doubleVal = 0.0;
+                longVal = v;
+                expression = null;
+                success = false;
             }
 
-            public bool hasResult
-            {
-                get { return this.success || this.expression != null; }
-            }
+            public bool hasResult => success || expression != null;
         }
     }
 }

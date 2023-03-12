@@ -13,15 +13,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     {
         static MaximizeGameView()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += () => Prefs.improveMaximizeGameViewBehaviour;
             binding.OnPress += OnInvoke;
         }
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
-            EditorWindow wnd = EditorWindow.focusedWindow;
+            var e = Event.current;
+            var wnd = EditorWindow.focusedWindow;
             if (wnd != null &&
                 ((wnd.GetType() == GameViewRef.type && e.keyCode == KeyCode.Space &&
                   e.modifiers == EventModifiers.Shift) ||

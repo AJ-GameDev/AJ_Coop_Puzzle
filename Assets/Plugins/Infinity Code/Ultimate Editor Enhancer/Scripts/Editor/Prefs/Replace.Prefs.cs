@@ -37,7 +37,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return new[]
                 {
-                    new Shortcut("Replace Selected GameObjects", "Everywhere", replaceModifiers, replaceKeyCode),
+                    new Shortcut("Replace Selected GameObjects", "Everywhere", replaceModifiers, replaceKeyCode)
                 };
             }
 

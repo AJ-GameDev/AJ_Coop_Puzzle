@@ -9,7 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer
     [InitializeOnLoad]
     public static class InputManager
     {
-        private static bool[] mouseStates = new bool[3];
+        private static readonly bool[] mouseStates = new bool[3];
 
         static InputManager()
         {
@@ -18,7 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void OnSceneView(SceneView view)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.MouseDown)
             {
                 if (e.button < 3) mouseStates[e.button] = true;

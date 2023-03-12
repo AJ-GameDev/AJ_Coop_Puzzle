@@ -27,60 +27,32 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             Load();
         }
 
-        protected virtual Rect areaRect
-        {
-            get { return rect; }
-        }
+        protected virtual Rect areaRect => rect;
 
         protected abstract string prefKey { get; }
         protected abstract Vector2 size { get; }
 
         public bool isDirty
         {
-            get { return _isDirty; }
-            set { _isDirty = _isDirty || value; }
+            get => _isDirty;
+            set => _isDirty = _isDirty || value;
         }
 
-        public bool hasLeftAlign
-        {
-            get
-            {
-                return align == ToolbarAlign.left || align == ToolbarAlign.topLeft || align == ToolbarAlign.bottomLeft;
-            }
-        }
+        public bool hasLeftAlign => align == ToolbarAlign.left || align == ToolbarAlign.topLeft ||
+                                    align == ToolbarAlign.bottomLeft;
 
-        public bool hasRightAlign
-        {
-            get
-            {
-                return align == ToolbarAlign.right || align == ToolbarAlign.topRight ||
-                       align == ToolbarAlign.bottomRight;
-            }
-        }
+        public bool hasRightAlign => align == ToolbarAlign.right || align == ToolbarAlign.topRight ||
+                                     align == ToolbarAlign.bottomRight;
 
-        public bool hasVerticalCenterAlign
-        {
-            get { return align == ToolbarAlign.top || align == ToolbarAlign.bottom; }
-        }
+        public bool hasVerticalCenterAlign => align == ToolbarAlign.top || align == ToolbarAlign.bottom;
 
-        public bool hasTopAlign
-        {
-            get { return align == ToolbarAlign.top || align == ToolbarAlign.topLeft || align == ToolbarAlign.topRight; }
-        }
+        public bool hasTopAlign =>
+            align == ToolbarAlign.top || align == ToolbarAlign.topLeft || align == ToolbarAlign.topRight;
 
-        public bool hasBottomAlign
-        {
-            get
-            {
-                return align == ToolbarAlign.bottom || align == ToolbarAlign.bottomLeft ||
-                       align == ToolbarAlign.bottomRight;
-            }
-        }
+        public bool hasBottomAlign => align == ToolbarAlign.bottom || align == ToolbarAlign.bottomLeft ||
+                                      align == ToolbarAlign.bottomRight;
 
-        public bool hasHorizontalCenterAlign
-        {
-            get { return align == ToolbarAlign.left || align == ToolbarAlign.right; }
-        }
+        public bool hasHorizontalCenterAlign => align == ToolbarAlign.left || align == ToolbarAlign.right;
 
         protected abstract void DrawBackground();
         protected abstract void DrawContent();
@@ -90,7 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             DrawBackground();
 
-            Rect headerRect = DrawHeader();
+            var headerRect = DrawHeader();
             ProcessHeaderEvents(SceneViewManager.GetRect(sceneView), headerRect);
 
             DrawContent();
@@ -98,12 +70,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void Load()
         {
-            string key = Prefs.Prefix + prefKey;
+            var key = Prefs.Prefix + prefKey;
 
-            string jsonString = EditorPrefs.GetString(key, null);
+            var jsonString = EditorPrefs.GetString(key, null);
             if (string.IsNullOrEmpty(jsonString)) return;
 
-            JsonItem json = Json.Parse(jsonString);
+            var json = Json.Parse(jsonString);
             align = (ToolbarAlign)json.V<int>("align");
             position = json.V<Vector2>("position");
 
@@ -139,7 +111,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (Event.current.type == EventType.Layout)
             {
-                bool v = Visible();
+                var v = Visible();
                 if (lastVisible && !v)
                 {
                     OnDisable();
@@ -155,7 +127,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (borderTexture == null) borderTexture = Resources.CreateSinglePixelTexture(0.1f);
 
-            Rect viewRect = SceneViewManager.GetRect(sceneView);
+            var viewRect = SceneViewManager.GetRect(sceneView);
 
             if (_isDirty)
             {
@@ -199,14 +171,14 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void ProcessHeaderDrag(Rect sceneRect, Rect headerRect)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (isDragging)
             {
                 rect.position += e.delta;
                 pressMousePosition -= e.delta;
                 Vector2 newPosition;
-                ToolbarAlign newAlign = SceneViewAlignDrawer.Update(sceneRect, rect, out newPosition);
+                var newAlign = SceneViewAlignDrawer.Update(sceneRect, rect, out newPosition);
                 if (newAlign != align || newPosition != position)
                 {
                     align = newAlign;
@@ -225,11 +197,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         protected void ProcessHeaderEvents(Rect sceneRect, Rect headerRect)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
-            if (e.type == EventType.MouseDown) ProcessHeaderPress(sceneRect, headerRect);
-            else if (e.type == EventType.MouseUp) ProcessHeaderRelease(sceneRect, headerRect);
-            else if (e.type == EventType.MouseDrag) ProcessHeaderDrag(sceneRect, headerRect);
+            if (e.type == EventType.MouseDown)
+            {
+                ProcessHeaderPress(sceneRect, headerRect);
+            }
+            else if (e.type == EventType.MouseUp)
+            {
+                ProcessHeaderRelease(sceneRect, headerRect);
+            }
+            else if (e.type == EventType.MouseDrag)
+            {
+                ProcessHeaderDrag(sceneRect, headerRect);
+            }
             else if (e.type == EventType.MouseMove && isDragging)
             {
                 isDragging = false;
@@ -242,7 +223,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void ProcessHeaderRelease(Rect sceneRect, Rect headerRect)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.button == 0)
             {
@@ -256,19 +237,17 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 }
 
                 if (headerRect.Contains(e.mousePosition) && (e.mousePosition - pressMousePosition).sqrMagnitude < 10)
-                {
                     OnHeaderClick();
-                }
             }
         }
 
         private void ProcessHeaderPress(Rect sceneRect, Rect headerRect)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (!headerRect.Contains(e.mousePosition)) return;
 
-            Vector2 mousePosition = e.mousePosition;
+            var mousePosition = e.mousePosition;
             if (e.button == 0)
             {
                 GUIUtility.hotControl = GUIUtility.GetControlID(FocusType.Passive);
@@ -279,7 +258,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 {
                     isDragging = true;
                     Vector2 newPosition;
-                    ToolbarAlign newAlign = SceneViewAlignDrawer.Show(sceneRect, rect, out newPosition);
+                    var newAlign = SceneViewAlignDrawer.Show(sceneRect, rect, out newPosition);
                     if (newAlign != align || newPosition != position)
                     {
                         align = newAlign;
@@ -313,7 +292,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 position
             };
 
-            JsonItem json = Json.Serialize(fields);
+            var json = Json.Serialize(fields);
 
             OnSave(json as JsonObject);
 
@@ -322,7 +301,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void ShowHeaderContextMenu()
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
             PrepareHeaderContextMenu(menu);
 
@@ -333,7 +312,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private void TryFixPosition(Rect sceneRect)
         {
-            bool changed = false;
+            var changed = false;
 
             if (hasLeftAlign)
             {
@@ -362,7 +341,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
             else if (hasBottomAlign)
             {
-                int bottomY = -5;
+                var bottomY = -5;
 
                 if (position.y > bottomY)
                 {
@@ -382,10 +361,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             rect = new Rect(position, size);
 
-            Vector2 sceneSize = sceneRect.size;
-            float sceneHeight = sceneSize.y;
+            var sceneSize = sceneRect.size;
+            var sceneHeight = sceneSize.y;
 
-            Rect r = QuickAccess.GetFreeRect(sceneRect);
+            var r = QuickAccess.GetFreeRect(sceneRect);
             rect.x += r.x;
             sceneSize.x -= r.x;
 

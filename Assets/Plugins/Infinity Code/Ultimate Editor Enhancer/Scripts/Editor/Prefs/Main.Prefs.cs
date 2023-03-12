@@ -24,8 +24,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 #endif
 
         public static bool contextMenuOnHotKey = true;
-        public static bool contextMenuDisableInPlayMode = false;
-        public static bool contextMenuPauseInPlayMode = false;
+        public static bool contextMenuDisableInPlayMode;
+        public static bool contextMenuPauseInPlayMode;
 
         public class ContextMenuMainManager : StandalonePrefManager<ContextMenuMainManager>, IHasShortcutPref
         {
@@ -41,33 +41,26 @@ namespace InfinityCode.UltimateEditorEnhancer
                         "Pause In Play Mode",
                         "Favorite Windows In Context Menu",
                         "Show Context Menu On Right Click",
-                        "Window Size",
+                        "Window Size"
                     };
                 }
             }
 
-            public override float order
-            {
-                get { return -100; }
-            }
+            public override float order => -100;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
-                List<Shortcut> shortcuts = new List<Shortcut>();
+                var shortcuts = new List<Shortcut>();
 
                 if (contextMenuOnRightClick)
-                {
                     shortcuts.Add(new Shortcut("Show Context Menu", "Scene View", rightClickModifiers, "RMB"));
-                }
 
                 shortcuts.Add(new Shortcut("Show Context Menu", "Everywhere", contextMenuHotKeyModifiers,
                     contextMenuHotKey));
 
                 if (pickGameObject)
-                {
                     shortcuts.Add(new Shortcut("Pick GameObject and Show Context Menu", "Scene View",
                         pickGameObjectModifiers, "RMB"));
-                }
 
                 shortcuts.Add(new Shortcut("Close Context Menu", "Context Menu", "Escape"));
                 shortcuts.Add(new Shortcut("Close Context Menu", "Everywhere", "LMB or RMB"));
@@ -106,11 +99,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUILayout.EndHorizontal();
 
                 if (contextMenuOnRightClick && pickGameObject && rightClickModifiers == pickGameObjectModifiers)
-                {
                     EditorGUILayout.HelpBox(
                         "The modifiers for the right click and the pick GameObject must be different.",
                         MessageType.Error);
-                }
 
                 EditorGUI.EndDisabledGroup();
             }

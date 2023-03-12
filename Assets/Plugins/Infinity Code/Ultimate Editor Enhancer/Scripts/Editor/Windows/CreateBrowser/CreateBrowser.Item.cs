@@ -11,7 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         public abstract class Item : SearchableItem
         {
-            private static int hash = "CreateBrowserItem".GetHashCode();
+            private static readonly int hash = "CreateBrowserItem".GetHashCode();
 
             protected GUIContent _content;
             internal string label;
@@ -34,14 +34,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public virtual void Draw()
             {
-                Rect r = GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.label, GUILayout.Height(18));
+                var r = GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.label, GUILayout.Height(18));
 
-                Event e = Event.current;
+                var e = Event.current;
 
                 if (e.type == EventType.Repaint)
                 {
                     if (selectedItem == this) GUI.DrawTexture(r, Styles.selectedRowTexture);
-                    int cid = GUIUtility.GetControlID(hash, FocusType.Passive);
+                    var cid = GUIUtility.GetControlID(hash, FocusType.Passive);
                     EditorStyles.label.Draw(r, content, cid, false, false);
                 }
 

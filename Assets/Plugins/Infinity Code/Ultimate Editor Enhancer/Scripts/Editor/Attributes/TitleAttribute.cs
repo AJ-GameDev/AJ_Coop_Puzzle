@@ -11,7 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
         public readonly string displayName;
 
         /// <summary>
-        ///   <para>Specify a display name for an enum value.</para>
+        ///     <para>Specify a display name for an enum value.</para>
         /// </summary>
         /// <param name="displayName">The name to display.</param>
         public TitleAttribute(string displayName)

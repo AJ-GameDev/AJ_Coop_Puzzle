@@ -10,11 +10,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         internal class GameObjectRecord : Record
         {
-            private GameObject _gameObject;
-
             public GameObjectRecord(GameObject gameObject)
             {
-                _gameObject = gameObject;
+                this.gameObject = gameObject;
 
                 search = new[]
                 {
@@ -22,59 +20,44 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 };
             }
 
-            public GameObject gameObject
-            {
-                get => _gameObject;
-            }
+            public GameObject gameObject { get; private set; }
 
-            public override Object target
-            {
-                get => _gameObject;
-            }
+            public override Object target => gameObject;
 
             public override string tooltip
             {
                 get
                 {
-                    if (_tooltip == null) _tooltip = GameObjectUtils.GetGameObjectPath(_gameObject).ToString();
+                    if (_tooltip == null) _tooltip = GameObjectUtils.GetGameObjectPath(gameObject).ToString();
                     return _tooltip;
                 }
             }
 
-            public override string type
-            {
-                get => "gameobject";
-            }
+            public override string type => "gameobject";
 
             public override void Dispose()
             {
                 base.Dispose();
-                _gameObject = null;
+                gameObject = null;
             }
 
             public override void Select(int state)
             {
                 if (state == 2)
-                {
                     WindowsHelper.ShowInspector();
-                }
                 else if (state == 1)
-                {
-                    if (SceneView.lastActiveSceneView != null) SceneView.lastActiveSceneView.Focus();
-                }
+                    if (SceneView.lastActiveSceneView != null)
+                        SceneView.lastActiveSceneView.Focus();
 
                 Selection.activeGameObject = gameObject;
                 EditorGUIUtility.PingObject(gameObject);
 
-                if (state == 3)
-                {
-                    SceneView.FrameLastActiveSceneView();
-                }
+                if (state == 3) SceneView.FrameLastActiveSceneView();
             }
 
             protected override void ShowContextMenu(int index)
             {
-                GameObjectUtils.ShowContextMenu(false, _gameObject);
+                GameObjectUtils.ShowContextMenu(false, gameObject);
             }
 
             public override void UpdateGameObjectName(GameObject go)

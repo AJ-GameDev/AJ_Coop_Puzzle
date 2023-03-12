@@ -2,14 +2,12 @@
 /*     https://infinity-code.com    */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using InfinityCode.UltimateEditorEnhancer.Editors;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
@@ -54,16 +52,14 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
             EditorGUILayout.LabelField($"{step}.1. Delete Assets / Plugins / Infinity Code / uContext Pro folder");
 #endif
             if (GUILayout.Button("Delete Folder(s)"))
-            {
-                for (int i = 0; i < 2; i++)
+                for (var i = 0; i < 2; i++)
                 {
-                    string basicPath = "Assets/Plugins/Infinity Code/uContext";
+                    var basicPath = "Assets/Plugins/Infinity Code/uContext";
                     if (Directory.Exists(basicPath)) AssetDatabase.DeleteAsset(basicPath);
 
-                    string proPath = basicPath + " Pro";
+                    var proPath = basicPath + " Pro";
                     if (Directory.Exists(proPath)) AssetDatabase.DeleteAsset(proPath);
                 }
-            }
 
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         }
@@ -110,17 +106,17 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
 #if UCONTEXT_PRO
             string symbolStr = "UCONTEXT and UCONTEXT_PRO";
 #else
-            string symbolStr = "UCONTEXT";
+            var symbolStr = "UCONTEXT";
 #endif
 
             EditorGUILayout.LabelField($"{step}. Open Player Settings and remove {symbolStr} define symbols");
             if (GUILayout.Button("Remove Symbol(s)"))
             {
-                string symbols =
+                var symbols =
                     PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
                 if (!string.IsNullOrEmpty(symbols))
                 {
-                    List<string> keys = symbols.Split(';').ToList();
+                    var keys = symbols.Split(';').ToList();
                     keys.Remove("UCONTEXT");
                     keys.Remove("UCONTEXT_PRO");
 
@@ -136,14 +132,14 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
         {
             if (oldType == null) return;
 
-            MonoScript script = MissedScriptEditor.scripts.FirstOrDefault(s => s.GetClass() == newType);
-            Object[] objects = FindObjectsOfType(oldType, true);
-            foreach (Object obj in objects)
+            var script = MissedScriptEditor.scripts.FirstOrDefault(s => s.GetClass() == newType);
+            var objects = FindObjectsOfType(oldType, true);
+            foreach (var obj in objects)
             {
-                SerializedObject so = new SerializedObject(obj);
+                var so = new SerializedObject(obj);
                 try
                 {
-                    SerializedProperty sp = so.FindProperty("m_Script");
+                    var sp = so.FindProperty("m_Script");
                     sp.objectReferenceValue = script;
                     so.ApplyModifiedProperties();
                 }
@@ -155,18 +151,16 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
 
         private static void UpdateReferences()
         {
-            Assembly assembly = Assembly.Load("uContext");
+            var assembly = Assembly.Load("uContext");
             if (assembly == null) return;
 
-            Type sceneReferencesType = assembly.GetType("InfinityCode.uContext.SceneReferences");
+            var sceneReferencesType = assembly.GetType("InfinityCode.uContext.SceneReferences");
             if (sceneReferencesType != null)
             {
-                Object[] sceneReferences = FindObjectsOfType(sceneReferencesType, true);
+                var sceneReferences = FindObjectsOfType(sceneReferencesType, true);
 
-                foreach (Object sr in sceneReferences)
-                {
+                foreach (var sr in sceneReferences)
                     (sr as Component).gameObject.name = "Ultimate Editor Enhancer References";
-                }
 
                 ReplaceAllScripts(sceneReferencesType, typeof(SceneReferences));
             }

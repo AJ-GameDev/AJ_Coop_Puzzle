@@ -14,35 +14,35 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         public const string COLLECTION_TAG = "Collection";
         private const int DIALOG_HEIGHT = 105;
 
-        private static string defaultName = "Group";
+        private static readonly string defaultName = "Group";
         private static GameObject[] _targets;
         private static InputDialog dialog;
-        private static bool createCollection = false;
-        private static int align = 0;
+        private static bool createCollection;
+        private static int align;
         private static Transform parent;
 
-        private static GUIContent[] singleAlign =
+        private static readonly GUIContent[] singleAlign =
         {
-            new GUIContent("Original Position"),
-            new GUIContent("Center Position"),
-            new GUIContent("Zero Local Position")
+            new("Original Position"),
+            new("Center Position"),
+            new("Zero Local Position")
         };
 
-        private static int[] singleAlignValues = { 2, 0, 1 };
+        private static readonly int[] singleAlignValues = { 2, 0, 1 };
 
-        private static GUIContent[] multipleAlign =
+        private static readonly GUIContent[] multipleAlign =
         {
-            new GUIContent("Center Position"),
-            new GUIContent("Zero Local Position")
+            new("Center Position"),
+            new("Zero Local Position")
         };
 
-        private static int[] multipleAlignValues = { 0, 1 };
+        private static readonly int[] multipleAlignValues = { 0, 1 };
         private static GUIContent[] alignContents;
         private static int[] alignValues;
 
         static Group()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += () => Selection.gameObjects.Length > 0;
             binding.OnPress += OnInvoke;
 
@@ -52,9 +52,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         [MenuItem("GameObject/Create Empty Collection", priority = 1)]
         public static GameObject Create()
         {
-            GameObject go = new GameObject("Collection");
+            var go = new GameObject("Collection");
             GameObjectUtils.SetCustomTag(go, COLLECTION_TAG);
-            GameObject active = Selection.activeGameObject;
+            var active = Selection.activeGameObject;
             if (active != null)
             {
                 go.transform.SetParent(active.transform.parent);
@@ -72,11 +72,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             if (p1 == null || p2 == null) return null;
             if (p1 == p2) return p1;
 
-            List<Transform> rp1 = new List<Transform> { p1 };
-            List<Transform> rp2 = new List<Transform> { p2 };
+            var rp1 = new List<Transform> { p1 };
+            var rp2 = new List<Transform> { p2 };
 
-            Transform tp1 = p1;
-            Transform tp2 = p2;
+            var tp1 = p1;
+            var tp2 = p2;
 
             while (tp1.parent != null)
             {
@@ -92,11 +92,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
             Transform p = null;
 
-            for (int i = 0; i < Mathf.Min(rp1.Count, rp2.Count); i++)
-            {
+            for (var i = 0; i < Mathf.Min(rp1.Count, rp2.Count); i++)
                 if (rp1[i] == rp2[i]) p = rp1[i];
                 else break;
-            }
 
             return p;
         }
@@ -121,9 +119,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             align = alignValues[0];
 
             parent = _targets[0].transform.parent;
-            for (int i = 1; i < _targets.Length; i++) parent = FindParent(parent, _targets[i].transform.parent);
+            for (var i = 1; i < _targets.Length; i++) parent = FindParent(parent, _targets[i].transform.parent);
 
-            string name = defaultName;
+            var name = defaultName;
             if (targets.Length == 1) name = targets[0].name + " Container";
 
             dialog = InputDialog.Show("Enter name of GameObject", name, OnCreateGroup);
@@ -146,9 +144,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             if (_targets == null || _targets.Length == 0) return;
 
             Undo.SetCurrentGroupName("Group GameObjects");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
-            GameObject go = new GameObject(name);
+            var go = new GameObject(name);
             if (createCollection)
             {
                 GameObjectUtils.SetCustomTag(go, COLLECTION_TAG);
@@ -161,17 +159,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
             if (align == 0)
             {
-                Bounds bounds = new Bounds();
+                var bounds = new Bounds();
 
-                for (int i = 0; i < _targets.Length; i++)
+                for (var i = 0; i < _targets.Length; i++)
                 {
-                    GameObject t = _targets[i];
-                    Collider cl = t.GetComponent<Collider>();
+                    var t = _targets[i];
+                    var cl = t.GetComponent<Collider>();
                     Bounds b;
-                    if (cl != null) b = cl.bounds;
+                    if (cl != null)
+                    {
+                        b = cl.bounds;
+                    }
                     else
                     {
-                        Renderer r = t.GetComponent<Renderer>();
+                        var r = t.GetComponent<Renderer>();
                         if (r != null) b = r.bounds;
                         else b = new Bounds(t.transform.position, Vector3.zero);
                     }
@@ -191,8 +192,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 go.transform.position = _targets[0].transform.position;
             }
 
-            bool addRectTransform = true;
-            foreach (GameObject g in _targets)
+            var addRectTransform = true;
+            foreach (var g in _targets)
             {
                 if (addRectTransform && g.GetComponent<RectTransform>() == null) addRectTransform = false;
                 Undo.SetTransformParent(g.transform, go.transform, g.name);
@@ -230,15 +231,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDrawLeftButtons(InputDialog dlg)
         {
-            if (GUILayout.Button("?", GUILayout.ExpandWidth(false)))
-            {
-                Links.OpenDocumentation("group-gameobjects");
-            }
+            if (GUILayout.Button("?", GUILayout.ExpandWidth(false))) Links.OpenDocumentation("group-gameobjects");
         }
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode == Prefs.groupKeyCode && e.modifiers == Prefs.groupModifiers) GroupSelection();
         }
 

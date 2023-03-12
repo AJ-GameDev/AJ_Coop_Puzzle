@@ -14,7 +14,7 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public static Action OnChanged;
         private static Bounds _bounds;
-        private static Vector3[] fourCorners = new Vector3[4];
+        private static readonly Vector3[] fourCorners = new Vector3[4];
 
         static SelectionBoundsManager()
         {
@@ -27,10 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             OnSelectionChanged();
         }
 
-        public static Bounds bounds
-        {
-            get { return _bounds; }
-        }
+        public static Bounds bounds => _bounds;
 
         public static GameObject firstGameObject
         {
@@ -38,13 +35,13 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (renderers.Count > 0)
                 {
-                    Renderer first = renderers.FirstOrDefault(r => r != null);
+                    var first = renderers.FirstOrDefault(r => r != null);
                     if (first != null) return first.gameObject;
                 }
 
                 if (rectTransforms.Count > 0)
                 {
-                    RectTransform first = rectTransforms.FirstOrDefault(r => r != null);
+                    var first = rectTransforms.FirstOrDefault(r => r != null);
                     if (first != null) return first.gameObject;
                 }
 
@@ -54,10 +51,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static bool hasBounds { get; private set; }
 
-        public static bool isRectTransform
-        {
-            get { return renderers.Count == 0 && rectTransforms.Count > 0; }
-        }
+        public static bool isRectTransform => renderers.Count == 0 && rectTransforms.Count > 0;
 
         private static List<RectTransform> rectTransforms { get; }
         private static List<Renderer> renderers { get; }
@@ -67,15 +61,14 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (!hasBounds) return;
             if (Event.current.type != EventType.Layout) return;
 
-            Bounds b = new Bounds();
+            var b = new Bounds();
 
-            bool isFirst = true;
+            var isFirst = true;
 
             if (renderers.Count > 0)
-            {
-                for (int i = 0; i < renderers.Count; i++)
+                for (var i = 0; i < renderers.Count; i++)
                 {
-                    Renderer r = renderers[i];
+                    var r = renderers[i];
                     if (r == null) continue;
 
                     if (isFirst)
@@ -83,15 +76,16 @@ namespace InfinityCode.UltimateEditorEnhancer
                         b = r.bounds;
                         isFirst = false;
                     }
-                    else b.Encapsulate(r.bounds);
+                    else
+                    {
+                        b.Encapsulate(r.bounds);
+                    }
                 }
-            }
 
             if (rectTransforms.Count > 0)
-            {
-                for (int i = 0; i < rectTransforms.Count; i++)
+                for (var i = 0; i < rectTransforms.Count; i++)
                 {
-                    RectTransform rt = rectTransforms[i];
+                    var rt = rectTransforms[i];
                     if (rt == null) continue;
 
                     rt.GetWorldCorners(fourCorners);
@@ -102,12 +96,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                         isFirst = false;
                     }
 
-                    for (int j = 0; j < 4; j++)
-                    {
-                        b.Encapsulate(fourCorners[j]);
-                    }
+                    for (var j = 0; j < 4; j++) b.Encapsulate(fourCorners[j]);
                 }
-            }
 
             if (b != _bounds)
             {
@@ -122,23 +112,22 @@ namespace InfinityCode.UltimateEditorEnhancer
             rectTransforms.Clear();
             hasBounds = false;
 
-            int[] instanceIDs = Selection.instanceIDs;
+            var instanceIDs = Selection.instanceIDs;
 
-            bool isFirst = true;
+            var isFirst = true;
 
-            foreach (int instanceID in instanceIDs)
+            foreach (var instanceID in instanceIDs)
             {
-                GameObject gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+                var gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
 
                 if (gameObject == null || gameObject.scene.name == null) continue;
 
-                Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
+                var rs = gameObject.GetComponentsInChildren<Renderer>();
                 if (rs != null && rs.Length != 0)
                 {
                     renderers.AddRange(rs);
 
-                    foreach (Renderer renderer in rs)
-                    {
+                    foreach (var renderer in rs)
                         if (isFirst)
                         {
                             _bounds = renderer.bounds;
@@ -148,15 +137,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                         {
                             _bounds.Encapsulate(renderer.bounds);
                         }
-                    }
                 }
 
-                RectTransform[] rts = gameObject.GetComponentsInChildren<RectTransform>();
+                var rts = gameObject.GetComponentsInChildren<RectTransform>();
                 if (rts != null && rts.Length > 0)
                 {
                     rectTransforms.AddRange(rts);
 
-                    foreach (RectTransform rt in rts)
+                    foreach (var rt in rts)
                     {
                         rt.GetWorldCorners(fourCorners);
 
@@ -166,10 +154,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                             isFirst = false;
                         }
 
-                        for (int i = 0; i < 4; i++)
-                        {
-                            _bounds.Encapsulate(fourCorners[i]);
-                        }
+                        for (var i = 0; i < 4; i++) _bounds.Encapsulate(fourCorners[i]);
                     }
                 }
             }

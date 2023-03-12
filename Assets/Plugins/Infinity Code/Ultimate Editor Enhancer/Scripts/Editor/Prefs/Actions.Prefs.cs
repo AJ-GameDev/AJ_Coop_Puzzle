@@ -9,7 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer
     public static partial class Prefs
     {
         public static bool actions = true;
-        public static bool actionsAddComponent = false;
+        public static bool actionsAddComponent;
 
         private class ActionsManager : StandalonePrefManager<ActionsManager>
         {
@@ -18,10 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return new[] { "Actions", "Add Component Action For Single GameObject In Actions" }; }
             }
 
-            public override float order
-            {
-                get { return -80; }
-            }
+            public override float order => -80;
 
             public override void Draw()
             {

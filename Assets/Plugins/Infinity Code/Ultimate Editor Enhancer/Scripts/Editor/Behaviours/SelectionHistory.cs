@@ -13,35 +13,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     {
         private const int MAX_RECORDS = 30;
 
-        private static List<SelectionRecord> _records;
-        private static int index = -1;
-        private static bool ignoreNextAdd = false;
+        private static bool ignoreNextAdd;
 
         static SelectionHistory()
         {
             Selection.selectionChanged += SelectionChanged;
 
-            KeyManager.KeyBinding prevBinding = KeyManager.AddBinding();
+            var prevBinding = KeyManager.AddBinding();
             prevBinding.OnValidate += ValidatePrev;
             prevBinding.OnPress += Prev;
 
-            KeyManager.KeyBinding nextBinding = KeyManager.AddBinding();
+            var nextBinding = KeyManager.AddBinding();
             nextBinding.OnValidate += ValidateNext;
             nextBinding.OnPress += Next;
 
-            _records = new List<SelectionRecord>();
+            records = new List<SelectionRecord>();
             if (Selection.instanceIDs.Length > 0) Add(Selection.instanceIDs);
         }
 
-        public static List<SelectionRecord> records
-        {
-            get { return _records; }
-        }
+        public static List<SelectionRecord> records { get; }
 
-        public static int activeIndex
-        {
-            get { return index; }
-        }
+        public static int activeIndex { get; private set; } = -1;
 
         public static void Add(params int[] ids)
         {
@@ -51,53 +43,47 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 return;
             }
 
-            while (_records.Count > index + 1)
-            {
-                _records.RemoveAt(_records.Count - 1);
-            }
+            while (records.Count > activeIndex + 1) records.RemoveAt(records.Count - 1);
 
-            while (_records.Count > MAX_RECORDS - 1)
-            {
-                _records.RemoveAt(_records.Count - 1);
-            }
+            while (records.Count > MAX_RECORDS - 1) records.RemoveAt(records.Count - 1);
 
-            SelectionRecord r = new SelectionRecord();
+            var r = new SelectionRecord();
             r.ids = ids;
             r.names = ids.Select(id =>
             {
-                Object obj = EditorUtility.InstanceIDToObject(id);
+                var obj = EditorUtility.InstanceIDToObject(id);
                 return obj != null ? obj.name : null;
             }).ToArray();
-            _records.Add(r);
+            records.Add(r);
 
-            index = _records.Count - 1;
+            activeIndex = records.Count - 1;
         }
 
         public static void Clear()
         {
-            _records.Clear();
+            records.Clear();
         }
 
         public static void Next()
         {
-            if (_records.Count == 0 || index >= _records.Count - 1) return;
+            if (records.Count == 0 || activeIndex >= records.Count - 1) return;
 
-            index++;
+            activeIndex++;
             ignoreNextAdd = true;
 
-            Selection.instanceIDs = _records[index].ids;
+            Selection.instanceIDs = records[activeIndex].ids;
 
             Event.current.Use();
         }
 
         public static void Prev()
         {
-            if (_records.Count == 0 || index <= 0) return;
+            if (records.Count == 0 || activeIndex <= 0) return;
 
-            index--;
+            activeIndex--;
             ignoreNextAdd = true;
 
-            Selection.instanceIDs = _records[index].ids;
+            Selection.instanceIDs = records[activeIndex].ids;
 
             Event.current.Use();
         }
@@ -113,8 +99,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
             ignoreNextAdd = true;
 
-            index = newIndex;
-            Selection.instanceIDs = _records[index].ids;
+            activeIndex = newIndex;
+            Selection.instanceIDs = records[activeIndex].ids;
         }
 
         private static bool ValidateNext()

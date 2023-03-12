@@ -18,21 +18,18 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static Action OnNextGUI;
         public static Func<bool> OnValidateOpenContextMenu;
 
-        private static Vector2 _lastMousePosition;
-        private static GameObject _lastGameObjectUnderCursor;
-        private static Vector3 _lastNormal;
         private static Vector3 _lastWorldPosition;
         private static Ray _screenRay;
-        private static bool beforeInvoked = false;
-        private static double lastUpdateLate = 0;
+        private static bool beforeInvoked;
+        private static double lastUpdateLate;
         private static List<Listener> lateListeners;
         private static List<Listener> listeners;
         private static Vector2 pressPoint;
-        private static Dictionary<int, VisualElement> rectElements;
+        private static readonly Dictionary<int, VisualElement> rectElements;
 
         private static bool waitOpenMenu;
-        private static Plane plane2D;
-        private static Plane plane3D;
+        private static readonly Plane plane2D;
+        private static readonly Plane plane3D;
 
         static SceneViewManager()
         {
@@ -44,30 +41,15 @@ namespace InfinityCode.UltimateEditorEnhancer
             plane2D = new Plane(Vector3.back, Vector3.zero);
         }
 
-        public static GameObject lastGameObjectUnderCursor
-        {
-            get { return _lastGameObjectUnderCursor; }
-        }
+        public static GameObject lastGameObjectUnderCursor { get; private set; }
 
-        public static Vector2 lastMousePosition
-        {
-            get { return _lastMousePosition; }
-        }
+        public static Vector2 lastMousePosition { get; private set; }
 
-        public static Ray lastScreenRay
-        {
-            get { return _screenRay; }
-        }
+        public static Ray lastScreenRay => _screenRay;
 
-        public static Vector3 lastWorldPosition
-        {
-            get { return _lastWorldPosition; }
-        }
+        public static Vector3 lastWorldPosition => _lastWorldPosition;
 
-        public static Vector3 lastNormal
-        {
-            get { return _lastNormal; }
-        }
+        public static Vector3 lastNormal { get; private set; }
 
         public static void AddListener(Action<SceneView> invoke, float weight = 0, bool late = false)
         {
@@ -93,7 +75,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void BlockMouseUpMethod(SceneView view)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type != EventType.MouseUp) return;
 
             RemoveListener(BlockMouseUpMethod);
@@ -110,7 +92,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             return rect;
 #else
 
-            int id = view.GetInstanceID();
+            var id = view.GetInstanceID();
             VisualElement el;
             if (rectElements.TryGetValue(id, out el)) return el.contentRect;
 
@@ -124,8 +106,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (listeners == null) return;
 
-            for (int i = listeners.Count - 1; i >= 0; i--)
-            {
+            for (var i = listeners.Count - 1; i >= 0; i--)
                 try
                 {
                     if (i < listeners.Count) listeners[i].Invoke(sceneview);
@@ -134,15 +115,13 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(exception);
                 }
-            }
         }
 
         private static void InvokeSceneGUILate(SceneView sceneview)
         {
             if (lateListeners == null) return;
 
-            for (int i = lateListeners.Count - 1; i >= 0; i--)
-            {
+            for (var i = lateListeners.Count - 1; i >= 0; i--)
                 try
                 {
                     lateListeners[i].Invoke(sceneview);
@@ -151,7 +130,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(exception);
                 }
-            }
         }
 
         private static void OnMouseDown(Event e)
@@ -177,20 +155,18 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (OnValidateOpenContextMenu != null)
             {
-                Delegate[] invocationList = OnValidateOpenContextMenu.GetInvocationList();
+                var invocationList = OnValidateOpenContextMenu.GetInvocationList();
                 if (invocationList.Any(d => !(bool)d.DynamicInvoke())) return;
             }
 
             if (Prefs.pickGameObject && e.modifiers == Prefs.pickGameObjectModifiers)
-            {
                 Selection.activeGameObject = HandleUtility.PickGameObject(e.mousePosition, false);
-            }
 
             if (Prefs.contextMenuOnRightClick && (e.modifiers == Prefs.rightClickModifiers ||
                                                   e.modifiers == Prefs.pickGameObjectModifiers))
             {
 #if !UNITY_2021_1
-                Vector2 position = e.mousePosition;
+                var position = e.mousePosition;
                 if (EditorWindow.focusedWindow != null) position += EditorWindow.focusedWindow.position.position;
                 EditorMenu.Show(position);
 #else
@@ -202,20 +178,13 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static void RemoveListener(Action<SceneView> invoke)
         {
             if (listeners != null)
-            {
-                for (int i = listeners.Count - 1; i >= 0; i--)
-                {
-                    if (listeners[i].Invoke == invoke) listeners.RemoveAt(i);
-                }
-            }
-
+                for (var i = listeners.Count - 1; i >= 0; i--)
+                    if (listeners[i].Invoke == invoke)
+                        listeners.RemoveAt(i);
             if (lateListeners != null)
-            {
-                for (int i = lateListeners.Count - 1; i >= 0; i--)
-                {
-                    if (lateListeners[i].Invoke == invoke) lateListeners.RemoveAt(i);
-                }
-            }
+                for (var i = lateListeners.Count - 1; i >= 0; i--)
+                    if (lateListeners[i].Invoke == invoke)
+                        lateListeners.RemoveAt(i);
         }
 
         private static void SceneGUI(SceneView view)
@@ -235,14 +204,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 OnNextGUI = null;
             }
 
-            Event e = Event.current;
+            var e = Event.current;
 
             if (EditorApplication.timeSinceStartup - lastUpdateLate > 1) UpdateSceneGUILate();
 
-            if (e.type == EventType.MouseMove || e.type == EventType.DragUpdated)
-            {
-                UpdateLastItems(view);
-            }
+            if (e.type == EventType.MouseMove || e.type == EventType.DragUpdated) UpdateLastItems(view);
 
             InvokeSceneGUI(view);
 
@@ -251,9 +217,18 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (GUILayoutUtils.hoveredButtonID != 0) GUIUtility.hotControl = GUILayoutUtils.hoveredButtonID;
                 OnMouseDown(e);
             }
-            else if (e.type == EventType.MouseUp) OnMouseUp(e);
-            else if (e.type == EventType.MouseDrag) OnMouseDrag(e);
-            else if (e.type == EventType.MouseMove) GUILayoutUtils.hoveredButtonID = 0;
+            else if (e.type == EventType.MouseUp)
+            {
+                OnMouseUp(e);
+            }
+            else if (e.type == EventType.MouseDrag)
+            {
+                OnMouseDrag(e);
+            }
+            else if (e.type == EventType.MouseMove)
+            {
+                GUILayoutUtils.hoveredButtonID = 0;
+            }
         }
 
         private static void SceneGUILate(SceneView view)
@@ -265,45 +240,45 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void UpdateLastItems(SceneView view)
         {
-            Camera camera = SceneView.lastActiveSceneView.camera;
+            var camera = SceneView.lastActiveSceneView.camera;
             if (camera == null || camera.pixelWidth == 0 || camera.pixelHeight == 0) return;
 
-            _lastMousePosition = Event.current.mousePosition;
-            Vector2 pixelCoordinate = HandleUtility.GUIPointToScreenPixelCoordinate(_lastMousePosition);
+            lastMousePosition = Event.current.mousePosition;
+            var pixelCoordinate = HandleUtility.GUIPointToScreenPixelCoordinate(lastMousePosition);
 
             _screenRay = camera.ScreenPointToRay(pixelCoordinate);
-            _lastGameObjectUnderCursor = HandleUtility.PickGameObject(_lastMousePosition, false);
+            lastGameObjectUnderCursor = HandleUtility.PickGameObject(lastMousePosition, false);
 
-            if (_lastGameObjectUnderCursor != null && !view.in2DMode)
+            if (lastGameObjectUnderCursor != null && !view.in2DMode)
             {
-                MeshFilter meshFilter = _lastGameObjectUnderCursor.GetComponent<MeshFilter>();
+                var meshFilter = lastGameObjectUnderCursor.GetComponent<MeshFilter>();
                 RaycastHit hit;
 
                 if (meshFilter != null && meshFilter.sharedMesh != null && HandleUtilityRef.IntersectRayMesh(_screenRay,
                         meshFilter.sharedMesh, meshFilter.transform.localToWorldMatrix, out hit))
                 {
                     _lastWorldPosition = hit.point;
-                    _lastNormal = hit.normal;
+                    lastNormal = hit.normal;
                 }
                 else
                 {
-                    Collider collider = _lastGameObjectUnderCursor.GetComponentInParent<Collider>();
+                    var collider = lastGameObjectUnderCursor.GetComponentInParent<Collider>();
                     if (collider != null)
                     {
                         if (collider.Raycast(_screenRay, out hit, float.MaxValue))
                         {
                             _lastWorldPosition = hit.point;
-                            _lastNormal = hit.normal;
+                            lastNormal = hit.normal;
                         }
                     }
                     else
                     {
-                        RectTransform rectTransform = _lastGameObjectUnderCursor.GetComponent<RectTransform>();
+                        var rectTransform = lastGameObjectUnderCursor.GetComponent<RectTransform>();
                         if (rectTransform != null)
                         {
                             RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, pixelCoordinate,
                                 view.camera, out _lastWorldPosition);
-                            _lastNormal = Vector3.forward;
+                            lastNormal = Vector3.forward;
                         }
                     }
                 }
@@ -311,10 +286,10 @@ namespace InfinityCode.UltimateEditorEnhancer
             else
             {
                 float distance;
-                Plane plane = view.in2DMode ? plane2D : plane3D;
+                var plane = view.in2DMode ? plane2D : plane3D;
                 if (plane.Raycast(_screenRay, out distance)) _lastWorldPosition = _screenRay.GetPoint(distance);
                 else _lastWorldPosition = Vector3.zero;
-                _lastNormal = Vector3.up;
+                lastNormal = Vector3.up;
             }
         }
 

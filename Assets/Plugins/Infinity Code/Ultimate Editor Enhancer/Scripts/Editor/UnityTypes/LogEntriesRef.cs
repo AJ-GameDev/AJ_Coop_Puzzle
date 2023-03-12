@@ -91,7 +91,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static bool GetEntryInternal(int row, object outputEntry)
         {
-            return (bool)getEntryMethod.Invoke(null, new object[] { row, outputEntry });
+            return (bool)getEntryMethod.Invoke(null, new[] { row, outputEntry });
         }
 
         public static void RowGotDoubleClicked(int index)

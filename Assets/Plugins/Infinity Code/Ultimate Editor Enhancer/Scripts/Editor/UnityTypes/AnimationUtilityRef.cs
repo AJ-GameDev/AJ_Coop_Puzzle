@@ -24,10 +24,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static Type type
-        {
-            get => typeof(AnimationUtility);
-        }
+        public static Type type => typeof(AnimationUtility);
 
         public static MethodInfo updateTangentsFromModeSurroundingMethod
         {

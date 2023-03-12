@@ -108,7 +108,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void InvokeCurveChanged(EditorWindow window, AnimationCurve curve)
         {
-            Action<AnimationCurve> action = onCurveChangedField.GetValue(window) as Action<AnimationCurve>;
+            var action = onCurveChangedField.GetValue(window) as Action<AnimationCurve>;
             if (action != null) action(curve);
         }
 

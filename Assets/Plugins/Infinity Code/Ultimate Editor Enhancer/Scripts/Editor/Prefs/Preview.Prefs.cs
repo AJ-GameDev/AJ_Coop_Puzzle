@@ -32,10 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -33; }
-            }
+            public override float order => -33;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -44,7 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return new[]
                 {
                     new Shortcut("Preview of Cameras", "Scene View", previewModifiers, previewKeyCode),
-                    new Shortcut("Set View", "Preview of Cameras", "F"),
+                    new Shortcut("Set View", "Preview of Cameras", "F")
                 };
             }
 

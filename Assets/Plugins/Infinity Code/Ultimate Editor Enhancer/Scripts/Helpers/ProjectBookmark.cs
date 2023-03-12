@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -15,24 +17,18 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
         }
 
-        public ProjectBookmark(UnityEngine.Object obj) : base(obj)
+        public ProjectBookmark(Object obj) : base(obj)
         {
         }
 
-        public override bool isProjectItem
-        {
-            get => true;
-        }
+        public override bool isProjectItem => true;
 
         public string path
         {
             get
             {
 #if UNITY_EDITOR
-                if (_path == null)
-                {
-                    _path = UnityEditor.AssetDatabase.GetAssetPath(target);
-                }
+                if (_path == null) _path = AssetDatabase.GetAssetPath(target);
 #endif
 
                 return _path;
@@ -42,7 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public override bool HasLabel(string label)
         {
 #if UNITY_EDITOR
-            return UnityEditor.AssetDatabase.GetLabels(target).Contains(label);
+            return AssetDatabase.GetLabels(target).Contains(label);
 #else
             return false;
 #endif

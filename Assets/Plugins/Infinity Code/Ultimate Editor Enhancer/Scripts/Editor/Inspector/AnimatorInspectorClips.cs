@@ -10,7 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
     [InitializeOnLoad]
     public static class AnimatorInspectorClips
     {
-        private static bool showClips = false;
+        private static bool showClips;
         private static bool inited;
         private static GUIContent pauseContent;
         private static GUIContent playContent;
@@ -62,7 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             if (EditorApplication.isPlaying) return;
             if (editor.targets.Length != 1) return;
 
-            Animator animator = editor.target as Animator;
+            var animator = editor.target as Animator;
             if (animator.runtimeAnimatorController == null) return;
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -77,34 +77,27 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
             if (!inited) Init();
 
-            AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+            var clips = animator.runtimeAnimatorController.animationClips;
 
-            for (int i = 0; i < clips.Length; i++)
+            for (var i = 0; i < clips.Length; i++)
             {
-                AnimationClip clip = clips[i];
+                var clip = clips[i];
                 if (clip == null) continue;
                 EditorGUILayout.BeginHorizontal();
 
-                bool isPlayed = playIndex == i;
+                var isPlayed = playIndex == i;
                 if (isPlayed)
                 {
-                    if (GUILayout.Button(stopContent, GUILayout.Width(30), GUILayout.Height(20)))
-                    {
-                        Stop();
-                    }
+                    if (GUILayout.Button(stopContent, GUILayout.Width(30), GUILayout.Height(20))) Stop();
                 }
                 else
                 {
                     if (GUILayout.Button(playContent, GUILayout.Width(30), GUILayout.Height(20)))
-                    {
                         Play(animator, clip, i);
-                    }
                 }
 
                 if (GUILayout.Button(selectContent, GUILayout.Width(30), GUILayout.Height(20)))
-                {
                     Selection.activeObject = clip;
-                }
 
                 EditorGUILayout.LabelField(clip.name, EditorStyles.textField);
 
@@ -114,21 +107,14 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 {
                     EditorGUILayout.BeginHorizontal();
 
-                    GUIContent content = isPaused ? resumeContent : pauseContent;
+                    var content = isPaused ? resumeContent : pauseContent;
 
-                    if (GUILayout.Button(content, GUILayout.Width(30), GUILayout.Height(20)))
-                    {
-                        isPaused = !isPaused;
-                    }
+                    if (GUILayout.Button(content, GUILayout.Width(30), GUILayout.Height(20))) isPaused = !isPaused;
 
-                    int total = Mathf.RoundToInt(clip.length * clip.frameRate);
+                    var total = Mathf.RoundToInt(clip.length * clip.frameRate);
                     EditorGUI.BeginChangeCheck();
                     frame = EditorGUILayout.IntSlider("Frame (" + frame + "/" + total + ")", frame, 0, total);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        isPaused = true;
-                    }
-
+                    if (EditorGUI.EndChangeCheck()) isPaused = true;
                     EditorGUILayout.EndHorizontal();
                 }
             }

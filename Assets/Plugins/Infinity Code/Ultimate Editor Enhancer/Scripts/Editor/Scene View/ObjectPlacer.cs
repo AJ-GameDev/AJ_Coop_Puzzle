@@ -27,10 +27,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 #if !UNITY_EDITOR_OSX
             string rootKey = "CTRL";
 #else
-            string rootKey = "CMD";
+            var rootKey = "CMD";
 #endif
 
-            string alternativeMessage = GetMessage(Prefs.createBrowserAlternativeTarget);
+            var alternativeMessage = GetMessage(Prefs.createBrowserAlternativeTarget);
 
             StaticStringBuilder.Clear();
             StaticStringBuilder.Append($"Hold {rootKey} to create an object {alternativeMessage}.");
@@ -47,7 +47,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void Invoke(SceneView sceneView)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.type != EventType.MouseDown) return;
             if (e.button != 1) return;
@@ -56,7 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             in2DMode = sceneView.in2DMode;
 
             Waila.Close();
-            CreateBrowser wnd = CreateBrowser.OpenWindow();
+            var wnd = CreateBrowser.OpenWindow();
             wnd.OnClose += OnCreateBrowserClose;
             wnd.OnSelectCreate += OnSelectCreate;
             wnd.OnSelectPrefab += OnBrowserPrefab;
@@ -70,8 +70,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnBrowserPrefab(string assetPath)
         {
-            GameObject go =
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
+            var go = PrefabUtility.InstantiatePrefab(
+                AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
             Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
             PlaceObject(go);
         }
@@ -85,7 +85,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnSelectCreate(string menuItem)
         {
-            GameObject go = Selection.activeGameObject;
+            var go = Selection.activeGameObject;
             EditorApplication.ExecuteMenuItem(menuItem);
             if (go != Selection.activeGameObject) PlaceObject(Selection.activeGameObject);
         }
@@ -98,54 +98,54 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (Object.FindObjectsOfType<AudioListener>().Length > 1)
                 {
-                    AudioListener audioListener = go.GetComponent<AudioListener>();
+                    var audioListener = go.GetComponent<AudioListener>();
                     if (audioListener != null) Object.DestroyImmediate(audioListener);
                 }
 
                 parent = null;
             }
 
-            Event e = Event.current;
+            var e = Event.current;
 
-            RectTransform rectTransform = go.GetComponent<RectTransform>();
-            Vector2 sizeDelta = rectTransform != null ? rectTransform.sizeDelta : Vector2.zero;
-            bool isDefaultTarget = (e.modifiers & EventModifiers.Control) == 0 &&
-                                   (e.modifiers & EventModifiers.Command) == 0;
-            CreateBrowserTarget target =
-                isDefaultTarget ? Prefs.createBrowserDefaultTarget : Prefs.createBrowserAlternativeTarget;
+            var rectTransform = go.GetComponent<RectTransform>();
+            var sizeDelta = rectTransform != null ? rectTransform.sizeDelta : Vector2.zero;
+            var isDefaultTarget = (e.modifiers & EventModifiers.Control) == 0 &&
+                                  (e.modifiers & EventModifiers.Command) == 0;
+            var target = isDefaultTarget ? Prefs.createBrowserDefaultTarget : Prefs.createBrowserAlternativeTarget;
 
             if ((target == CreateBrowserTarget.sibling || target == CreateBrowserTarget.child) && parent != null)
             {
-                Transform parentTransform = parent.transform;
+                var parentTransform = parent.transform;
                 if (target == CreateBrowserTarget.sibling) parentTransform = parentTransform.parent;
 
                 while (parentTransform != null && PrefabUtility.IsPartOfAnyPrefab(parentTransform))
-                {
                     parentTransform = parentTransform.parent;
-                }
 
                 if (parentTransform != null)
                 {
                     parent = parentTransform.gameObject;
                     go.transform.SetParent(parentTransform);
                 }
-                else parent = null;
+                else
+                {
+                    parent = null;
+                }
             }
 
-            bool allowDown = true;
-            bool useCanvas = parent != null && parent.GetComponent<RectTransform>() != null;
-            bool hasRectTransform = rectTransform != null;
+            var allowDown = true;
+            var useCanvas = parent != null && parent.GetComponent<RectTransform>() != null;
+            var hasRectTransform = rectTransform != null;
 
             if (useCanvas || hasRectTransform || in2DMode) allowDown = false;
 
             go.transform.position = lastWorldPosition;
             if (allowDown && (e.modifiers & EventModifiers.Shift) == 0)
             {
-                Vector3 cubeSide = MathHelper.NormalToCubeSide(lastNormal);
-                Collider c = go.GetComponent<Collider>();
+                var cubeSide = MathHelper.NormalToCubeSide(lastNormal);
+                var c = go.GetComponent<Collider>();
                 if (c != null)
                 {
-                    Vector3 extents = c.bounds.extents;
+                    var extents = c.bounds.extents;
                     if (extents != Vector3.zero)
                     {
                         extents.Scale(cubeSide);
@@ -155,10 +155,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 }
                 else
                 {
-                    Renderer r = go.GetComponent<Renderer>();
+                    var r = go.GetComponent<Renderer>();
                     if (r != null)
                     {
-                        Vector3 extents = r.bounds.extents;
+                        var extents = r.bounds.extents;
                         if (extents != Vector3.zero)
                         {
                             extents.Scale(cubeSide);
@@ -169,7 +169,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
             else if (!useCanvas && hasRectTransform)
             {
-                Canvas canvas = CanvasUtils.GetCanvas();
+                var canvas = CanvasUtils.GetCanvas();
                 go.transform.SetParent(canvas.transform);
                 go.transform.localPosition = Vector3.zero;
                 useCanvas = true;
@@ -177,7 +177,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (useCanvas && rectTransform != null)
             {
-                Vector3 pos = rectTransform.localPosition;
+                var pos = rectTransform.localPosition;
                 if (Math.Abs(rectTransform.anchorMin.x) < float.Epsilon &&
                     Math.Abs(rectTransform.anchorMax.x - 1) < float.Epsilon) pos.x = 0;
                 if (Math.Abs(rectTransform.anchorMin.y) < float.Epsilon &&

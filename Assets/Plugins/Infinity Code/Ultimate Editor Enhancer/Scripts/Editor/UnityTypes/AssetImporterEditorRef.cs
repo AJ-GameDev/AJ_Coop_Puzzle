@@ -16,7 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 if (_type == null)
                 {
 #if UNITY_2020_2_OR_NEWER
-                    string name = "AssetImporters.AssetImporterEditor";
+                    var name = "AssetImporters.AssetImporterEditor";
 #else
                     string name = "Experimental.AssetImporters.AssetImporterEditor";
 #endif

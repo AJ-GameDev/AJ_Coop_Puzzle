@@ -16,20 +16,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         private static bool inited;
 
-        protected override MethodInfo originalMethod
-        {
-            get { return EditorGUIUtilityRef.drawEditorHeaderItemsMethod; }
-        }
+        protected override MethodInfo originalMethod => EditorGUIUtilityRef.drawEditorHeaderItemsMethod;
 
-        protected override string postfixMethodName
-        {
-            get { return nameof(DrawEditorHeaderItemsPostfix); }
-        }
+        protected override string postfixMethodName => nameof(DrawEditorHeaderItemsPostfix);
 
-        public override bool state
-        {
-            get { return Prefs.componentExtraHeaderButtons; }
-        }
+        public override bool state => Prefs.componentExtraHeaderButtons;
 
         private static void DrawEditorHeaderItemsPostfix(ref Rect __result, Rect rectangle, Object[] targetObjs,
             float spacing)
@@ -37,14 +28,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             if (!Prefs.componentExtraHeaderButtons) return;
             if (inited) return;
 
-            IList s_EditorHeaderItemsMethods =
+            var s_EditorHeaderItemsMethods =
                 Reflection.GetStaticFieldValue<IList>(typeof(EditorGUIUtility), "s_EditorHeaderItemsMethods");
             if (s_EditorHeaderItemsMethods == null) return;
 
             inited = true;
             var methods = TypeCache.GetMethodsWithAttribute<ComponentHeaderButtonAttribute>();
-            Type headerItemDelegate = Reflection.GetEditorType("EditorGUIUtility+HeaderItemDelegate");
-            foreach (MethodInfo method in methods)
+            var headerItemDelegate = Reflection.GetEditorType("EditorGUIUtility+HeaderItemDelegate");
+            foreach (var method in methods)
                 s_EditorHeaderItemsMethods.Add(Delegate.CreateDelegate(headerItemDelegate, method));
 
             Reflection.SetStaticFieldValue(typeof(EditorGUIUtility), "s_EditorHeaderItemsMethods",

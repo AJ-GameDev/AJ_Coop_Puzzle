@@ -11,17 +11,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
         protected Rect rect;
         protected LayoutWindow wnd;
 
-        public LayoutWindow window
-        {
-            get { return wnd; }
-        }
+        public LayoutWindow window => wnd;
 
         public abstract bool isActive { get; }
 
-        public virtual float order
-        {
-            get { return 0; }
-        }
+        public virtual float order => 0;
 
         public virtual void Close()
         {

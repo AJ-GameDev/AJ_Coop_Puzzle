@@ -12,14 +12,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     [InitializeOnLoad]
     public class AdvancedDropToFloor : EditorWindow
     {
-        private int alignTo = 0; // 0 - Center, 1 - Min, 2 - Average, 3 - Max
-        private int countRays = 0; // 0 - 5, 1 - 1
-        private int raycastFrom = 0; // 0 - Lower bounds, 1 - Transform
+        private int alignTo; // 0 - Center, 1 - Min, 2 - Average, 3 - Max
+        private int countRays; // 0 - 5, 1 - 1
+        private int raycastFrom; // 0 - Lower bounds, 1 - Transform
         private Vector2 scrollPosition;
 
         static AdvancedDropToFloor()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnPress += OnInvoke;
             binding.OnValidate += OnValidate;
         }
@@ -56,10 +56,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             EditorGUILayout.EndScrollView();
 
-            Event e = Event.current;
+            var e = Event.current;
 
             if (GUILayout.Button("Drop Selected Objects") ||
-                e.type == EventType.KeyDown && (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter))
+                (e.type == EventType.KeyDown && (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter)))
             {
                 DropSelection();
                 Close();
@@ -70,7 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (!Prefs.advancedDropToFloor) return false;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode != Prefs.dropToFloorKeyCode ||
                 e.modifiers != (Prefs.advancedDropToFloorModifiers | EventModifiers.FunctionKey)) return false;
             return true;
@@ -78,21 +78,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DropRenderer(Renderer renderer)
         {
-            Bounds bounds = renderer.bounds;
-            Vector3 min = bounds.min;
-            Vector3 size = bounds.size;
+            var bounds = renderer.bounds;
+            var min = bounds.min;
+            var size = bounds.size;
 
             DropToFloor.points.Clear();
 
             DropToFloor.RaycastRendererPoints(min, size, (DropToFloor.CountRays)countRays);
 
             if (DropToFloor.points.Count == 0)
-            {
                 DropToFloor.points = new List<Vector3>
                 {
-                    new Vector3(min.x, 0, min.z)
+                    new(min.x, 0, min.z)
                 };
-            }
 
             float shift = 0;
             if (countRays == 1 || alignTo == 0)
@@ -109,23 +107,23 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DropSelection()
         {
-            GameObject[] targets = Selection.gameObjects.Where(g => g.scene.name != null)
-                .OrderBy(g => g.transform.position.y).ToArray();
+            var targets = Selection.gameObjects.Where(g => g.scene.name != null).OrderBy(g => g.transform.position.y)
+                .ToArray();
 
             if (targets.Length == 0) return;
 
             Undo.SetCurrentGroupName("Drop To Floor");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
             if (DropToFloor.movedObjects == null) DropToFloor.movedObjects = new Dictionary<Transform, float>();
             if (DropToFloor.points == null) DropToFloor.points = new List<Vector3>(5);
 
-            for (int i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
-                GameObject go = targets[i];
+                var go = targets[i];
                 if (raycastFrom == 0)
                 {
-                    Renderer renderer = go.GetComponent<Renderer>();
+                    var renderer = go.GetComponent<Renderer>();
                     if (renderer != null) DropRenderer(renderer);
                     else DropTransform(go.transform);
                 }
@@ -143,13 +141,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             Vector3 p;
             if (DropToFloor.RaycastDown(transform.position + new Vector3(0, 0.1f, 0), out p) == -1)
-            {
                 p = new Vector3(transform.position.x, 0, transform.position.z);
-            }
 
             Undo.RecordObject(transform, "Drop To Floor");
 
-            float shift = p.y - transform.position.y;
+            var shift = p.y - transform.position.y;
 
             transform.Translate(0, shift, 0, Space.World);
             DropToFloor.movedObjects.Add(transform, shift);
@@ -157,7 +153,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static void OnInvoke()
         {
-            AdvancedDropToFloor wnd = GetWindow<AdvancedDropToFloor>("Drop To Floor");
+            var wnd = GetWindow<AdvancedDropToFloor>("Drop To Floor");
         }
     }
 }

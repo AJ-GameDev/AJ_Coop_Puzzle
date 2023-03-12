@@ -11,30 +11,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         private static int indentLevel;
 
-        public static bool insideList
-        {
-            get { return indentLevel > 0; }
-        }
+        public static bool insideList => indentLevel > 0;
 
-        protected override MethodInfo originalMethod
-        {
-            get => ReorderableListRef.doListElementsMethod;
-        }
+        protected override MethodInfo originalMethod => ReorderableListRef.doListElementsMethod;
 
-        public override bool state
-        {
-            get => !Prefs.nestedEditorInReorderableList;
-        }
+        public override bool state => !Prefs.nestedEditorInReorderableList;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(DoListElementsPrefix);
-        }
+        protected override string prefixMethodName => nameof(DoListElementsPrefix);
 
-        protected override string postfixMethodName
-        {
-            get => nameof(DoListElementsPostfix);
-        }
+        protected override string postfixMethodName => nameof(DoListElementsPostfix);
 
         private static void DoListElementsPrefix()
         {

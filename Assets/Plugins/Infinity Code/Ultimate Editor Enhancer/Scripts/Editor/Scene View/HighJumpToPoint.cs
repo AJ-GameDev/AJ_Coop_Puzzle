@@ -26,16 +26,16 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!Prefs.highJumpToPoint || view.orthographic) return;
 
-            Event e = Event.current;
-            bool isJump = e.type == EventType.MouseUp && e.button == 2 && e.modifiers == MODIFIERS;
+            var e = Event.current;
+            var isJump = e.type == EventType.MouseUp && e.button == 2 && e.modifiers == MODIFIERS;
 
             if (!isJump && Prefs.alternativeJumpShortcut && EditorWindow.mouseOverWindow is SceneView)
             {
-                bool isAlternativeShortcut = e.type == EventType.KeyUp && (e.control || e.command) &&
-                                             (e.keyCode == KeyCode.LeftShift || e.keyCode == KeyCode.RightShift);
+                var isAlternativeShortcut = e.type == EventType.KeyUp && (e.control || e.command) &&
+                                            (e.keyCode == KeyCode.LeftShift || e.keyCode == KeyCode.RightShift);
                 if (isAlternativeShortcut)
                 {
-                    double timeDelta = EditorApplication.timeSinceStartup - lastShiftPressed;
+                    var timeDelta = EditorApplication.timeSinceStartup - lastShiftPressed;
                     isJump = timeDelta < JumpToPoint.MAX_SHIFT_DELAY;
                     lastShiftPressed = isJump ? 0 : EditorApplication.timeSinceStartup;
                 }
@@ -43,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (!isJump) return;
 
-            if (!JumpToPoint.GetTargetPoint(e, out Vector3 targetPosition)) return;
+            if (!JumpToPoint.GetTargetPoint(e, out var targetPosition)) return;
 
             view.LookAt(targetPosition + new Vector3(0, 20, 0), view.rotation, 20);
 

@@ -12,7 +12,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         private static Prefs.Shortcut[] _shortcuts;
         private static string[] _contexts;
-        private int contextIndex = 0;
+        private int contextIndex;
         private string filter = "";
         private IEnumerable<Prefs.Shortcut> filteredShortcuts;
         private Vector2 scrollPosition;
@@ -22,12 +22,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             get
             {
                 if (_shortcuts == null)
-                {
                     _shortcuts = Prefs.managers
                         .Select(m => m as IHasShortcutPref)
                         .Where(m => m != null)
                         .SelectMany(m => m.GetShortcuts()).ToArray();
-                }
 
                 return _shortcuts;
             }
@@ -52,12 +50,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void OnGUI()
         {
-            float w = position.width;
-            float actionWidth = w * 0.58f - 10;
-            float contextWidth = w * 0.22f - 10;
-            float shortcutWidth = w * 0.2f - 10;
+            var w = position.width;
+            var actionWidth = w * 0.58f - 10;
+            var contextWidth = w * 0.22f - 10;
+            var shortcutWidth = w * 0.2f - 10;
 
-            bool adjusted = false;
+            var adjusted = false;
             if (contextWidth < 190)
             {
                 contextWidth = 190;
@@ -94,7 +92,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         s.action.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
                 if (contextIndex != 0)
                 {
-                    string context = contexts[contextIndex].ToLowerInvariant();
+                    var context = contexts[contextIndex].ToLowerInvariant();
                     filteredShortcuts = filteredShortcuts.Where(s => s.context.ToLowerInvariant().Contains(context));
                 }
             }
@@ -104,7 +102,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-            foreach (Prefs.Shortcut shortcut in filteredShortcuts)
+            foreach (var shortcut in filteredShortcuts)
             {
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label(shortcut.action, GUILayout.Width(actionWidth));

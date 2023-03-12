@@ -6,17 +6,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.JSON
 {
     /// <summary>
-    /// The wrapper for JSON value.
+    ///     The wrapper for JSON value.
     /// </summary>
     public class JsonValue : JsonItem
     {
         /// <summary>
-        /// Type of value
+        ///     Type of value
         /// </summary>
         public enum ValueType
         {
@@ -27,11 +29,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             NULL
         }
 
-        private ValueType _type;
         private object _value;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="value">Value</param>
         public JsonValue(object value)
@@ -40,28 +41,22 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="value">Value</param>
         /// <param name="type">Type of value</param>
         public JsonValue(object value, ValueType type)
         {
             _value = value;
-            _type = type;
+            this.type = type;
         }
 
-        public override JsonItem this[string key]
-        {
-            get { return null; }
-        }
+        public override JsonItem this[string key] => null;
 
-        public override JsonItem this[int index]
-        {
-            get { return null; }
-        }
+        public override JsonItem this[int index] => null;
 
         /// <summary>
-        /// Gets / sets the current value
+        ///     Gets / sets the current value
         /// </summary>
         public object value
         {
@@ -74,50 +69,50 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 if (value == null)
 #endif
                 {
-                    _type = ValueType.NULL;
+                    type = ValueType.NULL;
                     _value = value;
                 }
                 else if (value is string)
                 {
-                    _type = ValueType.STRING;
+                    type = ValueType.STRING;
                     _value = value;
                 }
                 else if (value is double)
                 {
-                    _type = ValueType.DOUBLE;
+                    type = ValueType.DOUBLE;
                     _value = (double)value;
                 }
                 else if (value is float)
                 {
-                    _type = ValueType.DOUBLE;
+                    type = ValueType.DOUBLE;
                     _value = (double)(float)value;
                 }
                 else if (value is bool)
                 {
-                    _type = ValueType.BOOLEAN;
+                    type = ValueType.BOOLEAN;
                     _value = value;
                 }
                 else if (value is long)
                 {
-                    _type = ValueType.LONG;
+                    type = ValueType.LONG;
                     _value = value;
                 }
                 else if (value is int || value is short || value is byte)
                 {
-                    _type = ValueType.LONG;
+                    type = ValueType.LONG;
                     _value = Convert.ChangeType(value, typeof(long));
                 }
-                else throw new Exception("Unknown type of value.");
+                else
+                {
+                    throw new Exception("Unknown type of value.");
+                }
             }
         }
 
         /// <summary>
-        /// Get the type of value
+        ///     Get the type of value
         /// </summary>
-        public ValueType type
-        {
-            get { return _type; }
-        }
+        public ValueType type { get; private set; }
 
         public override object Deserialize(Type type,
             BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
@@ -132,10 +127,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public override void ToJSON(StringBuilder b)
         {
-            if (_type == ValueType.STRING) WriteString(b);
-            else if (_type == ValueType.NULL) b.Append("null");
-            else if (_type == ValueType.BOOLEAN) b.Append((bool)_value ? "true" : "false");
-            else if (_type == ValueType.DOUBLE) b.Append(((double)value).ToString(Culture.cultureInfo));
+            if (type == ValueType.STRING) WriteString(b);
+            else if (type == ValueType.NULL) b.Append("null");
+            else if (type == ValueType.BOOLEAN) b.Append((bool)_value ? "true" : "false");
+            else if (type == ValueType.DOUBLE) b.Append(((double)value).ToString(Culture.cultureInfo));
             else b.Append(value);
         }
 
@@ -152,7 +147,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public override object Value(Type t)
         {
-            if (_type == ValueType.NULL || _value == null)
+            if (type == ValueType.NULL || _value == null)
             {
                 if (Reflection.IsValueType(t)) return Activator.CreateInstance(t);
                 return null;
@@ -160,23 +155,20 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             if (t == typeof(string)) return Convert.ChangeType(_value, t);
 
-            if (_type == ValueType.BOOLEAN)
+            if (type == ValueType.BOOLEAN)
             {
                 if (t == typeof(bool)) return Convert.ChangeType(_value, t);
             }
-            else if (_type == ValueType.DOUBLE)
+            else if (type == ValueType.DOUBLE)
             {
                 if (t == typeof(double)) return Convert.ChangeType(_value, t, Culture.numberFormat);
                 if (t == typeof(float)) return Convert.ChangeType((double)_value, t, Culture.numberFormat);
             }
-            else if (_type == ValueType.LONG)
+            else if (type == ValueType.LONG)
             {
                 if (t == typeof(long)) return Convert.ChangeType(_value, t);
 #if UNITY_EDITOR
-                if (t.IsSubclassOf(typeof(UnityEngine.Object)))
-                {
-                    return UnityEditor.EditorUtility.InstanceIDToObject((int)(long)_value);
-                }
+                if (t.IsSubclassOf(typeof(Object))) return EditorUtility.InstanceIDToObject((int)(long)_value);
 #endif
 
                 try
@@ -189,24 +181,21 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                     return null;
                 }
             }
-            else if (_type == ValueType.STRING)
+            else if (type == ValueType.STRING)
             {
                 if (t.IsEnum)
                 {
                     return Enum.Parse(t, value as string);
                 }
-                else
-                {
-                    MethodInfo method =
-                        Reflection.GetMethod(t, "Parse", new[] { typeof(string), typeof(IFormatProvider) });
-                    if (method != null) return method.Invoke(null, new object[] { value, Culture.numberFormat });
 
-                    method = Reflection.GetMethod(t, "Parse", new[] { typeof(string) });
-                    return method.Invoke(null, new[] { value });
-                }
+                var method = Reflection.GetMethod(t, "Parse", new[] { typeof(string), typeof(IFormatProvider) });
+                if (method != null) return method.Invoke(null, new[] { value, Culture.numberFormat });
+
+                method = Reflection.GetMethod(t, "Parse", new[] { typeof(string) });
+                return method.Invoke(null, new[] { value });
             }
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             ToJSON(builder);
             throw new InvalidCastException(t.FullName + "\n" + builder);
         }
@@ -215,10 +204,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         {
             b.Append('\"');
 
-            string s = value as string;
+            var s = value as string;
 
-            int runIndex = -1;
-            int l = s.Length;
+            var runIndex = -1;
+            var l = s.Length;
             for (var index = 0; index < l; ++index)
             {
                 var c = s[index];

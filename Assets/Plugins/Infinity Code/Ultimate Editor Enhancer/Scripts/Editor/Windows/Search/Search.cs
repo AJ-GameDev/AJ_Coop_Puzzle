@@ -27,15 +27,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static Dictionary<int, Record> sceneRecords;
         private static Dictionary<int, Record> windowRecords;
 
-        private static bool focusOnTextField = false;
-        public static int searchMode = 0;
+        private static bool focusOnTextField;
+        public static int searchMode;
         private static Record[] bestRecords;
-        private static int countBestRecords = 0;
-        private static int bestRecordIndex = 0;
+        private static int countBestRecords;
+        private static int bestRecordIndex;
         private static bool updateScroll;
         private static bool needUpdateBestRecords;
-        private static bool isDragStarted = false;
-        private static string[] searchModeLabels = { "Everywhere", "By Hierarchy", "By Project" };
+        private static bool isDragStarted;
+        private static readonly string[] searchModeLabels = { "Everywhere", "By Hierarchy", "By Project" };
 
         public string searchText;
         public int setSelectionIndex = -1;
@@ -45,7 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         static Search()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidate;
             binding.OnPress += OnInvoke;
 
@@ -106,13 +106,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUI.SetNextControlName("UEESearchTextField");
             EditorGUI.BeginChangeCheck();
             searchText = GUILayoutUtils.ToolbarSearchField(searchText);
-            bool changed = EditorGUI.EndChangeCheck();
+            var changed = EditorGUI.EndChangeCheck();
 
             if (Event.current.type == EventType.Repaint)
-            {
                 if (resetSelection)
                 {
-                    TextEditor recycledEditor = EditorGUIRef.GetRecycledEditor() as TextEditor;
+                    var recycledEditor = EditorGUIRef.GetRecycledEditor() as TextEditor;
                     if (recycledEditor != null)
                     {
                         if (setSelectionIndex == -1)
@@ -129,7 +128,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     resetSelection = false;
                     Repaint();
                 }
-            }
 
             if (focusOnTextField && Event.current.type == EventType.Repaint)
             {
@@ -148,7 +146,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static bool OnValidate()
         {
             if (!Prefs.search) return false;
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.keyCode != Prefs.searchKeyCode) return false;
             if (e.modifiers != Prefs.searchModifiers) return false;
@@ -160,58 +158,55 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static void CachePrefabWithComponents(Dictionary<int, Record> tempRecords, GameObject go)
         {
             tempRecords.Add(go.GetInstanceID(), new GameObjectRecord(go));
-            Component[] components = go.GetComponents<Component>();
-            for (int i = 0; i < components.Length; i++)
+            var components = go.GetComponents<Component>();
+            for (var i = 0; i < components.Length; i++)
             {
-                Component c = components[i];
+                var c = components[i];
                 tempRecords.Add(c.GetInstanceID(), new ComponentRecord(c));
             }
 
-            Transform t = go.transform;
-            for (int i = 0; i < t.childCount; i++) CachePrefabWithComponents(tempRecords, t.GetChild(i).gameObject);
+            var t = go.transform;
+            for (var i = 0; i < t.childCount; i++) CachePrefabWithComponents(tempRecords, t.GetChild(i).gameObject);
         }
 
         private static void CachePrefabWithoutComponents(Dictionary<int, Record> tempRecords, GameObject go)
         {
             tempRecords.Add(go.GetInstanceID(), new GameObjectRecord(go));
-            Transform t = go.transform;
-            for (int i = 0; i < t.childCount; i++) CachePrefabWithoutComponents(tempRecords, t.GetChild(i).gameObject);
+            var t = go.transform;
+            for (var i = 0; i < t.childCount; i++) CachePrefabWithoutComponents(tempRecords, t.GetChild(i).gameObject);
         }
 
         private static void CacheProject()
         {
-            Dictionary<int, Record> tempRecords = new Dictionary<int, Record>();
-            string[] assets = AssetDatabase.GetAllAssetPaths();
+            var tempRecords = new Dictionary<int, Record>();
+            var assets = AssetDatabase.GetAllAssetPaths();
 
             if (projectRecords != null)
-            {
-                foreach (KeyValuePair<int, Record> pair in projectRecords) pair.Value.used = false;
-            }
+                foreach (var pair in projectRecords)
+                    pair.Value.used = false;
 
             char[] validPrefix = { 'A', 's', 's', 'e', 't', 's', '/' };
 
-            for (int i = 0; i < assets.Length; i++)
+            for (var i = 0; i < assets.Length; i++)
             {
-                string assetPath = assets[i];
+                var assetPath = assets[i];
                 try
                 {
                     if (string.IsNullOrEmpty(assetPath)) continue;
                     if (assetPath.Length < 8) continue;
 
-                    bool hasValidPrefix = true;
+                    var hasValidPrefix = true;
 
-                    for (int j = 0; j < validPrefix.Length; j++)
-                    {
+                    for (var j = 0; j < validPrefix.Length; j++)
                         if (validPrefix[j] != assetPath[j])
                         {
                             hasValidPrefix = false;
                             break;
                         }
-                    }
 
                     if (!hasValidPrefix) continue;
 
-                    int hashCode = assetPath.GetHashCode();
+                    var hashCode = assetPath.GetHashCode();
 
                     if (projectRecords != null)
                     {
@@ -229,10 +224,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         }
                     }
 
-                    if (!tempRecords.ContainsKey(hashCode))
-                    {
-                        tempRecords.Add(hashCode, new ProjectRecord(assetPath));
-                    }
+                    if (!tempRecords.ContainsKey(hashCode)) tempRecords.Add(hashCode, new ProjectRecord(assetPath));
                 }
                 catch
                 {
@@ -240,25 +232,23 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             if (projectRecords != null)
-            {
-                foreach (var pair in projectRecords.Where(p => !p.Value.used)) pair.Value.Dispose();
-            }
+                foreach (var pair in projectRecords.Where(p => !p.Value.used))
+                    pair.Value.Dispose();
 
             projectRecords = tempRecords;
         }
 
         private static void CacheScene()
         {
-            PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
 
             if (sceneRecords != null)
-            {
-                foreach (var record in sceneRecords) record.Value.used = false;
-            }
+                foreach (var record in sceneRecords)
+                    record.Value.used = false;
 
             if (prefabStage != null)
             {
-                Dictionary<int, Record> tempRecords = new Dictionary<int, Record>();
+                var tempRecords = new Dictionary<int, Record>();
                 try
                 {
                     if (Prefs.searchByComponents)
@@ -271,12 +261,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
 
                 if (sceneRecords != null)
-                {
                     foreach (var record in sceneRecords)
-                    {
-                        if (!record.Value.used) record.Value.Dispose();
-                    }
-                }
+                        if (!record.Value.used)
+                            record.Value.Dispose();
 
                 sceneRecords = tempRecords;
             }
@@ -289,13 +276,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static void CacheSceneGameObjects()
         {
-            Transform[] transforms = FindObjectsOfType<Transform>(true);
-            Dictionary<int, Record> tempRecords = new Dictionary<int, Record>(transforms.Length);
+            var transforms = FindObjectsOfType<Transform>(true);
+            var tempRecords = new Dictionary<int, Record>(transforms.Length);
 
-            for (int i = 0; i < transforms.Length; i++)
+            for (var i = 0; i < transforms.Length; i++)
             {
-                GameObject go = transforms[i].gameObject;
-                int key = go.GetInstanceID();
+                var go = transforms[i].gameObject;
+                var key = go.GetInstanceID();
 
                 Record r;
 
@@ -307,25 +294,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             if (sceneRecords != null)
-            {
                 foreach (var record in sceneRecords)
-                {
-                    if (!record.Value.used) record.Value.Dispose();
-                }
-            }
+                    if (!record.Value.used)
+                        record.Value.Dispose();
 
             sceneRecords = tempRecords;
         }
 
         private static void CacheSceneItems()
         {
-            Component[] components = FindObjectsOfType<Component>(true);
-            Dictionary<int, Record> tempRecords = new Dictionary<int, Record>(Mathf.NextPowerOfTwo(components.Length));
+            var components = FindObjectsOfType<Component>(true);
+            var tempRecords = new Dictionary<int, Record>(Mathf.NextPowerOfTwo(components.Length));
 
-            for (int i = 0; i < components.Length; i++)
+            for (var i = 0; i < components.Length; i++)
             {
-                Component c = components[i];
-                int key = c.GetInstanceID();
+                var c = components[i];
+                var key = c.GetInstanceID();
                 Record r = null;
                 if (sceneRecords == null || !sceneRecords.TryGetValue(key, out r)) r = new ComponentRecord(c);
                 else r.UpdateGameObjectName(c.gameObject);
@@ -333,7 +317,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 r.used = true;
                 tempRecords.Add(key, r);
 
-                GameObject go = c.gameObject;
+                var go = c.gameObject;
                 key = go.GetInstanceID();
 
                 if (!tempRecords.ContainsKey(key))
@@ -347,12 +331,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             if (sceneRecords != null)
-            {
                 foreach (var record in sceneRecords)
-                {
-                    if (!record.Value.used) record.Value.Dispose();
-                }
-            }
+                    if (!record.Value.used)
+                        record.Value.Dispose();
 
             sceneRecords = tempRecords;
         }
@@ -363,39 +344,35 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             windowRecords = new Dictionary<int, Record>();
 
-            foreach (string submenu in Unsupported.GetSubmenus("Window"))
+            foreach (var submenu in Unsupported.GetSubmenus("Window"))
             {
-                string upper = Culture.textInfo.ToUpper(submenu);
+                var upper = Culture.textInfo.ToUpper(submenu);
                 if (upper == "WINDOW/NEXT WINDOW") continue;
                 if (upper == "WINDOW/PREVIOUS WINDOW") continue;
                 if (Culture.compareInfo.IsPrefix(upper, "WINDOW/LAYOUTS", CompareOptions.None)) continue;
 
-                int lastSlash = 7;
+                var lastSlash = 7;
 
-                for (int i = submenu.Length - 1; i >= 8; i--)
-                {
+                for (var i = submenu.Length - 1; i >= 8; i--)
                     if (submenu[i] == '/')
                     {
                         lastSlash = i;
                         break;
                     }
-                }
 
                 windowRecords.Add(submenu.GetHashCode(), new WindowRecord(submenu, submenu.Substring(lastSlash + 1)));
             }
 
-            foreach (string submenu in Unsupported.GetSubmenus("Tools"))
+            foreach (var submenu in Unsupported.GetSubmenus("Tools"))
             {
-                int lastSlash = 6;
+                var lastSlash = 6;
 
-                for (int i = submenu.Length - 1; i >= 7; i--)
-                {
+                for (var i = submenu.Length - 1; i >= 7; i--)
                     if (submenu[i] == '/')
                     {
                         lastSlash = i;
                         break;
                     }
-                }
 
                 windowRecords.Add(submenu.GetHashCode(), new WindowRecord(submenu, submenu.Substring(lastSlash + 1)));
             }
@@ -414,8 +391,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (updateScroll)
             {
-                float bry = 20 * bestRecordIndex - scrollPosition.y;
-                if (bry < 0) scrollPosition.y = 20 * bestRecordIndex;
+                var bry = 20 * bestRecordIndex - scrollPosition.y;
+                if (bry < 0)
+                {
+                    scrollPosition.y = 20 * bestRecordIndex;
+                }
                 else if (bry > 80)
                 {
                     if (bestRecordIndex != countBestRecords - 1) scrollPosition.y = 20 * bestRecordIndex - 80;
@@ -423,15 +403,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            int selectedIndex = -1;
-            int selectedState = -1;
+            var selectedIndex = -1;
+            var selectedState = -1;
 
             scrollPosition = GUI.BeginScrollView(new Rect(0, 40, position.width, position.height - 40), scrollPosition,
                 new Rect(0, 0, position.width - 40, countBestRecords * 20));
 
-            for (int i = 0; i < countBestRecords; i++)
+            for (var i = 0; i < countBestRecords; i++)
             {
-                int state = bestRecords[i].Draw(i);
+                var state = bestRecords[i].Draw(i);
                 if (state != 0)
                 {
                     selectedIndex = i;
@@ -470,14 +450,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             if (GUILayoutUtils.ToolbarButton(TempContent.Get(EditorIconContents.settings.image, "Settings")))
-            {
                 SettingsService.OpenProjectSettings("Project/Ultimate Editor Enhancer");
-            }
 
-            if (GUILayoutUtils.ToolbarButton("?"))
-            {
-                Links.OpenDocumentation("smart-search");
-            }
+            if (GUILayoutUtils.ToolbarButton("?")) Links.OpenDocumentation("smart-search");
 
             EditorGUILayout.EndHorizontal();
         }
@@ -496,17 +471,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static void OnInvoke()
         {
-            Event e = Event.current;
-            Vector2 position = e.mousePosition;
+            var e = Event.current;
+            var position = e.mousePosition;
 
             if (focusedWindow != null) position += focusedWindow.position.position;
 
-            Rect rect = new Rect(position + new Vector2(width / -2, -30), new Vector2(width, 140));
+            var rect = new Rect(position + new Vector2(width / -2, -30), new Vector2(width, 140));
 
 #if !UNITY_EDITOR_OSX
             if (rect.y < 5) rect.y = 5;
-            else if (rect.yMax > Screen.currentResolution.height - 40)
-                rect.y = Screen.currentResolution.height - 40 - rect.height;
+            else if (rect.yMax > Screen.currentResolution.height - 40) rect.y =
+ Screen.currentResolution.height - 40 - rect.height;
 #endif
 
             Show(rect);
@@ -525,13 +500,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (!Prefs.searchScript) return false;
 
-            Event e = Event.current;
+            var e = Event.current;
             return e.modifiers == Prefs.searchScriptModifiers && e.keyCode == Prefs.searchScriptKeyCode;
         }
 
         private static bool ProcessEvents()
         {
-            Event e = Event.current;
+            var e = Event.current;
             updateScroll = false;
 
             if (e.type == EventType.KeyDown)
@@ -552,8 +527,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     if (countBestRecords > 0)
                     {
-                        Record bestRecord = bestRecords[bestRecordIndex];
-                        int state = 1;
+                        var bestRecord = bestRecords[bestRecordIndex];
+                        var state = 1;
                         if (e.modifiers == EventModifiers.Control || e.modifiers == EventModifiers.Command) state = 2;
                         else if (e.modifiers == EventModifiers.Shift) state = 3;
                         bestRecord.Select(state);
@@ -616,13 +591,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private int TakeBestRecords(IEnumerable<KeyValuePair<int, Record>> tempBestRecords)
         {
-            int count = 0;
-            float minAccuracy = float.MaxValue;
+            var count = 0;
+            var minAccuracy = float.MaxValue;
 
             foreach (var pair in tempBestRecords)
             {
-                Record v = pair.Value;
-                float a = v.accuracy;
+                var v = pair.Value;
+                var a = v.accuracy;
 
                 if (count < maxRecords)
                 {
@@ -634,20 +609,23 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (a <= minAccuracy) continue;
 
-                float newMin = float.MaxValue;
-                bool needReplace = true;
+                var newMin = float.MaxValue;
+                var needReplace = true;
 
-                for (int i = 0; i < maxRecords; i++)
+                for (var i = 0; i < maxRecords; i++)
                 {
-                    Record v1 = bestRecords[i];
-                    float a1 = v1.accuracy;
+                    var v1 = bestRecords[i];
+                    var a1 = v1.accuracy;
                     if (needReplace && a1 == minAccuracy)
                     {
                         bestRecords[i] = v;
                         needReplace = false;
                         if (newMin > v.accuracy) newMin = v.accuracy;
                     }
-                    else if (newMin > a1) newMin = a1;
+                    else if (newMin > a1)
+                    {
+                        newMin = a1;
+                    }
                 }
 
                 minAccuracy = newMin;
@@ -655,12 +633,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (count > 1)
             {
-                Record[] sortedRecords = bestRecords.Take(count)
+                var sortedRecords = bestRecords.Take(count)
                     .OrderByDescending(r => r.accuracy)
                     .ThenBy(r => r.label.Length)
                     .ThenBy(r => r.label).ToArray();
 
-                for (int i = 0; i < sortedRecords.Length; i++) bestRecords[i] = sortedRecords[i];
+                for (var i = 0; i < sortedRecords.Length; i++) bestRecords[i] = sortedRecords[i];
             }
 
             return count;
@@ -673,17 +651,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             countBestRecords = 0;
             scrollPosition = Vector2.zero;
 
-            int minStrLen = 1;
+            var minStrLen = 1;
             if (searchText == null || searchText.Length < minStrLen) return;
 
             string assetType;
-            string search = SearchableItem.GetPattern(searchText, out assetType);
+            var search = SearchableItem.GetPattern(searchText, out assetType);
 
             IEnumerable<KeyValuePair<int, Record>> tempBestRecords;
 
             if (searchMode == 0)
             {
-                int currentMode = 0;
+                var currentMode = 0;
                 tempBestRecords = new List<KeyValuePair<int, Record>>();
                 if (search.Length > 0)
                 {
@@ -699,7 +677,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (currentMode == 0 || currentMode == 1)
                     tempBestRecords =
                         tempBestRecords.Concat(sceneRecords.Where(r => r.Value.Update(search, assetType) > 0));
-                if (Prefs.searchByProject && currentMode == 0 || currentMode == 2)
+                if ((Prefs.searchByProject && currentMode == 0) || currentMode == 2)
                     tempBestRecords =
                         tempBestRecords.Concat(projectRecords.Where(r => r.Value.Update(search, assetType) > 0));
             }

@@ -14,24 +14,24 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             ref bool flipVertical)
         {
             rect = new Rect(position, Vector2.zero);
-            foreach (ActionItem item in items)
+            foreach (var item in items)
             {
                 if (!item.isActive) continue;
 
-                Vector2 size = item.size;
+                var size = item.size;
                 rect.width = Mathf.Max(size.x, rect.width);
                 rect.height += size.y;
             }
 
             rect.height += GUI.skin.button.margin.top;
 
-            Resolution resolution = Screen.currentResolution;
-            int width = resolution.width;
+            var resolution = Screen.currentResolution;
+            var width = resolution.width;
 
             if (rect.x % width < 11 + rect.width) offset.x = rect.width + 11 - rect.x % width;
 #if !UNITY_EDITOR_OSX
-            else if (flipHorizontal && rect.xMin % width + rect.width > width - 11)
-                offset.x = width - 11 - rect.xMin % width - rect.width;
+            else if (flipHorizontal && rect.xMin % width + rect.width > width - 11) offset.x =
+ width - 11 - rect.xMin % width - rect.width;
 #endif
 
 #if !UNITY_EDITOR_OSX
@@ -54,10 +54,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
         {
             if (items == null) return;
 
-            foreach (ActionItem item in items)
-            {
+            foreach (var item in items)
                 if (item.isActive)
-                {
                     try
                     {
                         item.Draw();
@@ -66,14 +64,12 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                     {
                         Log.Add(e);
                     }
-                }
-            }
         }
 
         public override void SetPosition(Vector2 position, Vector2 offset, bool flipHorizontal, bool flipVertical)
         {
-            int ox = -10;
-            int oy = -10;
+            var ox = -10;
+            var oy = -10;
             rect.position = position + offset + new Vector2(ox - rect.width, oy);
 
             if (flipHorizontal) rect.x += rect.width - ox * 2;

@@ -21,16 +21,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (label.Length < 8) return;
 
-                int lastDot = 1;
+                var lastDot = 1;
 
-                for (int i = label.Length - 1; i >= 2; i--)
-                {
+                for (var i = label.Length - 1; i >= 2; i--)
                     if (label[i] == '.')
                     {
                         lastDot = i;
                         break;
                     }
-                }
 
                 this.label = label.Substring(0, lastDot);
                 this.path = path;
@@ -56,10 +54,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     previewLoaded = false;
 
                     if (asset == null && EditorApplication.timeSinceStartup - loadTimer < 0.3)
-                    {
                         try
                         {
-                            if (File.Exists(path)) asset = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                            if (File.Exists(path))
+                            {
+                                asset = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                            }
                             else
                             {
                                 content.image = EditorResources.prefabTexture;
@@ -69,7 +69,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         catch
                         {
                         }
-                    }
                     else GUI.changed = true;
 
                     if (asset != null)
@@ -111,10 +110,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public void DrawPreview()
             {
                 if (!Prefs.createBrowserPreviewSelection) return;
-                if (previewPrefab != this && previewEditor != null)
-                {
-                    DestroyImmediate(previewEditor);
-                }
+                if (previewPrefab != this && previewEditor != null) DestroyImmediate(previewEditor);
 
                 if (previewEditor == null)
                 {

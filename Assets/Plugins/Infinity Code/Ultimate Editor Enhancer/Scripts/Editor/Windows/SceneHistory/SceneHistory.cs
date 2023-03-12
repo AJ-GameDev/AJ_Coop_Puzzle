@@ -23,19 +23,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static string filter = "";
         private static List<SceneHistoryItem> filteredRecords;
         private static SceneHistoryItem selectedItem;
-        private static int selectedIndex = 0;
+        private static int selectedIndex;
         private static double lastClickTime;
-        private static bool focusOnTextField = false;
+        private static bool focusOnTextField;
 
         static SceneHistory()
         {
             EditorSceneManager.sceneClosed += OnSceneClosed;
         }
 
-        private static List<SceneHistoryItem> items
-        {
-            get { return ReferenceManager.sceneHistory; }
-        }
+        private static List<SceneHistoryItem> items => ReferenceManager.sceneHistory;
 
         private void OnEnable()
         {
@@ -45,10 +42,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             showContent = new GUIContent(Styles.isProSkin ? Icons.openNewWhite : Icons.openNewBlack, "Open Scene");
             closeContent = new GUIContent(Styles.isProSkin ? Icons.closeWhite : Icons.closeBlack, "Remove");
 
-            foreach (SceneHistoryItem item in items)
-            {
-                item.CheckExists();
-            }
+            foreach (var item in items) item.CheckExists();
 
             focusOnTextField = true;
         }
@@ -62,7 +56,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void OnGUI()
         {
             if (showContentStyle == null || showContentStyle.normal.background == null)
-            {
                 showContentStyle = new GUIStyle(Styles.transparentButton)
                 {
                     margin =
@@ -71,12 +64,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         left = 6
                     }
                 };
-            }
 
             if (noBookmarkTexture == null)
-            {
                 noBookmarkTexture = Styles.isProSkin ? (Texture2D)Icons.starWhite : (Texture2D)Icons.starBlack;
-            }
 
             if (ProcessEvents())
             {
@@ -88,24 +78,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-            int removeIndex = -1;
+            var removeIndex = -1;
 
             if (filteredRecords == null)
-            {
-                for (int i = 0; i < items.Count; i++)
+                for (var i = 0; i < items.Count; i++)
                 {
-                    SceneHistoryItem item = items[i];
+                    var item = items[i];
                     if (DrawRow(item)) removeIndex = i;
                 }
-            }
             else
-            {
-                for (int i = 0; i < filteredRecords.Count; i++)
+                for (var i = 0; i < filteredRecords.Count; i++)
                 {
-                    SceneHistoryItem item = filteredRecords[i];
+                    var item = filteredRecords[i];
                     if (DrawRow(item)) removeIndex = items.IndexOf(item);
                 }
-            }
 
             if (removeIndex != -1)
             {
@@ -136,33 +122,28 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private bool DrawRow(SceneHistoryItem item)
         {
-            bool ret = false;
+            var ret = false;
 
             EditorGUILayout.BeginHorizontal(selectedItem == item ? Styles.selectedRow : Styles.transparentRow);
 
             EditorGUI.BeginDisabledGroup(!item.exists);
 
             if (GUILayout.Button(showContent, showContentStyle, GUILayout.ExpandWidth(false), GUILayout.Height(12)))
-            {
                 if (SceneManagerHelper.AskForSave(SceneManager.GetActiveScene()))
                 {
                     EditorSceneManager.OpenScene(item.path);
                     Close();
                 }
-            }
 
-            GUIContent content = TempContent.Get(item.name, item.path);
-            ButtonEvent ev = GUILayoutUtils.Button(content, EditorStyles.label, GUILayout.Height(20),
+            var content = TempContent.Get(item.name, item.path);
+            var ev = GUILayoutUtils.Button(content, EditorStyles.label, GUILayout.Height(20),
                 GUILayout.MaxWidth(position.width - 30));
-            if (ProcessRowEvents(item, ev))
-            {
-                Close();
-            }
+            if (ProcessRowEvents(item, ev)) Close();
 
-            bool hasBookmark = HasBookmark(item);
+            var hasBookmark = HasBookmark(item);
 
-            Texture2D texture = noBookmarkTexture;
-            string tooltip = "Add Bookmark";
+            var texture = noBookmarkTexture;
+            var tooltip = "Add Bookmark";
 
             if (hasBookmark)
             {
@@ -172,7 +153,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (GUILayout.Button(TempContent.Get(texture, tooltip), GUIStyle.none, GUILayout.Width(20)))
             {
-                SceneAsset asset = AssetDatabase.LoadAssetAtPath<SceneAsset>(item.path);
+                var asset = AssetDatabase.LoadAssetAtPath<SceneAsset>(item.path);
                 if (hasBookmark) Bookmarks.Remove(asset);
                 else Bookmarks.Add(asset);
             }
@@ -180,10 +161,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             EditorGUI.EndDisabledGroup();
 
             if (GUILayout.Button(closeContent, Styles.transparentButton, GUILayout.ExpandWidth(false),
-                    GUILayout.Height(12)))
-            {
-                ret = true;
-            }
+                    GUILayout.Height(12))) ret = true;
 
             EditorGUILayout.EndHorizontal();
 
@@ -192,9 +170,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static bool HasBookmark(SceneHistoryItem item)
         {
-            for (int i = 0; i < ReferenceManager.bookmarks.Count; i++)
+            for (var i = 0; i < ReferenceManager.bookmarks.Count; i++)
             {
-                ProjectBookmark bookmark = ReferenceManager.bookmarks[i];
+                var bookmark = ReferenceManager.bookmarks[i];
                 if (bookmark.target == null) continue;
                 if (bookmark.path == item.path) return true;
             }
@@ -219,10 +197,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (EditorApplication.isPlaying) return;
 
             SelectionHistory.Clear();
-            string path = scene.path;
+            var path = scene.path;
             if (string.IsNullOrEmpty(path)) return;
 
-            SceneHistoryItem item = items.FirstOrDefault(i => i.path == path);
+            var item = items.FirstOrDefault(i => i.path == path);
             if (item != null)
             {
                 items.Remove(item);
@@ -251,7 +229,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void ProcessContextMenu(SceneHistoryItem item)
         {
             selectedItem = item;
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             menu.Add("Open", () => SelectCurrent());
             menu.Add("Open Additive", () => { EditorSceneManager.OpenScene(item.path, OpenSceneMode.Additive); });
             menu.AddSeparator();
@@ -266,7 +244,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private bool ProcessEvents()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.DownArrow) SelectNext();
@@ -283,13 +261,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (selectedItem == item)
             {
                 if (EditorApplication.timeSinceStartup - lastClickTime < 0.3)
-                {
                     if (SelectCurrent())
                     {
                         Close();
                         return true;
                     }
-                }
 
                 lastClickTime = EditorApplication.timeSinceStartup;
                 Selection.activeObject = AssetDatabase.LoadAssetAtPath<SceneAsset>(item.path);
@@ -308,7 +284,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private bool ProcessRowEvents(SceneHistoryItem item, ButtonEvent ev)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (ev == ButtonEvent.press)
             {
                 if (e.button == 0) return ProcessRowClick(item);
@@ -425,7 +401,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return;
             }
 
-            string pattern = SearchableItem.GetPattern(filter);
+            var pattern = SearchableItem.GetPattern(filter);
 
             filteredRecords = items.Where(i => i.UpdateAccuracy(pattern) > 0).OrderByDescending(i => i.accuracy)
                 .ToList();

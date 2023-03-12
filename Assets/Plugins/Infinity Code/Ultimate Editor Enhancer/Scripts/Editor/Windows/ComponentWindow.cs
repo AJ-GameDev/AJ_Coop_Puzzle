@@ -17,7 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         public Component component
         {
-            get { return _component; }
+            get => _component;
             set
             {
                 _component = value;
@@ -81,7 +81,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         _component = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) as Component;
                         isMissed = _component == null;
                     }
-                    else isMissed = true;
+                    else
+                    {
+                        isMissed = true;
+                    }
                 }
 
                 if (isMissed)
@@ -111,7 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (isPopup)
             {
-                GUIStyle style = GUI.skin.box;
+                var style = GUI.skin.box;
                 style.normal.textColor = Color.blue;
                 GUI.Box(new Rect(0, 0, position.width, position.height), GUIContent.none, style);
             }
@@ -126,7 +129,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             serializedObject.Update();
             searchableProperties = new List<SearchableProperty>();
 
-            SerializedProperty p = serializedObject.GetIterator();
+            var p = serializedObject.GetIterator();
             if (!p.Next(true)) return;
 
             do
@@ -159,8 +162,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-            Rect lastRect = GUILayoutUtility.GetLastRect();
-            Rect r = new Rect(lastRect.x, lastRect.y, lastRect.width, lastRect.height);
+            var lastRect = GUILayoutUtility.GetLastRect();
+            var r = new Rect(lastRect.x, lastRect.y, lastRect.width, lastRect.height);
 
             DrawHeaderPreview(r);
             DrawHeaderComponent(r);
@@ -171,18 +174,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawHeaderComponent(Rect r)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
-            int verticalOffset = 4;
+            var verticalOffset = 4;
             if (!displayGameObject) verticalOffset += 8;
 
-            Behaviour behaviour = _component as Behaviour;
-            Renderer renderer = _component as Renderer;
+            var behaviour = _component as Behaviour;
+            var renderer = _component as Renderer;
             if (behaviour != null || renderer != null)
             {
-                Rect tr1 = new Rect(r.x + 44, r.y + verticalOffset + 1, 16, 18);
+                var tr1 = new Rect(r.x + 44, r.y + verticalOffset + 1, 16, 18);
                 EditorGUI.BeginChangeCheck();
-                bool v1 = GUI.Toggle(tr1, behaviour != null ? behaviour.enabled : renderer.enabled, GUIContent.none);
+                var v1 = GUI.Toggle(tr1, behaviour != null ? behaviour.enabled : renderer.enabled, GUIContent.none);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (behaviour != null) behaviour.enabled = v1;
@@ -191,7 +194,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            Rect r2 = new Rect(r.x + 60, r.y + verticalOffset, r.width - 100, 18);
+            var r2 = new Rect(r.x + 60, r.y + verticalOffset, r.width - 100, 18);
 
             GUI.Label(r2, _component.GetType().Name, EditorStyles.largeLabel);
             if (e.type == EventType.MouseDown && r2.Contains(e.mousePosition))
@@ -214,10 +217,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawHeaderExtraButtons(Rect r)
         {
-            Event e = Event.current;
+            var e = Event.current;
             r.y += 27;
 
-            bool containBookmark = Bookmarks.Contain(component);
+            var containBookmark = Bookmarks.Contain(component);
             if (GUI.Button(new Rect(r.xMax - 18, r.y, 16, 16),
                     containBookmark ? removeBookmarkContent : bookmarkContent, Styles.transparentButton))
             {
@@ -237,21 +240,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (debugOnContent == null) debugOnContent = new GUIContent(Icons.debugOn, "Debug");
 
             if (GUI.Button(new Rect(r.width - 36, r.y, 16, 16), isDebug ? debugOnContent : debugContent,
-                    Styles.transparentButton))
-            {
-                ToggleDebugMode();
-            }
+                    Styles.transparentButton)) ToggleDebugMode();
         }
 
         private void DrawHeaderGameObject(Rect r)
         {
             if (!displayGameObject) return;
 
-            Event e = Event.current;
+            var e = Event.current;
 
-            Rect tr2 = new Rect(r.x + 44, r.y + 25, 16, 18);
+            var tr2 = new Rect(r.x + 44, r.y + 25, 16, 18);
             EditorGUI.BeginChangeCheck();
-            bool v2 = GUI.Toggle(tr2, _component.gameObject.activeSelf, GUIContent.none);
+            var v2 = GUI.Toggle(tr2, _component.gameObject.activeSelf, GUIContent.none);
             if (EditorGUI.EndChangeCheck())
             {
                 _component.gameObject.SetActive(v2);
@@ -286,14 +286,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawHeaderIcons(Rect r)
         {
-            Vector2 settingsSize = Styles.iconButton.CalcSize(titleSettingsIcon);
-            Rect settingsRect = new Rect(r.xMax - settingsSize.x, r.y + 5, settingsSize.x, settingsSize.y);
+            var settingsSize = Styles.iconButton.CalcSize(titleSettingsIcon);
+            var settingsRect = new Rect(r.xMax - settingsSize.x, r.y + 5, settingsSize.x, settingsSize.y);
             if (EditorGUI.DropdownButton(settingsRect, titleSettingsIcon, FocusType.Passive, Styles.iconButton))
-            {
                 ComponentUtils.ShowContextMenu(_component);
-            }
 
-            float offset = settingsSize.x * 2;
+            var offset = settingsSize.x * 2;
 
             EditorGUIUtilityRef.DrawEditorHeaderItems(
                 new Rect(r.xMax - offset, r.y + 5f, settingsSize.x, settingsSize.y), new Object[] { component }, 0);
@@ -301,10 +299,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawHeaderPreview(Rect r)
         {
-            Rect r1 = new Rect(r.x + 6, r.y + 6, 32, 32);
+            var r1 = new Rect(r.x + 6, r.y + 6, 32, 32);
 
-            bool isLoadingAssetPreview = AssetPreview.IsLoadingAssetPreview(component.GetInstanceID());
-            Texture2D texture2D = AssetPreview.GetAssetPreview(component);
+            var isLoadingAssetPreview = AssetPreview.IsLoadingAssetPreview(component.GetInstanceID());
+            var texture2D = AssetPreview.GetAssetPreview(component);
             if (texture2D == null)
             {
                 if (isLoadingAssetPreview) Repaint();
@@ -324,12 +322,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             serializedObject.Update();
 
-            bool wideMode = EditorGUIUtility.wideMode;
+            var wideMode = EditorGUIUtility.wideMode;
             EditorGUIUtility.wideMode = true;
 
             if (filteredItems == null)
             {
-                SerializedProperty p = serializedObject.GetIterator();
+                var p = serializedObject.GetIterator();
 
                 if (!p.Next(true)) return;
 
@@ -340,7 +338,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             else
             {
-                foreach (SearchableProperty item in filteredItems)
+                foreach (var item in filteredItems)
                     EditorGUILayout.PropertyField(serializedObject.FindProperty(item.path));
             }
 
@@ -425,7 +423,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode)
+            {
                 allowInitEditor = false;
+            }
             else
             {
                 allowInitEditor = true;
@@ -439,9 +439,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (component == null) return null;
 
-            ComponentWindow wnd = CreateInstance<ComponentWindow>();
+            var wnd = CreateInstance<ComponentWindow>();
 
-            Texture2D texture2D = AssetPreview.GetAssetPreview(component);
+            var texture2D = AssetPreview.GetAssetPreview(component);
             if (texture2D == null) texture2D = AssetPreview.GetMiniThumbnail(component);
 
             wnd.titleContent = new GUIContent(component.GetType().Name + " (" + component.gameObject.name + ")",
@@ -456,7 +456,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             wnd.Focus();
             if (Event.current != null)
             {
-                Vector2 screenPoint = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
+                var screenPoint = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
                 Vector2 size = Prefs.defaultWindowSize;
                 wnd.position = new Rect(screenPoint - size / 2, size);
             }
@@ -473,21 +473,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 autoPopupWindow = null;
             }
 
-            ComponentWindow wnd = CreateInstance<ComponentWindow>();
+            var wnd = CreateInstance<ComponentWindow>();
             wnd.component = component;
             wnd.minSize = Vector2.one;
 
-            Event e = Event.current;
+            var e = Event.current;
 
             if (!rect.HasValue)
             {
-                Vector2 mousePosition = e != null ? e.mousePosition : new Vector2(Screen.width / 2, Screen.height / 2);
-                Vector2 position = GUIUtility.GUIToScreenPoint(mousePosition);
+                var mousePosition = e != null ? e.mousePosition : new Vector2(Screen.width / 2, Screen.height / 2);
+                var position = GUIUtility.GUIToScreenPoint(mousePosition);
                 Vector2 size = Prefs.defaultWindowSize;
                 rect = new Rect(position - size / 2, size);
             }
 
-            Rect r = rect.Value;
+            var r = rect.Value;
             if (r.y < 30) r.y = 30;
             wnd.position = r
                 ;
@@ -501,8 +501,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             wnd.drawTitle = true;
             wnd.OnPin += () =>
             {
-                Rect wRect = wnd.position;
-                ComponentWindow w = Show(component, false);
+                var wRect = wnd.position;
+                var w = Show(component, false);
                 w.position = wRect;
                 w.closeOnLossFocus = false;
                 w.closeOnCompileOrPlay = false;
@@ -516,7 +516,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (component == null) return null;
 
-            ComponentWindow wnd = CreateInstance<ComponentWindow>();
+            var wnd = CreateInstance<ComponentWindow>();
             wnd.minSize = Vector2.one;
             wnd.titleContent = new GUIContent(component.GetType().Name + " (" + component.gameObject.name + ")");
             wnd.component = component;
@@ -559,10 +559,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             EditorGUILayout.HelpBox("Select Terrain GameObject", MessageType.Info);
-            if (GUILayout.Button("Select"))
-            {
-                Selection.activeGameObject = _component.gameObject;
-            }
+            if (GUILayout.Button("Select")) Selection.activeGameObject = _component.gameObject;
 
             return false;
         }
@@ -575,14 +572,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return;
             }
 
-            string pattern = SearchableItem.GetPattern(filter);
+            var pattern = SearchableItem.GetPattern(filter);
             filteredItems = searchableProperties.Where(p => p.UpdateAccuracy(pattern) > 0)
                 .OrderByDescending(p => p.accuracy).ToList();
         }
 
         public class SearchableProperty : SearchableItem
         {
-            private string displayName;
+            private readonly string displayName;
             public string path;
 
             public SearchableProperty(SerializedProperty prop)
@@ -643,7 +640,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         [NonSerialized] private bool isDebug;
 
-        [NonSerialized] private bool isMissed = false;
+        [NonSerialized] private bool isMissed;
 
         [NonSerialized] private SerializedObject serializedObject;
 

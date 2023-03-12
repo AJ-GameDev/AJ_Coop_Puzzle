@@ -30,7 +30,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (OnWindowFocused != null) OnWindowFocused(focusedWindow);
             }
 
-            bool maximized = focusedWindow != null && focusedWindow.maximized;
+            var maximized = focusedWindow != null && focusedWindow.maximized;
             if (maximized != isMaximized)
             {
                 isMaximized = maximized;

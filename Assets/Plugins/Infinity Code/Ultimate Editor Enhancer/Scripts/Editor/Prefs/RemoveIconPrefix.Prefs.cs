@@ -20,10 +20,9 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (_removeIconPrefix == null)
                 _removeIconPrefix = removeIconPrefix.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (string p in _removeIconPrefix)
-            {
-                if (text.Length > p.Length && text.StartsWith(p)) return text.Substring(p.Length);
-            }
+            foreach (var p in _removeIconPrefix)
+                if (text.Length > p.Length && text.StartsWith(p))
+                    return text.Substring(p.Length);
 
             return text;
         }
@@ -41,10 +40,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return Order.removeComponentIconPrefix; }
-            }
+            public override float order => Order.removeComponentIconPrefix;
 
             public override void Draw()
             {
@@ -57,8 +53,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.indentLevel++;
 
-                int removeIndex = -1;
-                for (int i = 0; i < _removeIconPrefix.Length; i++)
+                var removeIndex = -1;
+                for (var i = 0; i < _removeIconPrefix.Length; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
                     _removeIconPrefix[i] = EditorGUILayout.TextField(_removeIconPrefix[i]);
@@ -70,10 +66,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(16);
-                if (GUILayout.Button("Add"))
-                {
-                    ArrayUtility.Add(ref _removeIconPrefix, "");
-                }
+                if (GUILayout.Button("Add")) ArrayUtility.Add(ref _removeIconPrefix, "");
 
                 EditorGUILayout.EndHorizontal();
 

@@ -26,7 +26,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return;
             }
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape)
             {
                 e.Use();
@@ -44,7 +44,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (GUILayout.Button("2")) Time.timeScale = 2f;
             if (GUILayout.Button("5")) Time.timeScale = 5f;
             if (GUILayout.Button("..."))
-            {
                 InputDialog.Show("Enter Timescale (0-100)", Time.timeScale.ToString(), s =>
                 {
                     float v;
@@ -60,7 +59,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         else Time.timeScale = v;
                     }
                 });
-            }
 
 
             EditorGUILayout.EndHorizontal();
@@ -68,28 +66,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static void OnTimerClick()
         {
-            TimescaleWindow[] windows = UnityEngine.Resources.FindObjectsOfTypeAll<TimescaleWindow>();
+            var windows = UnityEngine.Resources.FindObjectsOfTypeAll<TimescaleWindow>();
             if (windows.Any(w => w.closeOnLossFocus))
             {
-                foreach (TimescaleWindow window in windows)
-                {
-                    if (window.closeOnLossFocus) window.Close();
-                }
+                foreach (var window in windows)
+                    if (window.closeOnLossFocus)
+                        window.Close();
             }
             else
             {
-                Rect rect = GUILayoutUtils.lastRect;
+                var rect = GUILayoutUtils.lastRect;
                 ShowPopupWindow(rect.position + new Vector2(0, rect.height + 5));
             }
         }
 
         public static EditorWindow ShowPopupWindow(Vector2 position)
         {
-            TimescaleWindow wnd = CreateInstance<TimescaleWindow>();
+            var wnd = CreateInstance<TimescaleWindow>();
             wnd.titleContent = new GUIContent("Bookmarks");
             position = GUIUtility.GUIToScreenPoint(position);
-            Vector2 size = new Vector2(300, 44);
-            Rect rect = new Rect(position, size);
+            var size = new Vector2(300, 44);
+            var rect = new Rect(position, size);
 
             wnd.minSize = rect.size;
             wnd.position = rect;
@@ -103,8 +100,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         [MenuItem(WindowsHelper.MenuPath + "Timescale", false, 102)]
         public static void ShowWindow()
         {
-            TimescaleWindow wnd = GetWindow<TimescaleWindow>("Timescale");
-            Rect rect = wnd.position;
+            var wnd = GetWindow<TimescaleWindow>("Timescale");
+            var rect = wnd.position;
             rect.size = new Vector2(300, 40);
             wnd.minSize = rect.size;
             wnd.position = rect;

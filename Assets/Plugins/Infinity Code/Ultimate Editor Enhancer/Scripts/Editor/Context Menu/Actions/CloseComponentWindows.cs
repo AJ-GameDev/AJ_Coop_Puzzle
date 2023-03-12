@@ -8,14 +8,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class CloseComponentWindows : ActionItem, IValidatableLayoutItem
     {
-        public override float order
-        {
-            get { return 850; }
-        }
+        public override float order => 850;
 
         public bool Validate()
         {
-            ComponentWindow[] windows = UnityEngine.Resources.FindObjectsOfTypeAll<ComponentWindow>();
+            var windows = UnityEngine.Resources.FindObjectsOfTypeAll<ComponentWindow>();
             return windows.Length > 0;
         }
 
@@ -26,9 +23,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         public override void Invoke()
         {
-            ComponentWindow[] windows = UnityEngine.Resources.FindObjectsOfTypeAll<ComponentWindow>();
-            for (int i = 0; i < windows.Length; i++)
-            {
+            var windows = UnityEngine.Resources.FindObjectsOfTypeAll<ComponentWindow>();
+            for (var i = 0; i < windows.Length; i++)
                 try
                 {
                     windows[i].Close();
@@ -37,7 +33,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                 {
                     Object.DestroyImmediate(windows[i]);
                 }
-            }
         }
     }
 }

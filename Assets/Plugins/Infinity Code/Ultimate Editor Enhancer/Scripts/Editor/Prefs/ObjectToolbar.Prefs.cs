@@ -25,10 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return Order.objectToolbar; }
-            }
+            public override float order => Order.objectToolbar;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -41,7 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 #else
                     new Shortcut("Drag Object Toolbar", "Scene View", "CTRL"),
 #endif
-                    new Shortcut("Open Component In Object Toolbar", "Scene View", "ALT + {1-9}"),
+                    new Shortcut("Open Component In Object Toolbar", "Scene View", "ALT + {1-9}")
                 };
             }
 

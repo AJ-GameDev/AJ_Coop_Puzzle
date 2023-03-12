@@ -35,7 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return new[]
                 {
-                    new Shortcut("Show Tool Values", "Scene View", toolValuesModifiers),
+                    new Shortcut("Show Tool Values", "Scene View", toolValuesModifiers)
                 };
             }
 

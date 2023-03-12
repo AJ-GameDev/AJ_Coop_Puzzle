@@ -11,25 +11,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         private static string recycledText;
 
-        protected override MethodInfo originalMethod
-        {
-            get => EditorGUIRef.doNumberFieldMethod;
-        }
+        protected override MethodInfo originalMethod => EditorGUIRef.doNumberFieldMethod;
 
-        public override bool state
-        {
-            get => Prefs.changeNumberFieldValueByArrow;
-        }
+        public override bool state => Prefs.changeNumberFieldValueByArrow;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(DoNumberFieldPrefix);
-        }
+        protected override string prefixMethodName => nameof(DoNumberFieldPrefix);
 
-        protected override InitType initType
-        {
-            get => InitType.gui;
-        }
+        protected override InitType initType => InitType.gui;
 
         private static void DoNumberFieldPrefix(
             object editor,
@@ -48,8 +36,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             bool draggable,
             double dragSensitivity)
         {
-            Event e = Event.current;
-            int v = 0;
+            var e = Event.current;
+            var v = 0;
 
             if (e.type == EventType.KeyDown && GUIUtility.keyboardControl == id)
             {
@@ -107,7 +95,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                     }
 #endif
 
-                    TextEditor textEditor = editor as TextEditor;
+                    var textEditor = editor as TextEditor;
                     if (textEditor != null)
                     {
                         textEditor.text = recycledText;

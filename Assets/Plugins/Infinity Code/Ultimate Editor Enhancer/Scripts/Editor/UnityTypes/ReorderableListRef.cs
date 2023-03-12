@@ -17,7 +17,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_doListElementsMethod == null)
-                {
                     _doListElementsMethod = type.GetMethod("DoListElements", Reflection.InstanceLookup, null,
                         new[]
                         {
@@ -26,16 +25,11 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                             typeof(Rect)
 #endif
                         }, null);
-                }
-
                 return _doListElementsMethod;
             }
         }
 
-        public static Type type
-        {
-            get => typeof(ReorderableList);
-        }
+        public static Type type => typeof(ReorderableList);
 
 #if UNITY_2021_3_OR_NEWER || UNITY_2022_1_OR_NEWER
         private static MethodInfo _invalidateCacheMethod;

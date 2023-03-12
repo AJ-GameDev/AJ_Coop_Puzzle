@@ -32,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 if (_headerStyle == null || CheckStyleChanges())
                 {
                     _headerStyle = new GUIStyle();
-                    Color color = backgroundColor;
+                    var color = backgroundColor;
                     color.a = 1;
                     _headerStyle.normal.background = Resources.CreateSinglePixelTexture(color);
                     _textColor = new Color(textColor.r, textColor.g, textColor.b, 1);
@@ -51,7 +51,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 }
                 else if (_headerStyle.normal.background == null)
                 {
-                    Color color = backgroundColor;
+                    var color = backgroundColor;
                     color.a = 1;
                     _headerStyle.normal.background = Resources.CreateSinglePixelTexture(color);
                 }
@@ -72,50 +72,46 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         {
             if (Event.current.type != EventType.Repaint) return;
 
-            string name = item.gameObject.name;
+            var name = item.gameObject.name;
 
-            Rect rect = item.rect;
-            Rect r = new Rect(32, rect.y, rect.xMax - 16, rect.height);
+            var rect = item.rect;
+            var r = new Rect(32, rect.y, rect.xMax - 16, rect.height);
 
-            int start = 0;
-            int end = name.Length;
+            var start = 0;
+            var end = name.Length;
 
-            for (int i = start; i < name.Length; i++)
+            for (var i = start; i < name.Length; i++)
             {
-                char c = name[i];
+                var c = name[i];
                 int j;
                 for (j = 0; j < trimChars.Length; j++)
-                {
                     if (trimChars[j] == c)
                     {
                         start++;
                         break;
                     }
-                }
 
                 if (j == trimChars.Length) break;
             }
 
-            for (int i = end - 1; i > start; i--)
+            for (var i = end - 1; i > start; i--)
             {
-                char c = name[i];
+                var c = name[i];
                 int j;
                 for (j = 0; j < trimChars.Length; j++)
-                {
                     if (trimChars[j] == c)
                     {
                         end--;
                         break;
                     }
-                }
 
                 if (j == trimChars.Length) break;
             }
 
             name = name.Substring(start, end - start);
 
-            GUIStyle style = headerStyle;
-            RectOffset padding = style.padding;
+            var style = headerStyle;
+            var padding = style.padding;
             padding.left = textPadding;
             style.padding = padding;
             style.Draw(r, TempContent.Get(name), 0, false, false);
@@ -125,7 +121,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         {
             if (!enabled) return false;
 
-            string name = go.name;
+            var name = go.name;
             if (condition == HeaderCondition.nameStarts) return name.StartsWith(value);
             if (condition == HeaderCondition.nameContains) return name.Contains(value);
             if (condition == HeaderCondition.nameEqual) return name == value;

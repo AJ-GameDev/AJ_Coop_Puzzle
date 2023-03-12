@@ -18,16 +18,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static void OnDragPerformed(SerializedProperty property)
         {
             if (DragAndDrop.objectReferences.Length == 0) return;
-            foreach (Object obj in DragAndDrop.objectReferences)
-            {
-                if (!(obj is GameObject || obj is Component)) return;
-            }
+            foreach (var obj in DragAndDrop.objectReferences)
+                if (!(obj is GameObject || obj is Component))
+                    return;
 
             DragAndDrop.AcceptDrag();
 
-            foreach (Object obj in DragAndDrop.objectReferences)
+            foreach (var obj in DragAndDrop.objectReferences)
             {
-                SerializedProperty callsProp = property.FindPropertyRelative("m_PersistentCalls.m_Calls");
+                var callsProp = property.FindPropertyRelative("m_PersistentCalls.m_Calls");
                 callsProp.arraySize++;
 
                 GameObject target;
@@ -35,7 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 else if (obj is Component) target = (obj as Component).gameObject;
                 else continue;
 
-                SerializedProperty last = callsProp.GetArrayElementAtIndex(callsProp.arraySize - 1);
+                var last = callsProp.GetArrayElementAtIndex(callsProp.arraySize - 1);
                 last.FindPropertyRelative("m_Target").objectReferenceValue = target;
                 last.FindPropertyRelative("m_CallState").enumValueIndex = 2;
             }
@@ -47,10 +46,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static void OnDragUpdated()
         {
             if (DragAndDrop.objectReferences.Length == 0) return;
-            foreach (Object obj in DragAndDrop.objectReferences)
-            {
-                if (!(obj is GameObject || obj is Component)) return;
-            }
+            foreach (var obj in DragAndDrop.objectReferences)
+                if (!(obj is GameObject || obj is Component))
+                    return;
 
             DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
             Event.current.Use();
@@ -58,7 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnGUIAfter(Rect position, SerializedProperty property, GUIContent label)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (position.Contains(e.mousePosition))
             {
                 if (e.type == EventType.DragUpdated) OnDragUpdated();

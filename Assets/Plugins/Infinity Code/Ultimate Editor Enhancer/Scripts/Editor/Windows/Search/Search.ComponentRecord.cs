@@ -16,7 +16,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             private static Dictionary<int, int> typeHashes;
             private static List<string> typeNames;
             private static List<string> nicifyNames;
-            private string _type;
 
             public Component component;
 
@@ -31,62 +30,47 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     nicifyNames = new List<string>(64);
                 }
 
-                Type t = component.GetType();
-                _type = t.Name.ToLowerInvariant();
+                var t = component.GetType();
+                type = t.Name.ToLowerInvariant();
 
                 string componentName;
                 string nicifyName;
                 GetNames(t, out componentName, out nicifyName);
 
-                string gameObjectName = component.gameObject.name;
+                var gameObjectName = component.gameObject.name;
 
                 if (componentName != nicifyName)
-                {
                     search = new[]
                     {
                         componentName,
                         nicifyName,
                         gameObjectName + " " + nicifyName
                     };
-                }
                 else
-                {
                     search = new[]
                     {
                         componentName,
                         gameObjectName + " " + nicifyName
                     };
-                }
             }
 
-            public GameObject gameObject
-            {
-                get => component.gameObject;
-            }
+            public GameObject gameObject => component.gameObject;
 
-            public override Object target
-            {
-                get => component;
-            }
+            public override Object target => component;
 
             public override string tooltip
             {
                 get
                 {
                     if (_tooltip == null)
-                    {
                         _tooltip = GameObjectUtils.GetTransformPath(component.transform).Append(" (")
                             .Append(ObjectNames.NicifyVariableName(component.GetType().Name)).Append(")").ToString();
-                    }
 
                     return _tooltip;
                 }
             }
 
-            public override string type
-            {
-                get => _type;
-            }
+            public override string type { get; }
 
             private void GetNames(Type type, out string componentName, out string nicifyName)
             {
@@ -115,7 +99,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public override void Select(int state)
             {
-                if (state == 2) ComponentWindow.Show(component);
+                if (state == 2)
+                {
+                    ComponentWindow.Show(component);
+                }
                 else if (state == 1)
                 {
                     Selection.activeGameObject = gameObject;

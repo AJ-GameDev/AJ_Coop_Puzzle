@@ -30,23 +30,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void DrawTooltip(SceneView sceneView)
         {
-            GUIContent content = TempContent.Get(tooltip);
-            float pixelPerPoint = EditorGUIUtility.pixelsPerPoint;
-            Vector2 size = Styles.tooltip.CalcSize(content);
+            var content = TempContent.Get(tooltip);
+            var pixelPerPoint = EditorGUIUtility.pixelsPerPoint;
+            var size = Styles.tooltip.CalcSize(content);
 
             Handles.BeginGUI();
-            Vector3 screenPoint = new Vector3(Event.current.mousePosition.x,
+            var screenPoint = new Vector3(Event.current.mousePosition.x,
                 sceneView.position.height - Event.current.mousePosition.y);
             if (screenPoint.y > 100 / pixelPerPoint)
-            {
                 screenPoint.y -= size.y + 0 / pixelPerPoint;
-            }
             else
-            {
                 screenPoint.y += size.y + 20 / pixelPerPoint;
-            }
 
-            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2,
+            var rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2,
                 size.x, size.y);
             GUI.Label(rect, content, Styles.tooltip);
 
@@ -55,12 +51,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragComponent(SceneView sceneView)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.modifiers != EventModifiers.Control && e.modifiers != EventModifiers.Command) return;
             if (e.type != EventType.DragUpdated && e.type != EventType.DragPerform) return;
 
-            EditorWindow wnd = EditorWindow.mouseOverWindow;
+            var wnd = EditorWindow.mouseOverWindow;
 
             if (wnd == null) return;
             if (!(wnd is SceneView)) return;
@@ -84,29 +80,32 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragGameObjectPerform()
         {
-            GameObject go = DragAndDrop.objectReferences[0] as GameObject;
+            var go = DragAndDrop.objectReferences[0] as GameObject;
             if (go.scene.name != null || go.GetComponent<RectTransform>() == null) return;
 
-            Event e = Event.current;
-            GameObject target = HandleUtility.PickGameObject(e.mousePosition, false, null);
+            var e = Event.current;
+            var target = HandleUtility.PickGameObject(e.mousePosition, false, null);
             if (target == null) return;
-            RectTransform parent = target.GetComponent<RectTransform>();
+            var parent = target.GetComponent<RectTransform>();
             if (parent == null) return;
 
-            PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
             if (prefabStage != null)
             {
                 if (prefabStage.assetPath == DragAndDrop.paths[0]) return;
                 if (e.alt)
                 {
-                    RectTransform p = prefabStage.prefabContentsRoot.transform as RectTransform;
+                    var p = prefabStage.prefabContentsRoot.transform as RectTransform;
                     parent = p != null ? p : GameObjectUtils.GetRoot(parent);
                 }
             }
-            else if (e.alt) parent = GameObjectUtils.GetRoot(parent);
+            else if (e.alt)
+            {
+                parent = GameObjectUtils.GetRoot(parent);
+            }
 
             DragAndDrop.AcceptDrag();
-            GameObject instance = PrefabUtility.InstantiatePrefab(go) as GameObject;
+            var instance = PrefabUtility.InstantiatePrefab(go) as GameObject;
             Undo.RegisterCreatedObjectUndo(instance, "Drag Instance");
             instance.transform.SetParent(parent, false);
             instance.transform.position = SceneViewManager.lastWorldPosition;
@@ -115,11 +114,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragGameObjectUpdated()
         {
-            GameObject go = DragAndDrop.objectReferences[0] as GameObject;
+            var go = DragAndDrop.objectReferences[0] as GameObject;
             if (go.GetComponent<RectTransform>() == null) return;
 
-            Event e = Event.current;
-            GameObject target = HandleUtility.PickGameObject(e.mousePosition, false, null);
+            var e = Event.current;
+            var target = HandleUtility.PickGameObject(e.mousePosition, false, null);
             if (target == null || target.GetComponent<RectTransform>() == null) return;
 
             DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
@@ -130,7 +129,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (DragAndDrop.objectReferences.Length != 1) return;
 
-            Object obj = DragAndDrop.objectReferences[0];
+            var obj = DragAndDrop.objectReferences[0];
             if (obj is Texture) OnDragTexturePerform(view);
             else if (obj is Sprite) OnDragSpritePerform(view);
             else if (obj is GameObject) OnDragGameObjectPerform();
@@ -138,12 +137,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragSpritePerform(SceneView view)
         {
-            Event e = Event.current;
-            GameObject go = HandleUtility.PickGameObject(e.mousePosition, false, null);
+            var e = Event.current;
+            var go = HandleUtility.PickGameObject(e.mousePosition, false, null);
             if (go == null) return;
 
-            Image image = go.GetComponent<Image>();
-            RectTransform rt = go.GetComponent<RectTransform>();
+            var image = go.GetComponent<Image>();
+            var rt = go.GetComponent<RectTransform>();
             if (image != null && e.modifiers == EventModifiers.None)
             {
                 DragAndDrop.AcceptDrag();
@@ -154,7 +153,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             {
                 DragAndDrop.AcceptDrag();
                 EditorApplication.ExecuteMenuItem("GameObject/UI/Image");
-                GameObject newGO = Selection.activeGameObject;
+                var newGO = Selection.activeGameObject;
                 if (e.alt) rt = GameObjectUtils.GetRoot(rt);
                 SetPosition(view, newGO, rt);
 
@@ -165,8 +164,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragSpriteUpdated(Object obj)
         {
-            Event e = Event.current;
-            GameObject go = HandleUtility.PickGameObject(e.mousePosition, false, null);
+            var e = Event.current;
+            var go = HandleUtility.PickGameObject(e.mousePosition, false, null);
             if (go == null) return;
 
             if (go.GetComponent<Image>() != null && e.modifiers == EventModifiers.None)
@@ -187,15 +186,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragTexturePerform(SceneView view)
         {
-            Event e = Event.current;
-            GameObject go = HandleUtility.PickGameObject(e.mousePosition, false, null);
+            var e = Event.current;
+            var go = HandleUtility.PickGameObject(e.mousePosition, false, null);
             if (go == null) return;
 
-            RectTransform rt = go.GetComponent<RectTransform>();
+            var rt = go.GetComponent<RectTransform>();
 
             if (e.modifiers == EventModifiers.None)
             {
-                RawImage rawImage = go.GetComponent<RawImage>();
+                var rawImage = go.GetComponent<RawImage>();
                 if (rawImage != null)
                 {
                     DragAndDrop.AcceptDrag();
@@ -204,10 +203,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                     return;
                 }
 
-                Image image = go.GetComponent<Image>();
+                var image = go.GetComponent<Image>();
                 if (image != null)
                 {
-                    TextureImporter importer = AssetImporter.GetAtPath(DragAndDrop.paths[0]) as TextureImporter;
+                    var importer = AssetImporter.GetAtPath(DragAndDrop.paths[0]) as TextureImporter;
                     if (importer != null && importer.textureType == TextureImporterType.Sprite)
                     {
                         DragAndDrop.AcceptDrag();
@@ -223,7 +222,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             {
                 DragAndDrop.AcceptDrag();
                 EditorApplication.ExecuteMenuItem("GameObject/UI/Raw Image");
-                GameObject newGO = Selection.activeGameObject;
+                var newGO = Selection.activeGameObject;
                 if (e.alt) rt = GameObjectUtils.GetRoot(rt);
                 SetPosition(view, newGO, rt);
                 SetReferenceValue(newGO.GetComponent<RawImage>(), "m_Texture");
@@ -233,14 +232,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnDragTextureUpdated(Object obj)
         {
-            Event e = Event.current;
-            GameObject go = HandleUtility.PickGameObject(e.mousePosition, false, null);
+            var e = Event.current;
+            var go = HandleUtility.PickGameObject(e.mousePosition, false, null);
             if (go == null) return;
 
-            RectTransform rectTransform = go.GetComponent<RectTransform>();
+            var rectTransform = go.GetComponent<RectTransform>();
             if (rectTransform != null && DragAndDrop.paths.Length > 0)
             {
-                TextureImporter importer = AssetImporter.GetAtPath(DragAndDrop.paths[0]) as TextureImporter;
+                var importer = AssetImporter.GetAtPath(DragAndDrop.paths[0]) as TextureImporter;
                 if (importer != null && importer.textureType == TextureImporterType.Sprite) needCleanUp = true;
             }
 
@@ -257,12 +256,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
                 if (go.GetComponent<Image>())
                 {
-                    {
-                        DragAndDrop.visualMode = DragAndDropVisualMode.Link;
-                        tooltip = "Set " + obj.name + " to " + go.name + "/Image.sprite";
-                        e.Use();
-                        return;
-                    }
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Link;
+                    tooltip = "Set " + obj.name + " to " + go.name + "/Image.sprite";
+                    e.Use();
+                    return;
                 }
             }
 
@@ -278,7 +275,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (DragAndDrop.objectReferences.Length != 1) return;
 
-            Object obj = DragAndDrop.objectReferences[0];
+            var obj = DragAndDrop.objectReferences[0];
             if (obj is Texture) OnDragTextureUpdated(obj);
             else if (obj is Sprite) OnDragSpriteUpdated(obj);
             else if (obj is GameObject) OnDragGameObjectUpdated();
@@ -290,7 +287,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
             needCleanUp = false;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.DragPerform)
             {
                 tooltip = null;
@@ -320,7 +317,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void SetPosition(SceneView view, GameObject newGO, RectTransform rt)
         {
-            RectTransform rectTransform = newGO.GetComponent<RectTransform>();
+            var rectTransform = newGO.GetComponent<RectTransform>();
             rectTransform.SetParent(rt);
             Vector3 screenPos = Event.current.mousePosition;
             screenPos.y = view.position.height - screenPos.y;
@@ -331,13 +328,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void SetReferenceValue(Object obj, string field)
         {
-            Object value = DragAndDrop.objectReferences[0];
+            var value = DragAndDrop.objectReferences[0];
             SetReferenceValue(obj, field, value);
         }
 
         private static void SetReferenceValue(Object obj, string field, Object value)
         {
-            SerializedObject so = new SerializedObject(obj);
+            var so = new SerializedObject(obj);
             so.Update();
             so.FindProperty(field).objectReferenceValue = value;
             so.ApplyModifiedProperties();

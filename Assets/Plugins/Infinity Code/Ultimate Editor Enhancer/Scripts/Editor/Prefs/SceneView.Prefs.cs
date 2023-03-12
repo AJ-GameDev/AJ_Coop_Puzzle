@@ -10,17 +10,12 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public class SceneViewManager : StandalonePrefManager<SceneViewManager>
         {
-            public override IEnumerable<string> keywords
-            {
-                get
-                {
-                    return ObjectToolbarManager.GetKeywords()
-                        .Concat(SwitchCustomToolManager.GetKeywords())
-                        .Concat(DistanceToolManager.GetKeywords())
-                        .Concat(TerrainBrushSizeManager.GetKeywords())
-                        .Concat(ToolValuesManager.GetKeywords());
-                }
-            }
+            public override IEnumerable<string> keywords =>
+                ObjectToolbarManager.GetKeywords()
+                    .Concat(SwitchCustomToolManager.GetKeywords())
+                    .Concat(DistanceToolManager.GetKeywords())
+                    .Concat(TerrainBrushSizeManager.GetKeywords())
+                    .Concat(ToolValuesManager.GetKeywords());
 
             public override void Draw()
             {

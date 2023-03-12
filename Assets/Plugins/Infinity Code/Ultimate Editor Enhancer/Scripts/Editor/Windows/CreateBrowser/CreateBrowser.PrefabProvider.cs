@@ -12,29 +12,23 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         public class PrefabProvider : Provider
         {
-            public override float order
-            {
-                get { return 1; }
-            }
+            public override float order => 1;
 
-            public override string title
-            {
-                get { return instance.prefabsLabel; }
-            }
+            public override string title => instance.prefabsLabel;
 
             public override void Cache()
             {
                 items = new List<Item>();
 
-                string[] blacklist =
+                var blacklist =
                     Prefs.createBrowserBlacklist.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
                 CacheItems(blacklist, "t:prefab");
                 CacheItems(blacklist, "t:model");
 
-                foreach (Item item in items)
+                foreach (var item in items)
                 {
-                    PrefabItemFolder fi = item as PrefabItemFolder;
+                    var fi = item as PrefabItemFolder;
                     if (fi == null) continue;
                     fi.Simplify();
                 }
@@ -48,25 +42,24 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             private void CacheItems(string[] blacklist, string filter)
             {
-                bool hasBlacklist = blacklist.Length > 0;
+                var hasBlacklist = blacklist.Length > 0;
 
-                string[] assets = AssetDatabase.FindAssets(filter, new[] { "Assets" });
-                foreach (string guid in assets)
+                var assets = AssetDatabase.FindAssets(filter, new[] { "Assets" });
+                foreach (var guid in assets)
                 {
-                    string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                    var assetPath = AssetDatabase.GUIDToAssetPath(guid);
                     if (hasBlacklist)
                     {
-                        bool inBlackList = false;
-                        for (int i = 0; i < blacklist.Length; i++)
+                        var inBlackList = false;
+                        for (var i = 0; i < blacklist.Length; i++)
                         {
-                            string s = blacklist[i];
+                            var s = blacklist[i];
                             if (s.Length > assetPath.Length) continue;
 
                             int j;
                             for (j = 0; j < s.Length; j++)
-                            {
-                                if (s[i] != assetPath[i]) break;
-                            }
+                                if (s[i] != assetPath[i])
+                                    break;
 
                             if (j == assetPath.Length)
                             {
@@ -78,8 +71,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         if (inBlackList) continue;
                     }
 
-                    string shortPath = assetPath.Substring(7);
-                    string[] parts = shortPath.Split('/');
+                    var shortPath = assetPath.Substring(7);
+                    var parts = shortPath.Split('/');
                     if (parts.Length == 1)
                     {
                         if (shortPath.Length < 8) continue;
@@ -87,31 +80,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     }
                     else
                     {
-                        string label = parts[0];
+                        var label = parts[0];
                         int i;
                         for (i = 0; i < items.Count; i++)
                         {
-                            Item item = items[i];
-                            string l = item.label;
+                            var item = items[i];
+                            var l = item.label;
                             if (l.Length != label.Length) continue;
 
                             int j;
                             for (j = 0; j < l.Length; j++)
-                            {
-                                if (l[j] != label[j]) break;
-                            }
+                                if (l[j] != label[j])
+                                    break;
 
                             if (j != l.Length) continue;
 
-                            PrefabItemFolder f = item as PrefabItemFolder;
+                            var f = item as PrefabItemFolder;
                             if (f != null) f.Add(parts, 0, assetPath);
                             break;
                         }
 
-                        if (i == items.Count)
-                        {
-                            items.Add(new PrefabItemFolder(parts, 0, assetPath));
-                        }
+                        if (i == items.Count) items.Add(new PrefabItemFolder(parts, 0, assetPath));
                     }
                 }
             }

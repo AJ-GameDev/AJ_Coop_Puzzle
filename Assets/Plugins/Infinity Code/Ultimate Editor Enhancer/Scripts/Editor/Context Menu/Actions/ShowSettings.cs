@@ -8,10 +8,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class ShowSettings : ActionItem
     {
-        public override float order
-        {
-            get { return 1000; }
-        }
+        public override float order => 1000;
 
         protected override void Init()
         {

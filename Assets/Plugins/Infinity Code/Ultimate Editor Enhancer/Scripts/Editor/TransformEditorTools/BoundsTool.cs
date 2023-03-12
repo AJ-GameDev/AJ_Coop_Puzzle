@@ -13,7 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
         {
             GUILayout.Label("Bounds");
 
-            float labelWidth = EditorGUIUtility.labelWidth;
+            var labelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 85;
 
             EditorGUI.BeginDisabledGroup(true);

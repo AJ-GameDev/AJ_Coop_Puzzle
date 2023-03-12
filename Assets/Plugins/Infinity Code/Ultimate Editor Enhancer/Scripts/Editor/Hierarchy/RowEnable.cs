@@ -19,11 +19,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (!Prefs.hierarchyEnableGameObject) return;
             if (item.gameObject == null || !item.hovered) return;
 
-            Rect rect = item.rect;
-            Rect r = new Rect(32, rect.y, 16, rect.height);
+            var rect = item.rect;
+            var r = new Rect(32, rect.y, 16, rect.height);
 
             EditorGUI.BeginChangeCheck();
-            bool v = EditorGUI.Toggle(r, GUIContent.none, item.gameObject.activeSelf);
+            var v = EditorGUI.Toggle(r, GUIContent.none, item.gameObject.activeSelf);
             if (EditorGUI.EndChangeCheck())
             {
                 item.gameObject.SetActive(v);

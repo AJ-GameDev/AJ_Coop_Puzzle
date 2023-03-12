@@ -28,9 +28,9 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_instanceProp == null)
                 {
-                    Type ssType = typeof(ScriptableSingleton<>);
+                    var ssType = typeof(ScriptableSingleton<>);
                     Type[] typeArgs = { type };
-                    Type t = ssType.MakeGenericType(typeArgs);
+                    var t = ssType.MakeGenericType(typeArgs);
                     _instanceProp = t.GetProperty("instance", Reflection.StaticLookup);
                 }
 

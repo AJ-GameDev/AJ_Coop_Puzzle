@@ -8,10 +8,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 {
     public static class TextEditorRef
     {
-        public static Type type
-        {
-            get => typeof(TextEditor);
-        }
+        public static Type type => typeof(TextEditor);
 
         public static void SetText(string text)
         {

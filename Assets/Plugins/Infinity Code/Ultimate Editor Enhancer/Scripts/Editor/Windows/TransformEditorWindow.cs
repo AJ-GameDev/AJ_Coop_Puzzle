@@ -13,8 +13,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public class TransformEditorWindow : AutoSizePopupWindow
     {
-        private static TransformEditorWindow _instance;
-
         [SerializeField] private Transform[] transforms;
 
         private TransformEditorTool activeTool;
@@ -27,21 +25,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private GUIContent[] toolContents;
         private TransformEditorTool[] tools;
 
-        public static TransformEditorWindow instance
-        {
-            get { return _instance; }
-        }
+        public static TransformEditorWindow instance { get; private set; }
 
         private void OnEnable()
         {
-            _instance = this;
+            instance = this;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-            _instance = null;
+            instance = null;
             transforms = null;
 
             if (activeTool != null)
@@ -60,8 +55,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (tools != null)
             {
-                for (int i = 0; i < tools.Length; i++)
-                {
+                for (var i = 0; i < tools.Length; i++)
                     try
                     {
                         tools[i].Dispose();
@@ -70,7 +64,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     {
                         Log.Add(e);
                     }
-                }
 
                 tools = null;
             }
@@ -87,12 +80,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             tools = Reflection.GetInheritedItems<TransformEditorTool>()
                 .Where(t => t.Validate())
                 .OrderBy(t => t.order).ToArray();
-            List<GUIContent> contents = new List<GUIContent>();
-            for (int i = 0; i < tools.Length; i++)
-            {
+            var contents = new List<GUIContent>();
+            for (var i = 0; i < tools.Length; i++)
                 try
                 {
-                    TransformEditorTool t = tools[i];
+                    var t = tools[i];
                     t.Init();
                     contents.Add(t.content);
                 }
@@ -100,7 +92,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     Log.Add(e);
                 }
-            }
 
             toolContents = contents.ToArray();
 
@@ -122,18 +113,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             EditorGUILayout.BeginHorizontal();
 
-            for (int i = 0; i < toolContents.Length; i++)
+            for (var i = 0; i < toolContents.Length; i++)
             {
-                GUIStyle style = midStyle;
+                var style = midStyle;
                 if (i == 0) style = leftStyle;
                 else if (i == toolContents.Length - 1) style = rightStyle;
 
-                bool isActiveTool = i == activeToolIndex;
-                bool newSelected = GUILayout.Toggle(isActiveTool, toolContents[i], style, GUILayout.ExpandWidth(false));
+                var isActiveTool = i == activeToolIndex;
+                var newSelected = GUILayout.Toggle(isActiveTool, toolContents[i], style, GUILayout.ExpandWidth(false));
                 if (newSelected != isActiveTool)
                 {
                     if (activeTool != null)
-                    {
                         try
                         {
                             activeTool.OnDisable();
@@ -142,7 +132,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         {
                             Log.Add(e);
                         }
-                    }
 
                     if (isActiveTool)
                     {
@@ -168,7 +157,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             EditorGUILayout.EndHorizontal();
 
             if (activeTool != null)
-            {
                 try
                 {
                     activeTool.Draw();
@@ -177,13 +165,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     Log.Add(e);
                 }
-            }
         }
 
         public static Transform[] GetTransforms()
         {
-            if (_instance == null) return null;
-            return _instance.transforms;
+            if (instance == null) return null;
+            return instance.transforms;
         }
 
         protected override void OnContentGUI()
@@ -197,18 +184,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             editor.OnInspectorGUI();
             DrawTools();
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
-            {
-                if (e.keyCode == KeyCode.Escape) Close();
-            }
+                if (e.keyCode == KeyCode.Escape)
+                    Close();
         }
 
         public static TransformEditorWindow ShowPopup(Transform[] transforms, Rect? rect = null)
         {
             if (transforms == null || transforms.Length == 0) return null;
 
-            TransformEditorWindow wnd = CreateInstance<TransformEditorWindow>();
+            var wnd = CreateInstance<TransformEditorWindow>();
             wnd.transforms = transforms;
             wnd.adjustHeight = AutoSize.top;
             wnd.minSize = new Vector2(10, 10);
@@ -217,18 +203,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 Vector2 position = ToolValues.lastScreenPosition;
                 position = GUIUtility.GUIToScreenPoint(new Vector2(position.x, Screen.height - position.y));
-                if (ToolValues.isBelowHandle) position.y += 0;
+                if (ToolValues.isBelowHandle)
+                {
+                    position.y += 0;
+                }
                 else
                 {
                     position.y -= 20;
                     wnd.adjustHeight = AutoSize.bottom;
                 }
 
-                Vector2 size = new Vector2(Prefs.defaultWindowSize.x, 20);
+                var size = new Vector2(Prefs.defaultWindowSize.x, 20);
                 rect = new Rect(position - new Vector2(size.x / 2, 0), size);
             }
 
-            Rect r = rect.Value;
+            var r = rect.Value;
             if (r.y < 40) r.y = 40;
             wnd.position = r;
             wnd.ShowPopup();

@@ -11,7 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer
     [InitializeOnLoad]
     public class KeyManager : BindingManager<KeyManager.KeyBinding>
     {
-        private static Dictionary<KeyCode, bool> _isDown = new Dictionary<KeyCode, bool>();
+        private static readonly Dictionary<KeyCode, bool> _isDown = new();
 
         static KeyManager()
         {
@@ -54,12 +54,12 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (Event.current.type == EventType.KeyDown)
             {
                 _isDown[Event.current.keyCode] = true;
-                for (int i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvokePress();
+                for (var i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvokePress();
             }
             else if (Event.current.type == EventType.KeyUp)
             {
                 _isDown[Event.current.keyCode] = false;
-                for (int i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvokeRelease();
+                for (var i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvokeRelease();
             }
         }
 
@@ -71,14 +71,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class KeyBinding
         {
-            private bool control;
-            private KeyCode keyCode;
+            private readonly bool control;
+            private readonly KeyCode keyCode;
             public Action OnPress;
             public Action OnPressOnRelease;
             public Action OnRelease;
             public Func<bool> OnValidate;
-            private bool shift;
-            private bool useValidate;
+            private readonly bool shift;
+            private readonly bool useValidate;
 
             internal KeyBinding()
             {
@@ -117,7 +117,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
                 else
                 {
-                    Event e = Event.current;
+                    var e = Event.current;
                     if (e.keyCode != keyCode || e.shift != shift || e.control != control) return;
                 }
 
@@ -145,7 +145,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
                 else
                 {
-                    Event e = Event.current;
+                    var e = Event.current;
                     if (e.keyCode != keyCode || e.shift != shift || e.control != control) return;
                 }
 

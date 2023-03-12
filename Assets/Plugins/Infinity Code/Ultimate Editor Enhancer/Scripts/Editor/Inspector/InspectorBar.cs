@@ -10,7 +10,6 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 {
@@ -34,7 +33,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private static Dictionary<EditorWindow, VisualElementWrapper> visualElements;
         private static GUIContent openPrefabContent;
 
-        InspectorBar()
+        private InspectorBar()
         {
             EditorApplication.delayCall += InitInspector;
             WindowManager.OnWindowFocused += OnWindowFocused;
@@ -72,7 +71,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             {
                 if (_selectedContentStyle == null || _selectedContentStyle.normal.background == null)
                 {
-                    GUIStyle s = EditorStyles.toolbarButton;
+                    var s = EditorStyles.toolbarButton;
                     _selectedContentStyle = new GUIStyle
                     {
                         normal =
@@ -95,9 +94,9 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         {
             if (editorsList == null) return;
             if (editorsList.childCount < 1) return;
-            VisualElement elements = editorsList[0];
+            var elements = editorsList[0];
 
-            Editor[] editors = EditorElementRef.GetEditors(elements);
+            var editors = EditorElementRef.GetEditors(elements);
             if (editors == null || editors.Length < 2) return;
 
             lastPosition = Vector2.zero;
@@ -106,25 +105,22 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             DrawExpand(wnd, editors);
             DrawOpenPrefab(wnd, editors);
 
-            int editorIndex = 0;
+            var editorIndex = 0;
 
-            for (int i = 0; i < editorsList.childCount; i++)
-            {
-                DrawIcon(wnd, editorsList, i, ref editorIndex, editors);
-            }
+            for (var i = 0; i < editorsList.childCount; i++) DrawIcon(wnd, editorsList, i, ref editorIndex, editors);
 
             //if (OnDrawRelatedComponents != null && relatedComponents.Count > 0) OnDrawRelatedComponents(wnd, relatedComponents);
 
-            GUIContent addContentContent = TempContent.Get("+", "Add Component");
+            var addContentContent = TempContent.Get("+", "Add Component");
 
-            GUIStyle style = EditorStyles.toolbarButton;
-            Rect rect = GetRect(style.CalcSize(addContentContent).x, wnd.position.width);
+            var style = EditorStyles.toolbarButton;
+            var rect = GetRect(style.CalcSize(addContentContent).x, wnd.position.width);
 
             if (GUI.Button(rect, addContentContent, style))
             {
                 Vector2 s = Prefs.defaultWindowSize;
-                Rect wp = wnd.position;
-                Vector2 p = GUIUtility.GUIToScreenPoint(rect.position);
+                var wp = wnd.position;
+                var p = GUIUtility.GUIToScreenPoint(rect.position);
                 p.x = wp.x + (wp.width - s.x) / 2;
                 p.y += 45;
                 rect = new Rect(p, s);
@@ -134,8 +130,8 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
             DrawLateButtons(wnd, style);
 
-            int rowCount = Mathf.RoundToInt(lastPosition.y / LINE_HEIGHT + 1);
-            VisualElementWrapper visualElement = visualElements[wnd];
+            var rowCount = Mathf.RoundToInt(lastPosition.y / LINE_HEIGHT + 1);
+            var visualElement = visualElements[wnd];
             if (rowCount != visualElement.rowCount)
             {
                 visualElement.style.height = rowCount * LINE_HEIGHT;
@@ -145,11 +141,11 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private static void DrawExpand(EditorWindow wnd, Editor[] editors)
         {
-            ActiveEditorTracker tracker = InspectorWindowRef.GetTracker(wnd);
-            bool isExpanded = false;
-            for (int i = 1; i < editors.Length; i++)
+            var tracker = InspectorWindowRef.GetTracker(wnd);
+            var isExpanded = false;
+            for (var i = 1; i < editors.Length; i++)
             {
-                Editor editor = editors[i];
+                var editor = editors[i];
                 if (editor is MaterialEditor)
                 {
                     if (InternalEditorUtility.GetIsInspectorExpanded(editor.target))
@@ -165,20 +161,18 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 }
             }
 
-            GUIContent content = isExpanded ? collapseContent : expandContent;
+            var content = isExpanded ? collapseContent : expandContent;
 
-            Rect rect = GetRect(25, wnd.position.width);
+            var rect = GetRect(25, wnd.position.width);
 
             if (SafeButton(rect, content, EditorStyles.toolbarButton))
             {
-                int v = isExpanded ? 0 : 1;
-                for (int i = 1; i < editors.Length; i++)
+                var v = isExpanded ? 0 : 1;
+                for (var i = 1; i < editors.Length; i++)
                 {
-                    Editor editor = editors[i];
+                    var editor = editors[i];
                     if (editor is MaterialEditor)
-                    {
                         InternalEditorUtility.SetIsInspectorExpanded(editor.target, !isExpanded);
-                    }
                     else tracker.SetVisible(i, v);
                 }
             }
@@ -187,7 +181,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private static void DrawIcon(EditorWindow wnd, VisualElement editorsList, int elementIndex, ref int editorIndex,
             Editor[] editors)
         {
-            VisualElement el = editorsList[elementIndex];
+            var el = editorsList[elementIndex];
             if (el.GetType().Name != "EditorElement") return;
             if (el.childCount < 2)
             {
@@ -195,29 +189,29 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 return;
             }
 
-            Editor editor = editors[editorIndex];
+            var editor = editors[editorIndex];
             if (editor == null || editor.target == null) return;
             if (!Prefs.inspectorBarShowMaterials && editor.target is Material) return;
 
-            int id = editor.target.GetInstanceID();
+            var id = editor.target.GetInstanceID();
             ContentWrapper wrapper;
 
-            GUIStyle normalStyle = EditorStyles.toolbarButton;
+            var normalStyle = EditorStyles.toolbarButton;
 
             if (!contentCache.TryGetValue(id, out wrapper)) wrapper = InitContent(editor, normalStyle);
             //if (wrapper.relatedComponents != null) relatedComponents.AddRange(wrapper.relatedComponents);
 
-            StyleEnum<DisplayStyle> display = el.style.display;
-            bool isActive = display.keyword == StyleKeyword.Null || display == DisplayStyle.Flex;
-            GUIStyle style = isActive ? normalStyle : selectedContentStyle;
+            var display = el.style.display;
+            var isActive = display.keyword == StyleKeyword.Null || display == DisplayStyle.Flex;
+            var style = isActive ? normalStyle : selectedContentStyle;
 
-            float maxWidth = wnd.position.width;
-            Rect rect = GetRect(wrapper.width,
+            var maxWidth = wnd.position.width;
+            var rect = GetRect(wrapper.width,
                 maxWidth - (elementIndex == editorsList.childCount - 2 ? LAST_LINE_OFFSET : 0));
 
-            bool state = Debug.unityLogger.logEnabled;
+            var state = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
-            ButtonEvent buttonEvent = GUILayoutUtils.Button(rect, wrapper.content, style);
+            var buttonEvent = GUILayoutUtils.Button(rect, wrapper.content, style);
             Debug.unityLogger.logEnabled = state;
             ProcessIconEvents(wnd, editorsList, elementIndex, editorIndex, buttonEvent, isActive, editor);
 
@@ -228,14 +222,14 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         {
             Rect rect;
 
-            GUIContent helpContent = TempContent.Get("?", "Help");
-            float helpContentWidth = style.CalcSize(helpContent).x;
+            var helpContent = TempContent.Get("?", "Help");
+            var helpContentWidth = style.CalcSize(helpContent).x;
 
             if (Updater.hasNewVersion)
             {
-                GUIContent updateContent = TempContent.Get(Icons.updateAvailable,
+                var updateContent = TempContent.Get(Icons.updateAvailable,
                     "Update Available.\nClick to open the built-in update system.");
-                float updateContentWidth = style.CalcSize(updateContent).x;
+                var updateContentWidth = style.CalcSize(updateContent).x;
                 rect = new Rect(wnd.position.width - updateContentWidth - helpContentWidth, lastPosition.y,
                     updateContentWidth, LINE_HEIGHT);
 
@@ -251,7 +245,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         {
             if (EditorApplication.isPlaying) return;
 
-            Object target = editors[0].target;
+            var target = editors[0].target;
             if (target == null) return;
 
             string assetPath;
@@ -264,27 +258,24 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             {
                 assetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(target);
             }
-            else return;
+            else
+            {
+                return;
+            }
 
-            Rect rect = GetRect(25, wnd.position.width);
+            var rect = GetRect(25, wnd.position.width);
 
             if (openPrefabContent == null)
-            {
                 openPrefabContent = new GUIContent(EditorIconContents.folderOpened.image, "Open Prefab");
-            }
 
             if (SafeButton(rect, openPrefabContent, EditorStyles.toolbarButton))
-            {
                 if (!string.IsNullOrEmpty(assetPath))
-                {
                     PrefabStageUtilityRef.OpenPrefab(assetPath, target as GameObject);
-                }
-            }
         }
 
         public static Rect GetRect(float width, float maxWidth)
         {
-            Rect rect = new Rect(lastPosition, new Vector2(width, LINE_HEIGHT));
+            var rect = new Rect(lastPosition, new Vector2(width, LINE_HEIGHT));
             if (rect.xMax >= maxWidth)
             {
                 rect.x = 0;
@@ -292,7 +283,10 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 lastPosition.x = width;
                 lastPosition.y = rect.y;
             }
-            else lastPosition.x += width;
+            else
+            {
+                lastPosition.x += width;
+            }
 
             return rect;
         }
@@ -307,28 +301,31 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private static ContentWrapper InitContent(Editor editor, GUIStyle normalStyle)
         {
             Texture thumbnail = AssetPreview.GetMiniThumbnail(editor.target);
-            string tooltip = ObjectNames.NicifyVariableName(editor.target.GetType().Name);
+            var tooltip = ObjectNames.NicifyVariableName(editor.target.GetType().Name);
 
-            ContentWrapper wrapper = new ContentWrapper
+            var wrapper = new ContentWrapper
             {
-                content = new GUIContent(thumbnail, tooltip),
+                content = new GUIContent(thumbnail, tooltip)
             };
 
-            bool useIcon = true;
+            var useIcon = true;
             if (thumbnail.name == "cs Script Icon" || thumbnail.name == "d_cs Script Icon")
             {
                 GameObjectUtils.GetPsIconContent(wrapper.content);
                 useIcon = false;
             }
 
-            Vector2 s = new Vector2();
+            var s = new Vector2();
 
             if (!useIcon)
             {
                 s = normalStyle.CalcSize(wrapper.content);
                 if (s.x < 25) s.x = 25;
             }
-            else s.x = 25;
+            else
+            {
+                s.x = 25;
+            }
 
             wrapper.width = s.x;
             contentCache.Add(editor.target.GetInstanceID(), wrapper);
@@ -347,11 +344,11 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             if (!Prefs.inspectorBar) return true;
 
             if (editorsList.childCount < 2) return false;
-            VisualElement elements = editorsList[0];
+            var elements = editorsList[0];
 
-            Editor[] editors = EditorElementRef.GetEditors(elements);
+            var editors = EditorElementRef.GetEditors(elements);
             if (editors == null || editors.Length < 2) return false;
-            Object target = editors[0].target;
+            var target = editors[0].target;
 
             if (!(target is GameObject) && target.GetType() != PrefabImporterRef.type) return false;
 
@@ -381,7 +378,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private static void ProcessIconEvents(EditorWindow wnd, VisualElement editorsList, int elementIndex,
             int editorIndex, ButtonEvent buttonEvent, bool isActive, Editor editor)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (buttonEvent == ButtonEvent.hover)
             {
                 wnd.Focus();
@@ -391,18 +388,23 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 if (e.button == 0)
                 {
                     if (e.command || e.control || e.shift)
+                    {
                         ToggleVisible(wnd, editorsList, elementIndex, editorIndex, !isActive);
+                    }
                     else
                     {
-                        if (!isActive) SetSoloVisible(wnd, editorsList, elementIndex, editorIndex, false);
+                        if (!isActive)
+                        {
+                            SetSoloVisible(wnd, editorsList, elementIndex, editorIndex, false);
+                        }
                         else
                         {
-                            int countActive = 0;
-                            for (int j = 0; j < editorsList.childCount; j++)
+                            var countActive = 0;
+                            for (var j = 0; j < editorsList.childCount; j++)
                             {
-                                VisualElement el2 = editorsList[j];
+                                var el2 = editorsList[j];
                                 if (el2.childCount < 2) continue;
-                                StyleEnum<DisplayStyle> display = el2.style.display;
+                                var display = el2.style.display;
                                 if (display.keyword == StyleKeyword.Null || display == DisplayStyle.Flex) countActive++;
                             }
 
@@ -410,7 +412,10 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                         }
                     }
                 }
-                else if (e.button == 1) ComponentUtils.ShowContextMenu(editor.target);
+                else if (e.button == 1)
+                {
+                    ComponentUtils.ShowContextMenu(editor.target);
+                }
 
                 e.Use();
             }
@@ -425,9 +430,9 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         public static bool SafeButton(Rect rect, GUIContent content, GUIStyle style)
         {
-            bool state = Debug.unityLogger.logEnabled;
+            var state = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
-            bool ret = GUI.Button(rect, content, style);
+            var ret = GUI.Button(rect, content, style);
             Debug.unityLogger.logEnabled = state;
             return ret;
         }
@@ -437,29 +442,32 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         {
             if (show)
             {
-                for (int i = 0; i < element.childCount; i++)
+                for (var i = 0; i < element.childCount; i++)
                 {
-                    VisualElement el = element[i];
+                    var el = element[i];
                     el.style.display = DisplayStyle.Flex;
                     if (IsTransform(el)) el.style.marginTop = 0;
                 }
             }
             else
             {
-                for (int i = 0; i < element.childCount; i++)
+                for (var i = 0; i < element.childCount; i++)
                 {
-                    VisualElement el = element[i];
+                    var el = element[i];
                     if (i == index)
                     {
                         el.style.display = DisplayStyle.Flex;
                         if (IsTransform(el)) el.style.marginTop = 7;
-                        object inspectorElement = EditorElementRef.GetInspectorElement(el);
+                        var inspectorElement = EditorElementRef.GetInspectorElement(el);
                         EditorElementRef.SetElementVisible(inspectorElement, false);
                     }
-                    else el.style.display = DisplayStyle.None;
+                    else
+                    {
+                        el.style.display = DisplayStyle.None;
+                    }
                 }
 
-                ActiveEditorTracker tracker = InspectorWindowRef.GetTracker(wnd);
+                var tracker = InspectorWindowRef.GetTracker(wnd);
                 tracker.SetVisible(editorIndex, 1);
             }
         }
@@ -467,7 +475,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private static void ToggleVisible(EditorWindow wnd, VisualElement element, int index, int editorIndex,
             bool show)
         {
-            VisualElement el = element[index];
+            var el = element[index];
             if (show)
             {
                 el.style.display = DisplayStyle.Flex;
@@ -476,7 +484,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             else
             {
                 el.style.display = DisplayStyle.None;
-                for (int i = 0; i < element.childCount; i++)
+                for (var i = 0; i < element.childCount; i++)
                 {
                     el = element[i];
                     if (el.childCount < 2) continue;
@@ -490,7 +498,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                     if (el.style.display == DisplayStyle.Flex) break;
                 }
 
-                ActiveEditorTracker tracker = InspectorWindowRef.GetTracker(wnd);
+                var tracker = InspectorWindowRef.GetTracker(wnd);
                 tracker.SetVisible(editorIndex, 1);
             }
         }
@@ -514,10 +522,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                 this.rowCount = rowCount;
             }
 
-            public IStyle style
-            {
-                get { return visualElement.style; }
-            }
+            public IStyle style => visualElement.style;
         }
     }
 }

@@ -9,10 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
     [RequireSelected]
     public class Replace : ActionItem
     {
-        public override float order
-        {
-            get { return -905; }
-        }
+        public override float order => -905;
 
         protected override void Init()
         {

@@ -20,13 +20,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void OnEnable()
         {
-            string nspace = "InfinityCode.UltimateEditorEnhancer.UnityTypes";
+            var nspace = "InfinityCode.UltimateEditorEnhancer.UnityTypes";
             StaticStringBuilder.Clear();
             types = typeof(CheckIntegrityWindow).Assembly.GetTypes()
                 .Where(t => t.IsClass && t.Namespace == nspace && t.IsAbstract && t.IsSealed &&
                             t.GetCustomAttribute<HideInIntegrityAttribute>() == null)
                 .Select(t => new TypeRecord(t)).ToArray();
-            string problems = StaticStringBuilder.GetString(true);
+            var problems = StaticStringBuilder.GetString(true);
             if (string.IsNullOrEmpty(problems))
             {
                 message = "No problems were found.";
@@ -43,8 +43,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-            GUIStyle normalStyle = EditorStyles.label;
-            GUIStyle missedStyle = new GUIStyle(normalStyle)
+            var normalStyle = EditorStyles.label;
+            var missedStyle = new GUIStyle(normalStyle)
             {
                 normal =
                 {
@@ -53,10 +53,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 fontStyle = FontStyle.Bold
             };
 
-            foreach (TypeRecord type in types)
+            foreach (var type in types)
             {
-                string typeName = type.name;
-                GUIStyle style = normalStyle;
+                var typeName = type.name;
+                var style = normalStyle;
                 if (!type.exist)
                 {
                     typeName = "[Missed] " + typeName;
@@ -66,9 +66,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 EditorGUILayout.LabelField(typeName, style);
                 EditorGUI.indentLevel++;
 
-                foreach (PropRecord prop in type.properties)
+                foreach (var prop in type.properties)
                 {
-                    string propName = prop.name;
+                    var propName = prop.name;
                     style = normalStyle;
                     if (!prop.exist)
                     {
@@ -84,13 +84,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             EditorGUILayout.EndScrollView();
 
-            if (!hasProblems) EditorGUILayout.HelpBox(message, MessageType.Info);
+            if (!hasProblems)
+            {
+                EditorGUILayout.HelpBox(message, MessageType.Info);
+            }
             else
             {
                 EditorGUILayout.HelpBox(message, MessageType.Error);
                 if (GUILayout.Button("Report To Infinity Code"))
                 {
-                    string subject = "Ultimate Editor Enhancer Integrity Check";
+                    var subject = "Ultimate Editor Enhancer Integrity Check";
                     StaticStringBuilder.Clear();
                     StaticStringBuilder.Append("OS: ").Append(SystemInfo.operatingSystem).Append("\nUnity version: ")
                         .Append(Application.unityVersion).Append("\nUltimate Editor Enhancer version: ")
@@ -119,9 +122,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 name = type.Name;
                 if (name.EndsWith("Ref")) name = name.Substring(0, name.Length - 3);
 
-                PropertyInfo[] allProps = type.GetProperties(Reflection.StaticLookup);
+                var allProps = type.GetProperties(Reflection.StaticLookup);
 
-                PropertyInfo typeProp = allProps.FirstOrDefault(p => p.Name == "type");
+                var typeProp = allProps.FirstOrDefault(p => p.Name == "type");
                 if (typeProp != null) exist = typeProp.GetValue(null) != null;
                 else StaticStringBuilder.Append("Missed Type: ").Append(name).Append("\n");
 

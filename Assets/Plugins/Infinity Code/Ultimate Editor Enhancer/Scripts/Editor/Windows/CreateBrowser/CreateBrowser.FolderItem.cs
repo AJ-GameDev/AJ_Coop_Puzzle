@@ -13,10 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             protected static GUIContent folderIconContent;
             public List<Item> children;
 
-            public virtual string title
-            {
-                get { return label; }
-            }
+            public virtual string title => label;
 
             public override void Dispose()
             {
@@ -24,14 +21,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (children != null)
                 {
-                    foreach (Item child in children) child.Dispose();
+                    foreach (var child in children) child.Dispose();
                     children = null;
                 }
             }
 
             public override void Filter(string pattern, List<Item> filteredItems)
             {
-                foreach (Item child in children) child.Filter(pattern, filteredItems);
+                foreach (var child in children) child.Filter(pattern, filteredItems);
             }
 
             public override void OnClick()

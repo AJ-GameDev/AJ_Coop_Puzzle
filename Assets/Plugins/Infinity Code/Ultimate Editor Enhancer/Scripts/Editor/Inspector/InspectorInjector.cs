@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
@@ -21,9 +20,9 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         protected static VisualElement GetVisualElement(VisualElement element, string className)
         {
-            for (int i = 0; i < element.childCount; i++)
+            for (var i = 0; i < element.childCount; i++)
             {
-                VisualElement el = element[i];
+                var el = element[i];
                 if (el.ClassListContains(className)) return el;
                 el = GetVisualElement(el, className);
                 if (el != null) return el;
@@ -36,14 +35,11 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         {
             failedWindows = new List<EditorWindow>();
 
-            Object[] windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
+            var windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
             foreach (EditorWindow wnd in windows)
             {
                 if (wnd == null) continue;
-                if (!InjectBar(wnd))
-                {
-                    failedWindows.Add(wnd);
-                }
+                if (!InjectBar(wnd)) failedWindows.Add(wnd);
             }
 
             if (failedWindows.Count > 0)
@@ -55,10 +51,10 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         protected bool InjectBar(EditorWindow wnd)
         {
-            VisualElement mainContainer = GetMainContainer(wnd);
+            var mainContainer = GetMainContainer(wnd);
             if (mainContainer == null) return false;
             if (mainContainer.childCount < 2) return false;
-            VisualElement editorsList = GetVisualElement(mainContainer, "unity-inspector-editors-list");
+            var editorsList = GetVisualElement(mainContainer, "unity-inspector-editors-list");
 
             return OnInject(wnd, mainContainer, editorsList);
         }
@@ -67,11 +63,10 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         protected void OnMaximizedChanged(EditorWindow w)
         {
-            Object[] windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
+            var windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
             foreach (EditorWindow wnd in windows)
-            {
-                if (wnd != null) InjectBar(wnd);
-            }
+                if (wnd != null)
+                    InjectBar(wnd);
         }
 
         private void TryReinit()
@@ -87,7 +82,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private void TryReinit(List<EditorWindow> windows)
         {
-            foreach (EditorWindow wnd in windows)
+            foreach (var wnd in windows)
             {
                 if (wnd == null) continue;
                 InjectBar(wnd);

@@ -26,18 +26,18 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static ButtonEvent Button(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
-            Rect rect = GUILayoutUtility.GetRect(content, style, options);
+            var rect = GUILayoutUtility.GetRect(content, style, options);
             lastRect = rect;
             return Button(rect, content, style);
         }
 
         public static ButtonEvent Button(Rect rect, GUIContent content, GUIStyle style)
         {
-            int id = GUIUtility.GetControlID(buttonHash, FocusType.Passive, rect);
+            var id = GUIUtility.GetControlID(buttonHash, FocusType.Passive, rect);
 
-            Event e = Event.current;
-            bool isHover = rect.Contains(e.mousePosition);
-            bool hasMouseControl = GUIUtility.hotControl == id;
+            var e = Event.current;
+            var isHover = rect.Contains(e.mousePosition);
+            var hasMouseControl = GUIUtility.hotControl == id;
 
             if (e.type == EventType.Repaint)
             {
@@ -100,9 +100,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void Label(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type != EventType.Repaint) return;
-            Rect rect = GUILayoutUtility.GetRect(content, style, options);
+            var rect = GUILayoutUtility.GetRect(content, style, options);
             lastRect = rect;
             style.Draw(rect, content, false, false, false, false);
         }
@@ -110,12 +110,12 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static ButtonEvent ToggleButton(GUIContent content, GUIStyle style, bool isActive,
             params GUILayoutOption[] options)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
-            Rect rect = GUILayoutUtility.GetRect(content, style, options);
-            int id = GUIUtility.GetControlID(buttonHash, FocusType.Passive, rect);
-            bool isHover = rect.Contains(e.mousePosition);
-            bool hasMouseControl = GUIUtility.hotControl == id;
+            var rect = GUILayoutUtility.GetRect(content, style, options);
+            var id = GUIUtility.GetControlID(buttonHash, FocusType.Passive, rect);
+            var isHover = rect.Contains(e.mousePosition);
+            var hasMouseControl = GUIUtility.hotControl == id;
 
             if (e.type == EventType.Repaint)
             {
@@ -165,7 +165,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool ToggleButton(ref bool toggled, GUIContent content, GUIStyle toggleButtonStyle,
             params GUILayoutOption[] options)
         {
-            Rect rect = GUILayoutUtility.GetRect(content, toggleButtonStyle, options);
+            var rect = GUILayoutUtility.GetRect(content, toggleButtonStyle, options);
             EditorGUI.BeginChangeCheck();
             toggled = GUI.Toggle(rect, toggled, content, toggleButtonStyle);
             return EditorGUI.EndChangeCheck();

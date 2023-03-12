@@ -26,7 +26,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private static void CreateButton(VisualElement parent, string submenu, string text)
         {
-            ToolbarButton button = new ToolbarButton(() => EditorApplication.ExecuteMenuItem(submenu));
+            var button = new ToolbarButton(() => EditorApplication.ExecuteMenuItem(submenu));
             button.text = text;
             button.style.unityTextAlign = TextAnchor.MiddleCenter;
             button.style.left = 0;
@@ -36,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private VisualElement CreateContainer(VisualElement parent)
         {
-            VisualElement el = new VisualElement();
+            var el = new VisualElement();
             el.style.borderBottomWidth =
                 el.style.borderTopWidth = el.style.borderLeftWidth = el.style.borderRightWidth = 1;
             el.style.borderBottomColor = el.style.borderTopColor =
@@ -49,7 +49,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private static void CreateLabel(VisualElement parent, string text)
         {
-            Label label = new Label(text);
+            var label = new Label(text);
             label.style.marginTop = 10;
             label.style.marginLeft = label.style.marginRight = 3;
             label.style.paddingLeft = 5;
@@ -65,10 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             if (EditorGUI.EndChangeCheck()) UpdateFilteredItems();
 
             if (GUILayout.Button(TempContent.Get("?", "Help"), EditorStyles.toolbarButton,
-                    GUILayout.ExpandWidth(false)))
-            {
-                Links.OpenDocumentation("empty-inspector");
-            }
+                    GUILayout.ExpandWidth(false))) Links.OpenDocumentation("empty-inspector");
 
             GUILayout.EndHorizontal();
         }
@@ -81,17 +78,17 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private VisualElement InitItems()
         {
-            VisualElement visualElement = new VisualElement();
+            var visualElement = new VisualElement();
             visualElement.name = ELEMENT_NAME;
 
-            Label helpbox = new Label("Nothing selected");
+            var helpbox = new Label("Nothing selected");
             helpbox.style.backgroundColor = Color.gray;
             helpbox.style.height = 30;
             helpbox.style.unityTextAlign = TextAnchor.MiddleCenter;
 
             visualElement.Add(helpbox);
 
-            IMGUIContainer search = new IMGUIContainer(DrawFilterTextField);
+            var search = new IMGUIContainer(DrawFilterTextField);
             search.style.marginTop = 5;
             search.style.marginLeft = 5;
             search.style.marginRight = 5;
@@ -107,7 +104,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private void InitSettings(VisualElement parent)
         {
             CreateLabel(parent, "Settings");
-            VisualElement container = CreateContainer(parent);
+            var container = CreateContainer(parent);
             CreateButton(container, "Edit/Project Settings...", "Project Settings");
             CreateButton(container, "Edit/Preferences...", "Preferences");
             CreateButton(container, "Edit/Shortcuts...", "Shortcuts");
@@ -116,7 +113,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private void InitUEEItems(VisualElement parent)
         {
             CreateLabel(parent, "Ultimate Editor Enhancer");
-            VisualElement container = CreateContainer(parent);
+            var container = CreateContainer(parent);
             CreateButton(container, WindowsHelper.MenuPath + "Bookmarks", "Bookmarks");
             CreateButton(container, WindowsHelper.MenuPath + "Distance Tool", "Distance Tool");
             CreateButton(container, WindowsHelper.MenuPath + "View Gallery", "View Gallery");
@@ -127,27 +124,25 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private void InitWindows(VisualElement parent)
         {
             CreateLabel(parent, "Packages");
-            VisualElement container = CreateContainer(parent);
+            var container = CreateContainer(parent);
 
             CreateButton(container, "Assets/Import Package/Custom Package...", "Import Custom Package");
 
-            bool skip = true;
-            string groupName = "";
+            var skip = true;
+            var groupName = "";
 
-            foreach (string submenu in Unsupported.GetSubmenus("Window"))
+            foreach (var submenu in Unsupported.GetSubmenus("Window"))
             {
-                string upper = Culture.textInfo.ToUpper(submenu);
+                var upper = Culture.textInfo.ToUpper(submenu);
                 if (skip)
                 {
                     if (upper == "WINDOW/PACKAGE MANAGER")
-                    {
                         skip = false;
-                    }
                     else continue;
                 }
 
-                string[] parts = submenu.Split('/');
-                string firstPart = parts[1];
+                var parts = submenu.Split('/');
+                var firstPart = parts[1];
 
                 if (parts.Length == 2)
                 {
@@ -183,41 +178,41 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
         private void UpdateFilteredItems()
         {
-            string t = filterText.Trim();
+            var t = filterText.Trim();
             if (string.IsNullOrEmpty(t))
             {
-                for (int i = 2; i < visualElement.childCount; i += 2)
+                for (var i = 2; i < visualElement.childCount; i += 2)
                 {
                     visualElement[i].style.display = DisplayStyle.Flex;
-                    VisualElement container = visualElement[i + 1];
+                    var container = visualElement[i + 1];
                     container.style.display = DisplayStyle.Flex;
-                    for (int j = 0; j < container.childCount; j++)
-                    {
-                        container[j].style.display = DisplayStyle.Flex;
-                    }
+                    for (var j = 0; j < container.childCount; j++) container[j].style.display = DisplayStyle.Flex;
                 }
 
                 return;
             }
 
-            string pattern = SearchableItem.GetPattern(t);
+            var pattern = SearchableItem.GetPattern(t);
 
-            for (int i = 3; i < visualElement.childCount; i += 2)
+            for (var i = 3; i < visualElement.childCount; i += 2)
             {
-                VisualElement el = visualElement[i];
+                var el = visualElement[i];
 
-                bool hasVisible = false;
-                VisualElement container = el as VisualElement;
-                for (int j = 0; j < container.childCount; j++)
+                var hasVisible = false;
+                var container = el;
+                for (var j = 0; j < container.childCount; j++)
                 {
-                    ToolbarButton b = container[j] as ToolbarButton;
-                    bool visible = SearchableItem.GetAccuracy(pattern, b.text) > 0;
+                    var b = container[j] as ToolbarButton;
+                    var visible = SearchableItem.GetAccuracy(pattern, b.text) > 0;
                     if (visible)
                     {
                         b.style.display = DisplayStyle.Flex;
                         hasVisible = true;
                     }
-                    else b.style.display = DisplayStyle.None;
+                    else
+                    {
+                        b.style.display = DisplayStyle.None;
+                    }
                 }
 
                 if (hasVisible)

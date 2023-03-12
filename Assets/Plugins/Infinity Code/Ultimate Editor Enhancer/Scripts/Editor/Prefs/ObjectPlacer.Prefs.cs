@@ -30,10 +30,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -42; }
-            }
+            public override float order => -42;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -58,7 +55,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 #else
                         "CMD + SHIFT + ENTER"
 #endif
-                    ),
+                    )
                 };
             }
 

@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
@@ -20,7 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         static Rename()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate = OnValidate;
             binding.OnPress = OnInvoke;
         }
@@ -44,11 +43,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode != KeyCode.F2) return;
             if (e.modifiers != EventModifiers.FunctionKey) return;
 
-            EditorWindow wnd = EditorWindow.focusedWindow;
+            var wnd = EditorWindow.focusedWindow;
             if (wnd.GetType() == typeof(ComponentWindow))
             {
                 gameObjects = new[]
@@ -58,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             }
             else if (wnd.GetType() == typeof(PinAndClose))
             {
-                ComponentWindow cw = (wnd as PinAndClose).targetWindow as ComponentWindow;
+                var cw = (wnd as PinAndClose).targetWindow as ComponentWindow;
                 gameObjects = new[]
                 {
                     cw.component.gameObject
@@ -77,7 +76,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 dialog = InputDialog.Show("Enter a new GameObject name", gameObjects[0].name, OnRename);
                 dialog.OnClose += OnDialogClose;
             }
-            else ShowMassRename();
+            else
+            {
+                ShowMassRename();
+            }
         }
 
         public static void OnRename(string name)
@@ -90,20 +92,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             Undo.RecordObjects(gameObjects, "Rename GameObjects");
 
             if (gameObjects.Length == 1)
-            {
-                foreach (GameObject go in gameObjects.Where(g => g.scene.name != null))
-                {
+                foreach (var go in gameObjects.Where(g => g.scene.name != null))
                     go.name = name;
-                }
-            }
             else
-            {
-                foreach (GameObject go in gameObjects.Where(g => g.scene.name != null)
+                foreach (var go in gameObjects.Where(g => g.scene.name != null)
                              .OrderBy(g => g.transform.GetSiblingIndex()))
-                {
                     go.name = ReplaceTokens(go, name);
-                }
-            }
 
             gameObjects = null;
         }
@@ -112,9 +106,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (!Prefs.renameByShortcut) return false;
 
-            EditorWindow wnd = EditorWindow.focusedWindow;
+            var wnd = EditorWindow.focusedWindow;
             if (wnd == null) return false;
-            Type type = wnd.GetType();
+            var type = wnd.GetType();
             return type == typeof(SceneView) ||
                    type == InspectorWindowRef.type ||
                    type == typeof(ComponentWindow) ||
@@ -128,7 +122,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             return Regex.Replace(name, @"{[\w\d:-]+}", delegate(Match match)
             {
-                string v = match.Value.Trim('{', '}');
+                var v = match.Value.Trim('{', '}');
                 if (char.ToUpperInvariant(v[0]) == 'C')
                 {
                     if (index == int.MinValue)
@@ -142,16 +136,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                         if (index == int.MinValue) index = 1;
                     }
 
-                    int i = index++;
+                    var i = index++;
                     return i.ToString();
                 }
 
                 if (char.ToUpperInvariant(v[0]) == 'S') return go.transform.GetSiblingIndex().ToString();
 
-                string[] ss = v.Split(':');
+                var ss = v.Split(':');
                 if (ss.Length >= 2)
                 {
-                    string original = go.name;
+                    var original = go.name;
                     int start = 0, len = 0;
 
                     if (!string.IsNullOrEmpty(ss[0]) && !int.TryParse(ss[0], out start)) return "";
@@ -163,7 +157,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                         if (!int.TryParse(ss[1], out len)) return "";
                         if (len < 0) len = original.Length - start + len;
                     }
-                    else len = original.Length - start;
+                    else
+                    {
+                        len = original.Length - start;
+                    }
 
                     if (original.Length <= start) return "";
                     if (original.Length < start + len) len = original.Length - start;
@@ -185,7 +182,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 dialog = InputDialog.Show("Enter a new GameObject name", gameObjects[0].name, OnRename);
                 dialog.OnClose += OnDialogClose;
             }
-            else ShowMassRename();
+            else
+            {
+                ShowMassRename();
+            }
         }
 
         private static void ShowMassRename()

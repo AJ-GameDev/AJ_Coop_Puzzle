@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Pegasus
 {
     /// <summary>
-    /// This class can be attached to Mecanim based objects to change the animation state based on the speed at which the object is travelling.
+    ///     This class can be attached to Mecanim based objects to change the animation state based on the speed at which the
+    ///     object is travelling.
     /// </summary>
     public class PegasusAnimator : MonoBehaviour
     {
@@ -12,82 +13,77 @@ namespace Pegasus
         [Header("Character And Animator")]
         [Tooltip("Drop your character here. By default it will select the character this script is attached to.")]
         public Transform m_character;
-        [Tooltip("Drop your animator here. By default it will select the animator on the character this script is attached to.")]
+
+        [Tooltip(
+            "Drop your animator here. By default it will select the animator on the character this script is attached to.")]
         public Animator m_animator;
+
         [Tooltip("Select your initial animation state. This will be played immediately on start at runtime.")]
         public PegasusConstants.PegasusAnimationState m_animationState = PegasusConstants.PegasusAnimationState.Idle;
         //private PegasusConstants.PegasusAnimationState m_lastAnimationState = PegasusConstants.PegasusAnimationState.Idle;
 
         //Override the animations that get played - changed only at the start of the playback
         [Header("Optional Animation Overrides")]
-        [Tooltip("Add your idle animation override here. This is optional, and the default animation will be used instead if not supplied.")]
+        [Tooltip(
+            "Add your idle animation override here. This is optional, and the default animation will be used instead if not supplied.")]
         public AnimationClip m_idleAnimation;
-        [Tooltip("Add your walk animation override here. This is optional, and the default animation will be used instead if not supplied.")]
+
+        [Tooltip(
+            "Add your walk animation override here. This is optional, and the default animation will be used instead if not supplied.")]
         public AnimationClip m_walkAnimation;
-        [Tooltip("Add your run animation override here. This is optional, and the default animation will be used instead if not supplied.")]
+
+        [Tooltip(
+            "Add your run animation override here. This is optional, and the default animation will be used instead if not supplied.")]
         public AnimationClip m_runAnimation;
 
         //Typical idle, walk & run speeds - override to influence animation speeds
         [Header("Walk & Run Speeds (m/sec)")]
-        [Tooltip("Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
+        [Tooltip(
+            "Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
         public float m_walkSpeed = 2f;
-        [Tooltip("Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
+
+        [Tooltip(
+            "Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
         public float m_maxWalkSpeed = 3.5f;
+
         [Tooltip("Run animations will play when the character movement is greater than the walk speed.")]
         public float m_runSpeed = 7f;
 
-        //Internal variables
-        private float m_speedDamping = 0.7f;
-        private float m_speed = 0f;
-        private float m_lastSpeed = float.MinValue;
-        private Vector3 m_lastPosition = Vector3.zero;
         private float m_animationMultiplier = 1f;
-        private int m_animationStateHash = Animator.StringToHash("AnimationState");
-        private int m_animationMultiplierHash = Animator.StringToHash("AnimationMultiplier");
+        private readonly int m_animationMultiplierHash = Animator.StringToHash("AnimationMultiplier");
+        private readonly int m_animationStateHash = Animator.StringToHash("AnimationState");
+        private Vector3 m_lastPosition = Vector3.zero;
+        private float m_lastSpeed = float.MinValue;
+        private float m_speed;
 
-        void Start()
+        //Internal variables
+        private readonly float m_speedDamping = 0.7f;
+
+        private void Start()
         {
-            if (m_character == null)
-            {
-                m_character = gameObject.transform;
-            }
+            if (m_character == null) m_character = gameObject.transform;
 
-            if (m_animator == null)
-            {
-                m_animator = GetComponent<Animator>();
-            }
+            if (m_animator == null) m_animator = GetComponent<Animator>();
 
             if (m_animator != null)
             {
                 m_lastPosition = transform.position;
 
-                if (m_idleAnimation != null)
-                {
-                    ReplaceClip(m_animator, "HumanoidIdle", m_idleAnimation);
-                }
-                if (m_walkAnimation != null)
-                {
-                    ReplaceClip(m_animator, "HumanoidWalk", m_walkAnimation);
-                }
-                if (m_runAnimation != null)
-                {
-                    ReplaceClip(m_animator, "HumanoidRun", m_runAnimation);
-                }
+                if (m_idleAnimation != null) ReplaceClip(m_animator, "HumanoidIdle", m_idleAnimation);
+                if (m_walkAnimation != null) ReplaceClip(m_animator, "HumanoidWalk", m_walkAnimation);
+                if (m_runAnimation != null) ReplaceClip(m_animator, "HumanoidRun", m_runAnimation);
 
                 PlayState(m_animationState, true);
             }
         }
 
         // Update is called once per frame
-        void Update()
+        private void Update()
         {
             //Exit if we are not connected to anything
-            if (m_animator == null)
-            {
-                return;
-            }
+            if (m_animator == null) return;
 
-            float distance = Vector3.Distance(transform.position, m_lastPosition);
+            var distance = Vector3.Distance(transform.position, m_lastPosition);
             m_lastPosition = transform.position;
 
             if (Time.deltaTime > 0f)
@@ -128,7 +124,7 @@ namespace Pegasus
         }
 
         /// <summary>
-        /// Play an animation state
+        ///     Play an animation state
         /// </summary>
         /// <param name="newState">The new state</param>
         /// <param name="forceStateNow">Force an animation state update</param>
@@ -168,25 +164,24 @@ namespace Pegasus
         }
 
         /// <summary>
-        /// Replace a clip with another one
+        ///     Replace a clip with another one
         /// </summary>
         /// <param name="animator">Animator its being replaced on</param>
         /// <param name="clipName">Clip name</param>
         /// <param name="overrideClip">New clip</param>
         private void ReplaceClip(Animator animator, string clipName, AnimationClip overrideClip)
         {
-            AnimatorOverrideController overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
+            var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
             if (overrideController == null)
             {
                 overrideController = new AnimatorOverrideController();
                 overrideController.name = "PegasusRuntimeController";
                 overrideController.runtimeAnimatorController = animator.runtimeAnimatorController;
             }
+
             overrideController[clipName] = overrideClip;
             if (ReferenceEquals(animator.runtimeAnimatorController, overrideController) == false)
-            {
                 animator.runtimeAnimatorController = overrideController;
-            }
         }
 
         //                    #if UNITY_EDITOR

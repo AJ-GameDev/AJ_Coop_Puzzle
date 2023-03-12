@@ -20,15 +20,14 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (!Prefs.addScriptingDefineSymbols) return;
 
-            string symbols =
+            var symbols =
                 PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             if (!string.IsNullOrEmpty(symbols))
             {
-                string[] keys = symbols.Split(';');
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    if (keys[i] == key) return;
-                }
+                var keys = symbols.Split(';');
+                for (var i = 0; i < keys.Length; i++)
+                    if (keys[i] == key)
+                        return;
             }
 
             symbols += ";" + key;

@@ -7,6 +7,7 @@ using System.Text;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 {
@@ -25,27 +26,24 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
         private GameObject[] targets;
         private GUIContent upButtonContent;
 
-        public override bool isActive
-        {
-            get { return _isActive; }
-        }
+        public override bool isActive => _isActive;
 
         private void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal,
             ref bool flipVertical)
         {
-            GUIStyle style = EditorStyles.whiteLabel;
-            Vector2 size = labelSize = style.CalcSize(labelContent) +
-                                       new Vector2(style.margin.horizontal, style.margin.vertical);
+            var style = EditorStyles.whiteLabel;
+            var size = labelSize = style.CalcSize(labelContent) +
+                                   new Vector2(style.margin.horizontal, style.margin.vertical);
 
-            int countButtons = 0;
+            var countButtons = 0;
             if (hasParents) countButtons++;
             if (hasNeighbors) countButtons++;
             if (hasChilds) countButtons++;
 
-            Vector2 buttonSize = Styles.transparentButton.CalcSize(upButtonContent);
+            var buttonSize = Styles.transparentButton.CalcSize(upButtonContent);
             size.x += (buttonSize.x + Styles.transparentButton.margin.right) * countButtons;
 
-            Vector2 toggleSize = GUI.skin.toggle.CalcSize(GUIContent.none);
+            var toggleSize = GUI.skin.toggle.CalcSize(GUIContent.none);
             size.x += toggleSize.x;
 
             rect = new Rect(position, size);
@@ -62,10 +60,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             if (!hasChilds) return;
             if (!GUILayout.Button(downButtonContent, Styles.transparentButton, GUILayout.Width(12))) return;
 
-            GameObject g = Selection.activeGameObject;
-            Transform t = g.transform;
+            var g = Selection.activeGameObject;
+            var t = g.transform;
 
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             GetChildren(t, menu, "");
 
             menu.Show();
@@ -76,23 +74,20 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             if (!hasNeighbors) return;
             if (!GUILayout.Button(rightButtonContent, Styles.transparentButton, GUILayout.Width(12))) return;
 
-            List<GameObject> items = new List<GameObject>();
-            GameObject g = Selection.activeGameObject;
-            Transform parent = g.transform.parent;
+            var items = new List<GameObject>();
+            var g = Selection.activeGameObject;
+            var parent = g.transform.parent;
             if (parent != null)
-            {
-                for (int i = 0; i < parent.childCount; i++) items.Add(parent.GetChild(i).gameObject);
-            }
+                for (var i = 0; i < parent.childCount; i++)
+                    items.Add(parent.GetChild(i).gameObject);
             else
-            {
-                items = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList();
-            }
+                items = SceneManager.GetActiveScene().GetRootGameObjects().ToList();
 
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
-            foreach (GameObject item in items)
+            foreach (var item in items)
             {
-                GameObject go = item;
+                var go = item;
                 menu.Add(go.name, Selection.activeGameObject == go, () =>
                 {
                     Selection.activeGameObject = go;
@@ -118,19 +113,19 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             if (!Prefs.breadcrumbsParentShowAll ||
                 Event.current.modifiers != Prefs.breadcrumbsParentShowAllModifiers) return;
 
-            List<GameObject> items = new List<GameObject>();
-            GameObject g = Selection.activeGameObject;
+            var items = new List<GameObject>();
+            var g = Selection.activeGameObject;
             while (g.transform.parent != null)
             {
                 g = g.transform.parent.gameObject;
                 items.Insert(0, g);
             }
 
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
-            foreach (GameObject item in items)
+            foreach (var item in items)
             {
-                GameObject go = item;
+                var go = item;
                 menu.Add(go.name, false, () =>
                 {
                     Selection.activeGameObject = go;
@@ -143,11 +138,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 
         private void GetChildren(Transform t, GenericMenuEx menu, string prefix)
         {
-            for (int i = 0; i < t.childCount; i++)
+            for (var i = 0; i < t.childCount; i++)
             {
-                Transform ct = t.GetChild(i);
-                GameObject go = ct.gameObject;
-                string title = prefix + go.name;
+                var ct = t.GetChild(i);
+                var go = ct.gameObject;
+                var title = prefix + go.name;
                 if (ct.childCount > 0)
                 {
                     menu.Add(title + "/" + "Select", false, () =>
@@ -171,23 +166,21 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 
         public override void OnGUI()
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             EditorGUILayout.BeginHorizontal();
 
             DrawParentsButton();
             EditorGUI.BeginChangeCheck();
 
-            bool enabled = targets.All(t => t.activeSelf);
+            var enabled = targets.All(t => t.activeSelf);
             enabled = EditorGUILayout.Toggle(enabled);
             if (EditorGUI.EndChangeCheck())
-            {
-                foreach (GameObject target in targets)
+                foreach (var target in targets)
                 {
                     target.SetActive(enabled);
                     EditorUtility.SetDirty(target);
                 }
-            }
 
             EditorGUILayout.LabelField(labelContent, EditorStyles.whiteLabel, GUILayout.Width(labelSize.x));
             if (GUILayoutUtility.GetLastRect().Contains(e.mousePosition))
@@ -208,7 +201,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                     }
                     else if (e.button == 1)
                     {
-                        Rect lastRect = GUILayoutUtility.GetLastRect();
+                        var lastRect = GUILayoutUtility.GetLastRect();
                         if (lastRect.Contains(e.mousePosition)) GameObjectUtils.ShowContextMenu(true, targets);
                     }
                 }
@@ -245,21 +238,22 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                 }
                 else
                 {
-                    GameObject[] rootGameObjects =
-                        UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+                    var rootGameObjects = SceneManager.GetActiveScene().GetRootGameObjects();
                     hasNeighbors = rootGameObjects.Length > 1;
                 }
             }
 
             if (!isMultiple)
+            {
                 labelContent = new GUIContent(targets[0].name,
                     GameObjectUtils.GetTransformPath(targets[0].transform).ToString());
+            }
             else
             {
-                StringBuilder tooltipBuilder = new StringBuilder();
-                for (int i = 0; i < Mathf.Min(targets.Length, 10); i++)
+                var tooltipBuilder = new StringBuilder();
+                for (var i = 0; i < Mathf.Min(targets.Length, 10); i++)
                 {
-                    GameObject go = targets[i];
+                    var go = targets[i];
                     if (i > 0) tooltipBuilder.Append("\n");
                     tooltipBuilder.Append(GameObjectUtils.GetTransformPath(go.transform));
                 }
@@ -276,8 +270,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 
         public override void SetPosition(Vector2 position, Vector2 offset, bool flipHorizontal, bool flipVertical)
         {
-            int ox = 0;
-            int oy = -20;
+            var ox = 0;
+            var oy = -20;
             rect.position = position - new Vector2(rect.width / 2, rect.height) + offset + new Vector2(ox, oy);
             if (rect.x < 1) rect.x = 1;
 

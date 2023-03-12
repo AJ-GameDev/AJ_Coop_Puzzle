@@ -27,15 +27,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_isEditingControlMethod == null)
-                {
                     _isEditingControlMethod = type.GetMethod(
                         "IsEditingControl",
                         Reflection.InstanceLookup,
                         null,
                         new[] { typeof(int) },
                         null);
-                }
-
                 return _isEditingControlMethod;
             }
         }

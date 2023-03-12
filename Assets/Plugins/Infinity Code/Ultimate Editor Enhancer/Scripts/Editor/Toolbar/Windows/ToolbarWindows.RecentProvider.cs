@@ -7,19 +7,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
     {
         public class RecentProvider : Provider
         {
-            public override float order
-            {
-                get { return 0; }
-            }
+            public override float order => 0;
 
             public override void GenerateMenu(GenericMenuEx menu, ref bool hasItems)
             {
                 if (!Prefs.recentWindowsInToolbar || recent.Count == 0) return;
 
-                foreach (WindowRecord window in recent)
-                {
-                    menu.Add("Recent/" + window.title, RestoreRecentWindow, window);
-                }
+                foreach (var window in recent) menu.Add("Recent/" + window.title, RestoreRecentWindow, window);
 
                 hasItems = true;
             }

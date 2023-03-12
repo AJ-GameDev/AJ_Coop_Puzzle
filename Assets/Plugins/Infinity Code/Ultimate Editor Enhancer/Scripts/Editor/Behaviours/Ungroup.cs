@@ -12,20 +12,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     {
         static Ungroup()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += () => Selection.gameObjects.Length > 0;
             binding.OnPress += OnInvoke;
         }
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode != Prefs.ungroupKeyCode || e.modifiers != Prefs.ungroupModifiers) return;
 
             if (EditorUtility.DisplayDialog("Ungroup", "Ungroup selected GameObjects?", "Yes", "Cancel"))
-            {
                 UngroupSelection();
-            }
         }
 
         [MenuItem("Edit/Ungroup", false, 120)]
@@ -39,27 +37,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         public static void UngroupTargets(params GameObject[] targets)
         {
             Undo.SetCurrentGroupName("Ungroup GameObjects");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
-            List<GameObject> newSelection = new List<GameObject>();
+            var newSelection = new List<GameObject>();
 
-            GameObject[] selections = targets;
+            var selections = targets;
 
-            for (int i = 0; i < selections.Length; i++)
+            for (var i = 0; i < selections.Length; i++)
             {
-                GameObject go = selections[i];
-                bool isPartOfPrefab = PrefabUtility.IsPartOfAnyPrefab(go);
+                var go = selections[i];
+                var isPartOfPrefab = PrefabUtility.IsPartOfAnyPrefab(go);
                 if (isPartOfPrefab)
                 {
-                    GameObject root = PrefabUtility.GetOutermostPrefabInstanceRoot(go);
+                    var root = PrefabUtility.GetOutermostPrefabInstanceRoot(go);
                     PrefabUtility.UnpackPrefabInstance(root, PrefabUnpackMode.Completely, InteractionMode.UserAction);
                     go = selections[i];
                 }
 
-                Transform t = go.transform;
+                var t = go.transform;
                 while (t.childCount != 0)
                 {
-                    Transform ct = t.GetChild(0);
+                    var ct = t.GetChild(0);
                     Undo.SetTransformParent(ct, t.parent, "Update Parent");
                     newSelection.Add(ct.gameObject);
                 }

@@ -2,7 +2,6 @@
 /*     https://infinity-code.com    */
 
 using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace InfinityCode.UltimateEditorEnhancer
@@ -15,8 +14,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public float accuracy
         {
-            get { return _accuracy; }
-            set { _accuracy = value; }
+            get => _accuracy;
+            set => _accuracy = value;
         }
 
         protected static bool Contains(string str1, string str2)
@@ -25,16 +24,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             int i, j;
 
-            TextInfo textInfo = Culture.textInfo;
+            var textInfo = Culture.textInfo;
 
-            int l2 = str2.Length;
+            var l2 = str2.Length;
 
             for (i = 0; i < str1.Length - l2 + 1; i++)
             {
                 for (j = 0; j < l2; j++)
                 {
-                    char c1 = textInfo.ToUpper(str1[i + j]);
-                    char c2 = textInfo.ToUpper(str2[j]);
+                    var c1 = textInfo.ToUpper(str1[i + j]);
+                    var c2 = textInfo.ToUpper(str2[j]);
                     if (c1 != c2) break;
                 }
 
@@ -48,21 +47,18 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (values == null || values.Length == 0) return 0;
 
-            if (string.IsNullOrEmpty(pattern))
-            {
-                return 1;
-            }
+            if (string.IsNullOrEmpty(pattern)) return 1;
 
             float accuracy = 0;
 
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
-                string s = values[i];
+                var s = values[i];
 
-                int r = Match(s, pattern);
+                var r = Match(s, pattern);
                 if (r == int.MinValue) continue;
 
-                float v = 1 - r / (float)s.Length;
+                var v = 1 - r / (float)s.Length;
                 if (r == pattern.Length * upFactor)
                 {
                     accuracy = v;
@@ -77,16 +73,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static string GetPattern(string str)
         {
-            string search = str;
+            var search = str;
 
-            TextInfo textInfo = Culture.textInfo;
+            var textInfo = Culture.textInfo;
             StaticStringBuilder.Clear();
 
-            bool lastWhite = false;
+            var lastWhite = false;
 
-            for (int i = 0; i < search.Length; i++)
+            for (var i = 0; i < search.Length; i++)
             {
-                char c = search[i];
+                var c = search[i];
                 if (c == ' ' || c == '\t' || c == '\n')
                 {
                     if (!lastWhite && StaticStringBuilder.Length > 0)
@@ -110,11 +106,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static string GetPattern(string str, out string assetType)
         {
             assetType = string.Empty;
-            string search = str;
+            var search = str;
 
-            TextInfo textInfo = Culture.textInfo;
+            var textInfo = Culture.textInfo;
 
-            Match match = Regex.Match(search, @"(:)(\w*)");
+            var match = Regex.Match(search, @"(:)(\w*)");
             if (match.Success)
             {
                 assetType = textInfo.ToUpper(match.Groups[2].Value);
@@ -124,11 +120,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             StaticStringBuilder.Clear();
 
-            bool lastWhite = false;
+            var lastWhite = false;
 
-            for (int i = 0; i < search.Length; i++)
+            for (var i = 0; i < search.Length; i++)
             {
-                char c = search[i];
+                var c = search[i];
                 if (c == ' ' || c == '\t' || c == '\n')
                 {
                     if (!lastWhite && StaticStringBuilder.Length > 0)
@@ -155,42 +151,45 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         protected static int Match(string str1, string str2)
         {
-            int bestExtra = int.MaxValue;
+            var bestExtra = int.MaxValue;
 
-            int l1 = str1.Length;
-            int l2 = str2.Length;
+            var l1 = str1.Length;
+            var l2 = str2.Length;
 
-            TextInfo textInfo = Culture.textInfo;
+            var textInfo = Culture.textInfo;
 
-            for (int i = 0; i < l1 - l2 + 1; i++)
+            for (var i = 0; i < l1 - l2 + 1; i++)
             {
-                bool success = true;
-                int iOffset = 0;
-                int extra = 0;
-                bool prevNoSkip = true;
+                var success = true;
+                var iOffset = 0;
+                var extra = 0;
+                var prevNoSkip = true;
 
-                for (int j = 0; j < l2; j++)
+                for (var j = 0; j < l2; j++)
                 {
-                    char c = str2[j];
+                    var c = str2[j];
 
-                    int j2 = i + j;
-                    int i1 = j2 + iOffset;
+                    var j2 = i + j;
+                    var i1 = j2 + iOffset;
                     if (i1 >= l1)
                     {
                         success = false;
                         break;
                     }
 
-                    char c1 = str1[i1];
+                    var c1 = str1[i1];
 
                     if (c1 >= 'A' && c1 <= 'Z')
                     {
                         if (prevNoSkip) extra += upFactor;
                     }
-                    else if (c1 >= 'a' && c1 <= 'z') c1 = (char)(c1 - 32);
+                    else if (c1 >= 'a' && c1 <= 'z')
+                    {
+                        c1 = (char)(c1 - 32);
+                    }
                     else
                     {
-                        char c2 = textInfo.ToUpper(c1);
+                        var c2 = textInfo.ToUpper(c1);
                         if (c1 == c2 && prevNoSkip) extra += upFactor;
                         c1 = c2;
                     }
@@ -207,14 +206,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                         break;
                     }
 
-                    bool successSkip = false;
+                    var successSkip = false;
                     iOffset++;
-                    int cOffset = 0;
+                    var cOffset = 0;
 
                     while (j2 + iOffset < l1)
                     {
-                        char oc = str1[j2 + iOffset];
-                        char uc = textInfo.ToUpper(oc);
+                        var oc = str1[j2 + iOffset];
+                        var uc = textInfo.ToUpper(oc);
                         cOffset++;
                         if (uc != c)
                         {
@@ -258,14 +257,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return 1;
             }
 
-            for (int i = 0; i < GetSearchCount(); i++)
+            for (var i = 0; i < GetSearchCount(); i++)
             {
-                string s = GetSearchString(i);
+                var s = GetSearchString(i);
 
-                int r = Match(s, pattern);
+                var r = Match(s, pattern);
                 if (r == int.MinValue) continue;
 
-                float v = 1 - r / (float)s.Length;
+                var v = 1 - r / (float)s.Length;
                 if (r == pattern.Length * upFactor)
                 {
                     _accuracy = v;

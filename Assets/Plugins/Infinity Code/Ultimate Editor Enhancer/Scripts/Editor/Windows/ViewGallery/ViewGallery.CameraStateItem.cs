@@ -21,7 +21,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public override bool useInPreview
             {
-                get { return _useInPreview; }
+                get => _useInPreview;
                 set
                 {
                     if (_useInPreview == value) return;
@@ -32,14 +32,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         if (camera.gameObject.GetComponent<HideInPreview>() == null)
                             camera.gameObject.AddComponent<HideInPreview>();
                     }
-                    else DestroyImmediate(camera.gameObject.GetComponent<HideInPreview>());
+                    else
+                    {
+                        DestroyImmediate(camera.gameObject.GetComponent<HideInPreview>());
+                    }
                 }
             }
 
-            public override bool allowPreview
-            {
-                get { return true; }
-            }
+            public override bool allowPreview => true;
 
             public override string name
             {

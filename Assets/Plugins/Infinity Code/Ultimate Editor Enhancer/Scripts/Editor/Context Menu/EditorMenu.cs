@@ -11,6 +11,7 @@ using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
+using PopupWindow = InfinityCode.UltimateEditorEnhancer.Windows.PopupWindow;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 {
@@ -20,16 +21,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
         public static bool allowCloseWindow = true;
 
         private static List<MainLayoutItem> items;
-        private static bool _isOpened;
         private static Vector2 _lastPosition;
-        private static Vector3 _lastWorldPosition;
-        private static EditorWindow _lastWindow;
 
         static EditorMenu()
         {
             AssetPreview.SetPreviewTextureCacheSize(32000);
 
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += () =>
             {
                 if (!Prefs.contextMenuOnHotKey) return false;
@@ -46,11 +44,14 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 
                 if (EditorWindow.focusedWindow != null)
                 {
-                    Rect rect = EditorWindow.focusedWindow.position;
+                    var rect = EditorWindow.focusedWindow.position;
                     rect.position += Event.current.mousePosition;
                     Show(rect.position);
                 }
-                else Show(Event.current.mousePosition);
+                else
+                {
+                    Show(Event.current.mousePosition);
+                }
             };
 
             EventManager.AddBinding(EventManager.ClosePopupEvent).OnInvoke += b => Close();
@@ -63,27 +64,18 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
             CloseAllFloatingWindows();
         }
 
-        public static EditorWindow lastWindow
-        {
-            get { return _lastWindow; }
-        }
+        public static EditorWindow lastWindow { get; private set; }
 
-        public static Vector3 lastWorldPosition
-        {
-            get { return _lastWorldPosition; }
-        }
+        public static Vector3 lastWorldPosition { get; private set; }
 
-        public static bool isOpened
-        {
-            get { return _isOpened; }
-        }
+        public static bool isOpened { get; private set; }
 
         private static void CloseAllFloatingWindows()
         {
             try
             {
-                Windows.PopupWindow[] windows = UnityEngine.Resources.FindObjectsOfTypeAll<Windows.PopupWindow>();
-                foreach (Windows.PopupWindow wnd in windows)
+                var windows = UnityEngine.Resources.FindObjectsOfTypeAll<PopupWindow>();
+                foreach (var wnd in windows)
                 {
                     if (wnd == null) continue;
                     if (wnd is AutoSizePopupWindow pw && !pw.closeOnLossFocus && !pw.closeOnCompileOrPlay) continue;
@@ -106,31 +98,28 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 
         private static void CheckOpened()
         {
-            if (!_isOpened || items == null) return;
+            if (!isOpened || items == null) return;
 
-            bool lastOpened = _isOpened;
+            var lastOpened = isOpened;
 
-            _isOpened = false;
-            foreach (MainLayoutItem item in items)
-            {
+            isOpened = false;
+            foreach (var item in items)
                 if (EditorWindow.focusedWindow == item.window)
                 {
-                    _isOpened = true;
+                    isOpened = true;
                     return;
                 }
-            }
 
-            if (lastOpened && !_isOpened) EventManager.BroadcastClosePopup();
+            if (lastOpened && !isOpened) EventManager.BroadcastClosePopup();
         }
 
         public static void Close()
         {
-            _isOpened = false;
-            _lastWindow = null;
+            isOpened = false;
+            lastWindow = null;
             if (items != null)
-            {
-                foreach (MainLayoutItem wnd in items) wnd.Close();
-            }
+                foreach (var wnd in items)
+                    wnd.Close();
         }
 
         private static void CloseAll()
@@ -145,14 +134,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
             if (items != null) return;
 
             items = new List<MainLayoutItem>();
-            Type[] types = typeof(EditorMenu).Assembly.GetTypes();
-            foreach (Type type in types)
-            {
+            var types = typeof(EditorMenu).Assembly.GetTypes();
+            foreach (var type in types)
                 if (!type.IsAbstract && type.IsSubclassOf(typeof(MainLayoutItem)))
-                {
                     items.Add(Activator.CreateInstance(type, true) as MainLayoutItem);
-                }
-            }
 
             items = items.OrderBy(w => w.order).ToList();
         }
@@ -180,13 +165,12 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 
         private static void Prepare(Vector2 position)
         {
-            Vector2 offset = Vector2.zero;
-            bool flipHorizontal = false;
-            bool flipVertical = false;
-            GameObject[] targets = Selection.gameObjects;
+            var offset = Vector2.zero;
+            var flipHorizontal = false;
+            var flipVertical = false;
+            var targets = Selection.gameObjects;
 
-            foreach (MainLayoutItem item in items)
-            {
+            foreach (var item in items)
                 try
                 {
                     item.Prepare(targets, position, ref offset, ref flipHorizontal, ref flipVertical);
@@ -195,10 +179,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
                 {
                     Log.Add(e);
                 }
-            }
 
-            foreach (MainLayoutItem item in items)
-            {
+            foreach (var item in items)
                 try
                 {
                     if (item.isActive) item.SetPosition(position, offset, flipHorizontal, flipVertical);
@@ -207,17 +189,16 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
                 {
                     Log.Add(e);
                 }
-            }
         }
 
         public static void Show(Vector2 position)
         {
 #if !UNITY_2021_1_OR_NEWER || UNITY_2021_2_OR_NEWER
-            EditorWindow focusedWindow = EditorWindow.focusedWindow;
+            var focusedWindow = EditorWindow.focusedWindow;
             if (focusedWindow != null) position -= focusedWindow.position.position;
 #endif
             _lastPosition = position = GUIUtility.GUIToScreenPoint(position);
-            _lastWorldPosition = SceneViewManager.lastWorldPosition;
+            lastWorldPosition = SceneViewManager.lastWorldPosition;
 
             GetWindows();
             Prepare(position);
@@ -230,14 +211,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
 
             if (Prefs.contextMenuPauseInPlayMode && EditorApplication.isPlaying) EditorApplication.isPaused = true;
 
-            _lastWindow = EditorWindow.focusedWindow;
+            lastWindow = EditorWindow.focusedWindow;
 
-            foreach (MainLayoutItem item in items)
-            {
-                if (item.isActive) item.Show();
-            }
+            foreach (var item in items)
+                if (item.isActive)
+                    item.Show();
 
-            _isOpened = true;
+            isOpened = true;
         }
 
         public static void ShowInLastPosition()

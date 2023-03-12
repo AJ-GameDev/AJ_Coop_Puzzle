@@ -52,10 +52,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public static bool collapsed
         {
-            get { return LocalSettings.collapseQuickAccessBar; }
+            get => LocalSettings.collapseQuickAccessBar;
             set
             {
-                bool changed = LocalSettings.collapseQuickAccessBar != value;
+                var changed = LocalSettings.collapseQuickAccessBar != value;
                 LocalSettings.collapseQuickAccessBar = value;
                 if (changed && OnCollapseChanged != null) OnCollapseChanged();
             }
@@ -66,7 +66,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             get
             {
                 if (_contentStyle == null || _contentStyle.normal.background == null)
-                {
                     _contentStyle = new GUIStyle(EditorStyles.toolbarButton)
                     {
                         fontSize = 8,
@@ -76,7 +75,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         active = { background = Resources.CreateSinglePixelTexture(0, 0.3f) },
                         padding = new RectOffset()
                     };
-                }
 
                 return _contentStyle;
             }
@@ -88,18 +86,15 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (!Prefs.quickAccessBar) return false;
 
-                SceneView sceneView = SceneView.lastActiveSceneView;
+                var sceneView = SceneView.lastActiveSceneView;
                 if (sceneView == null) return false;
 
-                bool maximized = WindowsHelper.IsMaximized(sceneView);
+                var maximized = WindowsHelper.IsMaximized(sceneView);
                 return ReferenceManager.quickAccessItems.Any(i => i.Visible(maximized));
             }
         }
 
-        public static float width
-        {
-            get { return 32; }
-        }
+        public static float width => 32;
 
         private static Texture2D collapseLineTexture
         {
@@ -134,8 +129,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 background.Apply();
             }
 
-            float minIntend = GetMinIntend();
-            float maxIntend = Prefs.quickAccessBarIndentMax;
+            var minIntend = GetMinIntend();
+            var maxIntend = Prefs.quickAccessBarIndentMax;
 
             GUI.DrawTexture(new Rect(0, minIntend, rect.width, rect.height - minIntend - maxIntend), background,
                 ScaleMode.StretchToFill);
@@ -145,8 +140,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!(EditorWindow.mouseOverWindow is SceneView)) return;
 
-            Event e = Event.current;
-            Vector2 p = e.mousePosition;
+            var e = Event.current;
+            var p = e.mousePosition;
             if (p.y < minIntend || p.y > rect.height - maxIntend) return;
             if (p.x < rect.width || p.x > rect.width + 3) return;
 
@@ -167,15 +162,15 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             CheckActiveWindow();
 
-            Event e = Event.current;
-            bool maximized = WindowsHelper.IsMaximized(sceneView);
+            var e = Event.current;
+            var maximized = WindowsHelper.IsMaximized(sceneView);
 
-            int index = -1;
-            int visibleIndex = -1;
+            var index = -1;
+            var visibleIndex = -1;
 
-            float y = GetMinIntend();
+            var y = GetMinIntend();
 
-            foreach (QuickAccessItem item in ReferenceManager.quickAccessItems)
+            foreach (var item in ReferenceManager.quickAccessItems)
             {
                 index++;
                 if (item.type == QuickAccessItemType.flexibleSpace)
@@ -200,11 +195,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 if (!item.Visible(maximized)) continue;
                 visibleIndex++;
 
-                GUIStyle style = activeWindowIndex == index ? activeContentStyle : contentStyle;
-                int padding = Mathf.RoundToInt(rect.width / 2 * (1 - item.iconScale));
+                var style = activeWindowIndex == index ? activeContentStyle : contentStyle;
+                var padding = Mathf.RoundToInt(rect.width / 2 * (1 - item.iconScale));
                 style.padding = new RectOffset(padding, padding, padding, padding);
-                ButtonEvent buttonEvent = GUILayoutUtils.Button(item.content, style, GUILayout.Width(width),
-                    GUILayout.Height(width));
+                var buttonEvent =
+                    GUILayoutUtils.Button(item.content, style, GUILayout.Width(width), GUILayout.Height(width));
                 if (buttonEvent == ButtonEvent.press)
                 {
                     if (e.button == 0)
@@ -217,7 +212,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         EditorApplication.update += InvokeItemAction;
                         e.Use();
                     }
-                    else if (e.button == 1) ShowContextMenu();
+                    else if (e.button == 1)
+                    {
+                        ShowContextMenu();
+                    }
                 }
             }
 
@@ -262,10 +260,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.Layout)
             {
-                bool v = visible;
+                var v = visible;
                 if (v != _visible)
                 {
                     if (OnVisibleChanged != null) OnVisibleChanged();
@@ -275,7 +273,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (!_visible) return;
 
-            Rect viewRect = SceneViewManager.GetRect(sceneView);
+            var viewRect = SceneViewManager.GetRect(sceneView);
 
             rect = new Rect(0, 0, width, viewRect.height);
 
@@ -283,12 +281,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 Handles.BeginGUI();
 
-                float minIntend = GetMinIntend();
-                float maxIntend = Mathf.Max(Prefs.quickAccessBarIndentMax, 0);
+                var minIntend = GetMinIntend();
+                var maxIntend = Mathf.Max(Prefs.quickAccessBarIndentMax, 0);
 
                 if (collapsed)
                 {
-                    float mx = e.mousePosition.x;
+                    var mx = e.mousePosition.x;
                     if (mx >= 0 && mx < 5)
                     {
                         if (e.type == EventType.Repaint)
@@ -339,7 +337,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void ShowContextMenu()
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             menu.Add("Edit", Settings.OpenQuickAccessSettings);
             menu.Add("Collapse", () => collapsed = true);
             menu.Show();

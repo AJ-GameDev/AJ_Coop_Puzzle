@@ -1,23 +1,18 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using InfinityCode.UltimateEditorEnhancer.Tools;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class SceneViewActions : ActionItem
     {
-        protected override bool closeOnSelect
-        {
-            get { return false; }
-        }
+        protected override bool closeOnSelect => false;
 
         private void AlignViewToCamera(object userdata)
         {
@@ -41,8 +36,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         {
             if (!EditorApplication.ExecuteMenuItem("GameObject/Camera")) return null;
 
-            Camera sceneViewCamera = SceneView.lastActiveSceneView.camera;
-            Camera camera = Selection.activeGameObject.GetComponent<Camera>();
+            var sceneViewCamera = SceneView.lastActiveSceneView.camera;
+            var camera = Selection.activeGameObject.GetComponent<Camera>();
             camera.transform.position = sceneViewCamera.transform.position;
             camera.transform.rotation = sceneViewCamera.transform.rotation;
             return camera;
@@ -57,29 +52,29 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         [MenuItem(WindowsHelper.MenuPath + "Cameras/Create Temporary", false, 101)]
         private static void CreateTemporaryCameraFromSceneView()
         {
-            GameObject container = TemporaryContainer.GetContainer();
+            var container = TemporaryContainer.GetContainer();
             if (container == null) return;
 
-            string pattern = @"Camera \((\d+)\)";
+            var pattern = @"Camera \((\d+)\)";
 
-            int maxIndex = 1;
-            Camera[] cameras = container.GetComponentsInChildren<Camera>();
-            for (int i = 0; i < cameras.Length; i++)
+            var maxIndex = 1;
+            var cameras = container.GetComponentsInChildren<Camera>();
+            for (var i = 0; i < cameras.Length; i++)
             {
-                string name = cameras[i].gameObject.name;
-                Match match = Regex.Match(name, pattern);
+                var name = cameras[i].gameObject.name;
+                var match = Regex.Match(name, pattern);
                 if (match.Success)
                 {
-                    string strIndex = match.Groups[1].Value;
-                    int index = Int32.Parse(strIndex);
+                    var strIndex = match.Groups[1].Value;
+                    var index = int.Parse(strIndex);
                     if (index >= maxIndex) maxIndex = index + 1;
                 }
             }
 
-            string defaultName = "Camera (" + maxIndex + ")";
+            var defaultName = "Camera (" + maxIndex + ")";
             InputDialog.Show("Enter name of Camera GameObject", defaultName, s =>
             {
-                Camera camera = CreateCameraFromSceneView();
+                var camera = CreateCameraFromSceneView();
                 if (camera == null) return;
 
                 camera.gameObject.name = !string.IsNullOrEmpty(s) ? s : defaultName;
@@ -92,8 +87,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         private void DeleteAllViewStates()
         {
-            ViewState[] views = Object.FindObjectsOfType<ViewState>();
-            for (int i = 0; i < views.Length; i++) Object.DestroyImmediate(views[i].gameObject);
+            var views = Object.FindObjectsOfType<ViewState>();
+            for (var i = 0; i < views.Length; i++) Object.DestroyImmediate(views[i].gameObject);
             EditorMenu.Close();
         }
 
@@ -122,14 +117,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         private void InitAlignViewToCameraMenu(GenericMenuEx menu)
         {
-            Camera[] cameras = Object.FindObjectsOfType<Camera>().OrderBy(c => c.name).ToArray();
+            var cameras = Object.FindObjectsOfType<Camera>().OrderBy(c => c.name).ToArray();
             if (cameras.Length > 0)
-            {
-                for (int i = 0; i < cameras.Length; i++)
-                {
+                for (var i = 0; i < cameras.Length; i++)
                     menu.Add("Align View To Camera/" + cameras[i].gameObject.name, AlignViewToCamera, cameras[i]);
-                }
-            }
         }
 
         private void InitViewStatesMenu(GenericMenuEx menu)
@@ -140,10 +131,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
             menu.Add("View States/Create For Selection", SelectionViewStates.AddToSelection);
 
-            ViewState[] views = Object.FindObjectsOfType<ViewState>().OrderBy(v => v.title).ToArray();
+            var views = Object.FindObjectsOfType<ViewState>().OrderBy(v => v.title).ToArray();
             if (views.Length > 0)
-            {
-                for (int i = 0; i < views.Length; i++)
+                for (var i = 0; i < views.Length; i++)
                 {
                     menu.Add("View States/Restore/" + views[i].title, RestoreViewState, views[i]);
 
@@ -155,12 +145,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
                     menu.Add("View States/Delete/" + views[i].title, DeleteViewState, views[i]);
                 }
-            }
         }
 
         public override void Invoke()
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
             InitCreateCameraFromViewMenu(menu);
             InitAlignViewToCameraMenu(menu);
@@ -185,8 +174,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         private void RestoreViewState(object userdata)
         {
-            ViewState state = userdata as ViewState;
-            SceneView view = SceneView.lastActiveSceneView;
+            var state = userdata as ViewState;
+            var view = SceneView.lastActiveSceneView;
             view.in2DMode = state.is2D;
             view.pivot = state.pivot;
             view.size = state.size;
@@ -197,33 +186,33 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         [MenuItem(WindowsHelper.MenuPath + "View States/Create", false, 104)]
         public static void SaveViewState()
         {
-            GameObject container = TemporaryContainer.GetContainer();
+            var container = TemporaryContainer.GetContainer();
             if (container == null) return;
 
-            string pattern = @"View State \((\d+)\)";
+            var pattern = @"View State \((\d+)\)";
 
-            int maxIndex = 1;
-            ViewState[] viewStates = container.GetComponentsInChildren<ViewState>();
-            for (int i = 0; i < viewStates.Length; i++)
+            var maxIndex = 1;
+            var viewStates = container.GetComponentsInChildren<ViewState>();
+            for (var i = 0; i < viewStates.Length; i++)
             {
-                string name = viewStates[i].gameObject.name;
-                Match match = Regex.Match(name, pattern);
+                var name = viewStates[i].gameObject.name;
+                var match = Regex.Match(name, pattern);
                 if (match.Success)
                 {
-                    string strIndex = match.Groups[1].Value;
-                    int index = int.Parse(strIndex);
+                    var strIndex = match.Groups[1].Value;
+                    var index = int.Parse(strIndex);
                     if (index >= maxIndex) maxIndex = index + 1;
                 }
             }
 
-            string viewStateName = "View State (" + maxIndex + ")";
+            var viewStateName = "View State (" + maxIndex + ")";
             InputDialog.Show("Enter title of View State", viewStateName, s =>
             {
-                GameObject go = new GameObject(viewStateName);
+                var go = new GameObject(viewStateName);
                 go.tag = "EditorOnly";
-                ViewState viewState = go.AddComponent<ViewState>();
+                var viewState = go.AddComponent<ViewState>();
 
-                SceneView view = SceneView.lastActiveSceneView;
+                var view = SceneView.lastActiveSceneView;
                 viewState.pivot = view.pivot;
                 viewState.rotation = view.rotation;
                 viewState.size = view.size;

@@ -14,10 +14,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
         protected int countActiveItems;
         protected List<U> items;
 
-        public override bool isActive
-        {
-            get { return countActiveItems > 0; }
-        }
+        public override bool isActive => countActiveItems > 0;
 
         protected abstract void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal,
             ref bool flipVertical);
@@ -50,9 +47,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
         {
             if (items == null) return;
 
-            GameObject[] targets = Selection.gameObjects;
+            var targets = Selection.gameObjects;
 
-            foreach (U item in items)
+            foreach (var item in items)
             {
                 item.Prepare(targets);
                 PrepareItemLate(item);

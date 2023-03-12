@@ -47,10 +47,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -46; }
-            }
+            public override float order => -46;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -91,10 +88,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                     EditorGUILayout.ToggleLeft("Show Best Component Icon Before Name", hierarchyOverrideMainIcon);
                 if (!EditorGUI.EndChangeCheck()) return;
 
-                Object[] windows = UnityEngine.Resources.FindObjectsOfTypeAll(SceneHierarchyWindowRef.type);
-                foreach (Object wnd in windows)
+                var windows = UnityEngine.Resources.FindObjectsOfTypeAll(SceneHierarchyWindowRef.type);
+                foreach (var wnd in windows)
                 {
-                    EditorWindow window = wnd as EditorWindow;
+                    var window = wnd as EditorWindow;
                     HierarchyHelper.SetDefaultIconsSize(window, hierarchyOverrideMainIcon ? 0 : 18);
                     window.Repaint();
                 }

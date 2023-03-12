@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using System.Linq;
 using InfinityCode.UltimateEditorEnhancer.Attributes;
 using InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions;
@@ -20,10 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
         private GUIContent labelContent;
         private Vector2 labelSize;
 
-        public override float order
-        {
-            get { return 100; }
-        }
+        public override float order => 100;
 
         public bool Validate()
         {
@@ -40,14 +36,14 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
             _size.y += GUI.skin.label.margin.bottom;
             _size.x += EditorStyles.whiteLabel.CalcSize(new GUIContent("+")).x;
 
-            GUIStyle style = Styles.buttonWithToggleAlignLeft;
-            int marginBottom = style.margin.bottom;
+            var style = Styles.buttonWithToggleAlignLeft;
+            var marginBottom = style.margin.bottom;
 
-            for (int i = 0; i < components.Length; i++)
+            for (var i = 0; i < components.Length; i++)
             {
                 if (components[i] == null) continue;
 
-                Vector2 s = style.CalcSize(contents[i]);
+                var s = style.CalcSize(contents[i]);
                 if (contents[i].image != null) s.x -= contents[i].image.width - 20;
                 _size.x = Mathf.Max(_size.x, s.x);
                 _size.y += s.y + marginBottom;
@@ -65,7 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         public override void Draw()
         {
-            Event e = Event.current;
+            var e = Event.current;
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Components:", EditorStyles.whiteLabel, GUILayout.Width(labelSize.x));
@@ -74,7 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 GUILayout.Button(addContent, EditorStyles.whiteLabel, GUILayout.ExpandWidth(false)))
             {
                 Vector2 s = Prefs.defaultWindowSize;
-                Rect rect = new Rect(GUIUtility.GUIToScreenPoint(e.mousePosition) - s / 2, s);
+                var rect = new Rect(GUIUtility.GUIToScreenPoint(e.mousePosition) - s / 2, s);
 
                 EditorMenu.Close();
                 AddComponent.ShowAddComponent(rect);
@@ -82,14 +78,14 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
             EditorGUILayout.EndHorizontal();
 
-            for (int i = 0; i < components.Length; i++)
+            for (var i = 0; i < components.Length; i++)
             {
-                Component component = components[i];
+                var component = components[i];
                 if (component == null) continue;
 
-                GUIContent content = contents[i];
+                var content = contents[i];
 
-                ButtonEvent buttonEvent = DrawComponent(component, content);
+                var buttonEvent = DrawComponent(component, content);
 
                 if (buttonEvent == ButtonEvent.drag)
                 {
@@ -104,9 +100,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                     if (e.button == 0)
                     {
                         if (Prefs.popupWindowTab && Prefs.popupWindowTabModifiers == e.modifiers)
+                        {
                             ComponentWindow.Show(component);
+                        }
                         else if (Prefs.popupWindowUtility && Prefs.popupWindowUtilityModifiers == e.modifiers)
+                        {
                             ComponentWindow.ShowUtility(component);
+                        }
                         else if (Prefs.popupWindowPopup && Prefs.popupWindowPopupModifiers == e.modifiers)
                         {
                             EditorWindow wnd = ComponentWindow.ShowPopup(component);
@@ -132,18 +132,20 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         public static ButtonEvent DrawComponent(Component component, GUIContent content)
         {
-            Event e = Event.current;
+            var e = Event.current;
 
-            Rect rect = GUILayoutUtility.GetRect(content, Styles.buttonWithToggleAlignLeft);
-            Rect toggleRect = new Rect(rect.x + 4, rect.y + 2, 16, 16);
-            int id = GUIUtility.GetControlID(GUILayoutUtils.buttonHash, FocusType.Passive, rect);
-            bool isHover = rect.Contains(e.mousePosition) && !toggleRect.Contains(e.mousePosition);
-            bool hasMouseControl = GUIUtility.hotControl == id;
+            var rect = GUILayoutUtility.GetRect(content, Styles.buttonWithToggleAlignLeft);
+            var toggleRect = new Rect(rect.x + 4, rect.y + 2, 16, 16);
+            var id = GUIUtility.GetControlID(GUILayoutUtils.buttonHash, FocusType.Passive, rect);
+            var isHover = rect.Contains(e.mousePosition) && !toggleRect.Contains(e.mousePosition);
+            var hasMouseControl = GUIUtility.hotControl == id;
 
-            ButtonEvent state = ButtonEvent.none;
+            var state = ButtonEvent.none;
 
             if (e.type == EventType.Repaint)
+            {
                 Styles.buttonWithToggleAlignLeft.Draw(rect, content, isHover, hasMouseControl, false, false);
+            }
             else if (e.type == EventType.MouseDrag)
             {
                 if (hasMouseControl)
@@ -174,20 +176,21 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                         state = ButtonEvent.click;
                     }
                 }
-                else state = ButtonEvent.release;
+                else
+                {
+                    state = ButtonEvent.release;
+                }
             }
 
             if (component.hideFlags == HideFlags.HideAndDontSave || component.hideFlags == HideFlags.HideInInspector)
             {
                 if (GUI.Button(toggleRect, EditorIconContents.sceneVisibilityHiddenHover, Styles.transparentButton))
-                {
                     component.hideFlags = HideFlags.None;
-                }
             }
             else if (ComponentUtils.CanBeDisabled(component))
             {
                 EditorGUI.BeginChangeCheck();
-                bool value = GUI.Toggle(toggleRect, ComponentUtils.GetEnabled(component), GUIContent.none);
+                var value = GUI.Toggle(toggleRect, ComponentUtils.GetEnabled(component), GUIContent.none);
                 if (EditorGUI.EndChangeCheck()) ComponentUtils.SetEnabled(component, value);
             }
 
@@ -198,23 +201,26 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
         {
             components = targets[0].GetComponents<Component>();
             contents = new GUIContent[components.Length];
-            for (int i = 0; i < components.Length; i++)
+            for (var i = 0; i < components.Length; i++)
             {
-                Component component = components[i];
+                var component = components[i];
                 if (component == null) continue;
 
-                Texture2D assetPreview = AssetPreview.GetMiniThumbnail(component);
-                GUIContent content = new GUIContent(assetPreview);
+                var assetPreview = AssetPreview.GetMiniThumbnail(component);
+                var content = new GUIContent(assetPreview);
 
-                Type type = component.GetType();
-                object[] acm = type.GetCustomAttributes(typeof(AddComponentMenu), true);
+                var type = component.GetType();
+                var acm = type.GetCustomAttributes(typeof(AddComponentMenu), true);
                 if (acm.Length > 0)
                 {
-                    string componentMenu = (acm[0] as AddComponentMenu).componentMenu;
+                    var componentMenu = (acm[0] as AddComponentMenu).componentMenu;
                     if (!string.IsNullOrEmpty(componentMenu)) content.text = componentMenu.Split('/').Last();
                     else content.text = ObjectNames.NicifyVariableName(type.Name);
                 }
-                else content.text = ObjectNames.NicifyVariableName(type.Name);
+                else
+                {
+                    content.text = ObjectNames.NicifyVariableName(type.Name);
+                }
 
                 contents[i] = content;
             }

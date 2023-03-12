@@ -18,15 +18,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     return new[]
                     {
-                        "Hide Scene References",
+                        "Hide Scene References"
                     };
                 }
             }
 
-            public override float order
-            {
-                get { return Order.sceneReferences; }
-            }
+            public override float order => Order.sceneReferences;
 
             public override void Draw()
             {

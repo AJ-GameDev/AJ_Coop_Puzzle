@@ -12,15 +12,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
     {
         private int type; // 0 - Root, 1 - Child, 2 - Sibling, 3 - Parent, 4 - Temporary
 
-        protected override bool closeOnSelect
-        {
-            get { return false; }
-        }
+        protected override bool closeOnSelect => false;
 
-        public override float order
-        {
-            get { return -1000; }
-        }
+        public override float order => -1000;
 
         protected override void Init()
         {
@@ -29,17 +23,17 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         private void ApplyType()
         {
-            GameObject active = Selection.activeGameObject;
+            var active = Selection.activeGameObject;
 
             CheckDuplicateAudioListeners(active);
 
             if (targets == null || targets.Length == 0) return;
 
-            GameObject go = targets[0];
+            var go = targets[0];
             if (go == null || active == go) return;
 
-            Transform t = go.transform;
-            Transform at = active.transform;
+            var t = go.transform;
+            var at = active.transform;
 
             if (type == 1)
             {
@@ -61,11 +55,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             }
             else if (type == 3)
             {
-                Transform parent = t.parent;
-                if (parent != null)
-                {
-                    Undo.SetTransformParent(at, parent, "Set Parent");
-                }
+                var parent = t.parent;
+                if (parent != null) Undo.SetTransformParent(at, parent, "Set Parent");
 
                 Undo.RecordObject(at, "Before Change Position");
                 at.position = t.position;
@@ -73,7 +64,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             }
             else if (type == 4)
             {
-                GameObject parent = TemporaryContainer.GetContainer();
+                var parent = TemporaryContainer.GetContainer();
                 if (parent == null || active == null || active == parent) return;
 
                 Undo.SetTransformParent(at, parent.transform, "Set Parent");
@@ -87,13 +78,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             if (target.GetComponent<Camera>() == null) return;
             if (Object.FindObjectsOfType<AudioListener>().Length <= 1) return;
 
-            AudioListener audioListener = target.GetComponent<AudioListener>();
+            var audioListener = target.GetComponent<AudioListener>();
             if (audioListener != null) Object.DestroyImmediate(audioListener);
         }
 
         public override void Invoke()
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
             menu.Add("Root", () => ShowCreateBrowser(0));
             if (targets.Length == 1 && targets[0] != null)
             {
@@ -109,7 +100,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         private void OnBrowserPrefab(string assetPath)
         {
             Undo.SetCurrentGroupName("Instantiate Prefab");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
             Selection.activeGameObject =
                 PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
@@ -121,20 +112,14 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         private void OnBrowserCreate(string menuItem)
         {
             Undo.SetCurrentGroupName("Create " + menuItem.Substring(11));
-            int group = Undo.GetCurrentGroup();
-            bool addRectTransform = false;
+            var group = Undo.GetCurrentGroup();
+            var addRectTransform = false;
             if (type > 0 && type < 4 && menuItem == "GameObject/Create Empty")
-            {
                 addRectTransform = targets.All(t => t.GetComponent<RectTransform>() != null);
-            }
-
             EditorApplication.ExecuteMenuItem(menuItem);
             ApplyType();
 
-            if (addRectTransform)
-            {
-                Undo.AddComponent<RectTransform>(Selection.activeGameObject);
-            }
+            if (addRectTransform) Undo.AddComponent<RectTransform>(Selection.activeGameObject);
 
             Undo.CollapseUndoOperations(group);
         }
@@ -151,7 +136,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             EditorMenu.Close();
 
             this.type = type;
-            CreateBrowser browser = CreateBrowser.OpenWindow();
+            var browser = CreateBrowser.OpenWindow();
             browser.OnClose += OnBrowserClose;
             browser.OnSelectCreate += OnBrowserCreate;
             browser.OnSelectPrefab += OnBrowserPrefab;

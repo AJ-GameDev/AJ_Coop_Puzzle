@@ -10,20 +10,16 @@ namespace Pegasus
     public class PegasusClip : PlayableAsset, ITimelineClipAsset
     {
         public ExposedReference<PegasusManager> PegasusManager;
-        [Range(0f, 1f)]
-        public float PegasusProgress;
 
-        [HideInInspector]
-        public PegasusBehaviour template = new PegasusBehaviour ();
+        [Range(0f, 1f)] public float PegasusProgress;
 
-        public ClipCaps clipCaps
+        [HideInInspector] public PegasusBehaviour template = new();
+
+        public ClipCaps clipCaps => ClipCaps.Blending;
+
+        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
-            get { return ClipCaps.Blending; }
-        }
-
-        public override Playable CreatePlayable (PlayableGraph graph, GameObject owner)
-        {
-            var playable = ScriptPlayable<PegasusBehaviour>.Create (graph, template);
+            var playable = ScriptPlayable<PegasusBehaviour>.Create(graph, template);
             playable.GetBehaviour().pegasusManager = PegasusManager.Resolve(graph.GetResolver());
             playable.GetBehaviour().pegasusProgress = PegasusProgress;
             return playable;

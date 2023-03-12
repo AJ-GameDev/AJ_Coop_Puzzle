@@ -10,16 +10,11 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public class NavigationManager : StandalonePrefManager<NavigationManager>
         {
-            public override IEnumerable<string> keywords
-            {
-                get
-                {
-                    return JumpToPointManager.GetKeywords()
-                        .Concat(PreviewManager.GetKeywords())
-                        .Concat(FrameSelectedBoundsManager.GetKeywords())
-                        .Concat(ZoomShortcutManager.GetKeywords());
-                }
-            }
+            public override IEnumerable<string> keywords =>
+                JumpToPointManager.GetKeywords()
+                    .Concat(PreviewManager.GetKeywords())
+                    .Concat(FrameSelectedBoundsManager.GetKeywords())
+                    .Concat(ZoomShortcutManager.GetKeywords());
 
             public override void Draw()
             {

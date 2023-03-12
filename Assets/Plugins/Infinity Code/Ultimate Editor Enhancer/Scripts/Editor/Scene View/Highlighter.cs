@@ -14,7 +14,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     public static class Highlighter
     {
         private static GameObject hoveredGO;
-        private static Dictionary<SceneView, SceneViewOutline> viewDict;
+        private static readonly Dictionary<SceneView, SceneViewOutline> viewDict;
         private static Renderer[] lastRenderers;
         private static RectTransform lastRectTransform;
         private static Vector3[] rectTransformCorners;
@@ -42,11 +42,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (rectTransformCorners == null) rectTransformCorners = new Vector3[4];
             lastRectTransform.GetWorldCorners(rectTransformCorners);
 
-            Color color = Handles.color;
+            var color = Handles.color;
             Handles.color = Prefs.highlightUIColor;
 
 #if UNITY_2020_2_OR_NEWER
-            int thickness = 2;
+            var thickness = 2;
             Handles.DrawLine(rectTransformCorners[0], rectTransformCorners[1], thickness);
             Handles.DrawLine(rectTransformCorners[1], rectTransformCorners[2], thickness);
             Handles.DrawLine(rectTransformCorners[2], rectTransformCorners[3], thickness);
@@ -64,14 +64,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             var wnd = EditorWindow.mouseOverWindow;
             if (wnd != null && wnd.GetType() == SceneHierarchyWindowRef.type && !wnd.wantsMouseMove)
-            {
                 wnd.wantsMouseMove = true;
-            }
         }
 
         public static bool Highlight(GameObject go)
         {
-            bool state = false;
+            var state = false;
             HighlightUI(go, ref state);
             if (GraphicsSettings.renderPipelineAsset == null) HighlightRenderers(go, ref state);
             HighlightWithoutRenderer(go, ref state);
@@ -85,7 +83,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void HighlightOnHierarchy(HierarchyItem item)
         {
-            Event e = Event.current;
+            var e = Event.current;
             switch (e.type)
             {
                 case EventType.MouseDrag:
@@ -93,9 +91,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 case EventType.DragPerform:
                 case EventType.DragExited:
                 case EventType.MouseMove:
-                    GameObject go = item.gameObject;
+                    var go = item.gameObject;
                     if (go == null) break;
-                    bool contains = item.rect.Contains(e.mousePosition);
+                    var contains = item.rect.Contains(e.mousePosition);
                     if (contains && e.modifiers == EventModifiers.Control)
                     {
                         if (hoveredGO != go)
@@ -186,15 +184,18 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (Event.current.type != EventType.Repaint) return;
 
-            if (lastRectTransform != null) DrawRectTransformBounds();
+            if (lastRectTransform != null)
+            {
+                DrawRectTransformBounds();
+            }
             else if (Prefs.highlightNoRenderer && lastNoRendererTransform != null &&
                      !(EditorWindow.mouseOverWindow is SceneView))
             {
-                Vector3 position = lastNoRendererTransform.position;
-                float size = HandleUtility.GetHandleSize(position);
+                var position = lastNoRendererTransform.position;
+                var size = HandleUtility.GetHandleSize(position);
 
-                Quaternion rotation = Quaternion.Euler(-45, 45, 0);
-                Color color = Handles.color;
+                var rotation = Quaternion.Euler(-45, 45, 0);
+                var color = Handles.color;
                 Handles.color = Prefs.highlightNoRendererColor;
                 position -= rotation * new Vector3(0, 0, size * 1.2f);
                 Handles.ArrowHandleCap(0, position, rotation, size, EventType.Repaint);
@@ -253,7 +254,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             public void OnRenderImage(RenderTexture source, RenderTexture destination)
             {
                 if (source == null || destination == null) return;
-                CommandBuffer b = buffer;
+                var b = buffer;
 
                 if (!useRenderImage)
                 {
@@ -262,10 +263,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     return;
                 }
 
-                int width = source.width;
-                int height = source.height;
-                RenderTexture t1 = RenderTexture.GetTemporary(width, height, 32);
-                RenderTexture t2 = RenderTexture.GetTemporary(width, height, 32);
+                var width = source.width;
+                var height = source.height;
+                var t1 = RenderTexture.GetTemporary(width, height, 32);
+                var t2 = RenderTexture.GetTemporary(width, height, 32);
 
                 RenderTexture.active = t1;
                 GL.Clear(true, true, Color.clear);
@@ -273,7 +274,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 Graphics.ExecuteCommandBuffer(b);
                 RenderTexture.active = null;
 
-                Material m = material;
+                var m = material;
 
                 Graphics.Blit(t1, t2, m, 1);
                 Graphics.Blit(t2, t1, m, 2);
@@ -289,33 +290,33 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             public void SetRenderer(Renderer[] renderers)
             {
-                CommandBuffer b = buffer;
+                var b = buffer;
                 b.Clear();
 
                 useRenderImage = renderers != null && renderers.Length > 0;
                 if (!useRenderImage) return;
 
-                Material m = material;
+                var m = material;
 
-                int id = 1;
-                foreach (Renderer r in renderers.OrderBy(r => SortingLayer.GetLayerValueFromID(r.sortingLayerID))
+                var id = 1;
+                foreach (var r in renderers.OrderBy(r => SortingLayer.GetLayerValueFromID(r.sortingLayerID))
                              .ThenBy(r => r.sortingOrder))
                 {
-                    int count = 1;
+                    var count = 1;
                     if (r is MeshRenderer)
                     {
-                        MeshFilter f = r.GetComponent<MeshFilter>();
+                        var f = r.GetComponent<MeshFilter>();
                         if (f != null && f.sharedMesh != null) count = f.sharedMesh.subMeshCount;
                     }
                     else
                     {
-                        SkinnedMeshRenderer smr = r as SkinnedMeshRenderer;
+                        var smr = r as SkinnedMeshRenderer;
                         if (smr != null && smr.sharedMesh != null) count = smr.sharedMesh.subMeshCount;
                     }
 
-                    Color32 objectID = new Color32((byte)(id & 0xff), (byte)((id >> 8) & 0xff), 0, 0);
+                    var objectID = new Color32((byte)(id & 0xff), (byte)((id >> 8) & 0xff), 0, 0);
                     b.SetGlobalColor("_ObjectID", objectID);
-                    for (int i = 0; i < count; i++) b.DrawRenderer(r, m, i, 0);
+                    for (var i = 0; i < count; i++) b.DrawRenderer(r, m, i, 0);
                     id++;
                 }
             }

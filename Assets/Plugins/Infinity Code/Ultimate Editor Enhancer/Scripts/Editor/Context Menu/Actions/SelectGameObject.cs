@@ -1,24 +1,18 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class SelectGameObject : ActionItem
     {
-        protected override bool closeOnSelect
-        {
-            get { return false; }
-        }
+        protected override bool closeOnSelect => false;
 
-        public override float order
-        {
-            get { return -950; }
-        }
+        public override float order => -950;
 
         protected override void Init()
         {
@@ -27,18 +21,17 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         public override void Invoke()
         {
-            List<GameObject> items = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects()
-                .ToList();
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var items = SceneManager.GetActiveScene().GetRootGameObjects().ToList();
+            var menu = GenericMenuEx.Start();
 
-            for (int i = 0; i < items.Count; i++) GetChilds(items[i].transform, menu, "");
+            for (var i = 0; i < items.Count; i++) GetChilds(items[i].transform, menu, "");
 
             menu.Show();
         }
 
         private void GetChilds(Transform t, GenericMenuEx menu, string prefix)
         {
-            string title = prefix + t.name;
+            var title = prefix + t.name;
 
             if (t.childCount > 0)
             {
@@ -48,7 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                     SceneViewManager.OnNextGUI += EditorMenu.ShowInLastPosition;
                 });
                 menu.AddSeparator(title + "/");
-                for (int i = 0; i < t.childCount; i++) GetChilds(t.GetChild(i), menu, title + "/");
+                for (var i = 0; i < t.childCount; i++) GetChilds(t.GetChild(i), menu, title + "/");
             }
             else
             {

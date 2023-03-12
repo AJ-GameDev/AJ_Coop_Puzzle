@@ -47,10 +47,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (focusedWindow != this) Close();
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
-                if (e.keyCode == KeyCode.Escape) Close();
+                if (e.keyCode == KeyCode.Escape)
+                {
+                    Close();
+                }
                 else if (e.keyCode == KeyCode.DownArrow)
                 {
                     ignoreItemSelect = true;
@@ -93,14 +96,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void Init()
         {
             items = new List<int>();
-            for (int i = 0; i < contents.Length; i++) items.Add(i);
+            for (var i = 0; i < contents.Length; i++) items.Add(i);
 
             Func<VisualElement> makeItem = () =>
             {
-                VisualElement el = new VisualElement();
+                var el = new VisualElement();
                 el.AddToClassList("flatselector-item");
 
-                Image image = new Image();
+                var image = new Image();
                 image.AddToClassList("flatselector-item-image");
 
                 el.Add(image);
@@ -112,13 +115,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             Action<VisualElement, int> bindItem = (el, i) =>
             {
-                Image image = el[0] as Image;
+                var image = el[0] as Image;
 
-                int itemIndex = items[i];
+                var itemIndex = items[i];
                 image.image = selected == itemIndex ? selectedTexture : null;
 
-                GUIContent content = contents[itemIndex];
-                Label label = el[1] as Label;
+                var content = contents[itemIndex];
+                var label = el[1] as Label;
                 label.text = content.text;
                 label.tooltip = content.tooltip;
 
@@ -145,13 +148,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             listView.onSelectionChange += objects =>
             {
                 if (ignoreItemSelect) return;
-                Event e = Event.current;
+                var e = Event.current;
                 if (e.type == EventType.KeyDown)
-                {
-                    if (e.keyCode != KeyCode.KeypadEnter && e.keyCode != KeyCode.Return &&
-                        e.keyCode != KeyCode.Space) return;
-                }
-
+                    if (e.keyCode != KeyCode.KeypadEnter && e.keyCode != KeyCode.Return && e.keyCode != KeyCode.Space)
+                        return;
                 if (OnSelect != null) OnSelect(items[listView.selectedIndex]);
                 Close();
             };
@@ -174,17 +174,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (instance != null) instance.Close();
             if (contents == null || contents.Length == 0) return null;
 
-            float width = rect.width;
+            var width = rect.width;
 
-            GUIStyle style = EditorStyles.label;
+            var style = EditorStyles.label;
 
-            for (int i = 0; i < contents.Length; i++)
+            for (var i = 0; i < contents.Length; i++)
             {
-                Vector2 size = style.CalcSize(contents[i]);
+                var size = style.CalcSize(contents[i]);
                 if (size.x + 50 > width) width = size.x + 50;
             }
 
-            FlatSelectorWindow wnd = instance = CreateInstance<FlatSelectorWindow>();
+            var wnd = instance = CreateInstance<FlatSelectorWindow>();
             rect.y += rect.height;
             rect.width = width;
             rect.height = Mathf.Min(Prefs.defaultWindowSize.y, contents.Length * ITEM_HEIGHT + EXTRA_HEIGHT);
@@ -204,19 +204,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             items = new List<int>();
             if (string.IsNullOrEmpty(filterText))
             {
-                for (int i = 0; i < contents.Length; i++) items.Add(i);
+                for (var i = 0; i < contents.Length; i++) items.Add(i);
             }
             else
             {
-                string pattern = SearchableItem.GetPattern(filterText);
+                var pattern = SearchableItem.GetPattern(filterText);
 
-                for (int i = 0; i < contents.Length; i++)
-                {
+                for (var i = 0; i < contents.Length; i++)
                     if (SearchableItem.GetAccuracy(pattern, contents[i].text) > 0)
-                    {
                         items.Add(i);
-                    }
-                }
             }
 
             listView.itemsSource = items;
@@ -230,7 +226,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             listView.selectedIndex = items.IndexOf(selected);
             ignoreItemSelect = false;
 
-            Rect rect = position;
+            var rect = position;
             rect.height = Mathf.Min(Prefs.defaultWindowSize.y, items.Count * ITEM_HEIGHT + EXTRA_HEIGHT);
             position = rect;
         }

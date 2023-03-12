@@ -19,35 +19,32 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 "GameObject/Ungroup".ToLower()
             };
 
-            public override float order
-            {
-                get { return 0; }
-            }
+            public override float order => 0;
 
-            public override string title
-            {
-                get { return instance.createLabel; }
-            }
+            public override string title => instance.createLabel;
 
             public override void Cache()
             {
                 items = new List<Item>();
 
-                foreach (string submenu in Unsupported.GetSubmenus("GameObject"))
+                foreach (var submenu in Unsupported.GetSubmenus("GameObject"))
                 {
-                    string l = submenu.ToLower();
+                    var l = submenu.ToLower();
                     if (l == "GameObject/Center On Children".ToLower()) break;
                     if (skipMenuItems.Contains(l)) continue;
 
-                    string menuItemStr = submenu.Substring(11);
+                    var menuItemStr = submenu.Substring(11);
                     if (menuItemStr == "Create Empty") menuItemStr = "Empty GameObject";
                     if (menuItemStr == "Create Empty Collection") menuItemStr = "Collection";
                     if (menuItemStr == "Create Header") menuItemStr = "Header";
-                    string[] parts = menuItemStr.Split('/');
-                    if (parts.Length == 1) items.Add(new CreateItem(menuItemStr, submenu));
+                    var parts = menuItemStr.Split('/');
+                    if (parts.Length == 1)
+                    {
+                        items.Add(new CreateItem(menuItemStr, submenu));
+                    }
                     else
                     {
-                        CreateItemFolder root = items.FirstOrDefault(i => i.label == parts[0]) as CreateItemFolder;
+                        var root = items.FirstOrDefault(i => i.label == parts[0]) as CreateItemFolder;
                         if (root != null) root.Add(parts, 0, submenu);
                         else items.Add(new CreateItemFolder(parts, 0, submenu));
                     }

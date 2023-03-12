@@ -11,22 +11,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class Snapping : ActionItem
     {
-        protected override bool closeOnSelect
-        {
-            get { return false; }
-        }
+        protected override bool closeOnSelect => false;
 
-        public override float order
-        {
-            get { return -990; }
-        }
+        public override float order => -990;
 
         private void AlignSelection(SnapAxis axis)
         {
-            foreach (GameObject gameObject in Selection.gameObjects)
-            {
-                SnapHelper.Snap(gameObject.transform, axis);
-            }
+            foreach (var gameObject in Selection.gameObjects) SnapHelper.Snap(gameObject.transform, axis);
 
             EditorMenu.Close();
         }
@@ -38,7 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         public override void Invoke()
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
             if (!ProGrids.snapEnabled)
             {
@@ -57,7 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                     menu.Add("Align Selection To Grid/Z", () => AlignSelection(SnapAxis.Z));
                 }
 
-                Vector3 boundsSize = SelectionBoundsManager.bounds.size;
+                var boundsSize = SelectionBoundsManager.bounds.size;
                 boundsSize.x = Mathf.Round(boundsSize.x * 1000) / 1000;
                 boundsSize.y = Mathf.Round(boundsSize.y * 1000) / 1000;
                 boundsSize.z = Mathf.Round(boundsSize.z * 1000) / 1000;
@@ -68,11 +59,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             }
 
             float[] values = { 0.1f, 0.25f, 0.5f, 1, 1.5f, 2, 3, 4, 8 };
-            float snapValue = SnapHelper.value;
-            foreach (float v in values)
-            {
+            var snapValue = SnapHelper.value;
+            foreach (var v in values)
                 menu.Add(v.ToString(), Math.Abs(snapValue - v) < float.Epsilon, () => SetSnapValue(v));
-            }
 
             menu.Add("Set Custom Value",
                 () => { InputDialog.Show("Enter snapping value", snapValue.ToString(), OnSnapValueEntered); });

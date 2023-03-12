@@ -28,7 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (!Prefs.showViewStateInScene) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (!e.alt)
             {
                 cameras = null;
@@ -43,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 cameras = Object.FindObjectsOfType<Camera>();
                 lastUpdateTime = EditorApplication.timeSinceStartup;
 
-                int countStates = viewStates.Length + cameras.Length;
+                var countStates = viewStates.Length + cameras.Length;
 
                 if (states == null) states = new ViewStateWrapper[countStates];
                 else if (states.Length < countStates) states = new ViewStateWrapper[countStates];
@@ -51,18 +51,18 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (viewStates == null || cameras == null || viewStates.Length + cameras.Length == 0) return;
 
-            Camera camera = sceneView.camera;
-            Vector3 cameraPosition = camera.transform.position;
+            var camera = sceneView.camera;
+            var cameraPosition = camera.transform.position;
 
             Handles.BeginGUI();
 
-            for (int i = 0; i < viewStates.Length; i++)
+            for (var i = 0; i < viewStates.Length; i++)
             {
-                ViewState state = viewStates[i];
-                Vector3 position = state.position;
-                float magnitude = (position - cameraPosition).magnitude;
+                var state = viewStates[i];
+                var position = state.position;
+                var magnitude = (position - cameraPosition).magnitude;
 
-                Vector2 point = HandleUtility.WorldToGUIPoint(position);
+                var point = HandleUtility.WorldToGUIPoint(position);
                 states[i] = new ViewStateWrapper
                 {
                     state = state,
@@ -74,11 +74,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             for (int i = 0, j = viewStates.Length; i < cameras.Length; i++, j++)
             {
-                Camera cam = cameras[i];
-                Vector3 position = cam.transform.position;
-                float magnitude = (position - cameraPosition).magnitude;
+                var cam = cameras[i];
+                var position = cam.transform.position;
+                var magnitude = (position - cameraPosition).magnitude;
 
-                Vector2 point = HandleUtility.WorldToGUIPoint(position);
+                var point = HandleUtility.WorldToGUIPoint(position);
                 states[j] = new ViewStateWrapper
                 {
                     camera = cam,
@@ -96,7 +96,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
 
             if (viewStyle == null)
-            {
                 viewStyle = new GUIStyle
                 {
                     imagePosition = ImagePosition.ImageAbove,
@@ -106,29 +105,24 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         textColor = Color.white
                     }
                 };
-            }
 
-            Vector2 mousePosition = e.mousePosition;
-            bool used = false;
+            var mousePosition = e.mousePosition;
+            var used = false;
 
-            foreach (ViewStateWrapper w in states.OrderByDescending(s => s.distance))
+            foreach (var w in states.OrderByDescending(s => s.distance))
             {
-                Vector3 vp = camera.WorldToViewportPoint(w.position);
+                var vp = camera.WorldToViewportPoint(w.position);
                 if (vp.x < 0 || vp.y < 0 || vp.x > 1 || vp.y > 1 || vp.z < 0) continue;
 
                 viewContent.text = w.title + "\nDistance: " + w.distance.ToString("F0") + " meters";
-                Rect rect = new Rect(w.screenPoint.x - 24, w.screenPoint.y - 12, 48, 48);
+                var rect = new Rect(w.screenPoint.x - 24, w.screenPoint.y - 12, 48, 48);
 
                 if (rect.Contains(mousePosition)) GUI.color = new Color32(211, 211, 211, 255);
 
                 if (w.state != null)
-                {
                     viewContent.image = eyeTexture;
-                }
                 else
-                {
                     viewContent.image = emptyTexture;
-                }
 
                 if (GUI.Button(rect, viewContent, viewStyle) && !used)
                 {

@@ -12,10 +12,9 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (target == null) return;
 
-            Delegate[] hooks = target.GetInvocationList();
+            var hooks = target.GetInvocationList();
 
-            for (int i = 0; i < hooks.Length; i++)
-            {
+            for (var i = 0; i < hooks.Length; i++)
                 try
                 {
                     hooks[i].DynamicInvoke(args);
@@ -28,7 +27,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(e);
                 }
-            }
         }
     }
 }

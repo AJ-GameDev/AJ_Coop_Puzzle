@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 {
@@ -20,7 +21,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_drawFoldoutInspectorMethod == null)
                     _drawFoldoutInspectorMethod = type.GetMethod("DrawFoldoutInspector", Reflection.StaticLookup, null,
-                        new[] { typeof(UnityEngine.Object), typeof(Editor).MakeByRefType() }, null);
+                        new[] { typeof(Object), typeof(Editor).MakeByRefType() }, null);
                 return _drawFoldoutInspectorMethod;
             }
         }
@@ -46,10 +47,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        private static Type type
-        {
-            get => typeof(Editor);
-        }
+        private static Type type => typeof(Editor);
 
         public static Rect DrawHeaderGUI(Editor editor)
         {

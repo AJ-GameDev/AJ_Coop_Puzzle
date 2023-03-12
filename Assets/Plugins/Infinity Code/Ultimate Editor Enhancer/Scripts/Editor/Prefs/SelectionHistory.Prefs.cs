@@ -34,10 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return Order.selectionHistory; }
-            }
+            public override float order => Order.selectionHistory;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -48,7 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Set Prev GameObject Selection", "Everywhere", selectionHistoryModifiers,
                         selectionHistoryPrevKeyCode),
                     new Shortcut("Set Next GameObject Selection", "Everywhere", selectionHistoryModifiers,
-                        selectionHistoryNextKeyCode),
+                        selectionHistoryNextKeyCode)
                 };
             }
 

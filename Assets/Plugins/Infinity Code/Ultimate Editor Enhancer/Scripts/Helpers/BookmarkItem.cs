@@ -29,18 +29,18 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             target = obj;
 
-            Type t = obj.GetType();
+            var t = obj.GetType();
             type = t.AssemblyQualifiedName;
 
             if (obj is GameObject)
             {
-                GameObject go = obj as GameObject;
+                var go = obj as GameObject;
                 title = go.name;
                 tooltip = GetTransformPath(go.transform).ToString();
             }
             else if (obj is Component)
             {
-                GameObject go = (obj as Component).gameObject;
+                var go = (obj as Component).gameObject;
                 title = go.name + " (" + t.Name + ")";
                 tooltip = GetTransformPath(go.transform).ToString();
             }
@@ -63,10 +63,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public abstract bool isProjectItem { get; }
 
-        public virtual bool canBeRemoved
-        {
-            get => true;
-        }
+        public virtual bool canBeRemoved => true;
 
         public static StringBuilder GetTransformPath(Transform t)
         {

@@ -31,7 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetContextMenuSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(CONTEXT_MENU_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(CONTEXT_MENU_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Context Menu",
                 guiHandler = Prefs.ContextMenuManager.DrawWithToolbar,
@@ -43,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetCreateBrowserSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(CREATE_BROWSER_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(CREATE_BROWSER_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Create Browser",
                 guiHandler = Prefs.CreateBrowserManager.DrawWithToolbar,
@@ -55,7 +55,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetFavoriteWindowsSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(FAVORITE_WINDOWS_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(FAVORITE_WINDOWS_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Favorite Windows",
                 guiHandler = Prefs.FavoriteWindowsManager.DrawWithToolbar,
@@ -67,7 +67,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetGameObjectSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(GAMEOBJECT_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(GAMEOBJECT_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "GameObjects",
                 guiHandler = Prefs.GameObjectManager.DrawWithToolbar,
@@ -79,7 +79,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetHeadersSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(HEADERS_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(HEADERS_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Headers",
                 guiHandler = Prefs.HeadersManager.DrawWithToolbar,
@@ -91,7 +91,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetHierarchySettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(HIERARCHY_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(HIERARCHY_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Hierarchy",
                 guiHandler = Prefs.HierarchyManager.DrawWithToolbar,
@@ -103,7 +103,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetHighlightSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(HIGHLIGHT_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(HIGHLIGHT_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Highlighter",
                 guiHandler = Prefs.HighlightManager.DrawWithToolbar,
@@ -115,7 +115,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetInspectorSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(INSPECTOR_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(INSPECTOR_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Inspector",
                 guiHandler = Prefs.InspectorManager.DrawWithToolbar,
@@ -127,7 +127,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetNavigationSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(NAVIGATION_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(NAVIGATION_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Navigation",
                 guiHandler = Prefs.NavigationManager.DrawWithToolbar,
@@ -139,7 +139,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetQuickAccessSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(QUICK_ACCESS_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(QUICK_ACCESS_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Quick Access Bar",
                 guiHandler = Prefs.QuickAccessBarManager.DrawWithToolbar,
@@ -151,7 +151,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetSearchSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(SEARCH_WINDOWS_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(SEARCH_WINDOWS_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Search",
                 guiHandler = Prefs.SearchManager.DrawWithToolbar,
@@ -163,7 +163,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetSceneViewSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(SCENEVIEW_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(SCENEVIEW_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Scene View",
                 guiHandler = Prefs.SceneViewManager.DrawWithToolbar,
@@ -175,7 +175,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(UEE_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(UEE_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Ultimate Editor Enhancer",
                 guiHandler = Prefs.OnGUI,
@@ -187,7 +187,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetToolbarSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(TOOLBAR_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(TOOLBAR_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Toolbar",
                 guiHandler = Prefs.ToolbarManager.DrawWithToolbar,
@@ -199,7 +199,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetViewsSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(VIEWS_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(VIEWS_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Views",
                 guiHandler = Prefs.ViewGalleryManager.DrawWithToolbar,
@@ -211,7 +211,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetWailaSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(WAILA_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(WAILA_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "WAILA",
                 guiHandler = Prefs.WailaManager.DrawWithToolbar,
@@ -223,7 +223,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         [SettingsProvider]
         public static SettingsProvider GetUnsafeSettingsProvider()
         {
-            SettingsProvider provider = new SettingsProvider(UNSAFE_SETTINGS_PATH, SettingsScope.Project)
+            var provider = new SettingsProvider(UNSAFE_SETTINGS_PATH, SettingsScope.Project)
             {
                 label = "Unsafe",
                 guiHandler = Prefs.UnsafeManager.DrawWithToolbar,

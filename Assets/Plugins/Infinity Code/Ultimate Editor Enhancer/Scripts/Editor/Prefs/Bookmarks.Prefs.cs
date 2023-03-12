@@ -20,10 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return new[] { "Bookmarks" }; }
             }
 
-            public override float order
-            {
-                get { return Order.bookmarks; }
-            }
+            public override float order => Order.bookmarks;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -31,7 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return new[]
                 {
-                    new Shortcut("Open Bookmarks", "Everywhere", bookmarksModifiers, bookmarksKeyCode),
+                    new Shortcut("Open Bookmarks", "Everywhere", bookmarksModifiers, bookmarksKeyCode)
                 };
             }
 

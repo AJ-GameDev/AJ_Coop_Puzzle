@@ -14,14 +14,14 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         static ZoomShortcutBehaviour()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidate;
             binding.OnPress += OnInvoke;
         }
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.modifiers != Prefs.zoomShortcutModifiers && e.modifiers != Prefs.zoomBoostShortcutModifiers) return;
 
             if (e.keyCode == Prefs.zoomInShortcutKeyCode) MoveCamera(-1);
@@ -30,10 +30,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void MoveCamera(int direction)
         {
-            SceneView view = SceneView.lastActiveSceneView;
+            var view = SceneView.lastActiveSceneView;
             if (Event.current.modifiers == Prefs.zoomBoostShortcutModifiers) direction *= 5;
             if (!view.orthographic)
-            {
                 try
                 {
                     view.pivot += view.rotation * new Vector3(0, 0, direction * -30);
@@ -42,11 +41,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 {
                     Log.Add(e);
                 }
-            }
             else
-            {
                 view.size = Mathf.Abs(view.size) * (float)(direction * speed * 0.0149999996647239 + 1.0);
-            }
 
             Event.current.Use();
         }

@@ -10,25 +10,25 @@ using System.Text;
 namespace InfinityCode.UltimateEditorEnhancer.JSON
 {
     /// <summary>
-    /// The base class of JSON elements.
+    ///     The base class of JSON elements.
     /// </summary>
     public abstract class JsonItem : IEnumerable<JsonItem>
     {
         /// <summary>
-        /// Get the element by index
+        ///     Get the element by index
         /// </summary>
         /// <param name="index">Index of element</param>
         /// <returns>Element</returns>
         public abstract JsonItem this[int index] { get; }
 
         /// <summary>
-        /// Get the element by key.\n
-        /// Supports XPath like selectors:\n
-        /// ["key"] - get element by key.\n
-        /// ["key1/key2"] - get element key2, which is a child of the element key1.\n
-        /// ["key/N"] - where N is number. Get array element by index N, which is a child of the element key1.\n
-        /// ["key/*"] - get all array elements, which is a child of the element key1.\n
-        /// ["//key"] - get all elements with the key on the first or the deeper levels of the current element. \n
+        ///     Get the element by key.\n
+        ///     Supports XPath like selectors:\n
+        ///     ["key"] - get element by key.\n
+        ///     ["key1/key2"] - get element key2, which is a child of the element key1.\n
+        ///     ["key/N"] - where N is number. Get array element by index N, which is a child of the element key1.\n
+        ///     ["key/*"] - get all array elements, which is a child of the element key1.\n
+        ///     ["//key"] - get all elements with the key on the first or the deeper levels of the current element. \n
         /// </summary>
         /// <param name="key">Element key</param>
         /// <returns>Element</returns>
@@ -45,7 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Serializes the object and adds to the current json node.
+        ///     Serializes the object and adds to the current json node.
         /// </summary>
         /// <param name="obj">Object</param>
         /// <returns>Current json node</returns>
@@ -55,20 +55,20 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Returns the value of the child element, converted to the specified type.
+        ///     Returns the value of the child element, converted to the specified type.
         /// </summary>
         /// <typeparam name="T">Type of variable</typeparam>
         /// <param name="childName">Child element key</param>
         /// <returns>Value</returns>
         public T ChildValue<T>(string childName)
         {
-            JsonItem el = this[childName];
-            if (el == null) return default(T);
+            var el = this[childName];
+            if (el == null) return default;
             return el.Value<T>();
         }
 
         /// <summary>
-        /// Deserializes current element
+        ///     Deserializes current element
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <returns>Object</returns>
@@ -78,7 +78,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Deserializes current element
+        ///     Deserializes current element
         /// </summary>
         /// <param name="type">Type</param>
         /// <returns>Object</returns>
@@ -86,34 +86,34 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public);
 
         /// <summary>
-        /// Get all elements with the key on the first or the deeper levels of the current element.
+        ///     Get all elements with the key on the first or the deeper levels of the current element.
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>Elements</returns>
         public abstract JsonItem GetAll(string key);
 
         /// <summary>
-        /// Converts the current and the child elements to JSON string.
+        ///     Converts the current and the child elements to JSON string.
         /// </summary>
         /// <param name="b">StringBuilder instance</param>
         public abstract void ToJSON(StringBuilder b);
 
         public override string ToString()
         {
-            StringBuilder b = new StringBuilder();
+            var b = new StringBuilder();
             ToJSON(b);
             return b.ToString();
         }
 
         /// <summary>
-        /// Returns the value of the element, converted to the specified type.
+        ///     Returns the value of the element, converted to the specified type.
         /// </summary>
         /// <param name="type">Type of variable</param>
         /// <returns>Value</returns>
         public abstract object Value(Type type);
 
         /// <summary>
-        /// Returns the value of the element, converted to the specified type.
+        ///     Returns the value of the element, converted to the specified type.
         /// </summary>
         /// <typeparam name="T">Type of variable</typeparam>
         /// <returns>Value</returns>
@@ -123,7 +123,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Returns the value of the child element, converted to the specified type.
+        ///     Returns the value of the child element, converted to the specified type.
         /// </summary>
         /// <typeparam name="T">Type of variable</typeparam>
         /// <param name="childName">Child element key</param>
@@ -134,7 +134,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Returns the value of the element, converted to the specified type.
+        ///     Returns the value of the element, converted to the specified type.
         /// </summary>
         /// <typeparam name="T">Type of variable</typeparam>
         /// <returns>Value</returns>
@@ -144,7 +144,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Returns the value of the child element, converted to the specified type.
+        ///     Returns the value of the child element, converted to the specified type.
         /// </summary>
         /// <typeparam name="T">Type of variable</typeparam>
         /// <param name="childName">Child element key</param>

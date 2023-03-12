@@ -16,7 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static List<Listener> listeners;
         private static bool isDirty;
         private static bool isStopped;
-        private static HierarchyItem item;
+        private static readonly HierarchyItem item;
 
         static HierarchyItemDrawer()
         {
@@ -48,10 +48,9 @@ namespace InfinityCode.UltimateEditorEnhancer
             searchFilter = SceneHierarchyWindowRef.GetSearchFilter(lastInteractedHierarchy);
             item.Set(id, rect);
 
-            foreach (Listener listener in listeners)
+            foreach (var listener in listeners)
             {
                 if (listener.action != null)
-                {
                     try
                     {
                         listener.action(item);
@@ -60,7 +59,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         Log.Add(e);
                     }
-                }
 
                 if (isStopped) break;
             }
@@ -73,16 +71,14 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (string.IsNullOrEmpty(id)) throw new Exception("ID cannot be empty");
             if (listeners == null) listeners = new List<Listener>();
 
-            int hash = id.GetHashCode();
-            foreach (Listener listener in listeners)
-            {
+            var hash = id.GetHashCode();
+            foreach (var listener in listeners)
                 if (listener.hash == hash && listener.id == id)
                 {
                     listener.action = action;
                     listener.order = order;
                     return;
                 }
-            }
 
             listeners.Add(new Listener
             {

@@ -25,7 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
         private static Vector3 rotation;
         private static Vector3 scale;
         private static int scaleType;
-        private static string[] sizeTypeTexts = { "World Scale", "World Size" };
+        private static readonly string[] sizeTypeTexts = { "World Scale", "World Size" };
         private static GUIStyle style;
         private static Transform target;
         private static GUIContent unlinkedContent;
@@ -49,11 +49,8 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
                 return false;
             }
 
-            Object target = targets[0];
-            if (!Validate(target))
-            {
-                return false;
-            }
+            var target = targets[0];
+            if (!Validate(target)) return false;
 
             if (!inited) Init();
 
@@ -100,36 +97,33 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             if (scaleType == 0)
             {
                 EditorGUI.BeginChangeCheck();
-                Vector3 newScale = EditorGUILayout.Vector3Field("World Scale", scale);
+                var newScale = EditorGUILayout.Vector3Field("World Scale", scale);
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(target, "Change Scale");
 
-                    if (!proportional) scale = newScale;
+                    if (!proportional)
+                    {
+                        scale = newScale;
+                    }
                     else
                     {
                         if (Math.Abs(scale.x - newScale.x) > float.Epsilon)
                         {
                             if (Math.Abs(originalScale.x) > float.Epsilon)
-                            {
                                 scale = originalScale * newScale.x / originalScale.x;
-                            }
                             else scale = new Vector3(newScale.x, newScale.x, newScale.x);
                         }
                         else if (Math.Abs(scale.x - newScale.x) > float.Epsilon)
                         {
                             if (Math.Abs(originalScale.y) > float.Epsilon)
-                            {
                                 scale = originalScale * newScale.y / originalScale.y;
-                            }
                             else scale = new Vector3(newScale.y, newScale.y, newScale.y);
                         }
                         else if (Math.Abs(scale.z - newScale.z) > float.Epsilon)
                         {
                             if (Math.Abs(originalScale.z) > float.Epsilon)
-                            {
                                 scale = originalScale * newScale.z / originalScale.z;
-                            }
                             else scale = new Vector3(newScale.z, newScale.z, newScale.z);
                         }
                     }
@@ -140,9 +134,9 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             else
             {
                 EditorGUI.BeginChangeCheck();
-                Vector3 size = originalSize;
+                var size = originalSize;
                 size.Scale(scale);
-                Vector3 newSize = EditorGUILayout.Vector3Field("World Size", size);
+                var newSize = EditorGUILayout.Vector3Field("World Size", size);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (!proportional)
@@ -186,7 +180,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
                 }
             }
 
-            Rect rect = GUILayoutUtility.GetLastRect();
+            var rect = GUILayoutUtility.GetLastRect();
 
 
             const int proportionalWidth = 20;
@@ -201,19 +195,14 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             EditorGUI.BeginDisabledGroup(!canUseSize);
             scaleType = GUILayout.Toolbar(scaleType, sizeTypeTexts);
             if (scaleType == 1)
-            {
                 EditorGUILayout.HelpBox("The world size is calculated based on the contained Renderers.",
                     MessageType.None);
-            }
-
             EditorGUI.EndDisabledGroup();
 
             if (!canUseSize)
-            {
                 EditorGUILayout.HelpBox(
                     "The world size is not available because the current and child GameObjects do not contain a Renderer.",
                     MessageType.None);
-            }
         }
 
         private static void Enable(Transform transform)
@@ -222,12 +211,9 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
 
             TransformInspectorInterceptor.DrawInspector3D += DrawInspector3D;
             Selection.selectionChanged += Disable;
-            Renderer[] renderers = target.GetComponentsInChildren<Renderer>();
+            var renderers = target.GetComponentsInChildren<Renderer>();
             canUseSize = renderers.Length > 0;
-            if (canUseSize)
-            {
-                originalSize = GameObjectUtils.GetOriginalBounds(target.gameObject).size;
-            }
+            if (canUseSize) originalSize = GameObjectUtils.GetOriginalBounds(target.gameObject).size;
         }
 
         private static void Init()
@@ -242,7 +228,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             style = new GUIStyle(Styles.iconButton)
             {
                 name = null,
-                alignment = TextAnchor.MiddleCenter,
+                alignment = TextAnchor.MiddleCenter
             };
 
             activeStyle = new GUIStyle(style)

@@ -16,7 +16,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static GUIContent _tabContent;
         public bool closeOnLossFocus = true;
 
-        private EditorWindow _targetWindow;
         private bool isDragging;
         private GUIContent labelContent;
         private Vector2 lastMousePosition;
@@ -45,50 +44,50 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
         }
 
-        public EditorWindow targetWindow
-        {
-            get { return _targetWindow; }
-        }
+        public EditorWindow targetWindow { get; private set; }
 
         protected void OnDestroy()
         {
             OnPin = null;
             OnClose = null;
 
-            if (_targetWindow != null) _targetWindow.Close();
-            _targetWindow = null;
+            if (targetWindow != null) targetWindow.Close();
+            targetWindow = null;
         }
 
         protected override void OnGUI()
         {
             try
             {
-                if (_targetWindow == null)
+                if (targetWindow == null)
                 {
                     Close();
                     return;
                 }
 
-                if (closeOnLossFocus && focusedWindow != this && focusedWindow != _targetWindow)
+                if (closeOnLossFocus && focusedWindow != this && focusedWindow != targetWindow)
                 {
                     if (waitRestoreAfterPicker &&
                         (focusedWindow == null || focusedWindow.GetType() != ObjectSelectorRef.type))
                     {
-                        _targetWindow.Focus();
+                        targetWindow.Focus();
                         waitRestoreAfterPicker = false;
                     }
                     else
                     {
-                        AutoSizePopupWindow w = _targetWindow as AutoSizePopupWindow;
+                        var w = targetWindow as AutoSizePopupWindow;
                         if (w != null && !w.closeOnLossFocus)
                         {
                         }
-                        else if (TryToClose()) return;
+                        else if (TryToClose())
+                        {
+                            return;
+                        }
                     }
                 }
 
-                if (!isDragging && targetRect != _targetWindow.position &&
-                    _targetWindow.position.position != Vector2.zero) SetRect(_targetWindow.position);
+                if (!isDragging && targetRect != targetWindow.position &&
+                    targetWindow.position.position != Vector2.zero) SetRect(targetWindow.position);
 
                 base.OnGUI();
 
@@ -119,7 +118,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (labelContent != null)
             {
-                float maxWidth = position.width - 35;
+                var maxWidth = position.width - 35;
                 if (OnPin != null) maxWidth -= 20;
 
                 GUILayout.Label(labelContent, EditorStyles.whiteLabel, GUILayout.MaxWidth(maxWidth));
@@ -150,14 +149,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ProcessLabelEvents(Rect labelRect)
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.MouseDown)
             {
-                Rect r = new Rect(0, 0, labelRect.xMax, 20);
+                var r = new Rect(0, 0, labelRect.xMax, 20);
                 if (e.button == 0 && r.Contains(e.mousePosition) && GUIUtility.hotControl == 0)
                 {
                     isDragging = true;
-                    _targetWindow.Focus();
+                    targetWindow.Focus();
                     Focus();
                     lastMousePosition = GUIUtility.GUIToScreenPoint(e.mousePosition);
                     GUIUtility.hotControl = GUIUtility.GetControlID(FocusType.Passive);
@@ -171,7 +170,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     isDragging = false;
 
-                    AutoSizePopupWindow cw = _targetWindow as AutoSizePopupWindow;
+                    var cw = targetWindow as AutoSizePopupWindow;
                     if (cw != null) cw.wasMoved = true;
 
                     e.Use();
@@ -183,16 +182,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (isDragging)
                 {
-                    Vector2 mousePosition = GUIUtility.GUIToScreenPoint(e.mousePosition);
-                    Vector2 delta = mousePosition - lastMousePosition;
+                    var mousePosition = GUIUtility.GUIToScreenPoint(e.mousePosition);
+                    var delta = mousePosition - lastMousePosition;
 
-                    Rect rect = position;
+                    var rect = position;
                     rect.position += delta;
                     position = rect;
 
-                    rect = _targetWindow.position;
+                    rect = targetWindow.position;
                     rect.position += delta;
-                    _targetWindow.position = rect;
+                    targetWindow.position = rect;
 
                     lastMousePosition = mousePosition;
 
@@ -205,8 +204,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void SetRect(Rect rect)
         {
             targetRect = rect;
-            Vector2 size = new Vector2(rect.width, HEIGHT);
-            Vector2 pos = rect.position - new Vector2(0, size.y);
+            var size = new Vector2(rect.width, HEIGHT);
+            var pos = rect.position - new Vector2(0, size.y);
             position = new Rect(pos, size);
         }
 
@@ -218,9 +217,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         public static PinAndClose Show(EditorWindow window, Rect inspectorRect, Action OnClose, Action OnLock = null,
             string label = null)
         {
-            PinAndClose wnd = CreateInstance<PinAndClose>();
+            var wnd = CreateInstance<PinAndClose>();
             wnd.minSize = new Vector2(10, 10);
-            wnd._targetWindow = window;
+            wnd.targetWindow = window;
             wnd.OnClose = OnClose;
             wnd.OnPin = OnLock;
             wnd.SetRect(inspectorRect);
@@ -229,11 +228,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             wnd.Focus();
             window.Focus();
 
-            ComponentWindow cw = window as ComponentWindow;
-            if (cw != null)
-            {
-                cw.OnPositionChanged += wnd.OnTargetRectChanged;
-            }
+            var cw = window as ComponentWindow;
+            if (cw != null) cw.OnPositionChanged += wnd.OnTargetRectChanged;
 
             return wnd;
         }
@@ -251,7 +247,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (Event.current.type == EventType.Repaint)
                 {
                     waitDragAndDropEnds = false;
-                    _targetWindow.Focus();
+                    targetWindow.Focus();
                 }
 
                 return false;
@@ -268,9 +264,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public void UpdatePosition(Rect rect)
         {
-            Rect r = position;
-            Vector2 size = r.size;
-            Vector2 pos = rect.position + new Vector2(rect.width, 0) - size;
+            var r = position;
+            var size = r.size;
+            var pos = rect.position + new Vector2(rect.width, 0) - size;
             r.position = pos;
             r.size = size;
             position = r;

@@ -14,8 +14,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
     [CustomEditor(typeof(MonoBehaviour), isFallback = true)]
     public class MissedScriptEditor : Editor
     {
-        private static BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
-                                            BindingFlags.DeclaredOnly;
+        private static readonly BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                                                     BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
         private static MonoScript[] _scripts;
 
@@ -43,33 +43,31 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
         {
             candidates = new List<ReplaceCandidate>();
 
-            foreach (MonoScript script in scripts)
+            foreach (var script in scripts)
             {
-                Type type = script.GetClass();
+                var type = script.GetClass();
                 if (type == null) continue;
 
-                FieldInfo[] fields = GetFields(type).ToArray();
-                int match = 0;
-                int total = 0;
+                var fields = GetFields(type).ToArray();
+                var match = 0;
+                var total = 0;
 
-                SerializedProperty iterator = serializedObject.GetIterator();
+                var iterator = serializedObject.GetIterator();
                 iterator.Next(true);
                 while (iterator.NextVisible(false))
                 {
-                    string propName = iterator.name;
+                    var propName = iterator.name;
                     if (propName == "m_Script") continue;
 
                     total++;
                     FieldInfo field = null;
 
-                    for (int j = 0; j < fields.Length; j++)
-                    {
+                    for (var j = 0; j < fields.Length; j++)
                         if (fields[j].Name == propName)
                         {
                             field = fields[j];
                             break;
                         }
-                    }
 
                     if (field == null) continue;
 
@@ -122,10 +120,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                     }
                 }
 
-                if (match > 0)
-                {
-                    candidates.Add(new ReplaceCandidate(script, 100f * match / total));
-                }
+                if (match > 0) candidates.Add(new ReplaceCandidate(script, 100f * match / total));
             }
 
             if (candidates.Count > 0)
@@ -143,17 +138,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                 return;
             }
 
-            if (candidates == null)
-            {
-                InitCandidates();
-            }
+            if (candidates == null) InitCandidates();
 
             GUI.enabled = false;
 
-            SerializedProperty iterator = serializedObject.GetIterator();
+            var iterator = serializedObject.GetIterator();
             iterator.Next(true);
             while (iterator.NextVisible(false))
-            {
                 try
                 {
                     EditorGUILayout.PropertyField(iterator);
@@ -161,7 +152,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                 catch
                 {
                 }
-            }
 
             GUI.enabled = true;
 
@@ -170,18 +160,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                 EditorGUILayout.HelpBox(
                     "Ultimate Editor Enhancer has determined that the best replacement candidate for this missing script is " +
                     bestCandidate.script.name + ". Replace it?", MessageType.Warning);
-                if (GUILayout.Button("Use " + bestCandidate.script.name))
-                {
-                    SetScript(bestCandidate);
-                }
+                if (GUILayout.Button("Use " + bestCandidate.script.name)) SetScript(bestCandidate);
 
                 if (GUILayout.Button("Use Other"))
                 {
-                    GenericMenu menu = new GenericMenu();
+                    var menu = new GenericMenu();
 
-                    for (int i = 0; i < Mathf.Min(candidates.Count, 10); i++)
+                    for (var i = 0; i < Mathf.Min(candidates.Count, 10); i++)
                     {
-                        ReplaceCandidate candidate = candidates[i];
+                        var candidate = candidates[i];
                         menu.AddItem(new GUIContent(candidate.script.name + " [" + candidate.similarity + "%]"), false,
                             () => SetScript(candidate));
                     }
@@ -191,7 +178,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
 
                 if (GUILayout.Button("Remove Component"))
                 {
-                    GameObject go = (target as Component).gameObject;
+                    var go = (target as Component).gameObject;
                     Undo.DestroyObjectImmediate(target);
                     EditorUtility.SetDirty(go);
                 }
@@ -200,7 +187,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
             {
                 if (GUILayout.Button("Remove Component"))
                 {
-                    GameObject go = (target as Component).gameObject;
+                    var go = (target as Component).gameObject;
                     Undo.DestroyObjectImmediate(target);
                     EditorUtility.SetDirty(go);
                 }
@@ -209,7 +196,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
 
         private void SetScript(ReplaceCandidate candidate)
         {
-            SerializedProperty prop = serializedObject.FindProperty("m_Script");
+            var prop = serializedObject.FindProperty("m_Script");
             prop.objectReferenceValue = candidate.script;
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(target);
@@ -217,8 +204,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
 
         private class ReplaceCandidate
         {
-            public MonoScript script;
-            public float similarity;
+            public readonly MonoScript script;
+            public readonly float similarity;
 
             public ReplaceCandidate(MonoScript script, float similarity)
             {

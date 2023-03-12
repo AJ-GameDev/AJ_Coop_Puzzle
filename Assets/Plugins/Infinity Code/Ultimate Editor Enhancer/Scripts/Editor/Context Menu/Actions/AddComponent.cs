@@ -12,10 +12,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
     [RequireSelected]
     public class AddComponent : ActionItem, IValidatableLayoutItem
     {
-        public override float order
-        {
-            get { return -990; }
-        }
+        public override float order => -990;
 
         public bool Validate()
         {
@@ -30,7 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         public override void Invoke()
         {
             Vector2 s = Prefs.defaultWindowSize;
-            Rect rect = new Rect(GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - s / 2, s);
+            var rect = new Rect(GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - s / 2, s);
 
             ShowAddComponent(rect);
         }
@@ -39,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         {
             AddComponentWindowRef.Show(rect, Selection.gameObjects);
 
-            EditorWindow wnd = EditorWindow.GetWindow(AddComponentWindowRef.type);
+            var wnd = EditorWindow.GetWindow(AddComponentWindowRef.type);
             wnd.position = rect;
 
             PinAndClose.Show(wnd, rect, wnd.Close, "Add Component");

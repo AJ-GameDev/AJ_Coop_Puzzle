@@ -22,20 +22,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         public void Dispose()
         {
             bookmark = null;
-            for (int i = 0; i < items.Length; i++) items[i].Dispose();
+            for (var i = 0; i < items.Length; i++) items[i].Dispose();
             items = null;
         }
 
         private void InitContent()
         {
-            string assetPath = bookmark.path;
-            string[] entries = Directory.GetFiles(assetPath, "*.*", SearchOption.AllDirectories);
+            var assetPath = bookmark.path;
+            var entries = Directory.GetFiles(assetPath, "*.*", SearchOption.AllDirectories);
 
-            List<Item> temp = new List<Item>();
+            var temp = new List<Item>();
 
-            for (int i = 0; i < entries.Length; i++)
+            for (var i = 0; i < entries.Length; i++)
             {
-                string entry = entries[i];
+                var entry = entries[i];
                 if (entry.EndsWith(".meta")) continue;
 
                 temp.Add(new Item(entry));
@@ -61,7 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     labels = AssetDatabase.GetLabels(target);
                 }
 
-                FileInfo info = new FileInfo(path);
+                var info = new FileInfo(path);
                 filename = info.Name;
                 if (info.Extension.Length > 0)
                     shortFilename = filename.Substring(0, filename.Length - info.Extension.Length);
@@ -71,15 +71,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 tooltip = path;
             }
 
-            public override bool canBeRemoved
-            {
-                get => false;
-            }
+            public override bool canBeRemoved => false;
 
-            public override bool isProjectItem
-            {
-                get => true;
-            }
+            public override bool isProjectItem => true;
 
             protected override int GetSearchCount()
             {

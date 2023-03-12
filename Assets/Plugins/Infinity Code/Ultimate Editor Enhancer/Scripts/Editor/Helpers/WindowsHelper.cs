@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using InfinityCode.UltimateEditorEnhancer.Integration;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
@@ -15,14 +14,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void ShowInspector()
         {
-            Event e = Event.current;
-            Type windowType = InspectorWindowRef.type;
+            var e = Event.current;
+            var windowType = InspectorWindowRef.type;
 
             Vector2 size = Prefs.defaultWindowSize;
-            Rect rect = new Rect(GUIUtility.GUIToScreenPoint(e.mousePosition) - size / 2, Vector2.zero);
+            var rect = new Rect(GUIUtility.GUIToScreenPoint(e.mousePosition) - size / 2, Vector2.zero);
 
-            Rect windowRect = new Rect(rect.position, size);
-            EditorWindow window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
+            var windowRect = new Rect(rect.position, size);
+            var window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
             window.Show();
             window.position = windowRect;
         }
@@ -38,10 +37,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (window == null) return;
 
-            bool state = IsMaximized(window);
+            var state = IsMaximized(window);
             if (state == maximized) return;
 
-            bool logState = Debug.unityLogger.logEnabled;
+            var logState = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
             window.maximized = maximized;
             Debug.unityLogger.logEnabled = logState;
@@ -51,13 +50,16 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (window == null) return;
 
-            bool state = IsMaximized(window);
+            var state = IsMaximized(window);
             if (state == maximized) return;
 
-            bool logState = Debug.unityLogger.logEnabled;
+            var logState = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
 
-            if (maximized) window.maximized = true;
+            if (maximized)
+            {
+                window.maximized = true;
+            }
             else
             {
                 if (FullscreenEditor.IsFullscreen(window)) FullscreenEditor.ToggleFullscreen(window);

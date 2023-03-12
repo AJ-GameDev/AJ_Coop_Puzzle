@@ -18,15 +18,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             Color.yellow, new Color32(0xFF, 0xAA, 0, 255), Color.red, new Color32(0xAA, 0x00, 0xFF, 255)
         };
 
-        private static GUIStyle backgroundStyle = "sv_iconselector_back";
+        private static readonly GUIStyle backgroundStyle = "sv_iconselector_back";
         private static GUIContent[] labelIcons;
         private static GUIContent noneButtonContent;
-        private static GUIStyle noneButtonStyle = "sv_iconselector_button";
-        private static bool recursive = false;
+        private static readonly GUIStyle noneButtonStyle = "sv_iconselector_button";
+        private static bool recursive;
         private static Color selectedColor = Color.black;
-        private static GUIStyle selectionLabelStyle = "sv_iconselector_labelselection";
-        private static GUIStyle selectionStyle = "sv_iconselector_selection";
-        private static GUIStyle seperatorStyle = "sv_iconselector_sep";
+        private static readonly GUIStyle selectionLabelStyle = "sv_iconselector_labelselection";
+        private static readonly GUIStyle selectionStyle = "sv_iconselector_selection";
+        private static readonly GUIStyle seperatorStyle = "sv_iconselector_sep";
         private static GUIContent[] smallIcons;
         private static Object[] targets;
 
@@ -64,10 +64,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(6f);
-            for (int i = 0; i < labelIcons.Length / 2; i++)
+            for (var i = 0; i < labelIcons.Length / 2; i++)
             {
-                GUIContent icon = labelIcons[i];
-                Color color = colors[i];
+                var icon = labelIcons[i];
+                var color = colors[i];
                 DrawIconButton(icon, null, true, () => SetBackground(color));
             }
 
@@ -76,17 +76,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(6f);
-            for (int i = labelIcons.Length / 2; i < labelIcons.Length; i++)
+            for (var i = labelIcons.Length / 2; i < labelIcons.Length; i++)
             {
-                GUIContent icon = labelIcons[i];
-                Color color = colors[i];
+                var icon = labelIcons[i];
+                var color = colors[i];
                 DrawIconButton(icon, null, true, () => SetBackground(color));
             }
 
             GUILayout.EndHorizontal();
 
             EditorGUI.BeginChangeCheck();
-            float labelWidth = EditorGUIUtility.labelWidth;
+            var labelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 40;
             try
             {
@@ -97,10 +97,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 throw e;
             }
 
-            if (EditorGUI.EndChangeCheck())
-            {
-                SetBackground(selectedColor);
-            }
+            if (EditorGUI.EndChangeCheck()) SetBackground(selectedColor);
 
             EditorGUI.BeginChangeCheck();
             recursive = EditorGUILayout.ToggleLeft("Recursive", recursive);
@@ -113,15 +110,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (content.image == selectedIcon && Event.current.type == EventType.Repaint)
             {
-                object topLevel = GUILayoutUtilityRef.GetTopLevel();
-                Rect rect = GUILayoutGroupRef.PeekNext(topLevel);
+                var topLevel = GUILayoutUtilityRef.GetTopLevel();
+                var rect = GUILayoutGroupRef.PeekNext(topLevel);
 
                 float offset = 2;
                 rect.x -= offset;
                 rect.y -= offset;
                 rect.width = selectedIcon.width + offset * 2;
                 rect.height = selectedIcon.height + offset * 2;
-                GUIStyle style = labelIcon ? selectionLabelStyle : selectionStyle;
+                var style = labelIcon ? selectionLabelStyle : selectionStyle;
                 style.Draw(rect, GUIContent.none, false, false, false, false);
             }
 
@@ -144,16 +141,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUILayout.Space(4);
             EditorGUILayout.EndHorizontal();
 
-            Texture2D texture2D = AssetPreview.GetMiniThumbnail(targets[0]);
+            var texture2D = AssetPreview.GetMiniThumbnail(targets[0]);
 
             GUILayout.Space(4);
             GUILayout.Label("", seperatorStyle);
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(6f);
-            for (int i = 0; i < labelIcons.Length / 2; i++)
+            for (var i = 0; i < labelIcons.Length / 2; i++)
             {
-                GUIContent icon = labelIcons[i];
+                var icon = labelIcons[i];
                 DrawIconButton(icon, texture2D, true, () => SetIcon((Texture2D)icon.image));
             }
 
@@ -162,9 +159,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(6f);
-            for (int i = labelIcons.Length / 2; i < labelIcons.Length; i++)
+            for (var i = labelIcons.Length / 2; i < labelIcons.Length; i++)
             {
-                GUIContent icon = labelIcons[i];
+                var icon = labelIcons[i];
                 DrawIconButton(icon, texture2D, true, () => SetIcon((Texture2D)icon.image));
             }
 
@@ -175,9 +172,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(9f);
-            for (int i = 0; i < smallIcons.Length / 2; i++)
+            for (var i = 0; i < smallIcons.Length / 2; i++)
             {
-                GUIContent icon = smallIcons[i];
+                var icon = smallIcons[i];
                 DrawIconButton(icon, texture2D, false, () => SetIcon((Texture2D)icon.image));
             }
 
@@ -187,9 +184,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(9f);
-            for (int i = smallIcons.Length / 2; i < smallIcons.Length; ++i)
+            for (var i = smallIcons.Length / 2; i < smallIcons.Length; ++i)
             {
-                GUIContent icon = smallIcons[i];
+                var icon = smallIcons[i];
                 DrawIconButton(icon, texture2D, false, () => SetIcon((Texture2D)icon.image));
             }
 
@@ -198,39 +195,34 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (GUILayout.Button("Other"))
             {
-                int objectPickerID = GUIUtility.GetControlID("Other_Button".GetHashCode(), FocusType.Keyboard) + 1000;
+                var objectPickerID = GUIUtility.GetControlID("Other_Button".GetHashCode(), FocusType.Keyboard) + 1000;
                 EditorGUIUtility.ShowObjectPicker<Texture2D>(null, false, "", objectPickerID);
             }
 
             GUILayout.Space(6f);
             GUILayout.Label("", seperatorStyle);
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.ExecuteCommand)
-            {
                 if (e.commandName == "ObjectSelectorUpdated")
                 {
                     SetIcon(EditorGUIUtility.GetObjectPickerObject() as Texture2D);
                     GUI.changed = true;
                     e.Use();
                 }
-            }
         }
 
         private GUIContent[] GetTextures(string baseName, string postFix, int startIndex, int count)
         {
-            GUIContent[] guiContentArray = new GUIContent[count];
-            for (int index = 0; index < count; ++index)
-            {
+            var guiContentArray = new GUIContent[count];
+            for (var index = 0; index < count; ++index)
                 guiContentArray[index] = EditorGUIUtility.IconContent(baseName + (startIndex + index) + postFix);
-            }
-
             return guiContentArray;
         }
 
         protected override void OnContentGUI()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.Repaint)
                 backgroundStyle.Draw(new Rect(0, 0, position.width, position.height), false, false, false, false);
 
@@ -251,9 +243,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             SceneReferences sceneReferences = null;
 
-            for (int i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
-                GameObject target = targets[i] as GameObject;
+                var target = targets[i] as GameObject;
                 if (target == null) continue;
 
                 if (sceneReferences == null || sceneReferences.gameObject.scene != target.scene)
@@ -276,9 +268,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             SceneReferences sceneReferences = null;
 
-            for (int i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
-                GameObject target = targets[i] as GameObject;
+                var target = targets[i] as GameObject;
                 if (target == null) continue;
 
                 if (sceneReferences == null || sceneReferences.gameObject.scene != target.scene)
@@ -287,8 +279,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     EditorUtility.SetDirty(sceneReferences);
                 }
 
-                SceneReferences.HierarchyBackground background =
-                    sceneReferences.hierarchyBackgrounds.FirstOrDefault(b => b.gameObject == target);
+                var background = sceneReferences.hierarchyBackgrounds.FirstOrDefault(b => b.gameObject == target);
                 if (background == null)
                 {
                     background = new SceneReferences.HierarchyBackground
@@ -312,18 +303,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             Undo.RecordObjects(targets, "Set Icon On GameObject");
 
-            foreach (Object target in targets)
-            {
-                EditorGUIUtilityRef.SetIconForObject(target, icon);
-            }
+            foreach (var target in targets) EditorGUIUtilityRef.SetIconForObject(target, icon);
         }
 
         private void SetRecursive()
         {
             SceneReferences sceneReferences = null;
-            for (int i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
-                GameObject target = targets[0] as GameObject;
+                var target = targets[0] as GameObject;
                 if (target == null) continue;
                 if (sceneReferences == null || sceneReferences.gameObject.scene != target.scene)
                 {
@@ -333,7 +321,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     EditorUtility.SetDirty(sceneReferences);
                 }
 
-                SceneReferences.HierarchyBackground b = sceneReferences.GetBackground(target);
+                var b = sceneReferences.GetBackground(target);
                 b.recursive = recursive;
             }
         }
@@ -347,10 +335,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (targets == null || targets.Length == 0) return null;
 
-            GameObject first = targets[0] as GameObject;
+            var first = targets[0] as GameObject;
             if (first == null) return null;
 
-            GameObjectHierarchySettings wnd = CreateInstance<GameObjectHierarchySettings>();
+            var wnd = CreateInstance<GameObjectHierarchySettings>();
             GameObjectHierarchySettings.targets = targets;
             wnd.minSize = new Vector2(10, 10);
             rect = GUIUtility.GUIToScreenRect(rect);
@@ -363,10 +351,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             wnd.ShowPopup();
             wnd.Focus();
 
-            SceneReferences sceneReferences = SceneReferences.Get(first.scene, false);
+            var sceneReferences = SceneReferences.Get(first.scene, false);
             if (sceneReferences != null)
             {
-                SceneReferences.HierarchyBackground b = sceneReferences.GetBackground(first);
+                var b = sceneReferences.GetBackground(first);
                 if (b != null)
                 {
                     selectedColor = b.color;
@@ -381,7 +369,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (focusedWindow == null) return true;
 
-            Type type = focusedWindow.GetType();
+            var type = focusedWindow.GetType();
             if (type.Name == "ColorPicker" || type.Name == "ObjectSelector") return false;
 
             return base.ValidateCloseOnLossFocus();

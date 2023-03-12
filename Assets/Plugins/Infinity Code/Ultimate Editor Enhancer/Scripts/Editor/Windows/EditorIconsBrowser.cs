@@ -13,7 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     public class EditorIconsBrowser : EditorWindow
     {
         // https://github.com/nukadelic/UnityEditorIcons
-        private static string[] ico_list =
+        private static readonly string[] ico_list =
         {
             "_Help", "_Popup", "aboutwindow.mainheader", "ageialogo", "AlphabeticalSorting", "Animation.AddEvent",
             "Animation.AddKeyframe", "Animation.EventMarker", "Animation.FirstKey", "Animation.LastKey",
@@ -423,11 +423,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             items = new Dictionary<string, GUIContent>();
             Debug.unityLogger.logEnabled = false;
-            foreach (string s in ico_list.OrderBy(s => s))
+            foreach (var s in ico_list.OrderBy(s => s))
             {
                 if (items.ContainsKey(s)) continue;
 
-                GUIContent content = EditorGUIUtility.IconContent(s);
+                var content = EditorGUIUtility.IconContent(s);
 
                 if (content == null) continue;
                 if (content.image == null) continue;
@@ -442,26 +442,29 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void OnGUI()
         {
             if (hoverImage == null) hoverImage = Resources.CreateSinglePixelTexture(0, 0.2f);
-            Event e = Event.current;
+            var e = Event.current;
 
             DrawToolbar();
 
             string selectedKey = null;
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            foreach (KeyValuePair<string, GUIContent> pair in displayItems)
+            foreach (var pair in displayItems)
             {
                 EditorGUILayout.BeginHorizontal();
-                Rect rect = GUILayoutUtility.GetRect(pair.Value, EditorStyles.label, GUILayout.Height(22));
+                var rect = GUILayoutUtility.GetRect(pair.Value, EditorStyles.label, GUILayout.Height(22));
 
                 if (rect.Contains(e.mousePosition))
                 {
                     if (e.type == EventType.MouseDown)
                     {
-                        if (e.button == 0) selectedKey = pair.Key;
+                        if (e.button == 0)
+                        {
+                            selectedKey = pair.Key;
+                        }
                         else if (e.button == 1)
                         {
-                            GenericMenuEx menu = GenericMenuEx.Start();
+                            var menu = GenericMenuEx.Start();
                             menu.Add("Export", false, ExportIcon, pair.Key);
                             menu.Show();
                         }
@@ -510,9 +513,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             if (GUILayoutUtils.ToolbarButton(TempContent.Get("?", "Help")))
-            {
                 Links.OpenDocumentation("editor-icon-browser");
-            }
 
             if (EditorGUI.EndChangeCheck()) UpdateFilteredItems();
 
@@ -521,14 +522,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void ExportIcon(object data)
         {
-            string icon = data as string;
-            GUIContent content = EditorGUIUtility.IconContent(icon);
+            var icon = data as string;
+            var content = EditorGUIUtility.IconContent(icon);
             if (content == null || content.image == null) return;
 
-            string filename = EditorUtility.SaveFilePanel("Export " + icon, Application.dataPath, icon, "png");
+            var filename = EditorUtility.SaveFilePanel("Export " + icon, Application.dataPath, icon, "png");
             if (string.IsNullOrEmpty(filename)) return;
 
-            Texture2D texture = Resources.DuplicateTexture(content.image);
+            var texture = Resources.DuplicateTexture(content.image);
             File.WriteAllBytes(filename, texture.EncodeToPNG());
             EditorUtility.RevealInFinder(filename);
         }
@@ -541,10 +542,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void UpdateFilteredItems()
         {
-            if (string.IsNullOrEmpty(_filter)) displayItems = items;
+            if (string.IsNullOrEmpty(_filter))
+            {
+                displayItems = items;
+            }
             else
             {
-                string f = _filter.ToUpperInvariant();
+                var f = _filter.ToUpperInvariant();
                 displayItems = items.Where(i => i.Key.ToUpperInvariant().Contains(f))
                     .ToDictionary(k => k.Key, v => v.Value);
             }

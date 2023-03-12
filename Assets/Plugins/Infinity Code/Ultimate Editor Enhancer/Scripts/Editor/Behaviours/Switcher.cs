@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System.Collections;
 using System.Linq;
 using InfinityCode.UltimateEditorEnhancer.Integration;
 using InfinityCode.UltimateEditorEnhancer.SceneTools;
@@ -17,7 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     {
         static Switcher()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += () => Prefs.switcher;
             binding.OnPress += OnInvoke;
 
@@ -28,8 +27,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (FullscreenEditor.isPresent)
             {
-                EditorWindow[] activeWindows = UnityEngine.Resources.FindObjectsOfTypeAll<EditorWindow>();
-                EditorWindow fullScreenWindow = activeWindows.FirstOrDefault(FullscreenEditor.IsFullscreen);
+                var activeWindows = UnityEngine.Resources.FindObjectsOfTypeAll<EditorWindow>();
+                var fullScreenWindow = activeWindows.FirstOrDefault(FullscreenEditor.IsFullscreen);
                 if (fullScreenWindow != null && !(fullScreenWindow is SceneView))
                 {
                     FullscreenEditor.OpenFullscreenSceneView();
@@ -37,16 +36,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 }
             }
 
-            IList list = Compatibility.GetGameViews();
+            var list = Compatibility.GetGameViews();
             if (list == null || list.Count == 0) return;
 
-            EditorWindow gameView = list[0] as EditorWindow;
+            var gameView = list[0] as EditorWindow;
             if (gameView == null || !gameView.maximized) return;
 
             gameView.maximized = false;
             gameView.Repaint();
 
-            SceneView sceneView = SceneView.lastActiveSceneView;
+            var sceneView = SceneView.lastActiveSceneView;
             if (sceneView == null) return;
 
             sceneView.Focus();
@@ -55,7 +54,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (Prefs.switcherWindows && e.keyCode == Prefs.switcherWindowsKeyCode &&
                 e.modifiers == Prefs.switcherWindowsModifiers) OnSwitch();
         }
@@ -76,20 +75,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void OnSwitch()
         {
-            EditorWindow window = EditorWindow.focusedWindow;
+            var window = EditorWindow.focusedWindow;
             if (window == null)
             {
                 window = EditorWindow.mouseOverWindow;
                 if (window == null) return;
             }
 
-            EditorWindow[] activeWindows = UnityEngine.Resources.FindObjectsOfTypeAll<EditorWindow>();
+            var activeWindows = UnityEngine.Resources.FindObjectsOfTypeAll<EditorWindow>();
 
             if (ToggleFullscreenEditorWindows(activeWindows)) return;
 
-            EditorWindow maximizedWindow = activeWindows.FirstOrDefault(w => w.maximized);
+            var maximizedWindow = activeWindows.FirstOrDefault(w => w.maximized);
 
-            bool maximized = maximizedWindow != null;
+            var maximized = maximizedWindow != null;
 
             if (maximized)
             {
@@ -99,18 +98,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             }
 
             if (window is SceneView)
-            {
                 SwitchToGameView(maximized);
-            }
             else if (window is PinAndClose || window == QuickAccess.activeWindow ||
                      window == ObjectToolbar.activeWindow)
-            {
                 SwitchToGameView(maximized);
-            }
             else
-            {
                 SwitchToSceneView(maximized);
-            }
 
             Event.current.Use();
         }
@@ -119,8 +112,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (FullscreenEditor.isPresent)
             {
-                EditorWindow[] activeWindows = UnityEngine.Resources.FindObjectsOfTypeAll<EditorWindow>();
-                EditorWindow fullScreenWindow = activeWindows.FirstOrDefault(FullscreenEditor.IsFullscreen);
+                var activeWindows = UnityEngine.Resources.FindObjectsOfTypeAll<EditorWindow>();
+                var fullScreenWindow = activeWindows.FirstOrDefault(FullscreenEditor.IsFullscreen);
                 if (fullScreenWindow != null && fullScreenWindow.GetType() != GameViewRef.type)
                 {
                     FullscreenEditor.OpenFullscreenGameView();
@@ -128,16 +121,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 }
             }
 
-            SceneView sceneView = SceneView.lastActiveSceneView;
+            var sceneView = SceneView.lastActiveSceneView;
             if (sceneView == null || !sceneView.maximized) return;
 
             sceneView.maximized = false;
             sceneView.Repaint();
 
-            IList list = Compatibility.GetGameViews();
+            var list = Compatibility.GetGameViews();
             if (list == null || list.Count == 0) return;
 
-            EditorWindow gameView = list[0] as EditorWindow;
+            var gameView = list[0] as EditorWindow;
             if (gameView != null)
             {
                 gameView.maximized = true;
@@ -147,10 +140,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         private static void SwitchToGameView(bool maximized)
         {
-            IList list = Compatibility.GetGameViews();
+            var list = Compatibility.GetGameViews();
             if (list == null || list.Count == 0) return;
 
-            EditorWindow gameView = list[0] as EditorWindow;
+            var gameView = list[0] as EditorWindow;
             if (gameView == null) return;
 
             if (maximized) gameView.maximized = true;
@@ -163,7 +156,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (SceneView.sceneViews == null || SceneView.sceneViews.Count == 0) return;
 
-            EditorWindow sceneView = SceneView.sceneViews[0] as EditorWindow;
+            var sceneView = SceneView.sceneViews[0] as EditorWindow;
             if (sceneView == null) return;
 
             if (maximized) sceneView.maximized = true;
@@ -175,13 +168,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (!FullscreenEditor.isPresent) return false;
 
-            EditorWindow fullScreenWindow = activeWindows.FirstOrDefault(FullscreenEditor.IsFullscreen);
+            var fullScreenWindow = activeWindows.FirstOrDefault(FullscreenEditor.IsFullscreen);
             if (fullScreenWindow == null) return false;
 
             if (fullScreenWindow is SceneView)
-            {
                 FullscreenEditor.OpenFullscreenGameView();
-            }
             else FullscreenEditor.OpenFullscreenSceneView();
 
             return true;

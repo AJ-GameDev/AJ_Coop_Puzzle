@@ -12,30 +12,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         public static Action<SerializedProperty, GenericMenu> OnAddMenuItems;
 
-        protected override MethodInfo originalMethod
-        {
-            get => PropertyHandlerRef.addMenuItemsMethod;
-        }
+        protected override MethodInfo originalMethod => PropertyHandlerRef.addMenuItemsMethod;
 
-        protected override string postfixMethodName
-        {
-            get => nameof(AddMenuItemsPostfix);
-        }
+        protected override string postfixMethodName => nameof(AddMenuItemsPostfix);
 
-        public override bool state
-        {
-            get => true;
-        }
+        public override bool state => true;
 
         private static void AddMenuItemsPostfix(SerializedProperty property, GenericMenu menu)
         {
             if (OnAddMenuItems == null) return;
-            Delegate[] invocationList = OnAddMenuItems.GetInvocationList();
+            var invocationList = OnAddMenuItems.GetInvocationList();
             object[] args = { property, menu };
 
-            for (int i = 0; i < invocationList.Length; i++)
+            for (var i = 0; i < invocationList.Length; i++)
             {
-                Delegate d = invocationList[i];
+                var d = invocationList[i];
                 try
                 {
                     d.DynamicInvoke(args);

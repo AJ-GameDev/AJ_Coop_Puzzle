@@ -10,10 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 {
     public class MaximizeSceneView : ActionItem, IValidatableLayoutItem
     {
-        public override float order
-        {
-            get { return 900; }
-        }
+        public override float order => 900;
 
         public bool Validate()
         {
@@ -34,7 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             }
             else
             {
-                string tooltip = "Maximize Active Window";
+                var tooltip = "Maximize Active Window";
                 if (FullscreenEditor.isPresent) tooltip += "\nUse SHIFT to switch the window in full screen.";
                 guiContent = new GUIContent(Icons.maximize, tooltip);
             }

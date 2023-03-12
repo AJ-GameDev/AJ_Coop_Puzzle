@@ -9,68 +9,56 @@ using System.Text;
 namespace InfinityCode.UltimateEditorEnhancer.JSON
 {
     /// <summary>
-    /// The wrapper for an array of JSON elements.
+    ///     The wrapper for an array of JSON elements.
     /// </summary>
     public class JsonArray : JsonItem
     {
-        private int _count;
-        private List<JsonItem> _items;
-
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         public JsonArray()
         {
-            _items = new List<JsonItem>();
+            items = new List<JsonItem>();
         }
 
-        public List<JsonItem> items
-        {
-            get { return _items; }
-        }
+        public List<JsonItem> items { get; }
 
         /// <summary>
-        /// Count elements
+        ///     Count elements
         /// </summary>
-        public int count
-        {
-            get { return _count; }
-        }
+        public int count { get; private set; }
 
         public override JsonItem this[int index]
         {
             get
             {
-                if (index < 0 || index >= _count) return null;
-                return _items[index];
+                if (index < 0 || index >= count) return null;
+                return items[index];
             }
         }
 
 
-        public override JsonItem this[string key]
-        {
-            get { return Get(key); }
-        }
+        public override JsonItem this[string key] => Get(key);
 
         /// <summary>
-        /// Adds an element to the array.
+        ///     Adds an element to the array.
         /// </summary>
         /// <param name="item">Element</param>
         public void Add(JsonItem item)
         {
-            _items.Add(item);
-            _count++;
+            items.Add(item);
+            count++;
         }
 
         /// <summary>
-        /// Adds an elements to the array.
+        ///     Adds an elements to the array.
         /// </summary>
         /// <param name="collection">Array of elements</param>
         public void AddRange(JsonArray collection)
         {
             if (collection == null) return;
-            _items.AddRange(collection._items);
-            _count += collection._count;
+            items.AddRange(collection.items);
+            count += collection.count;
         }
 
         public void AddRange(JsonItem collection)
@@ -80,7 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public JsonObject CreateObject()
         {
-            JsonObject obj = new JsonObject();
+            var obj = new JsonObject();
             Add(obj);
             return obj;
         }
@@ -88,28 +76,28 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         public override object Deserialize(Type type,
             BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
-            if (_count == 0) return null;
+            if (count == 0) return null;
 
             if (type.IsArray)
             {
-                Type elementType = type.GetElementType();
-                Array v = Array.CreateInstance(elementType, _count);
-                if (_items[0] is JsonObject)
+                var elementType = type.GetElementType();
+                var v = Array.CreateInstance(elementType, count);
+                if (items[0] is JsonObject)
                 {
-                    IEnumerable<MemberInfo> members = Reflection.GetMembers(elementType, bindingFlags);
-                    for (int i = 0; i < _count; i++)
+                    var members = Reflection.GetMembers(elementType, bindingFlags);
+                    for (var i = 0; i < count; i++)
                     {
-                        JsonItem child = _items[i];
-                        object item = (child as JsonObject).Deserialize(elementType, members, bindingFlags);
+                        var child = items[i];
+                        var item = (child as JsonObject).Deserialize(elementType, members, bindingFlags);
                         v.SetValue(item, i);
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < _count; i++)
+                    for (var i = 0; i < count; i++)
                     {
-                        JsonItem child = _items[i];
-                        object item = child.Deserialize(elementType, bindingFlags);
+                        var child = items[i];
+                        var item = child.Deserialize(elementType, bindingFlags);
                         v.SetValue(item, i);
                     }
                 }
@@ -119,20 +107,19 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             if (Reflection.IsGenericType(type))
             {
-                Type listType = Reflection.GetGenericArguments(type)[0];
-                object v = Activator.CreateInstance(type);
+                var listType = Reflection.GetGenericArguments(type)[0];
+                var v = Activator.CreateInstance(type);
 
-                if (_items[0] is JsonObject)
+                if (items[0] is JsonObject)
                 {
-                    IEnumerable<MemberInfo> members =
-                        Reflection.GetMembers(listType, BindingFlags.Instance | BindingFlags.Public);
-                    for (int i = 0; i < _count; i++)
+                    var members = Reflection.GetMembers(listType, BindingFlags.Instance | BindingFlags.Public);
+                    for (var i = 0; i < count; i++)
                     {
-                        JsonItem child = _items[i];
-                        object item = (child as JsonObject).Deserialize(listType, members);
+                        var child = items[i];
+                        var item = (child as JsonObject).Deserialize(listType, members);
                         try
                         {
-                            MethodInfo methodInfo = Reflection.GetMethod(type, "Add");
+                            var methodInfo = Reflection.GetMethod(type, "Add");
                             if (methodInfo != null) methodInfo.Invoke(v, new[] { item });
                         }
                         catch
@@ -142,13 +129,13 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 }
                 else
                 {
-                    for (int i = 0; i < _count; i++)
+                    for (var i = 0; i < count; i++)
                     {
-                        JsonItem child = _items[i];
-                        object item = child.Deserialize(listType);
+                        var child = items[i];
+                        var item = child.Deserialize(listType);
                         try
                         {
-                            MethodInfo methodInfo = Reflection.GetMethod(type, "Add");
+                            var methodInfo = Reflection.GetMethod(type, "Add");
                             if (methodInfo != null) methodInfo.Invoke(v, new[] { item });
                         }
                         catch
@@ -170,7 +157,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             if (key.StartsWith("//"))
             {
-                string k = key.Substring(2);
+                var k = key.Substring(2);
                 if (string.IsNullOrEmpty(k) || k.StartsWith("//")) return null;
                 return GetAll(k);
             }
@@ -184,16 +171,16 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             if (key.Contains("/"))
             {
-                int index = key.IndexOf("/");
-                string k = key.Substring(0, index);
-                string nextPart = key.Substring(index + 1);
+                var index = key.IndexOf("/");
+                var k = key.Substring(0, index);
+                var nextPart = key.Substring(index + 1);
 
                 if (k == "*")
                 {
-                    JsonArray arr = new JsonArray();
-                    for (int i = 0; i < _count; i++)
+                    var arr = new JsonArray();
+                    for (var i = 0; i < count; i++)
                     {
-                        JsonItem item = _items[i][nextPart];
+                        var item = items[i][nextPart];
                         if (item != null) arr.Add(item);
                     }
 
@@ -202,8 +189,8 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
                 if (int.TryParse(k, out kindex))
                 {
-                    if (kindex < 0 || kindex >= _count) return null;
-                    JsonItem item = _items[kindex];
+                    if (kindex < 0 || kindex >= count) return null;
+                    var item = items[kindex];
                     return item[nextPart];
                 }
             }
@@ -216,7 +203,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public override JsonItem GetAll(string k)
         {
-            JsonItem item = GetThis(k);
+            var item = GetThis(k);
             JsonArray arr = null;
             if (item != null)
             {
@@ -224,10 +211,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 arr.Add(item);
             }
 
-            for (int i = 0; i < _count; i++)
+            for (var i = 0; i < count; i++)
             {
-                item = _items[i];
-                JsonArray subArr = item.GetAll(k) as JsonArray;
+                item = items[i];
+                var subArr = item.GetAll(k) as JsonArray;
                 if (subArr != null)
                 {
                     if (arr == null) arr = new JsonArray();
@@ -240,11 +227,11 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public override IEnumerator<JsonItem> GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return items.GetEnumerator();
         }
 
         /// <summary>
-        /// Parse a string that contains an array
+        ///     Parse a string that contains an array
         /// </summary>
         /// <param name="json">JSON string</param>
         /// <returns>Instance</returns>
@@ -256,10 +243,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         public override void ToJSON(StringBuilder b)
         {
             b.Append("[");
-            for (int i = 0; i < _count; i++)
+            for (var i = 0; i < count; i++)
             {
                 if (i != 0) b.Append(",");
-                _items[i].ToJSON(b);
+                items[i].ToJSON(b);
             }
 
             b.Append("]");

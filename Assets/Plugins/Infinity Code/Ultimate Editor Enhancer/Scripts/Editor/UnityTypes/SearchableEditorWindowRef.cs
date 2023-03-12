@@ -16,18 +16,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             get
             {
                 if (_searchFieldGUIMethod == null)
-                {
                     _searchFieldGUIMethod = type.GetMethod("SearchFieldGUI", Reflection.InstanceLookup, null,
                         new[] { typeof(float) }, null);
-                }
-
                 return _searchFieldGUIMethod;
             }
         }
 
-        private static Type type
-        {
-            get => typeof(SearchableEditorWindow);
-        }
+        private static Type type => typeof(SearchableEditorWindow);
     }
 }

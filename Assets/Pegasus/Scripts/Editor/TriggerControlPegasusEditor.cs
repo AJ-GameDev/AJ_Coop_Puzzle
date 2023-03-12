@@ -1,32 +1,40 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Pegasus
 {
     [CustomEditor(typeof(TriggerControlPegasus))]
     public class PegasusTriggerEditor : Editor
     {
-        GUIStyle m_boxStyle;
-        GUIStyle m_wrapStyle;
-        TriggerControlPegasus m_trigger;
+        /// <summary>
+        ///     The tooltips
+        /// </summary>
+        private static readonly Dictionary<string, string> m_tooltips = new()
+        {
+            {
+                "Min Height From",
+                "Used to control how poi, lookat target and flythrough path heights are constrained. Manager - use the managers settings, collision - use whatever it collides with, terrain - use the terrain height, none - don't constrain."
+            }
+        };
+
+        private GUIStyle m_boxStyle;
+        private TriggerControlPegasus m_trigger;
+        private GUIStyle m_wrapStyle;
 
         /// <summary>
-        /// This is called when we select the poi in the editor
+        ///     This is called when we select the poi in the editor
         /// </summary>
         private void OnEnable()
         {
-            if (target == null)
-            {
-                return;
-            }
+            if (target == null) return;
 
             //Get our poi
             m_trigger = (TriggerControlPegasus)target;
         }
 
         /// <summary>
-        /// Draw the POI gui
+        ///     Draw the POI gui
         /// </summary>
         public override void OnInspectorGUI()
         {
@@ -59,16 +67,21 @@ namespace Pegasus
 
             GUILayout.Space(5);
 
-            PegasusManager poiTarget = (PegasusManager)EditorGUILayout.ObjectField(GetLabel("Target Pegasus"), m_trigger.m_pegasus, typeof(PegasusManager), true);
-            PegasusConstants.PoiPegasusTriggerAction actionOnStart = m_trigger.m_actionOnStart;
-            PegasusConstants.PoiPegasusTriggerAction actionOnEnd = m_trigger.m_actionOnEnd;
-            bool disabled = m_trigger.m_disabled;
-            bool disableAfterActioned = m_trigger.m_disableAfterActioned;
+            var poiTarget = (PegasusManager)EditorGUILayout.ObjectField(GetLabel("Target Pegasus"), m_trigger.m_pegasus,
+                typeof(PegasusManager), true);
+            var actionOnStart = m_trigger.m_actionOnStart;
+            var actionOnEnd = m_trigger.m_actionOnEnd;
+            var disabled = m_trigger.m_disabled;
+            var disableAfterActioned = m_trigger.m_disableAfterActioned;
 
             if (poiTarget != null)
             {
-                actionOnStart = (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On Start"), actionOnStart);
-                actionOnEnd = (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On End"), actionOnEnd);
+                actionOnStart =
+                    (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On Start"),
+                        actionOnStart);
+                actionOnEnd =
+                    (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On End"),
+                        actionOnEnd);
                 disableAfterActioned = EditorGUILayout.Toggle(GetLabel("Disable After Actioned"), disableAfterActioned);
                 disabled = EditorGUILayout.Toggle(GetLabel("Disabled"), disabled);
             }
@@ -115,29 +128,16 @@ namespace Pegasus
         }
 
         /// <summary>
-        /// Get a content label - look the tooltip up if possible
+        ///     Get a content label - look the tooltip up if possible
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         private GUIContent GetLabel(string name)
         {
-            string tooltip = "";
+            var tooltip = "";
             if (m_tooltips.TryGetValue(name, out tooltip))
-            {
                 return new GUIContent(name, tooltip);
-            }
-            else
-            {
-                return new GUIContent(name);
-            }
+            return new GUIContent(name);
         }
-
-        /// <summary>
-        /// The tooltips
-        /// </summary>
-        private static Dictionary<string, string> m_tooltips = new Dictionary<string, string>
-        {
-            { "Min Height From", "Used to control how poi, lookat target and flythrough path heights are constrained. Manager - use the managers settings, collision - use whatever it collides with, terrain - use the terrain height, none - don't constrain." },
-        };
     }
 }

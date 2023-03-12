@@ -12,7 +12,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (camera == null) return;
             if (view == null) view = SceneView.lastActiveSceneView;
-            Transform t = camera.transform;
+            var t = camera.transform;
             view.in2DMode = false;
             view.AlignViewToObject(t);
         }

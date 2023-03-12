@@ -66,13 +66,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public int Draw(int index)
             {
-                Rect rect = new Rect(0, index * 20, instance.position.width, 20);
+                var rect = new Rect(0, index * 20, instance.position.width, 20);
                 GUI.Box(rect, GUIContent.none, bestRecordIndex == index ? Styles.selectedRow : Styles.transparentRow);
                 if (assetPreview != null) GUI.DrawTexture(new Rect(2, rect.y + 2, 16, 16), assetPreview);
                 GUI.Label(new Rect(20, rect.y, rect.width - 20, 20), content);
 
-                Event e = Event.current;
-                int state = 0;
+                var e = Event.current;
+                var state = 0;
 
                 if (rect.Contains(e.mousePosition))
                 {
@@ -81,12 +81,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         if (e.button == 0)
                         {
                             bestRecordIndex = index;
-                            long ticks = DateTime.Now.Ticks;
-                            if (ticks - lastClickTime < 5000000)
-                            {
-                                state = ProcessDoubleClick(e);
-                            }
-
+                            var ticks = DateTime.Now.Ticks;
+                            if (ticks - lastClickTime < 5000000) state = ProcessDoubleClick(e);
                             lastClickTime = ticks;
                             e.Use();
                         }
@@ -119,10 +115,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             protected virtual void InitLabel()
             {
-                if (tooltip.Length <= maxLabelLength) _label = tooltip;
+                if (tooltip.Length <= maxLabelLength)
+                {
+                    _label = tooltip;
+                }
                 else
                 {
-                    int start = tooltip.IndexOf('/', tooltip.Length - maxLabelLength + 3);
+                    var start = tooltip.IndexOf('/', tooltip.Length - maxLabelLength + 3);
                     if (start != -1) _label = "..." + tooltip.Substring(start);
                     else _label = "..." + tooltip.Substring(tooltip.Length - maxLabelLength + 3);
                 }
@@ -144,7 +143,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             protected virtual void ShowContextMenu(int index)
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 menu.Add("Select", () => SelectRecord(index, 1));
                 menu.Add("Open", () => SelectRecord(index, 2));
 

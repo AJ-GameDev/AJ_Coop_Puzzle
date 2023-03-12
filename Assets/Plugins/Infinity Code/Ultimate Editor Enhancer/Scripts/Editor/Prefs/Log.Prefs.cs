@@ -24,10 +24,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return Order.log; }
-            }
+            public override float order => Order.log;
 
             public override void Draw()
             {

@@ -45,7 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             Vector3 pos;
 
-            RectTransform rt = firstTransform as RectTransform;
+            var rt = firstTransform as RectTransform;
 
             if (rt != null)
             {
@@ -112,7 +112,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static void DrawLabel(SceneView sceneView, string text)
         {
             if (style == null)
-            {
                 style = new GUIStyle(StyleID)
                 {
                     fontSize = 10,
@@ -121,14 +120,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     fixedHeight = 0,
                     border = new RectOffset(8, 8, 8, 8)
                 };
-            }
 
-            GUIContent content = TempContent.Get(text);
-            float pixelPerPoint = EditorGUIUtility.pixelsPerPoint;
-            Vector2 size = style.CalcSize(content);
+            var content = TempContent.Get(text);
+            var pixelPerPoint = EditorGUIUtility.pixelsPerPoint;
+            var size = style.CalcSize(content);
 
             Handles.BeginGUI();
-            Vector3 screenPoint = sceneView.camera.WorldToScreenPoint(UnityEditor.Tools.handlePosition) / pixelPerPoint;
+            var screenPoint = sceneView.camera.WorldToScreenPoint(UnityEditor.Tools.handlePosition) / pixelPerPoint;
             if (screenPoint.y > size.y + 150 / pixelPerPoint)
             {
                 screenPoint.y -= size.y + 50 / pixelPerPoint;
@@ -142,22 +140,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             lastScreenPosition = screenPoint;
 
-            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2,
+            var rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2,
                 size.x, size.y);
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.type == EventType.Repaint) GUI.Label(rect, content, style);
             else if (e.type == EventType.MouseDown)
-            {
                 if (rect.Contains(e.mousePosition))
                 {
-                    Transform[] transforms = Selection.gameObjects.Select(g => g.GetComponent<Transform>()).ToArray();
+                    var transforms = Selection.gameObjects.Select(g => g.GetComponent<Transform>()).ToArray();
                     TransformEditorWindow.ShowPopup(transforms);
 
                     e.Use();
                     SceneViewManager.BlockMouseUp();
                 }
-            }
 
             if (OnDrawLate != null) OnDrawLate(rect);
 
@@ -166,7 +162,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void InitLabel()
         {
-            Event e = Event.current;
+            var e = Event.current;
             label = null;
 
             if (!Prefs.showToolValues) return;
@@ -177,7 +173,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             StaticStringBuilder.Clear();
 
-            Tool tool = UnityEditor.Tools.current;
+            var tool = UnityEditor.Tools.current;
 #if UNITY_2020_2_OR_NEWER
             if (tool == Tool.Move || ToolManager.activeToolType == typeof(DuplicateTool))
 #else
@@ -202,7 +198,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 AppendPosition();
                 StaticStringBuilder.Append("\n");
 
-                RectTransform rt = firstTransform as RectTransform;
+                var rt = firstTransform as RectTransform;
                 if (rt != null) AppendSize(rt);
                 else AppendScale();
 
@@ -240,11 +236,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             samePositionX = samePositionY = samePositionZ =
                 sameRotationX = sameRotationY = sameRotationZ = sameScaleX = sameScaleY = sameScaleZ = true;
 
-            int[] instanceIDs = Selection.instanceIDs;
+            var instanceIDs = Selection.instanceIDs;
 
-            for (int i = 0; i < instanceIDs.Length; i++)
+            for (var i = 0; i < instanceIDs.Length; i++)
             {
-                GameObject go = EditorUtility.InstanceIDToObject(instanceIDs[i]) as GameObject;
+                var go = EditorUtility.InstanceIDToObject(instanceIDs[i]) as GameObject;
                 if (go == null || go.scene.name == null) continue;
 
                 if (firstTransform == null)
@@ -253,13 +249,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     continue;
                 }
 
-                Transform t = go.transform;
-                Vector3 p1 = t.localPosition;
-                Vector3 p2 = firstTransform.localPosition;
-                Vector3 r1 = t.eulerAngles;
-                Vector3 r2 = firstTransform.eulerAngles;
-                Vector3 s1 = t.localScale;
-                Vector3 s2 = firstTransform.localScale;
+                var t = go.transform;
+                var p1 = t.localPosition;
+                var p2 = firstTransform.localPosition;
+                var r1 = t.eulerAngles;
+                var r2 = firstTransform.eulerAngles;
+                var s1 = t.localScale;
+                var s2 = firstTransform.localScale;
                 if (samePositionX && Math.Abs(p1.x - p2.x) > float.Epsilon) samePositionX = false;
                 if (samePositionY && Math.Abs(p1.y - p2.y) > float.Epsilon) samePositionY = false;
                 if (samePositionZ && Math.Abs(p1.z - p2.z) > float.Epsilon) samePositionZ = false;

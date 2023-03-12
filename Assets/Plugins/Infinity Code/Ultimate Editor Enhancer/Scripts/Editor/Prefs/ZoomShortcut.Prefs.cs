@@ -39,10 +39,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -34; }
-            }
+            public override float order => -34;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -55,7 +52,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Super Fast Move Forward", "Scene View", zoomBoostShortcutModifiers,
                         zoomInShortcutKeyCode),
                     new Shortcut("Super Fast Move Backward", "Scene View", zoomBoostShortcutModifiers,
-                        zoomOutShortcutKeyCode),
+                        zoomOutShortcutKeyCode)
                 };
             }
 
@@ -66,7 +63,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.BeginDisabledGroup(!zoomShortcut);
                 EditorGUI.indentLevel++;
 
-                float oldLabelWidth = EditorGUIUtility.labelWidth;
+                var oldLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = labelWidth + 5;
                 zoomInShortcutKeyCode =
                     (KeyCode)EditorGUILayout.EnumPopup("Zoom In Hot Key", zoomInShortcutKeyCode, GUILayout.Width(420));

@@ -9,8 +9,6 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public class GenericMenuEx
     {
-        private static GenericMenuEx _instance;
-
         public List<GenericMenuItem> items;
 
         public GenericMenuEx()
@@ -18,20 +16,11 @@ namespace InfinityCode.UltimateEditorEnhancer
             items = new List<GenericMenuItem>();
         }
 
-        public static GenericMenuEx instance
-        {
-            get { return _instance; }
-        }
+        public static GenericMenuEx instance { get; private set; }
 
-        public GenericMenuItem this[int index]
-        {
-            get { return items[index]; }
-        }
+        public GenericMenuItem this[int index] => items[index];
 
-        public int count
-        {
-            get { return items.Count; }
-        }
+        public int count => items.Count;
 
         public void Add(string label, GenericMenu.MenuFunction action)
         {
@@ -124,8 +113,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public void Show()
         {
-            GenericMenu menu = new GenericMenu();
-            foreach (GenericMenuItem item in items)
+            var menu = new GenericMenu();
+            foreach (var item in items)
             {
                 if (item.separator) menu.AddSeparator(item.path);
                 else if (item.disabled) menu.AddDisabledItem(item.content, item.on);
@@ -146,10 +135,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static GenericMenuEx Start()
         {
-            if (_instance == null) _instance = new GenericMenuEx();
-            else _instance.items.Clear();
+            if (instance == null) instance = new GenericMenuEx();
+            else instance.items.Clear();
 
-            return _instance;
+            return instance;
         }
     }
 }

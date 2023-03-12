@@ -15,19 +15,13 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_currentField == null)
-                {
-                    _currentField = type.GetField("current", Reflection.StaticLookup);
-                }
+                if (_currentField == null) _currentField = type.GetField("current", Reflection.StaticLookup);
 
                 return _currentField;
             }
         }
 
-        public static Type type
-        {
-            get => typeof(GUISkin);
-        }
+        public static Type type => typeof(GUISkin);
 
         public static GUISkin GetCurrent()
         {

@@ -32,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void OnEnable()
         {
             folder = Resources.assetFolder + "Textures/Getting Started/";
-            string content = File.ReadAllText(folder + "_Content.json", Encoding.UTF8);
+            var content = File.ReadAllText(folder + "_Content.json", Encoding.UTF8);
 
             slides = Json.Deserialize<Slide[]>(content);
 
@@ -58,7 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (slides != null)
             {
-                foreach (Slide slide in slides) slide.Dispose();
+                foreach (var slide in slides) slide.Dispose();
                 slides = null;
             }
 
@@ -80,20 +80,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawActiveSlide()
         {
-            Event e = Event.current;
+            var e = Event.current;
 
-            Rect buttonsRect = new Rect(position.width - 35, 5, 30, 20);
+            var buttonsRect = new Rect(position.width - 35, 5, 30, 20);
 
             if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.Space || e.keyCode == KeyCode.RightArrow)
-                {
                     SetSlide(activeSlide.next);
-                }
-                else if (e.keyCode == KeyCode.Backspace || e.keyCode == KeyCode.LeftArrow)
-                {
-                    SetSlide(activeSlide.prev);
-                }
+                else if (e.keyCode == KeyCode.Backspace || e.keyCode == KeyCode.LeftArrow) SetSlide(activeSlide.prev);
 
                 UpdateTitle();
                 Repaint();
@@ -101,13 +96,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else if (e.type == EventType.MouseUp && !buttonsRect.Contains(e.mousePosition))
             {
                 if (e.button == 0)
-                {
                     SetSlide(activeSlide.next);
-                }
-                else if (e.button == 1)
-                {
-                    SetSlide(activeSlide.prev);
-                }
+                else if (e.button == 1) SetSlide(activeSlide.prev);
 
                 UpdateTitle();
 
@@ -117,7 +107,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (activeSlide.texture != null)
                 GUI.DrawTexture(new Rect(302, 2, position.width - 304, position.height - 4), activeSlide.texture);
             if (contents == null) contents = new[] { new GUIContent("?", "Open Documentation") };
-            int ti = GUI.Toolbar(buttonsRect, -1, contents);
+            var ti = GUI.Toolbar(buttonsRect, -1, contents);
             if (ti != -1) Links.OpenDocumentation(activeSlide.help);
         }
 
@@ -127,7 +117,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUI.SetNextControlName("UEEGettingStartedSearchTextField");
             EditorGUI.BeginChangeCheck();
             filterText = GUILayoutUtils.ToolbarSearchField(filterText);
-            bool changed = EditorGUI.EndChangeCheck();
+            var changed = EditorGUI.EndChangeCheck();
 
             if (resetSelection && Event.current.type == EventType.Repaint)
             {
@@ -142,17 +132,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawTableOfContent()
         {
-            bool filterChanged = DrawFilterTextField();
+            var filterChanged = DrawFilterTextField();
 
             if (filterChanged || activeSlides == null)
             {
-                if (string.IsNullOrEmpty(filterText)) activeSlides = slides.ToArray();
+                if (string.IsNullOrEmpty(filterText))
+                {
+                    activeSlides = slides.ToArray();
+                }
                 else
                 {
-                    string pattern = SearchableItem.GetPattern(filterText);
+                    var pattern = SearchableItem.GetPattern(filterText);
                     activeSlides = flatSlides.Where(p =>
                     {
-                        Slide parent = p.parent;
+                        var parent = p.parent;
                         while (parent != null)
                         {
                             if (parent.accuracy > 0)
@@ -181,15 +174,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (needReload) treeView.Reload();
 
-            Rect rect = new Rect(0, 18, 300, position.height - 18);
+            var rect = new Rect(0, 18, 300, position.height - 18);
             treeView.OnGUI(rect);
         }
 
         private void InitSlides(Slide[] slides, Slide parent, ref int index, ref Slide prev)
         {
-            for (int i = 0; i < slides.Length; i++)
+            for (var i = 0; i < slides.Length; i++)
             {
-                Slide slide = slides[i];
+                var slide = slides[i];
                 slide.parent = parent;
                 if (!string.IsNullOrEmpty(slide.image))
                 {
@@ -210,7 +203,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         [MenuItem(WindowsHelper.MenuPath + "Getting Started", false, 121)]
         public static void OpenWindow()
         {
-            GettingStarted wnd = GetWindow<GettingStarted>(true, "Getting Started", true);
+            var wnd = GetWindow<GettingStarted>(true, "Getting Started", true);
             SetSlide(activeSlide);
             wnd.UpdateTitle();
         }
@@ -221,10 +214,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (slide.slides == null) return;
 
-                bool success = false;
-                for (int i = 0; i < slide.slides.Length; i++)
+                var success = false;
+                for (var i = 0; i < slide.slides.Length; i++)
                 {
-                    Slide s = slide.slides[i];
+                    var s = slide.slides[i];
                     if (string.IsNullOrEmpty(s.image)) continue;
 
                     slide = s;
@@ -269,10 +262,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 get
                 {
-                    if (_texture == null)
-                    {
-                        _texture = AssetDatabase.LoadAssetAtPath<Texture2D>(folder + image);
-                    }
+                    if (_texture == null) _texture = AssetDatabase.LoadAssetAtPath<Texture2D>(folder + image);
 
                     return _texture;
                 }
@@ -281,12 +271,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public void Dispose()
             {
                 if (slides != null)
-                {
-                    foreach (Slide slide in slides)
-                    {
+                    foreach (var slide in slides)
                         slide.Dispose();
-                    }
-                }
 
                 slides = null;
                 next = null;
@@ -331,10 +317,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             private void BuildTree(Slide[] slides, int depth)
             {
-                for (int i = 0; i < slides.Length; i++)
+                for (var i = 0; i < slides.Length; i++)
                 {
-                    Slide slide = slides[i];
-                    GSTreeViewItem item = new GSTreeViewItem
+                    var slide = slides[i];
+                    var item = new GSTreeViewItem
                     {
                         id = slide.id,
                         depth = depth,
@@ -348,7 +334,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             protected override void SingleClickedItem(int id)
             {
-                TreeViewItem item = treeView.FindItem(id, treeView.rootItem);
+                var item = treeView.FindItem(id, treeView.rootItem);
                 SetSlide((item as GSTreeViewItem).slide);
             }
         }

@@ -19,11 +19,11 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (string.IsNullOrEmpty(_assetFolder))
                 {
-                    string[] paths = Directory.GetFiles(Application.dataPath, "Ultimate Editor Enhancer.asmdef",
+                    var paths = Directory.GetFiles(Application.dataPath, "Ultimate Editor Enhancer.asmdef",
                         SearchOption.AllDirectories);
                     if (paths.Length != 0)
                     {
-                        FileInfo info = new FileInfo(paths[0]);
+                        var info = new FileInfo(paths[0]);
                         _assetFolder = info.Directory.Parent.FullName.Substring(Application.dataPath.Length - 6) + "/";
                     }
                     else
@@ -52,7 +52,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (string.IsNullOrEmpty(_settingsFolder))
                 {
-                    DirectoryInfo info = new DirectoryInfo(assetFolder);
+                    var info = new DirectoryInfo(assetFolder);
                     _settingsFolder = info.Parent.FullName.Substring(Application.dataPath.Length - 6) +
                                       "/Ultimate Editor Enhancer Settings/";
                 }
@@ -78,7 +78,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static Texture2D CreateSinglePixelTexture(Color color)
         {
-            Texture2D t = new Texture2D(1, 1);
+            var t = new Texture2D(1, 1);
             t.SetPixel(0, 0, color);
             t.Apply();
             return t;
@@ -86,9 +86,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static Texture2D CreateTexture(int width, int height, Color color)
         {
-            Texture2D t = new Texture2D(width, height);
-            Color[] colors = new Color[width * height];
-            for (int i = 0; i < colors.Length; i++) colors[i] = color;
+            var t = new Texture2D(width, height);
+            var colors = new Color[width * height];
+            for (var i = 0; i < colors.Length; i++) colors[i] = color;
             t.SetPixels(colors);
             t.Apply();
             return t;
@@ -96,7 +96,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static Texture2D DuplicateTexture(Texture source)
         {
-            RenderTexture rt = RenderTexture.GetTemporary(
+            var rt = RenderTexture.GetTemporary(
                 source.width,
                 source.height,
                 0,
@@ -104,9 +104,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                 RenderTextureReadWrite.Linear);
 
             Graphics.Blit(source, rt);
-            RenderTexture prev = RenderTexture.active;
+            var prev = RenderTexture.active;
             RenderTexture.active = rt;
-            Texture2D texture = new Texture2D(source.width, source.height);
+            var texture = new Texture2D(source.width, source.height);
             texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
             texture.Apply();
             RenderTexture.active = prev;

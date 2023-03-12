@@ -22,12 +22,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 this.path = path;
 
-                int lastDot = -1;
-                int lastSlash = 6;
+                var lastDot = -1;
+                var lastSlash = 6;
 
-                for (int i = path.Length - 2; i >= 8; i--)
+                for (var i = path.Length - 2; i >= 8; i--)
                 {
-                    char c = path[i];
+                    var c = path[i];
                     if (c == '.')
                     {
                         if (lastDot == -1) lastDot = i;
@@ -65,16 +65,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     if (_label == null)
                     {
-                        int len = path.Length - 7;
+                        var len = path.Length - 7;
                         if (path[path.Length - 1] == '/') len--;
                         _label = path.Substring(7, len);
 
-                        int lastDot = _label.LastIndexOf(".", StringComparison.InvariantCulture);
+                        var lastDot = _label.LastIndexOf(".", StringComparison.InvariantCulture);
                         if (lastDot != -1) _label = _label.Substring(0, lastDot);
 
                         if (_label.Length > maxLabelLength)
                         {
-                            int start = _label.IndexOf("/", _label.Length - maxLabelLength + 3,
+                            var start = _label.IndexOf("/", _label.Length - maxLabelLength + 3,
                                 StringComparison.InvariantCulture);
                             if (start != -1) _label = "..." + _label.Substring(start);
                             else _label = "..." + _label.Substring(_label.Length - maxLabelLength + 3);
@@ -89,19 +89,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 get
                 {
-                    if (_tooltip == null && asset != null)
-                    {
-                        _tooltip = asset.GetType().Name + "\n" + path.Substring(7);
-                    }
-
+                    if (_tooltip == null && asset != null) _tooltip = asset.GetType().Name + "\n" + path.Substring(7);
                     return _tooltip;
                 }
             }
 
-            public override Object target
-            {
-                get => asset;
-            }
+            public override Object target => asset;
 
             public override string type
             {
@@ -109,7 +102,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     if (_type == null)
                     {
-                        Type assetType = AssetDatabase.GetMainAssetTypeAtPath(path);
+                        var assetType = AssetDatabase.GetMainAssetTypeAtPath(path);
                         if (assetType != null) _type = assetType.Name.ToLowerInvariant();
                         else _type = "missed";
                     }
@@ -129,21 +122,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 base.PrepareContextMenuExtraItems(menu);
 
                 if (type == "monoscript" && Selection.activeGameObject != null)
-                {
                     menu.Add("Add Component", () =>
                     {
                         Select(-1);
                         EventManager.BroadcastClosePopup();
                     });
-                }
                 else if (target is SceneAsset)
-                {
                     menu.Add("Open Additive", () =>
                     {
-                        string path = AssetDatabase.GetAssetPath(target);
+                        var path = AssetDatabase.GetAssetPath(target);
                         EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
                     });
-                }
 
                 menu.Add("Show In Explorer", () =>
                 {
@@ -158,9 +147,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (e.modifiers == EventModifiers.Control) state = 2;
                 else if (type == "monoscript" &&
 #if UNITY_EDITOR_OSX
-                    e.modifiers == (EventModifiers.Command | EventModifiers.Shift)
+                         e.modifiers == (EventModifiers.Command | EventModifiers.Shift)
 #else
-                         e.modifiers == (EventModifiers.Control | EventModifiers.Shift)
+                    e.modifiers == (EventModifiers.Control | EventModifiers.Shift)
 #endif
                         ) state = 3;
                 else state = 1;
@@ -169,7 +158,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public override void Select(int state)
             {
-                if (state == 2) AssetDatabase.OpenAsset(target);
+                if (state == 2)
+                {
+                    AssetDatabase.OpenAsset(target);
+                }
                 else if (state == -1 && type == "monoscript" && Selection.activeGameObject != null)
                 {
                     Selection.activeGameObject.AddComponent((target as MonoScript).GetClass());

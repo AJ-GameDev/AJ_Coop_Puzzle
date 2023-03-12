@@ -15,7 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
     [EditorTool("Duplicate Tool")]
     public class DuplicateTool : EditorTool
     {
-        public static int phase = 0;
+        public static int phase;
         private static Vector3 position;
 
         private static GUIContent labelContent;
@@ -23,7 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         private static GUIContent activeContent;
         private static GUIStyle style;
 
-        private static List<GameObject> tempItems;
+        private static readonly List<GameObject> tempItems;
         private static int lastPositionIDX;
         private Vector3Int count = Vector3Int.zero;
         private Transform parent;
@@ -60,7 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         private void Reset()
         {
-            foreach (GameObject item in tempItems) DestroyImmediate(item);
+            foreach (var item in tempItems) DestroyImmediate(item);
             tempItems.Clear();
             sourceGameObjects = null;
             labelContent = null;
@@ -73,17 +73,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (tempItems.Count > 0)
             {
                 Undo.SetCurrentGroupName("Duplicate GameObjects");
-                int group = Undo.GetCurrentGroup();
+                var group = Undo.GetCurrentGroup();
 
-                List<GameObject> gameObjects = Selection.gameObjects.ToList();
+                var gameObjects = Selection.gameObjects.ToList();
 
-                foreach (GameObject item in tempItems)
+                foreach (var item in tempItems)
                 {
-                    Transform t = item.transform;
+                    var t = item.transform;
                     while (t.childCount > 0)
                     {
-                        Transform child = t.GetChild(0);
-                        Vector3 pos = child.position;
+                        var child = t.GetChild(0);
+                        var pos = child.position;
                         child.SetParent(parent != null ? parent : t.parent, false);
                         child.position = pos;
                         child.hideFlags = HideFlags.None;
@@ -110,7 +110,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             Handles.BeginGUI();
 
             if (style == null)
-            {
                 style = new GUIStyle(ToolValues.StyleID)
                 {
                     fontSize = 10,
@@ -119,15 +118,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     fixedHeight = 0,
                     border = new RectOffset(8, 8, 8, 8)
                 };
-            }
 
-            Vector3 screenPoint = sceneView.camera.WorldToScreenPoint(position);
-            Vector2 size = style.CalcSize(labelContent);
+            var screenPoint = sceneView.camera.WorldToScreenPoint(position);
+            var size = style.CalcSize(labelContent);
             if (screenPoint.y > size.y + 150) screenPoint.y -= size.y + 50;
             else screenPoint.y += size.y + 150;
 
-            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height - screenPoint.y - size.y / 2, size.x,
-                size.y);
+            var rect = new Rect(screenPoint.x - size.x / 2, Screen.height - screenPoint.y - size.y / 2, size.x, size.y);
 
             GUI.Label(rect, labelContent, style);
             Handles.EndGUI();
@@ -146,25 +143,25 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 EditorGUI.BeginChangeCheck();
 
                 position = UnityEditor.Tools.handlePosition;
-                PositionHandle.Ids ids = PositionHandle.Ids.@default;
-                Vector3 newPosition = PositionHandle.DoPositionHandle(ids, position, Quaternion.identity);
+                var ids = PositionHandle.Ids.@default;
+                var newPosition = PositionHandle.DoPositionHandle(ids, position, Quaternion.identity);
 
                 if (EditorGUI.EndChangeCheck())
                 {
                     Waila.Close();
-                    Vector3 delta = newPosition - position;
+                    var delta = newPosition - position;
                     if (Math.Abs(delta.sqrMagnitude) < float.Epsilon) return;
 
                     sourceGameObjects = Selection.gameObjects;
-                    Transform firstTransform = sourceGameObjects[0].transform;
+                    var firstTransform = sourceGameObjects[0].transform;
                     sourceBounds = new Bounds(firstTransform.position, Vector3.zero);
                     sourceSize = SelectionBoundsManager.bounds.size;
 
                     parent = firstTransform.parent;
 
-                    for (int i = 1; i < sourceGameObjects.Length; i++)
+                    for (var i = 1; i < sourceGameObjects.Length; i++)
                     {
-                        Transform transform = sourceGameObjects[i].transform;
+                        var transform = sourceGameObjects[i].transform;
                         sourceBounds.Encapsulate(transform.position);
                         if (transform.parent != parent) parent = null;
                     }
@@ -179,22 +176,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             {
                 EditorGUI.BeginChangeCheck();
 
-                PositionHandle.Ids ids = PositionHandle.Ids.@default;
+                var ids = PositionHandle.Ids.@default;
                 if (lastPositionIDX == 0)
                 {
                     lastPositionIDX = ids.x;
                 }
                 else if (ids.x != lastPositionIDX)
                 {
-                    int delta = ids.x - lastPositionIDX;
+                    var delta = ids.x - lastPositionIDX;
                     lastPositionIDX = ids.x;
                     GUIUtility.hotControl += delta;
                 }
 
                 position = PositionHandle.DoPositionHandle(ids, position, Quaternion.identity);
 
-                Vector3 center = (startPosition + position) / 2;
-                Vector3 size = startPosition - position;
+                var center = (startPosition + position) / 2;
+                var size = startPosition - position;
 
                 if (EditorGUI.EndChangeCheck() && GUIUtility.hotControl != 0) UpdatePreviews(size);
 
@@ -215,7 +212,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 }
             }
 
-            Vector3 handlePos = position + UnityEditor.Tools.handleRotation * new Vector3(-.1f, -.1f, -.1f) *
+            var handlePos = position + UnityEditor.Tools.handleRotation * new Vector3(-.1f, -.1f, -.1f) *
                 HandleUtility.GetHandleSize(position);
             Handles.Label(handlePos, Icons.duplicate);
         }
@@ -224,10 +221,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         {
             sourceSize = SelectionBoundsManager.bounds.size;
 
-            bool snapEnabled = SnapHelper.enabled;
+            var snapEnabled = SnapHelper.enabled;
             if (snapEnabled)
             {
-                float snapValue = SnapHelper.value;
+                var snapValue = SnapHelper.value;
 
                 if (sourceSize.x < snapValue) sourceSize.x = snapValue;
                 else sourceSize.x = Mathf.RoundToInt(sourceSize.x / snapValue) * snapValue;
@@ -239,13 +236,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 else sourceSize.z = Mathf.RoundToInt(sourceSize.z / snapValue) * snapValue;
             }
 
-            bool isRectTransform = SelectionBoundsManager.isRectTransform;
+            var isRectTransform = SelectionBoundsManager.isRectTransform;
 
             count.x = Mathf.RoundToInt(Mathf.Abs(size.x / sourceSize.x));
             count.y = Mathf.RoundToInt(Mathf.Abs(size.y / sourceSize.y));
             count.z = !isRectTransform ? Mathf.RoundToInt(Mathf.Abs(size.z / sourceSize.z)) : 0;
 
-            int countItems = (count.x + 1) * (count.y + 1) * (count.z + 1) - 1;
+            var countItems = (count.x + 1) * (count.y + 1) * (count.z + 1) - 1;
             if (tempItems.Count == countItems) return;
 
             StaticStringBuilder.Clear();
@@ -253,83 +250,82 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (labelContent == null) labelContent = new GUIContent(StaticStringBuilder.GetString(true));
             else labelContent.text = StaticStringBuilder.GetString(true);
 
-            int i = 0;
+            var i = 0;
 
-            float dx = Mathf.Sign(-size.x);
-            float dy = Mathf.Sign(-size.y);
-            float dz = Mathf.Sign(-size.z);
+            var dx = Mathf.Sign(-size.x);
+            var dy = Mathf.Sign(-size.y);
+            var dz = Mathf.Sign(-size.z);
 
             while (tempItems.Count > countItems)
             {
-                int removeIndex = tempItems.Count - 1;
-                GameObject item = tempItems[removeIndex];
+                var removeIndex = tempItems.Count - 1;
+                var item = tempItems[removeIndex];
                 DestroyImmediate(item);
                 tempItems.RemoveAt(removeIndex);
             }
 
-            Vector3 sourcePos = sourceBounds.min;
-            Vector3 axis = ((Vector3)count).normalized;
+            var sourcePos = sourceBounds.min;
+            var axis = ((Vector3)count).normalized;
 
-            for (int x = 0; x <= count.x; x++)
+            for (var x = 0; x <= count.x; x++)
+            for (var y = 0; y <= count.y; y++)
+            for (var z = 0; z <= count.z; z++)
             {
-                for (int y = 0; y <= count.y; y++)
-                {
-                    for (int z = 0; z <= count.z; z++)
-                    {
-                        if (x == 0 && y == 0 && z == 0) continue;
+                if (x == 0 && y == 0 && z == 0) continue;
 
-                        GameObject item;
-                        if (i < tempItems.Count) item = tempItems[i];
+                GameObject item;
+                if (i < tempItems.Count)
+                {
+                    item = tempItems[i];
+                }
+                else
+                {
+                    item = new GameObject("temp");
+                    if (Prefs.hideDuplicateToolTemp) item.hideFlags = HideFlags.HideAndDontSave;
+                    if (isRectTransform)
+                    {
+                        item.transform.SetParent(SelectionBoundsManager.firstGameObject.transform.parent, false);
+                        item.AddComponent<RectTransform>();
+                    }
+
+                    item.transform.position = sourcePos;
+
+                    foreach (var so in sourceGameObjects)
+                    {
+                        GameObject dup;
+                        if (PrefabUtility.IsPartOfAnyPrefab(so))
+                        {
+                            var path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(so);
+                            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                            dup = PrefabUtility.InstantiatePrefab(prefab, item.transform) as GameObject;
+                        }
                         else
                         {
-                            item = new GameObject("temp");
-                            if (Prefs.hideDuplicateToolTemp) item.hideFlags = HideFlags.HideAndDontSave;
-                            if (isRectTransform)
-                            {
-                                item.transform.SetParent(SelectionBoundsManager.firstGameObject.transform.parent,
-                                    false);
-                                item.AddComponent<RectTransform>();
-                            }
-
-                            item.transform.position = sourcePos;
-
-                            foreach (GameObject so in sourceGameObjects)
-                            {
-                                GameObject dup;
-                                if (PrefabUtility.IsPartOfAnyPrefab(so))
-                                {
-                                    string path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(so);
-                                    GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                                    dup = PrefabUtility.InstantiatePrefab(prefab, item.transform) as GameObject;
-                                }
-                                else
-                                {
-                                    dup = Instantiate(so, item.transform, false);
-                                }
-
-                                dup.name = so.name;
-                                dup.transform.position = so.transform.position;
-                                dup.transform.rotation = so.transform.rotation;
-                                dup.transform.localScale = so.transform.localScale;
-                            }
-
-                            tempItems.Add(item);
+                            dup = Instantiate(so, item.transform, false);
                         }
 
-                        item.transform.position = sourcePos + new Vector3(sourceSize.x * x * dx, sourceSize.y * y * dy,
-                            sourceSize.z * z * dz);
-                        if (snapEnabled)
-                        {
-                            Vector3 pos = item.transform.position;
-                            SnapHelper.Snap(item.transform);
-                            Vector3 offset = item.transform.position - pos;
-                            offset.Scale(axis);
-                            item.transform.position = pos + offset;
-                        }
-
-                        i++;
+                        dup.name = so.name;
+                        dup.transform.position = so.transform.position;
+                        dup.transform.rotation = so.transform.rotation;
+                        dup.transform.localScale = so.transform.localScale;
                     }
+
+                    tempItems.Add(item);
                 }
+
+                item.transform.position = sourcePos +
+                                          new Vector3(sourceSize.x * x * dx, sourceSize.y * y * dy,
+                                              sourceSize.z * z * dz);
+                if (snapEnabled)
+                {
+                    var pos = item.transform.position;
+                    SnapHelper.Snap(item.transform);
+                    var offset = item.transform.position - pos;
+                    offset.Scale(axis);
+                    item.transform.position = pos + offset;
+                }
+
+                i++;
             }
         }
     }

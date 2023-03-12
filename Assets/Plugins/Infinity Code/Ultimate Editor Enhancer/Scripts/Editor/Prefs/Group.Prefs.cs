@@ -32,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return new[]
                 {
-                    new Shortcut("Group GameObjects", "Everywhere", groupModifiers, groupKeyCode),
+                    new Shortcut("Group GameObjects", "Everywhere", groupModifiers, groupKeyCode)
                 };
             }
 

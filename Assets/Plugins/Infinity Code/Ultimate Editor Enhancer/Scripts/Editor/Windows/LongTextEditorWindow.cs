@@ -36,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return;
             }
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter)
@@ -59,22 +59,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 style.wordWrap = true;
             }
 
-            float textfieldWidth = position.width - 38;
+            var textfieldWidth = position.width - 38;
             if (e.type == EventType.Repaint)
             {
-                float height = style.CalcHeight(TempContent.Get(_text), textfieldWidth);
-                Rect r = position;
+                var height = style.CalcHeight(TempContent.Get(_text), textfieldWidth);
+                var r = position;
                 r.height = height + 4;
                 position = r;
             }
 
             EditorGUILayout.BeginHorizontal();
             _text = EditorGUILayout.TextArea(_text, style, GUILayout.Width(textfieldWidth));
-            if (GUILayout.Button("OK", GUILayout.Width(30)))
-            {
-                Close();
-            }
-
+            if (GUILayout.Button("OK", GUILayout.Width(30))) Close();
             EditorGUILayout.EndHorizontal();
         }
 
@@ -82,7 +78,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             rect.position = GUIUtility.GUIToScreenPoint(rect.position);
 
-            LongTextEditorWindow wnd = CreateInstance<LongTextEditorWindow>();
+            var wnd = CreateInstance<LongTextEditorWindow>();
             wnd._text = wnd.originalText = text;
             wnd.ShowPopup();
             wnd.minSize = Vector2.one;

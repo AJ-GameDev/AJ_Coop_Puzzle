@@ -65,7 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             targets = targets.Where(t => t != null).ToArray();
             if (targets.Length == 0) return null;
 
-            ObjectWindow wnd = CreateInstance<ObjectWindow>();
+            var wnd = CreateInstance<ObjectWindow>();
             wnd.titleContent = new GUIContent(targets[0].name);
             wnd.targets = targets;
             wnd.minSize = Vector2.one;
@@ -74,7 +74,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             wnd.Focus();
             if (Event.current != null)
             {
-                Vector2 screenPoint = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
+                var screenPoint = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
                 Vector2 size = Prefs.defaultWindowSize;
                 wnd.position = new Rect(screenPoint - size / 2, size);
             }
@@ -88,18 +88,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             targets = targets.Where(t => t != null).ToArray();
             if (targets.Length == 0) return null;
 
-            ObjectWindow wnd = CreateInstance<ObjectWindow>();
+            var wnd = CreateInstance<ObjectWindow>();
             wnd.targets = targets;
             wnd.minSize = Vector2.one;
 
             if (!rect.HasValue)
             {
-                Vector2 position = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
+                var position = GUIUtility.GUIToScreenPoint(Event.current.mousePosition);
                 Vector2 size = Prefs.defaultWindowSize;
                 rect = new Rect(position - size / 2, size);
             }
 
-            Rect r = rect.Value;
+            var r = rect.Value;
             if (r.y < 30) r.y = 30;
             wnd.position = r;
             wnd.ShowPopup();
@@ -119,7 +119,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             targets = targets.Where(t => t != null).ToArray();
             if (targets.Length == 0) return null;
 
-            ObjectWindow wnd = CreateInstance<ObjectWindow>();
+            var wnd = CreateInstance<ObjectWindow>();
             wnd.minSize = Vector2.one;
             wnd.titleContent = new GUIContent(targets[0].name);
             wnd.targets = targets;

@@ -11,10 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
     {
         private static PropertyInfo _topLevelProp;
 
-        public static Type type
-        {
-            get => typeof(GUILayoutUtility);
-        }
+        public static Type type => typeof(GUILayoutUtility);
 
         public static PropertyInfo topLevelProp
         {

@@ -3,13 +3,12 @@
 
 using System;
 using UnityEditor;
-using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Attributes
 {
     public class RequireComponentsAttribute : ValidateAttribute
     {
-        private Type[] types;
+        private readonly Type[] types;
 
         public RequireComponentsAttribute(params Type[] types)
         {
@@ -18,13 +17,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
 
         public override bool Validate()
         {
-            GameObject go = Selection.activeGameObject;
+            var go = Selection.activeGameObject;
             if (go == null) return false;
 
-            foreach (Type type in types)
-            {
-                if (go.GetComponent(type) != null) return true;
-            }
+            foreach (var type in types)
+                if (go.GetComponent(type) != null)
+                    return true;
 
             return false;
         }

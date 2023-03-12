@@ -20,7 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 if (_type == null)
                 {
 #if UNITY_2020_3_OR_NEWER && !UNITY_2022_2_OR_NEWER
-                    string assembly = "UnityEditor.UIElementsModule";
+                    var assembly = "UnityEditor.UIElementsModule";
 #else
                     string assembly = "UnityEditor";
 #endif

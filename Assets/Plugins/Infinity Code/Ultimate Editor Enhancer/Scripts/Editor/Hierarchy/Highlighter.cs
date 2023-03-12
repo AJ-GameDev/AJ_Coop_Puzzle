@@ -22,13 +22,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             get
             {
                 if (lastColor != Prefs.highlightHierarchyRowColor)
-                {
                     if (_hoveredTexture != null)
                     {
                         Object.DestroyImmediate(_hoveredTexture);
                         _hoveredTexture = null;
                     }
-                }
 
                 if (_hoveredTexture == null)
                 {
@@ -45,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (!Prefs.highlight) return;
             if (!(EditorWindow.mouseOverWindow is SceneView)) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (item.rect.Contains(e.mousePosition))
             {
                 if (e.modifiers == Prefs.hierarchyIconsModifiers) SceneTools.Highlighter.Highlight(item.gameObject);

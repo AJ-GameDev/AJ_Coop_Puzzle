@@ -25,25 +25,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 
         private MethodInfo _originalMethod;
 
-        protected override MethodInfo originalMethod
-        {
-            get { return EditorGUIRef.doTextFieldMethod; }
-        }
+        protected override MethodInfo originalMethod => EditorGUIRef.doTextFieldMethod;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(DoTextFieldPrefix);
-        }
+        protected override string prefixMethodName => nameof(DoTextFieldPrefix);
 
-        protected override string postfixMethodName
-        {
-            get => nameof(DoTextFieldPostfix);
-        }
+        protected override string postfixMethodName => nameof(DoTextFieldPostfix);
 
-        public override bool state
-        {
-            get => true;
-        }
+        public override bool state => true;
 
         private static void DoTextFieldPrefix(
             TextEditor editor,
@@ -77,10 +65,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             bool passwordField)
         {
             if (OnPostfix != null)
-            {
                 OnPostfix(editor, id, ref position, ref __result, style, allowedletters, ref changed, reset, multiline,
                     passwordField);
-            }
         }
     }
 }

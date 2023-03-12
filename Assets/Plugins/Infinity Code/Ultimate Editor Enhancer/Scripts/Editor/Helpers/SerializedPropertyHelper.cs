@@ -4,12 +4,13 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
     public static class SerializedPropertyHelper
     {
-        public static object EMPTY_VALUE = new object();
+        public static object EMPTY_VALUE = new();
 
         public static object GetBoxedValue(SerializedProperty prop)
         {
@@ -161,7 +162,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         prop.colorValue = (Color)value;
                         break;
                     case SerializedPropertyType.ObjectReference:
-                        prop.objectReferenceValue = (UnityEngine.Object)value;
+                        prop.objectReferenceValue = (Object)value;
                         break;
                     case SerializedPropertyType.LayerMask:
                         try
@@ -206,7 +207,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         prop.quaternionValue = (Quaternion)value;
                         break;
                     case SerializedPropertyType.ExposedReference:
-                        prop.exposedReferenceValue = (UnityEngine.Object)value;
+                        prop.exposedReferenceValue = (Object)value;
                         break;
                     case SerializedPropertyType.Vector2Int:
                         prop.vector2IntValue = (Vector2Int)value;

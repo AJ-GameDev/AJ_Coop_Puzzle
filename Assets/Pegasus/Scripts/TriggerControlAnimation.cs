@@ -4,30 +4,31 @@ using UnityEngine;
 namespace Pegasus
 {
     /// <summary>
-    /// Control the animation on the target with this trigger.
+    ///     Control the animation on the target with this trigger.
     /// </summary>
     public class TriggerControlAnimation : TriggerBase
     {
         public Animation m_targetAnimation;
-        public PegasusConstants.PoiAnimationTriggerAction m_actionOnStart = PegasusConstants.PoiAnimationTriggerAction.PlayAnimation;
-        public PegasusConstants.PoiAnimationTriggerAction m_actionOnEnd = PegasusConstants.PoiAnimationTriggerAction.DoNothing;
-        public int m_startAnimationIdx = 0;
-        public int m_endAnimation = 0;
-        private List<AnimationState> m_animations = new List<AnimationState>();
 
-        void Start()
+        public PegasusConstants.PoiAnimationTriggerAction m_actionOnStart =
+            PegasusConstants.PoiAnimationTriggerAction.PlayAnimation;
+
+        public PegasusConstants.PoiAnimationTriggerAction m_actionOnEnd =
+            PegasusConstants.PoiAnimationTriggerAction.DoNothing;
+
+        public int m_startAnimationIdx;
+        public int m_endAnimation;
+        private readonly List<AnimationState> m_animations = new();
+
+        private void Start()
         {
             if (m_targetAnimation != null)
-            {
                 foreach (AnimationState state in m_targetAnimation)
-                {
                     m_animations.Add(state);
-                }
-            }
         }
 
         /// <summary>
-        /// Called when the trigger starts
+        ///     Called when the trigger starts
         /// </summary>
         /// <param name="poi"></param>
         public override void OnStart(PegasusPoi poi)
@@ -47,18 +48,14 @@ namespace Pegasus
             if (m_triggerAtStart)
             {
                 if (m_actionOnStart == PegasusConstants.PoiAnimationTriggerAction.PlayAnimation)
-                {
                     m_targetAnimation.Play(m_animations[m_startAnimationIdx].name);
-                }
                 else if (m_actionOnStart == PegasusConstants.PoiAnimationTriggerAction.StopAnimation)
-                {
                     m_targetAnimation.Stop();
-                }
             }
         }
 
         /// <summary>
-        /// Called when the trigger ends
+        ///     Called when the trigger ends
         /// </summary>
         /// <param name="poi"></param>
         public override void OnEnd(PegasusPoi poi)
@@ -78,13 +75,9 @@ namespace Pegasus
             if (m_triggerAtEnd)
             {
                 if (m_actionOnStart == PegasusConstants.PoiAnimationTriggerAction.PlayAnimation)
-                {
                     m_targetAnimation.Play(m_animations[m_startAnimationIdx].name);
-                }
                 else if (m_actionOnStart == PegasusConstants.PoiAnimationTriggerAction.StopAnimation)
-                {
                     m_targetAnimation.Stop();
-                }
             }
         }
     }

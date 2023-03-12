@@ -11,18 +11,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
     [InitializeOnLoad]
     public static class FullscreenEditor
     {
-        private static MethodInfo getFullscreenFromViewMethod;
-        private static MethodInfo toggleFullscreenMethod;
-        private static MethodInfo makeFullscreenMethod;
-        private static MethodInfo openSceneViewMethod;
-        private static MethodInfo openGameViewMethod;
+        private static readonly MethodInfo getFullscreenFromViewMethod;
+        private static readonly MethodInfo toggleFullscreenMethod;
+        private static readonly MethodInfo makeFullscreenMethod;
+        private static readonly MethodInfo openSceneViewMethod;
+        private static readonly MethodInfo openGameViewMethod;
 
         static FullscreenEditor()
         {
-            Assembly assembly = Reflection.GetAssembly("FullscreenEditor");
+            var assembly = Reflection.GetAssembly("FullscreenEditor");
             if (assembly == null) return;
 
-            Type feType = assembly.GetType("FullscreenEditor.Fullscreen");
+            var feType = assembly.GetType("FullscreenEditor.Fullscreen");
             if (feType == null) return;
 
             getFullscreenFromViewMethod = Reflection.GetMethod(feType, "GetFullscreenFromView",
@@ -32,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
             makeFullscreenMethod = Reflection.GetMethod(feType, "MakeFullscreen",
                 new[] { typeof(Type), typeof(EditorWindow), typeof(bool) }, BindingFlags.Static | BindingFlags.Public);
 
-            Type menuItemsType = assembly.GetType("FullscreenEditor.MenuItems");
+            var menuItemsType = assembly.GetType("FullscreenEditor.MenuItems");
 
             openSceneViewMethod = Reflection.GetMethod(menuItemsType, "SVMenuItem", Reflection.StaticLookup);
             openGameViewMethod = Reflection.GetMethod(menuItemsType, "GVMenuItem", Reflection.StaticLookup);

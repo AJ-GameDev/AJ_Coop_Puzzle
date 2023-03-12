@@ -13,25 +13,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         public static Action<EditorWindow> OnGUIAfter;
         public static Action<EditorWindow> OnGUIBefore;
 
-        protected override MethodInfo originalMethod
-        {
-            get => CurveEditorWindowRef.onGUIMethod;
-        }
+        protected override MethodInfo originalMethod => CurveEditorWindowRef.onGUIMethod;
 
-        public override bool state
-        {
-            get => true;
-        }
+        public override bool state => true;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(OnGUIPrefix);
-        }
+        protected override string prefixMethodName => nameof(OnGUIPrefix);
 
-        protected override string postfixMethodName
-        {
-            get => nameof(OnGUIPostfix);
-        }
+        protected override string postfixMethodName => nameof(OnGUIPostfix);
 
         private static void OnGUIPrefix(EditorWindow __instance)
         {

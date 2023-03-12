@@ -13,10 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_flatSelector == null)
-                {
-                    _flatSelector = Resources.Load<StyleSheet>("Stylesheets/FlatSelector.uss");
-                }
+                if (_flatSelector == null) _flatSelector = Resources.Load<StyleSheet>("Stylesheets/FlatSelector.uss");
 
                 return _flatSelector;
             }

@@ -14,15 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bookmarks: []
   _favoriteWindows: []
-  _headerRules:
-  - enabled: 1
-    condition: 0
-    value: --
-    trimChars: -=
-    backgroundColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    textColor: {r: 1, g: 1, b: 1, a: 1}
-    textAlign: 1
-    textStyle: 1
+  _headerRules: []
   _quickAccessItems:
   - tooltip: Open Scene
     expanded: 0

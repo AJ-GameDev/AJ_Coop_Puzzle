@@ -14,16 +14,14 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
 
         public override void Draw()
         {
-            Transform[] transforms = TransformEditorWindow.GetTransforms();
+            var transforms = TransformEditorWindow.GetTransforms();
             if (transforms.Length <= 1) return;
 
             if (rightLabel == null)
-            {
                 rightLabel = new GUIStyle(EditorStyles.label)
                 {
                     alignment = TextAnchor.MiddleRight
                 };
-            }
 
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Align", GUILayout.ExpandWidth(false));
@@ -32,33 +30,19 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
 
             EditorGUILayout.BeginHorizontal();
 
-            Color color = GUI.color;
-            Color targetColor = Styles.isProSkin ? Color.white : Color.black;
-            float f = 0.8f;
+            var color = GUI.color;
+            var targetColor = Styles.isProSkin ? Color.white : Color.black;
+            var f = 0.8f;
             GUI.color = Color.Lerp(Color.red, targetColor, f);
 
             GUILayout.Label("X", GUILayout.ExpandWidth(false));
-            if (GUILayout.Button("Min"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 0, 1, 0, 0);
-            }
-
-            if (GUILayout.Button("Center"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 1, 1, 0, 0);
-            }
-
-            if (GUILayout.Button("Max"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 2, 1, 0, 0);
-            }
+            if (GUILayout.Button("Min")) GameObjectUtils.Align(Selection.gameObjects, 0, 1, 0, 0);
+            if (GUILayout.Button("Center")) GameObjectUtils.Align(Selection.gameObjects, 1, 1, 0, 0);
+            if (GUILayout.Button("Max")) GameObjectUtils.Align(Selection.gameObjects, 2, 1, 0, 0);
 
             GUILayout.Space(10);
 
-            if (GUILayout.Button("X"))
-            {
-                GameObjectUtils.Distribute(Selection.gameObjects, 1, 0, 0);
-            }
+            if (GUILayout.Button("X")) GameObjectUtils.Distribute(Selection.gameObjects, 1, 0, 0);
 
             EditorGUILayout.EndHorizontal();
 
@@ -67,27 +51,13 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Y", GUILayout.ExpandWidth(false));
-            if (GUILayout.Button("Min"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 0, 0, 1, 0);
-            }
-
-            if (GUILayout.Button("Center"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 1, 0, 1, 0);
-            }
-
-            if (GUILayout.Button("Max"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 2, 0, 1, 0);
-            }
+            if (GUILayout.Button("Min")) GameObjectUtils.Align(Selection.gameObjects, 0, 0, 1, 0);
+            if (GUILayout.Button("Center")) GameObjectUtils.Align(Selection.gameObjects, 1, 0, 1, 0);
+            if (GUILayout.Button("Max")) GameObjectUtils.Align(Selection.gameObjects, 2, 0, 1, 0);
 
             GUILayout.Space(10);
 
-            if (GUILayout.Button("Y"))
-            {
-                GameObjectUtils.Distribute(Selection.gameObjects, 0, 1, 0);
-            }
+            if (GUILayout.Button("Y")) GameObjectUtils.Distribute(Selection.gameObjects, 0, 1, 0);
 
             EditorGUILayout.EndHorizontal();
 
@@ -96,27 +66,13 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Z", GUILayout.ExpandWidth(false));
-            if (GUILayout.Button("Min"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 0, 0, 0, 1);
-            }
-
-            if (GUILayout.Button("Center"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 1, 0, 0, 1);
-            }
-
-            if (GUILayout.Button("Max"))
-            {
-                GameObjectUtils.Align(Selection.gameObjects, 2, 0, 0, 1);
-            }
+            if (GUILayout.Button("Min")) GameObjectUtils.Align(Selection.gameObjects, 0, 0, 0, 1);
+            if (GUILayout.Button("Center")) GameObjectUtils.Align(Selection.gameObjects, 1, 0, 0, 1);
+            if (GUILayout.Button("Max")) GameObjectUtils.Align(Selection.gameObjects, 2, 0, 0, 1);
 
             GUILayout.Space(10);
 
-            if (GUILayout.Button("Z"))
-            {
-                GameObjectUtils.Distribute(Selection.gameObjects, 0, 0, 1);
-            }
+            if (GUILayout.Button("Z")) GameObjectUtils.Distribute(Selection.gameObjects, 0, 0, 1);
 
             EditorGUILayout.EndHorizontal();
 

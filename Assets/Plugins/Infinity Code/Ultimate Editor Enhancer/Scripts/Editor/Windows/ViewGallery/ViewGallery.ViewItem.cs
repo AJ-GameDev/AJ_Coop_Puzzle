@@ -27,9 +27,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public bool Draw(Rect rect, float maxLabelWidth)
             {
-                bool status = false;
-                Event e = Event.current;
-                Rect toggleRect = new Rect(rect.xMax - 20, rect.yMin + 4, 16, 16);
+                var status = false;
+                var e = Event.current;
+                var toggleRect = new Rect(rect.xMax - 20, rect.yMin + 4, 16, 16);
                 if (rect.Contains(e.mousePosition))
                 {
                     GUI.Box(new RectOffset(2, 2, 2, 2).Add(rect), string.Empty, selectedStyle);
@@ -42,7 +42,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (allowPreview)
                 {
                     EditorGUI.BeginChangeCheck();
-                    bool v = GUI.Toggle(toggleRect, useInPreview, GUIContent.none);
+                    var v = GUI.Toggle(toggleRect, useInPreview, GUIContent.none);
                     if (EditorGUI.EndChangeCheck()) useInPreview = v;
                 }
 
@@ -70,7 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             private void ShowContextMenu()
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 PrepareMenu(menu);
                 menu.Show();
             }

@@ -14,9 +14,9 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool search = true;
         public static bool searchScript = true;
 
-        public static bool searchPauseInPlayMode = false;
+        public static bool searchPauseInPlayMode;
         public static bool searchByProject = true;
-        public static bool searchByComponents = false;
+        public static bool searchByComponents;
         public static bool searchByWindow = true;
 
         public static string searchDoNotShowOnWindows =
@@ -43,13 +43,13 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 _searchDoNotShowOnWindows =
                     searchDoNotShowOnWindows.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++)
+                for (var i = 0; i < _searchDoNotShowOnWindows.Length; i++)
                     _searchDoNotShowOnWindows[i] = _searchDoNotShowOnWindows[i].Trim();
             }
 
             if (_searchDoNotShowOnWindows.Length == 0) return false;
 
-            Type windowType = EditorWindow.focusedWindow.GetType();
+            var windowType = EditorWindow.focusedWindow.GetType();
             return _searchDoNotShowOnWindows.Contains(windowType.FullName);
         }
 
@@ -71,10 +71,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -45; }
-            }
+            public override float order => -45;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
@@ -96,7 +93,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     ),
                     new Shortcut("Close Window", "Search", "Escape"),
                     new Shortcut("Start Drag Item", "Search", "Drag Item"),
-                    new Shortcut("Show Context Menu For Item", "Search", "RMB"),
+                    new Shortcut("Show Context Menu For Item", "Search", "RMB")
                 };
             }
 
@@ -117,15 +114,15 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _searchDoNotShowOnWindows =
                         searchDoNotShowOnWindows.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++)
+                    for (var i = 0; i < _searchDoNotShowOnWindows.Length; i++)
                         _searchDoNotShowOnWindows[i] = _searchDoNotShowOnWindows[i].Trim();
                 }
 
                 EditorGUILayout.LabelField("Do Not Show On Windows");
 
                 EditorGUI.indentLevel++;
-                int removeIndex = -1;
-                for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++)
+                var removeIndex = -1;
+                for (var i = 0; i < _searchDoNotShowOnWindows.Length; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
                     _searchDoNotShowOnWindows[i] = EditorGUILayout.TextField(_searchDoNotShowOnWindows[i]);
@@ -135,10 +132,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(16);
-                if (GUILayout.Button("Add"))
-                {
-                    ArrayUtility.Add(ref _searchDoNotShowOnWindows, "");
-                }
+                if (GUILayout.Button("Add")) ArrayUtility.Add(ref _searchDoNotShowOnWindows, "");
 
                 if (GUILayout.Button(!searchWaitWindowChanged ? "Pick" : "Stop Pick", GUILayout.Width(200)))
                 {
@@ -157,10 +151,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUILayout.EndHorizontal();
 
                 if (searchWaitWindowChanged)
-                {
                     EditorGUILayout.HelpBox("Set the focus on the window you want to add to the black list.",
                         MessageType.Info);
-                }
 
                 if (removeIndex != -1)
                 {
@@ -190,10 +182,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             private void WaitWindowChanged()
             {
-                EditorWindow wnd = EditorWindow.focusedWindow;
+                var wnd = EditorWindow.focusedWindow;
 
                 if (wnd == null) return;
-                string wndType = wnd.GetType().ToString();
+                var wndType = wnd.GetType().ToString();
                 if (wndType == "UnityEditor.ProjectSettingsWindow") return;
 
                 EditorApplication.update -= WaitWindowChanged;

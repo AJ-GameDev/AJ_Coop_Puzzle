@@ -18,10 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Cache();
             }
 
-            public int count
-            {
-                get { return items.Count; }
-            }
+            public int count => items.Count;
 
             public abstract float order { get; }
 
@@ -33,7 +30,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (items != null)
                 {
-                    foreach (Item item in items) item.Dispose();
+                    foreach (var item in items) item.Dispose();
                     items = null;
                 }
             }
@@ -47,7 +44,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 EditorGUILayout.Space();
                 EditorGUILayout.EndHorizontal();
 
-                foreach (Item item in items)
+                foreach (var item in items)
                 {
                     item.Draw();
                     if (instance == null) return;
@@ -58,7 +55,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public virtual void Filter(string pattern, List<Item> filteredItems)
             {
-                foreach (Item item in items) item.Filter(pattern, filteredItems);
+                foreach (var item in items) item.Filter(pattern, filteredItems);
             }
 
             public virtual int IndexOf(Item item)

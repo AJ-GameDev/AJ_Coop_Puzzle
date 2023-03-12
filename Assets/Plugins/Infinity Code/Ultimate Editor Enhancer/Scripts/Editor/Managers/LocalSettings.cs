@@ -15,17 +15,17 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         [SerializeField] private bool _askMaximizeGameView = true;
 
-        [SerializeField] private bool _collapseQuickAccessBar = false;
+        [SerializeField] private bool _collapseQuickAccessBar;
 
         [SerializeField] private bool _enhancedHierarchyShown;
 
         [SerializeField] private bool _hideObjectToolbar;
 
-        [SerializeField] private int _upgradeID = 0;
+        [SerializeField] private int _upgradeID;
 
         public static bool askMaximizeGameView
         {
-            get { return _instance._askMaximizeGameView; }
+            get => _instance._askMaximizeGameView;
             set
             {
                 if (instance._askMaximizeGameView == value) return;
@@ -36,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static bool collapseQuickAccessBar
         {
-            get { return instance._collapseQuickAccessBar; }
+            get => instance._collapseQuickAccessBar;
             set
             {
                 if (instance._collapseQuickAccessBar == value) return;
@@ -48,7 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static bool enhancedHierarchyShown
         {
-            get { return instance._enhancedHierarchyShown; }
+            get => instance._enhancedHierarchyShown;
             set
             {
                 if (instance._enhancedHierarchyShown == value) return;
@@ -68,7 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static bool hideObjectToolbar
         {
-            get { return instance._hideObjectToolbar; }
+            get => instance._hideObjectToolbar;
             set
             {
                 if (instance._hideObjectToolbar == value) return;
@@ -79,7 +79,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static int upgradeID
         {
-            get { return instance._upgradeID; }
+            get => instance._upgradeID;
             set
             {
                 if (_instance._upgradeID >= value) return;
@@ -91,11 +91,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void Load()
         {
-            string path = Resources.settingsFolder + "LocalSettings.asset";
+            var path = Resources.settingsFolder + "LocalSettings.asset";
             try
             {
                 if (File.Exists(path))
-                {
                     try
                     {
                         _instance = AssetDatabase.LoadAssetAtPath<LocalSettings>(path);
@@ -104,14 +103,13 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         Log.Add(e);
                     }
-                }
 
                 if (_instance == null)
                 {
                     _instance = CreateInstance<LocalSettings>();
 
 #if !UEE_IGNORE_SETTINGS
-                    FileInfo info = new FileInfo(path);
+                    var info = new FileInfo(path);
                     if (!info.Directory.Exists) info.Directory.Create();
 
                     AssetDatabase.CreateAsset(_instance, path);

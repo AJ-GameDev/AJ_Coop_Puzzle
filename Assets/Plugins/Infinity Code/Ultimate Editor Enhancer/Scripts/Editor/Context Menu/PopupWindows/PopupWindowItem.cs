@@ -10,26 +10,17 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
     {
         protected GUIContent _guiContent;
 
-        public virtual GUIContent guiContent
-        {
-            get { return _guiContent; }
-        }
+        public virtual GUIContent guiContent => _guiContent;
 
-        public virtual Texture icon
-        {
-            get { return null; }
-        }
+        public virtual Texture icon => null;
 
-        protected virtual string label
-        {
-            get { return string.Empty; }
-        }
+        protected virtual string label => string.Empty;
 
         public abstract float order { get; }
 
         protected override void CalcSize()
         {
-            GUIStyle style = Styles.buttonAlignLeft;
+            var style = Styles.buttonAlignLeft;
             _size = style.CalcSize(guiContent);
             _size.x += style.margin.horizontal;
             _size.y += style.margin.bottom;
@@ -46,7 +37,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
         {
             if (!GUILayout.Button(guiContent, Styles.buttonAlignLeft)) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.button == 0)
             {
                 try
@@ -84,8 +75,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         protected virtual void ShowContextMenu()
         {
-            Vector2 mousePosition = Event.current.mousePosition;
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var mousePosition = Event.current.mousePosition;
+            var menu = GenericMenuEx.Start();
             menu.Add("Open As Tab", () =>
             {
                 try

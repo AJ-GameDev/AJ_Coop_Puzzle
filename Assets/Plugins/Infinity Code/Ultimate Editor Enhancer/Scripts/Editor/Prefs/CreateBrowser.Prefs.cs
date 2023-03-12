@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -52,9 +51,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                     createBrowserBlacklists =
                         createBrowserBlacklist.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
-                int removeIndex = -1;
+                var removeIndex = -1;
                 EditorGUI.indentLevel++;
-                for (int i = 0; i < createBrowserBlacklists.Length; i++)
+                for (var i = 0; i < createBrowserBlacklists.Length; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField(createBrowserBlacklists[i], EditorStyles.textField);
@@ -76,19 +75,15 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             private static void ProcessDragAndDropFolder()
             {
-                Event e = Event.current;
+                var e = Event.current;
                 if (e.type != EventType.DragUpdated && e.type != EventType.DragPerform) return;
-                Rect rect = GUILayoutUtility.GetLastRect();
+                var rect = GUILayoutUtility.GetLastRect();
                 if (!rect.Contains(e.mousePosition)) return;
                 if (DragAndDrop.objectReferences.Length <= 0) return;
 
-                foreach (Object o in DragAndDrop.objectReferences)
-                {
+                foreach (var o in DragAndDrop.objectReferences)
                     if (!(o is DefaultAsset))
-                    {
                         return;
-                    }
-                }
 
                 if (e.type == EventType.DragUpdated)
                 {

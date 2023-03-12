@@ -10,7 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public static bool jumpToPoint = true;
         public static bool highJumpToPoint = true;
-        public static bool alternativeJumpShortcut = false;
+        public static bool alternativeJumpShortcut;
 
         public class JumpToPointManager : StandalonePrefManager<JumpToPointManager>, IHasShortcutPref
         {
@@ -25,14 +25,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -34; }
-            }
+            public override float order => -34;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
-                List<Shortcut> shortcuts = new List<Shortcut>();
+                var shortcuts = new List<Shortcut>();
 
                 if (jumpToPoint)
                 {
@@ -44,8 +41,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (highJumpToPoint)
                 {
 #if UNITY_EDITOR_OSX
-                    string shortcut = "CMD + SHIFT + MMB";
-                    string shortcut2 = "CMD + SHIFT + SHIFT";
+                    var shortcut = "CMD + SHIFT + MMB";
+                    var shortcut2 = "CMD + SHIFT + SHIFT";
 #else
                     string shortcut = "CTRL + SHIFT + MMB";
                     string shortcut2 = "CTRL + SHIFT + SHIFT";
@@ -64,7 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 highJumpToPoint = EditorGUILayout.ToggleLeft("High Jump To Point", highJumpToPoint);
 
 #if UNITY_EDITOR_OSX
-                string alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CMD + SHIFT + SHIFT)";
+                var alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CMD + SHIFT + SHIFT)";
 #else
                 string alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CTRL + SHIFT + SHIFT)";
 #endif

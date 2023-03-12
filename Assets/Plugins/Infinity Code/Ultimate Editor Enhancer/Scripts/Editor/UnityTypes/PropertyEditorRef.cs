@@ -4,6 +4,7 @@
 using System;
 using System.Reflection;
 using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 {
@@ -20,7 +21,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_openPropertyEditorMethod == null)
                     _openPropertyEditorMethod = type.GetMethod("OpenPropertyEditor", Reflection.StaticLookup, null,
-                        new[] { typeof(UnityEngine.Object), typeof(bool) }, null);
+                        new[] { typeof(Object), typeof(bool) }, null);
                 return _openPropertyEditorMethod;
             }
         }
@@ -34,7 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static EditorWindow OpenPropertyEditor(Object obj, bool showWindow = true)
+        public static EditorWindow OpenPropertyEditor(object obj, bool showWindow = true)
         {
             return openPropertyEditorMethod.Invoke(null, new[] { obj, showWindow }) as EditorWindow;
         }

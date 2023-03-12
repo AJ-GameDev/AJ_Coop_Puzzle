@@ -14,26 +14,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
     {
         public static Func<EditorWindow, Rect> OnGetCurveEditorRect;
 
-        protected override MethodInfo originalMethod
-        {
-            get => CurveEditorWindowRef.getCurveEditorRectMethod;
-        }
+        protected override MethodInfo originalMethod => CurveEditorWindowRef.getCurveEditorRectMethod;
 
-        public override bool state
-        {
-            get => true;
-        }
+        public override bool state => true;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(GetCurveEditorRectPrefix);
-        }
+        protected override string prefixMethodName => nameof(GetCurveEditorRectPrefix);
 
         private static bool GetCurveEditorRectPrefix(EditorWindow __instance, ref Rect __result)
         {
             if (OnGetCurveEditorRect != null)
             {
-                Rect rect = OnGetCurveEditorRect(__instance);
+                var rect = OnGetCurveEditorRect(__instance);
                 if (rect != default)
                 {
                     __result = rect;

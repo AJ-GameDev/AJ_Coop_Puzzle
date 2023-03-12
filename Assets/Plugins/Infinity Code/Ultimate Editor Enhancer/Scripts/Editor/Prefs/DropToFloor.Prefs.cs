@@ -37,19 +37,15 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
-                List<Shortcut> shortcuts = new List<Shortcut>();
+                var shortcuts = new List<Shortcut>();
 
                 if (dropToFloor)
-                {
                     shortcuts.Add(new Shortcut("Drop Selected GameObject To Floor", "Scene View", dropToFloorModifiers,
                         dropToFloorKeyCode));
-                }
 
                 if (advancedDropToFloor)
-                {
                     shortcuts.Add(new Shortcut("Drop Selected GameObject To Floor (Advanced)", "Scene View",
                         advancedDropToFloorModifiers, dropToFloorKeyCode));
-                }
 
                 return shortcuts;
             }
@@ -61,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.BeginDisabledGroup(!dropToFloor);
                 EditorGUI.indentLevel++;
 
-                float oldLabelWidth = EditorGUIUtility.labelWidth;
+                var oldLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = labelWidth + 5;
                 dropToFloorKeyCode =
                     (KeyCode)EditorGUILayout.EnumPopup("Hot Key", dropToFloorKeyCode, GUILayout.Width(420));

@@ -19,10 +19,10 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         {
             if (!Prefs.dragObjectFields) return;
 
-            Object obj = property.objectReferenceValue;
+            var obj = property.objectReferenceValue;
             if (obj == null) return;
 
-            Event e = Event.current;
+            var e = Event.current;
 
             if (e.type == EventType.MouseDrag && area.Contains(e.mousePosition))
             {

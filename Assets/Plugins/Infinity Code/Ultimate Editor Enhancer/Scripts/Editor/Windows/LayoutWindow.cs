@@ -38,7 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static LayoutWindow Show(MainLayoutItem item, Rect rect)
         {
-            LayoutWindow wnd = CreateInstance<LayoutWindow>();
+            var wnd = CreateInstance<LayoutWindow>();
             wnd.minSize = Vector2.zero;
             wnd.item = item;
             wnd.position = rect;

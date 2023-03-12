@@ -17,14 +17,11 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
         [ComponentHeaderButton]
         public static bool DrawHeaderButton(Rect rectangle, Object[] targets)
         {
-            Object target = targets[0];
+            var target = targets[0];
             if (!Validate(target)) return false;
             if (!inited) Init();
 
-            if (GUI.Button(rectangle, content, style))
-            {
-                UpdateBounds(targets[0] as BoxCollider);
-            }
+            if (GUI.Button(rectangle, content, style)) UpdateBounds(targets[0] as BoxCollider);
 
             return true;
         }
@@ -32,25 +29,21 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
         private static void Init()
         {
             if (content == null)
-            {
                 content = new GUIContent(EditorIconContents.rectTransformBlueprint.image, "Detect Bounds");
-            }
 
             if (style == null)
-            {
                 style = new GUIStyle(Styles.iconButton)
                 {
                     alignment = TextAnchor.MiddleCenter
                 };
-            }
 
             inited = true;
         }
 
         private static void UpdateBounds(BoxCollider collider)
         {
-            GameObject gameObject = collider.gameObject;
-            Bounds bounds = GameObjectUtils.GetOriginalBounds(gameObject);
+            var gameObject = collider.gameObject;
+            var bounds = GameObjectUtils.GetOriginalBounds(gameObject);
             if (bounds.size == Vector3.zero) return;
 
             Undo.RecordObject(collider, "Update Collider Bounds");

@@ -34,7 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private const string channelKey = Prefs.Prefix + "UpdateChannel";
         private const string invoiceNumberKey = Prefs.Prefix + "InvoiceNumber";
 
-        public static bool hasNewVersion = false;
+        public static bool hasNewVersion;
 
         private static Channel channel = Channel.stable;
         private static string lastVersionID;
@@ -65,13 +65,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             EditorGUILayout.BeginHorizontal();
             invoiceNumber = EditorGUILayout.TextField("Invoice Number:", invoiceNumber).Trim(' ');
 
-            GUIStyle helpStyle = new GUIStyle();
+            var helpStyle = new GUIStyle();
             helpStyle.margin = new RectOffset(2, 2, 2, 2);
 
             if (helpContent != null && GUILayout.Button(helpContent, helpStyle, GUILayout.ExpandWidth(false)))
-            {
                 Process.Start("https://assetstore.unity.com/orders");
-            }
 
             EditorGUILayout.EndHorizontal();
 
@@ -84,7 +82,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (updates != null)
             {
-                foreach (Item update in updates) update.Draw();
+                foreach (var update in updates) update.Draw();
                 if (updates.Count == 0) GUILayout.Label("No updates");
             }
 
@@ -101,7 +99,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             SavePrefs();
 
-            string updateKey = GetUpdateKey();
+            var updateKey = GetUpdateKey();
             GetUpdateList(updateKey);
         }
 
@@ -122,11 +120,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (EditorPrefs.HasKey(lastVersionCheckKey))
             {
-                long lastVersionCheck = EditorPrefs.GetInt(lastVersionCheckKey) * ticksInHour;
-                if (DateTime.Now.Ticks - lastVersionCheck < 24 * ticksInHour)
-                {
-                    return;
-                }
+                var lastVersionCheck = EditorPrefs.GetInt(lastVersionCheckKey) * ticksInHour;
+                if (DateTime.Now.Ticks - lastVersionCheck < 24 * ticksInHour) return;
             }
 
             EditorPrefs.SetInt(lastVersionCheckKey, (int)(DateTime.Now.Ticks / ticksInHour));
@@ -136,7 +131,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (channel == Channel.stablePrevious) channel = Channel.stable;
 
-            WebClient client = new WebClient();
+            var client = new WebClient();
 
             client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
             client.UploadDataCompleted += delegate(object sender, UploadDataCompletedEventArgs response)
@@ -147,12 +142,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     return;
                 }
 
-                string version = Encoding.UTF8.GetString(response.Result);
+                var version = Encoding.UTF8.GetString(response.Result);
 
                 try
                 {
-                    string[] vars = version.Split('.');
-                    string[] vars2 = new string[4];
+                    var vars = version.Split('.');
+                    var vars2 = new string[4];
                     while (vars[1].Length < 8) vars[1] += "0";
                     vars2[0] = vars[0];
                     vars2[1] = int.Parse(vars[1].Substring(0, 2)).ToString();
@@ -178,14 +173,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static bool CompareVersions()
         {
-            double v1 = GetDoubleVersion(Version.version);
-            double v2 = GetDoubleVersion(lastVersionID);
+            var v1 = GetDoubleVersion(Version.version);
+            var v2 = GetDoubleVersion(lastVersionID);
             return v1 < v2;
         }
 
         private static double GetDoubleVersion(string v)
         {
-            string[] vs = v.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+            var vs = v.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
             if (vs[1].Length < 2) vs[1] = "0" + vs[1];
             if (vs[2].Length < 2) vs[2] = "0" + vs[2];
             if (vs[3].Length < 4)
@@ -202,9 +197,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private string GetUpdateKey()
         {
-            WebClient client = new WebClient();
+            var client = new WebClient();
             client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            string updateKey = client.UploadString("http://infinity-code.com/products_update/getupdatekey.php",
+            var updateKey = client.UploadString("http://infinity-code.com/products_update/getupdatekey.php",
                 "key=" + invoiceNumber + "&package=" + UnityWebRequest.EscapeURL(packageID));
 
             return updateKey;
@@ -212,7 +207,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void GetUpdateList(string updateKey)
         {
-            WebClient client = new WebClient();
+            var client = new WebClient();
             client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 
             string response;
@@ -228,10 +223,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return;
             }
 
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(response);
 
-            XmlNode firstChild = document.FirstChild;
+            var firstChild = document.FirstChild;
             updates = new List<Item>();
 
             foreach (XmlNode node in firstChild.ChildNodes) updates.Add(new Item(node));
@@ -259,7 +254,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             return Regex.Replace(str, @"&(\w+);", delegate(Match match)
             {
-                string v = match.Groups[1].Value;
+                var v = match.Groups[1].Value;
                 if (v == "amp") return "&";
                 if (v == "lt") return "<";
                 if (v == "gt") return ">";
@@ -273,11 +268,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             private static GUIStyle _changelogStyle;
             private static GUIStyle _titleStyle;
-            private string changelog;
-            private string date;
-            private string download;
-            private int type;
-            private string version;
+            private readonly string changelog;
+            private readonly string date;
+            private readonly string download;
+            private readonly int type;
+            private readonly string version;
 
             public Item(XmlNode node)
             {
@@ -287,8 +282,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 download = node.SelectSingleNode("Download").InnerText;
                 date = node.SelectSingleNode("Date").InnerText;
 
-                string[] vars = version.Split('.');
-                string[] vars2 = new string[4];
+                var vars = version.Split('.');
+                var vars2 = new string[4];
                 vars2[0] = vars[0];
                 vars2[1] = int.Parse(vars[1].Substring(0, 2)).ToString();
                 vars2[2] = int.Parse(vars[1].Substring(2, 2)).ToString();
@@ -315,10 +310,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
             }
 
-            public string typeStr
-            {
-                get { return Enum.GetName(typeof(Channel), type); }
-            }
+            public string typeStr => Enum.GetName(typeof(Channel), type);
 
             public void Draw()
             {
@@ -330,9 +322,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 EditorGUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("Download"))
-                {
                     Process.Start("http://infinity-code.com/products_update/download.php?k=" + download);
-                }
 
                 if (GUILayout.Button("Copy download link", GUILayout.ExpandWidth(false)))
                 {

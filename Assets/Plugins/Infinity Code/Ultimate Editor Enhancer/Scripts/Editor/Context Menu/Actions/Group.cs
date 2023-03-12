@@ -9,10 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
     [RequireMultipleGameObjects]
     public class Group : ActionItem
     {
-        public override float order
-        {
-            get { return -895; }
-        }
+        public override float order => -895;
 
         protected override void Init()
         {

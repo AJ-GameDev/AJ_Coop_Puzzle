@@ -21,10 +21,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static Texture2D GetIcon(string filename, string ext = ".png")
         {
-            string id = "Icons/" + filename + ext;
+            var id = "Icons/" + filename + ext;
             object item;
             if (cache.TryGetValue(id, out item)) return item as Texture2D;
-            Texture2D icon = Resources.LoadIcon(filename, ext);
+            var icon = Resources.LoadIcon(filename, ext);
             if (icon != null) cache.Add(id, icon);
             return icon;
         }

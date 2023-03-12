@@ -17,16 +17,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
 #if !UNITY_EDITOR_OSX
         public static EventModifiers wailaShowNameUnderCursorModifiers = EventModifiers.Control;
-
         public static EventModifiers wailaShowAllNamesUnderCursorModifiers =
-            EventModifiers.Control | EventModifiers.Shift;
-
+ EventModifiers.Control | EventModifiers.Shift;
         public static KeyCode wailaSmartSelectionKeyCode = KeyCode.Space;
         public static EventModifiers wailaSmartSelectionModifiers = EventModifiers.Control | EventModifiers.Shift;
 #else
         public static EventModifiers wailaShowNameUnderCursorModifiers = EventModifiers.Command;
+
         public static EventModifiers wailaShowAllNamesUnderCursorModifiers =
- EventModifiers.Command | EventModifiers.Shift;
+            EventModifiers.Command | EventModifiers.Shift;
+
         public static KeyCode wailaSmartSelectionKeyCode = KeyCode.Space;
         public static EventModifiers wailaSmartSelectionModifiers = EventModifiers.Command | EventModifiers.Shift;
 #endif
@@ -47,34 +47,25 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public override float order
-            {
-                get { return -50; }
-            }
+            public override float order => -50;
 
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!waila) return new Shortcut[0];
 
-                List<Shortcut> shortcuts = new List<Shortcut>();
+                var shortcuts = new List<Shortcut>();
 
                 if (wailaShowNameUnderCursor)
-                {
                     shortcuts.Add(new Shortcut("Show Name Of GameObject Under Cursor", "Scene View",
                         wailaShowNameUnderCursorModifiers));
-                }
 
                 if (wailaShowAllNamesUnderCursor)
-                {
                     shortcuts.Add(new Shortcut("Show Names Of All GameObject Under Cursor", "Scene View",
                         wailaShowAllNamesUnderCursorModifiers));
-                }
 
                 if (wailaSmartSelection)
-                {
                     shortcuts.Add(new Shortcut("Start Smart Selection", "Scene View", wailaSmartSelectionModifiers,
                         wailaSmartSelectionKeyCode));
-                }
 
                 return shortcuts;
             }

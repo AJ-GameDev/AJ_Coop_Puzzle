@@ -7,10 +7,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
 {
     public class RequireSelectedAttribute : ValidateAttribute
     {
-        public RequireSelectedAttribute()
-        {
-        }
-
         public override bool Validate()
         {
             return Selection.gameObjects.Length > 0;

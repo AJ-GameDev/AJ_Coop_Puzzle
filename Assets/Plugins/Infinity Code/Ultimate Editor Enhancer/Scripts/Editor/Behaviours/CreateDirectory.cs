@@ -11,15 +11,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     {
         static CreateDirectory()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnPress += OnInvoke;
             binding.OnValidate += OnValidate;
         }
 
         private static void OnInvoke()
         {
-            Object obj = Selection.objects[0];
-            string path = AssetDatabase.GetAssetPath(obj);
+            var obj = Selection.objects[0];
+            var path = AssetDatabase.GetAssetPath(obj);
 
             if (string.IsNullOrEmpty(path)) return;
             ProjectWindowUtil.CreateFolder();

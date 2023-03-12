@@ -25,7 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 #if !UNITY_EDITOR_OSX
                 EventModifiers modifiers = EventModifiers.Control | EventModifiers.Shift;
 #else
-                EventModifiers modifiers = EventModifiers.Command | EventModifiers.Shift;
+                var modifiers = EventModifiers.Command | EventModifiers.Shift;
 #endif
 
                 return new[]
@@ -36,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Rotate Selection To Myself +90°", "Scene View", modifiers, KeyCode.DownArrow),
                     new Shortcut("Rotate Selection By View Clockwise -90°", "Scene View", modifiers, KeyCode.PageUp),
                     new Shortcut("Rotate Selection By View Counterclockwise +90°", "Scene View", modifiers,
-                        KeyCode.PageDown),
+                        KeyCode.PageDown)
                 };
             }
 

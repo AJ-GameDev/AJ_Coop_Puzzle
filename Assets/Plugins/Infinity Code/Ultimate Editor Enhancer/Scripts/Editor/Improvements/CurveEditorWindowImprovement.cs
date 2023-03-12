@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
@@ -32,28 +31,24 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
 
             if (GUILayout.Button(TempContent.Get("<", "Close Points"), EditorStyles.toolbarButton,
-                    GUILayout.ExpandWidth(false)))
-            {
-                enabled = false;
-            }
-
+                    GUILayout.ExpandWidth(false))) enabled = false;
             GUILayout.Label("Points");
 
             GUILayout.EndHorizontal();
 
-            float labelWidth = EditorGUIUtility.labelWidth;
+            var labelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 100;
 
             EditorGUI.BeginChangeCheck();
 
-            AnimationCurve curve = CurveEditorWindowRef.GetCurve();
-            Keyframe[] keys = curve.keys;
-            float addTime = float.MinValue;
-            int removeIndex = -1;
+            var curve = CurveEditorWindowRef.GetCurve();
+            var keys = curve.keys;
+            var addTime = float.MinValue;
+            var removeIndex = -1;
 
-            for (int i = 0; i < keys.Length; i++)
+            for (var i = 0; i < keys.Length; i++)
             {
-                Keyframe key = keys[i];
+                var key = keys[i];
 
                 EditorGUILayout.BeginHorizontal();
                 key.time = EditorGUILayout.DelayedFloatField("Time", key.time);
@@ -65,9 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
 
                 if (i < keys.Length - 1 &&
                     GUILayout.Button(TempContent.Get("+", "Insert Key"), EditorStyles.miniButton))
-                {
                     addTime = (keys[i].time + keys[i + 1].time) / 2;
-                }
             }
 
             if (EditorGUI.EndChangeCheck())
@@ -86,8 +79,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
             }
             else if (addTime != float.MinValue)
             {
-                int index = AnimationUtilityRef.AddInbetweenKey(curve, addTime);
-                Type type = Reflection.GetEditorType("CurveUtility");
+                var index = AnimationUtilityRef.AddInbetweenKey(curve, addTime);
+                var type = Reflection.GetEditorType("CurveUtility");
                 Reflection.InvokeStaticMethod(type, "SetKeyModeFromContext",
                     new[] { typeof(AnimationCurve), typeof(int) }, new object[] { curve, index });
                 AnimationUtilityRef.UpdateTangentsFromModeSurrounding(curve, index);
@@ -109,10 +102,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
             GUI.skin.button.Draw(frameButtonRect,
                 TempContent.Get(EditorIconContents.rectTransformBlueprint.image, "Frame All Points"), -1);
 
-            if (!enabled)
-            {
-                GUI.skin.button.Draw(pointsButtonRect, TempContent.Get(Icons.hierarchy, "Show Points"), -1);
-            }
+            if (!enabled) GUI.skin.button.Draw(pointsButtonRect, TempContent.Get(Icons.hierarchy, "Show Points"), -1);
         }
 
         private static void OnGUIBefore(EditorWindow window)
@@ -124,7 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
             if (enabled) frameButtonRect.x -= 200;
 
             pointsButtonRect = new Rect(window.position.width - 40, 40, 25, 25);
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.MouseDown && e.button == 0)
             {
                 if (frameButtonRect.Contains(e.mousePosition))
@@ -146,9 +136,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
         {
             if (!enabled) return default;
 
-            Rect position = window.position;
-            float width = position.width - 200;
-            float height = position.height - 46f;
+            var position = window.position;
+            var width = position.width - 200;
+            var height = position.height - 46f;
             return new Rect(0, 0, width, height);
         }
     }

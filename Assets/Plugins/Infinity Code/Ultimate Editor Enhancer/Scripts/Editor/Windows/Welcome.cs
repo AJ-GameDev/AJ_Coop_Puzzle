@@ -31,7 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static GUIStyle copyrightStyle;
         private static Welcome wnd;
 
-        private string copyright = "Infinity Code " + DateTime.Now.Year;
+        private readonly string copyright = "Infinity Code " + DateTime.Now.Year;
         private Vector2 scrollPosition;
 
         static Welcome()
@@ -95,11 +95,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 GUILayout.EndHorizontal();
 
-                Rect rect = GUILayoutUtility.GetLastRect();
+                var rect = GUILayoutUtility.GetLastRect();
                 EditorGUIUtility.AddCursorRect(rect, MouseCursor.Link);
 
-                bool returnValue = Event.current.type == EventType.MouseDown &&
-                                   rect.Contains(Event.current.mousePosition);
+                var returnValue = Event.current.type == EventType.MouseDown &&
+                                  rect.Contains(Event.current.mousePosition);
 
                 GUILayout.Space(space);
 
@@ -122,57 +122,32 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUILayout.Space(10);
 
             if (DrawButton(gettingStartedTexture, "Getting Started",
-                    "A quick tour of the main features of Ultimate Editor Enhancer"))
-            {
-                GettingStarted.OpenWindow();
-            }
+                    "A quick tour of the main features of Ultimate Editor Enhancer")) GettingStarted.OpenWindow();
 
             if (DrawButton(shortcutsTexture, "Shortcuts", "Explore all Ultimate Editor Enhancer shortcuts"))
-            {
                 Shortcuts.OpenWindow();
-            }
 
             if (DrawButton(settingsTexture, "Settings",
                     "Customize Ultimate Editor Enhancer to fit your workflow perfectly"))
-            {
                 SettingsService.OpenProjectSettings("Project/Ultimate Editor Enhancer");
-            }
 
-            if (DrawButton(urlTexture, "Product Page", "Visit the official asset page"))
-            {
-                Links.OpenHomepage();
-            }
+            if (DrawButton(urlTexture, "Product Page", "Visit the official asset page")) Links.OpenHomepage();
 
             if (DrawButton(docTexture, "Documentation", "Online version of the documentation"))
-            {
                 Links.OpenDocumentation();
-            }
 
             if (DrawButton(supportTexture, "Support", "If you have any problems feel free to contact us"))
-            {
                 Links.OpenSupport();
-            }
 
-            if (DrawButton(forumTexture, "Forum", "Official forum of Ultimate Editor Enhancer"))
-            {
-                Links.OpenForum();
-            }
+            if (DrawButton(forumTexture, "Forum", "Official forum of Ultimate Editor Enhancer")) Links.OpenForum();
 
-            if (DrawButton(videoTexture, "Videos", "Check out new videos about asset"))
-            {
-                Links.OpenYouTube();
-            }
+            if (DrawButton(videoTexture, "Videos", "Check out new videos about asset")) Links.OpenYouTube();
 
             if (DrawButton(rateTexture, "Rate and Review", "Share your impression about the asset"))
-            {
                 Links.OpenReviews();
-            }
 
             if (DrawButton(updateTexture, "Check Updates",
-                    "Perhaps a new version is already waiting for you. Check it!"))
-            {
-                Updater.OpenWindow();
-            }
+                    "Perhaps a new version is already waiting for you. Check it!")) Updater.OpenWindow();
 
             EditorGUILayout.EndScrollView();
             EditorGUILayout.LabelField(copyright, copyrightStyle);

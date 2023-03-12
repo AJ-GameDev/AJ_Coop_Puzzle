@@ -10,19 +10,14 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public class GameObjectManager : StandalonePrefManager<GameObjectManager>
         {
-            public override IEnumerable<string> keywords
-            {
-                get
-                {
-                    return SelectionBoundsManager.GetKeywords()
-                        .Concat(DropToFloorManager.GetKeywords())
-                        .Concat(GroupManager.GetKeywords())
-                        .Concat(UngroupManager.GetKeywords())
-                        .Concat(RenameManager.GetKeywords())
-                        .Concat(ReplaceManager.GetKeywords())
-                        .Concat(RotateByShortcutManager.GetKeywords());
-                }
-            }
+            public override IEnumerable<string> keywords =>
+                SelectionBoundsManager.GetKeywords()
+                    .Concat(DropToFloorManager.GetKeywords())
+                    .Concat(GroupManager.GetKeywords())
+                    .Concat(UngroupManager.GetKeywords())
+                    .Concat(RenameManager.GetKeywords())
+                    .Concat(ReplaceManager.GetKeywords())
+                    .Concat(RotateByShortcutManager.GetKeywords());
 
             public override void Draw()
             {

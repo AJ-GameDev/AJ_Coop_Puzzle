@@ -16,7 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         {
             ViewGallery.OnPrepareViewStatesMenu += OnPrepareViewStatesMenu;
 
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnAddToSelectedValidate;
             binding.OnPress += AddToSelection;
 
@@ -31,9 +31,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         public static void AddToSelection()
         {
-            ViewState viewState = Selection.activeGameObject.GetComponent<ViewState>();
+            var viewState = Selection.activeGameObject.GetComponent<ViewState>();
             if (viewState == null) viewState = Selection.activeGameObject.AddComponent<ViewState>();
-            SceneView view = SceneView.lastActiveSceneView;
+            var view = SceneView.lastActiveSceneView;
             viewState.pivot = view.pivot;
             viewState.rotation = view.rotation;
             viewState.size = view.size;
@@ -48,7 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (!Prefs.createViewStateFromSelection) return false;
             if (Selection.activeGameObject == null) return false;
             if (Selection.gameObjects.Length > 1) return false;
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode != Prefs.createViewStateFromSelectionKeyCode) return false;
             if (e.modifiers != Prefs.createViewStateFromSelectionModifiers) return false;
             return true;
@@ -65,10 +65,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         private static void OnRestoreSelectedInvoke()
         {
-            ViewState viewState = Selection.activeGameObject.GetComponent<ViewState>();
+            var viewState = Selection.activeGameObject.GetComponent<ViewState>();
             if (viewState == null) return;
 
-            SceneView sceneView = SceneView.lastActiveSceneView;
+            var sceneView = SceneView.lastActiveSceneView;
             sceneView.in2DMode = viewState.is2D;
             sceneView.pivot = viewState.pivot;
             sceneView.size = viewState.size;
@@ -87,7 +87,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (!Prefs.restoreViewStateFromSelection) return false;
             if (Selection.activeGameObject == null) return false;
             if (Selection.gameObjects.Length > 1) return false;
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode != Prefs.restoreViewStateFromSelectionKeyCode) return false;
             if (e.modifiers != Prefs.restoreViewStateFromSelectionModifiers) return false;
             return true;
@@ -107,10 +107,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (!Prefs.showViewStateToolbarIcon || selectedState == null) return;
 
             if (GUILayout.Button(new GUIContent(Icons.focusToolbar, "Restore View"), Styles.appToolbarButtonLeft,
-                    GUILayout.Width(30)))
-            {
-                OnRestoreSelectedInvoke();
-            }
+                    GUILayout.Width(30))) OnRestoreSelectedInvoke();
         }
     }
 }

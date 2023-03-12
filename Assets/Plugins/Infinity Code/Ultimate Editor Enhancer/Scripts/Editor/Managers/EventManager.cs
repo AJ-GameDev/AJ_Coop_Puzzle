@@ -28,7 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void Broadcast(string eventName)
         {
-            for (int i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvoke(eventName);
+            for (var i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvoke(eventName);
         }
 
         public static void BroadcastClosePopup()
@@ -60,7 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class EventBinding
         {
-            private string eventName;
+            private readonly string eventName;
             public Action<EventBinding> OnInvoke;
 
             internal EventBinding(string eventName)
@@ -81,9 +81,8 @@ namespace InfinityCode.UltimateEditorEnhancer
             public void TryInvoke(string eventName)
             {
                 if (eventName == this.eventName)
-                {
-                    if (OnInvoke != null) OnInvoke(this);
-                }
+                    if (OnInvoke != null)
+                        OnInvoke(this);
             }
         }
     }

@@ -5,16 +5,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
     public abstract class GenericInterceptor<T> : Interceptor where T : GenericInterceptor<T>
     {
-        private static T _instance;
-
-        protected static T instance
-        {
-            get => _instance;
-        }
+        protected static T instance { get; private set; }
 
         protected override void Init()
         {
-            _instance = (T)this;
+            instance = (T)this;
 
             base.Init();
         }

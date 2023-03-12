@@ -16,10 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
         private Vector2 labelSize;
         private List<FavoriteWindowItem> records;
 
-        public override float order
-        {
-            get { return 95; }
-        }
+        public override float order => 95;
 
         public bool Validate()
         {
@@ -29,16 +26,16 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
         protected override void CalcSize()
         {
             labelSize = EditorStyles.whiteLabel.CalcSize(labelContent);
-            Vector2 editSize = EditorStyles.whiteLabel.CalcSize(editFavoritesContent);
+            var editSize = EditorStyles.whiteLabel.CalcSize(editFavoritesContent);
             _size = new Vector2(labelSize.x + editSize.x,
                 Mathf.Max(labelSize.y, editSize.y) + GUI.skin.label.margin.bottom);
 
-            GUIStyle style = Styles.buttonWithToggleAlignLeft;
-            int marginBottom = style.margin.bottom;
+            var style = Styles.buttonWithToggleAlignLeft;
+            var marginBottom = style.margin.bottom;
 
-            for (int i = 0; i < records.Count; i++)
+            for (var i = 0; i < records.Count; i++)
             {
-                Vector2 s = style.CalcSize(contents[i]);
+                var s = style.CalcSize(contents[i]);
                 _size.x = Mathf.Max(_size.x, s.x);
                 _size.y += s.y + marginBottom;
             }
@@ -65,9 +62,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
             EditorGUILayout.EndHorizontal();
 
-            for (int i = 0; i < records.Count; i++)
+            for (var i = 0; i < records.Count; i++)
             {
-                GUIContent content = contents[i];
+                var content = contents[i];
 
                 if (GUILayout.Button(content, Styles.buttonWithToggleAlignLeft))
                 {
@@ -81,10 +78,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
         {
             records = ReferenceManager.favoriteWindows;
             contents = new GUIContent[records.Count];
-            for (int i = 0; i < records.Count; i++)
-            {
-                contents[i] = new GUIContent(records[i].title);
-            }
+            for (var i = 0; i < records.Count; i++) contents[i] = new GUIContent(records[i].title);
 
             labelContent = new GUIContent("Favorite Windows:");
             editFavoritesContent = EditorGUIUtility.IconContent("d_Preset.Context");

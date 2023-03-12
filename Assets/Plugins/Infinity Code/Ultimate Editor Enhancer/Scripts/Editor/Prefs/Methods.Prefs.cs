@@ -26,10 +26,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static PrefManager[] _managers;
         private static string[] _keywords;
         private static PrefManager[] _generalManagers;
-        private static string[] escapeChars = { "%", "%25", ";", "%3B", "(", "%28", ")", "%29" };
-        private static bool forceSave = false;
+        private static readonly string[] escapeChars = { "%", "%25", ";", "%3B", "(", "%28", ")", "%29" };
+        private static bool forceSave;
         private static Vector2 scrollPosition;
-        private static bool loaded = false;
+        private static bool loaded;
 
         static Prefs()
         {
@@ -42,7 +42,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (_managers == null)
                 {
-                    List<PrefManager> items = Reflection.GetInheritedItems<PrefManager>();
+                    var items = Reflection.GetInheritedItems<PrefManager>();
                     _managers = items.OrderBy(d => d.order).ToArray();
                 }
 
@@ -56,27 +56,22 @@ namespace InfinityCode.UltimateEditorEnhancer
             get
             {
                 if (_generalManagers == null)
-                {
                     _generalManagers = managers.Where(i => !i.GetType().IsSubclassOf(typeof(StandalonePrefManager)))
                         .ToArray();
-                }
-
                 return _generalManagers;
             }
         }
 
         private static void CreateIgnore(string filename, bool entireAsset)
         {
-            string path = new DirectoryInfo(Resources.assetFolder).Parent.FullName + "/." + filename;
-            string content = "";
+            var path = new DirectoryInfo(Resources.assetFolder).Parent.FullName + "/." + filename;
+            var content = "";
             if (entireAsset)
-            {
                 content = @"
 /Ultimate Editor Enhancer/*
 !/Ultimate Editor Enhancer/Scripts
 /Ultimate Editor Enhancer/Scripts/Editor/
 ";
-            }
 
             content += "/Ultimate Editor Enhancer Settings/";
 
@@ -89,7 +84,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (GUILayoutUtils.ToolbarButton("File"))
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 menu.Add("Export/Settings", ExportSettings);
                 menu.Add("Export/Items/Everything", ExportItems, -1);
                 menu.AddSeparator("Export/Items/");
@@ -105,7 +100,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (GUILayoutUtils.ToolbarButton("Version Control"))
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 menu.Add(".gitignore/Exclude Settings", () => { CreateIgnore("gitignore", false); });
                 menu.Add(".gitignore/Exclude Entire Asset", () => { CreateIgnore("gitignore", true); });
                 menu.Add(".collabignore/Exclude Settings", () => { CreateIgnore("collabignore", false); });
@@ -114,7 +109,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
 
             if (GUILayoutUtils.ToolbarButton("Restore default settings"))
-            {
                 if (EditorUtility.DisplayDialog("Restore default settings",
                         "Are you sure you want to restore the default settings?", "Restore", "Cancel"))
                 {
@@ -126,12 +120,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                     AssetDatabase.ImportAsset(Resources.assetFolder + "Scripts/Editor/Prefs/Methods.Prefs.cs",
                         ImportAssetOptions.ForceUpdate);
                 }
-            }
 
             GUILayout.Label("", EditorStyles.toolbarButton, GUILayout.ExpandWidth(true));
             if (GUILayoutUtils.ToolbarButton("Help"))
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
+                var menu = GenericMenuEx.Start();
                 menu.Add("Welcome", Welcome.OpenWindow);
                 menu.Add("Getting Started", GettingStarted.OpenWindow);
                 menu.Add("Shortcuts", Shortcuts.OpenWindow);
@@ -155,18 +148,17 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void ExportItems(object data)
         {
-            int target = (int)data;
-            string name = "UEE-Items-";
+            var target = (int)data;
+            var name = "UEE-Items-";
             if (target == -1) name += "Everything";
             else if (target == 0) name += "Bookmarks";
             else if (target == 1) name += "Favorite-Windows";
             else if (target == 2) name += "Quick-Access-Bar";
 
-            string filename =
-                EditorUtility.SaveFilePanel("Export Items", EditorApplication.applicationPath, name, "json");
+            var filename = EditorUtility.SaveFilePanel("Export Items", EditorApplication.applicationPath, name, "json");
             if (string.IsNullOrEmpty(filename)) return;
 
-            JsonObject obj = new JsonObject();
+            var obj = new JsonObject();
 
             if (target == -1 || target == 0) obj.Add("bookmarks", Bookmarks.json);
             if (target == -1 || target == 1) obj.Add("favorite-windows", FavoriteWindowsManager.json);
@@ -177,7 +169,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void ExportSettings()
         {
-            string filename = EditorUtility.SaveFilePanel("Export Settings", EditorApplication.applicationPath,
+            var filename = EditorUtility.SaveFilePanel("Export Settings", EditorApplication.applicationPath,
                 "UEE-Settings", "ucs");
             if (string.IsNullOrEmpty(filename)) return;
 
@@ -186,10 +178,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static FieldInfo GetField(FieldInfo[] fields, string key)
         {
-            for (int i = 0; i < fields.Length; i++)
-            {
-                if (fields[i].Name == key) return fields[i];
-            }
+            for (var i = 0; i < fields.Length; i++)
+                if (fields[i].Name == key)
+                    return fields[i];
 
             return null;
         }
@@ -202,7 +193,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static string GetSettings()
         {
-            FieldInfo[] fields = typeof(Prefs).GetFields(BindingFlags.Static | BindingFlags.Public);
+            var fields = typeof(Prefs).GetFields(BindingFlags.Static | BindingFlags.Public);
             StaticStringBuilder.Clear();
 
             try
@@ -220,21 +211,21 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void ImportItems()
         {
-            string filename = EditorUtility.OpenFilePanel("Import Items", EditorApplication.applicationPath, "json");
+            var filename = EditorUtility.OpenFilePanel("Import Items", EditorApplication.applicationPath, "json");
             if (string.IsNullOrEmpty(filename)) return;
 
-            string text = File.ReadAllText(filename, Encoding.UTF8);
-            JsonItem json = Json.Parse(text);
-            JsonItem bookmarksItem = json["bookmarks"];
+            var text = File.ReadAllText(filename, Encoding.UTF8);
+            var json = Json.Parse(text);
+            var bookmarksItem = json["bookmarks"];
 
             migrationReplace = true;
 
             if (bookmarksItem != null) Bookmarks.json = bookmarksItem as JsonArray;
 
-            JsonItem fwItem = json["favorite-windows"];
+            var fwItem = json["favorite-windows"];
             if (fwItem != null) FavoriteWindowsManager.json = fwItem as JsonArray;
 
-            JsonItem qabItem = json["quick-access-bar"];
+            var qabItem = json["quick-access-bar"];
             if (qabItem != null) QuickAccessBarManager.json = qabItem as JsonArray;
 
             migrationReplace = false;
@@ -244,10 +235,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void ImportSettings()
         {
-            string filename = EditorUtility.OpenFilePanel("Import Settings", EditorApplication.applicationPath, "ucs");
+            var filename = EditorUtility.OpenFilePanel("Import Settings", EditorApplication.applicationPath, "ucs");
             if (string.IsNullOrEmpty(filename)) return;
 
-            string prefs = File.ReadAllText(filename, Encoding.UTF8);
+            var prefs = File.ReadAllText(filename, Encoding.UTF8);
             LoadSettings(prefs);
         }
 
@@ -259,25 +250,23 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void Load()
         {
-            string prefStr = EditorPrefs.GetString(PrefsKey, String.Empty);
+            var prefStr = EditorPrefs.GetString(PrefsKey, string.Empty);
             LoadSettings(prefStr);
 
             loaded = true;
 
             if (AfterFirstLoad != null)
             {
-                Delegate[] invocationList = AfterFirstLoad.GetInvocationList();
-                for (int i = 0; i < invocationList.Length; i++)
-                {
+                var invocationList = AfterFirstLoad.GetInvocationList();
+                for (var i = 0; i < invocationList.Length; i++)
                     try
                     {
-                        Delegate d = invocationList[i];
+                        var d = invocationList[i];
                         d.DynamicInvoke(null);
                     }
                     catch
                     {
                     }
-                }
 
                 AfterFirstLoad = null;
             }
@@ -287,10 +276,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (string.IsNullOrEmpty(str)) return;
 
-            Type prefType = typeof(Prefs);
-            FieldInfo[] fields = prefType.GetFields(BindingFlags.Static | BindingFlags.Public);
+            var prefType = typeof(Prefs);
+            var fields = prefType.GetFields(BindingFlags.Static | BindingFlags.Public);
 
-            int i = 0;
+            var i = 0;
             try
             {
                 LoadFields(str, fields, ref i, null);
@@ -304,12 +293,12 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static void LoadFields(string prefStr, FieldInfo[] fields, ref int i, object target)
         {
             StaticStringBuilder.Clear();
-            bool isKey = true;
+            var isKey = true;
             string key = null;
 
             while (i < prefStr.Length)
             {
-                char c = prefStr[i];
+                var c = prefStr[i];
                 i++;
                 if (c == ':' && isKey)
                 {
@@ -318,17 +307,17 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
                 else if (c == ';')
                 {
-                    string value = StaticStringBuilder.GetString(true);
+                    var value = StaticStringBuilder.GetString(true);
                     isKey = true;
                     SetValue(target, fields, key, value);
                 }
                 else if (c == '(')
                 {
-                    FieldInfo field = GetField(fields, key);
+                    var field = GetField(fields, key);
                     if (field == null || (field.FieldType.IsValueType && field.FieldType.IsPrimitive) ||
                         field.FieldType == typeof(string))
                     {
-                        int indent = 1;
+                        var indent = 1;
                         i++;
                         while (indent > 0 && i < prefStr.Length)
                         {
@@ -342,13 +331,13 @@ namespace InfinityCode.UltimateEditorEnhancer
                     }
                     else
                     {
-                        Type type = field.FieldType;
-                        object newTarget = Activator.CreateInstance(type, false);
+                        var type = field.FieldType;
+                        var newTarget = Activator.CreateInstance(type, false);
 
-                        BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+                        var bindingFlags = BindingFlags.Public | BindingFlags.Instance;
                         if (type == typeof(Vector2Int)) bindingFlags |= BindingFlags.NonPublic;
 
-                        FieldInfo[] objFields = type.GetFields(bindingFlags);
+                        var objFields = type.GetFields(bindingFlags);
 
                         LoadFields(prefStr, objFields, ref i, newTarget);
                         field.SetValue(target, newTarget);
@@ -358,11 +347,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
                 else if (c == ')')
                 {
-                    string value = StaticStringBuilder.GetString(true);
+                    var value = StaticStringBuilder.GetString(true);
                     SetValue(target, fields, key, value);
                     return;
                 }
-                else StaticStringBuilder.Append(c);
+                else
+                {
+                    StaticStringBuilder.Append(c);
+                }
             }
         }
 
@@ -399,7 +391,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static string ModifierToString(EventModifiers modifiers, string extra)
         {
-            string v = ModifierToString(modifiers);
+            var v = ModifierToString(modifiers);
             if (!string.IsNullOrEmpty(v)) v += " + ";
             v += extra;
             return v;
@@ -416,8 +408,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-            foreach (PrefManager manager in generalManagers)
-            {
+            foreach (var manager in generalManagers)
                 try
                 {
                     EditorGUI.BeginChangeCheck();
@@ -436,39 +427,47 @@ namespace InfinityCode.UltimateEditorEnhancer
                 catch
                 {
                 }
-            }
 
             EditorGUILayout.EndScrollView();
         }
 
         public static void Save()
         {
-            string value = GetSettings();
+            var value = GetSettings();
             EditorPrefs.SetString(PrefsKey, value);
         }
 
         private static void SaveFields(FieldInfo[] fields, object target)
         {
-            for (int i = 0; i < fields.Length; i++)
+            for (var i = 0; i < fields.Length; i++)
             {
-                FieldInfo field = fields[i];
+                var field = fields[i];
                 if (field.IsLiteral || field.IsInitOnly) continue;
-                object value = field.GetValue(target);
+                var value = field.GetValue(target);
 
                 if (value == null) continue;
 
                 if (i > 0) StaticStringBuilder.Append(";");
                 StaticStringBuilder.Append(field.Name).Append(":");
 
-                Type type = value.GetType();
-                if (type == typeof(string)) StaticStringBuilder.AppendEscaped(value as string, escapeChars);
-                else if (type.IsEnum) StaticStringBuilder.Append(value.ToString());
-                else if (type.IsValueType && type.IsPrimitive) StaticStringBuilder.Append(value);
+                var type = value.GetType();
+                if (type == typeof(string))
+                {
+                    StaticStringBuilder.AppendEscaped(value as string, escapeChars);
+                }
+                else if (type.IsEnum)
+                {
+                    StaticStringBuilder.Append(value.ToString());
+                }
+                else if (type.IsValueType && type.IsPrimitive)
+                {
+                    StaticStringBuilder.Append(value);
+                }
                 else
                 {
-                    BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+                    var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
                     if (type == typeof(Vector2Int)) bindingFlags |= BindingFlags.NonPublic;
-                    FieldInfo[] objFields = type.GetFields(bindingFlags);
+                    var objFields = type.GetFields(bindingFlags);
                     if (objFields.Length == 0) continue;
 
                     StaticStringBuilder.Append("(");
@@ -482,19 +481,18 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void SetValue(object target, FieldInfo[] fields, string key, object value)
         {
-            FieldInfo field = GetField(fields, key);
+            var field = GetField(fields, key);
             if (field == null) return;
 
-            Type type = field.FieldType;
+            var type = field.FieldType;
             if (type == typeof(string))
             {
                 field.SetValue(target, Unescape(value as string, escapeChars));
             }
             else if (field.FieldType.IsEnum)
             {
-                string strVal = value as string;
+                var strVal = value as string;
                 if (strVal != null)
-                {
                     try
                     {
                         value = Enum.Parse(type, strVal);
@@ -504,13 +502,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         Debug.Log("Some exception");
                     }
-                }
             }
             else if (type.IsValueType)
             {
                 try
                 {
-                    MethodInfo method = type.GetMethod("Parse", new[] { typeof(string) });
+                    var method = type.GetMethod("Parse", new[] { typeof(string) });
                     if (method == null)
                     {
                         Debug.Log("No parse for " + key);
@@ -533,24 +530,22 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             StaticStringBuilder.Clear();
 
-            for (int i = 0; i < value.Length; i++)
+            for (var i = 0; i < value.Length; i++)
             {
-                bool success = false;
-                for (int j = 0; j < escapeCodes.Length; j += 2)
+                var success = false;
+                for (var j = 0; j < escapeCodes.Length; j += 2)
                 {
-                    string code = escapeCodes[j + 1];
+                    var code = escapeCodes[j + 1];
                     if (value.Length - i - code.Length <= 0) continue;
 
                     success = true;
 
-                    for (int k = 0; k < code.Length; k++)
-                    {
+                    for (var k = 0; k < code.Length; k++)
                         if (code[k] != value[i + k])
                         {
                             success = false;
                             break;
                         }
-                    }
 
                     if (success)
                     {

@@ -6,21 +6,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.JSON
 {
     /// <summary>
-    /// Class for working with JSON. It is used for parsing of string, serialization and deserialization of object.
+    ///     Class for working with JSON. It is used for parsing of string, serialization and deserialization of object.
     /// </summary>
     public class Json
     {
-        private int index = 0;
-        private string json;
-        private int length;
+        private int index;
+        private readonly string json;
+        private readonly int length;
         private Token lookAheadToken = Token.None;
-        private StringBuilder s;
+        private readonly StringBuilder s;
 
         protected Json(string json)
         {
@@ -30,14 +31,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Deserialize string into object.
+        ///     Deserialize string into object.
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="json">JSON string</param>
         /// <returns>Deserialized object</returns>
         public static T Deserialize<T>(string json)
         {
-            object obj = ParseDirect(json);
+            var obj = ParseDirect(json);
             if (obj is IDictionary) return (T)DeserializeObject(typeof(T), obj as Dictionary<string, object>);
             if (obj is IList) return (T)DeserializeArray(typeof(T), obj as List<object>);
             return (T)DeserializeValue(typeof(T), obj);
@@ -63,11 +64,11 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             if (list == null || list.Count == 0) return null;
             if (type.IsArray)
             {
-                Type elementType = type.GetElementType();
-                Array v = Array.CreateInstance(elementType, list.Count);
-                for (int i = 0; i < list.Count; i++)
+                var elementType = type.GetElementType();
+                var v = Array.CreateInstance(elementType, list.Count);
+                for (var i = 0; i < list.Count; i++)
                 {
-                    object child = list[i];
+                    var child = list[i];
                     object item;
                     if (child is IDictionary)
                         item = DeserializeObject(elementType, child as Dictionary<string, object>);
@@ -81,19 +82,19 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             if (Reflection.IsGenericType(type))
             {
-                Type listType = Reflection.GetGenericArguments(type)[0];
-                object v = Activator.CreateInstance(type);
+                var listType = Reflection.GetGenericArguments(type)[0];
+                var v = Activator.CreateInstance(type);
 
-                for (int i = 0; i < list.Count; i++)
+                for (var i = 0; i < list.Count; i++)
                 {
-                    object child = list[i];
+                    var child = list[i];
                     object item;
                     if (child is IDictionary) item = DeserializeObject(listType, child as Dictionary<string, object>);
                     else if (child is IList) item = DeserializeArray(listType, child as List<object>);
                     else item = DeserializeValue(listType, child);
                     try
                     {
-                        MethodInfo methodInfo = Reflection.GetMethod(type, "Add");
+                        var methodInfo = Reflection.GetMethod(type, "Add");
                         if (methodInfo != null) methodInfo.Invoke(v, new[] { item });
                     }
                     catch
@@ -110,14 +111,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         private static object DeserializeObject(Type type, Dictionary<string, object> table)
         {
-            IEnumerable<MemberInfo> members = Reflection.GetMembers(type, BindingFlags.Instance | BindingFlags.Public);
+            var members = Reflection.GetMembers(type, BindingFlags.Instance | BindingFlags.Public);
 
-            object v = Activator.CreateInstance(type);
+            var v = Activator.CreateInstance(type);
 
-            foreach (MemberInfo member in members)
+            foreach (var member in members)
             {
 #if !NETFX_CORE
-                MemberTypes memberType = member.MemberType;
+                var memberType = member.MemberType;
                 if (memberType != MemberTypes.Field && memberType != MemberTypes.Property) continue;
 #else
                 MemberTypes memberType;
@@ -130,8 +131,8 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 object item;
 
 #if !NETFX_CORE
-                object[] attributes = member.GetCustomAttributes(typeof(AliasAttribute), true);
-                AliasAttribute alias = attributes.Length > 0 ? attributes[0] as AliasAttribute : null;
+                var attributes = member.GetCustomAttributes(typeof(AliasAttribute), true);
+                var alias = attributes.Length > 0 ? attributes[0] as AliasAttribute : null;
 #else
                 IEnumerable<Attribute> attributes = member.GetCustomAttributes(typeof(AliasAttribute), true);
                 AliasAttribute alias = null;
@@ -142,25 +143,19 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 }
 #endif
                 if (alias == null || !alias.ignoreFieldName)
-                {
                     if (table.TryGetValue(member.Name, out item))
                     {
                         DeserializeValue(memberType, member, item, v);
                         continue;
                     }
-                }
 
                 if (alias != null)
-                {
-                    for (int j = 0; j < alias.aliases.Length; j++)
-                    {
+                    for (var j = 0; j < alias.aliases.Length; j++)
                         if (table.TryGetValue(alias.aliases[j], out item))
                         {
                             DeserializeValue(memberType, member, item, v);
                             break;
                         }
-                    }
-                }
             }
 
             return v;
@@ -170,16 +165,16 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         {
             if (target == null) return;
 
-            object obj = ParseDirect(json);
-            Dictionary<string, object> table = obj as Dictionary<string, object>;
-            Type type = target.GetType();
+            var obj = ParseDirect(json);
+            var table = obj as Dictionary<string, object>;
+            var type = target.GetType();
 
-            IEnumerable<MemberInfo> members = Reflection.GetMembers(type, BindingFlags.Instance | BindingFlags.Public);
+            var members = Reflection.GetMembers(type, BindingFlags.Instance | BindingFlags.Public);
 
-            foreach (MemberInfo member in members)
+            foreach (var member in members)
             {
 #if !NETFX_CORE
-                MemberTypes memberType = member.MemberType;
+                var memberType = member.MemberType;
                 if (memberType != MemberTypes.Field && memberType != MemberTypes.Property) continue;
 #else
                 MemberTypes memberType;
@@ -192,8 +187,8 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 object item;
 
 #if !NETFX_CORE
-                object[] attributes = member.GetCustomAttributes(typeof(AliasAttribute), true);
-                AliasAttribute alias = attributes.Length > 0 ? attributes[0] as AliasAttribute : null;
+                var attributes = member.GetCustomAttributes(typeof(AliasAttribute), true);
+                var alias = attributes.Length > 0 ? attributes[0] as AliasAttribute : null;
 #else
                 IEnumerable<Attribute> attributes = member.GetCustomAttributes(typeof(AliasAttribute), true);
                 AliasAttribute alias = null;
@@ -204,47 +199,56 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 }
 #endif
                 if (alias == null || !alias.ignoreFieldName)
-                {
                     if (table.TryGetValue(member.Name, out item))
                     {
                         DeserializeValue(memberType, member, item, target);
                         continue;
                     }
-                }
 
                 if (alias != null)
-                {
-                    for (int j = 0; j < alias.aliases.Length; j++)
-                    {
+                    for (var j = 0; j < alias.aliases.Length; j++)
                         if (table.TryGetValue(alias.aliases[j], out item))
                         {
                             DeserializeValue(memberType, member, item, target);
                             break;
                         }
-                    }
-                }
             }
         }
 
         private static void DeserializeValue(MemberTypes memberType, MemberInfo member, object item, object v)
         {
             object cv;
-            Type t = memberType == MemberTypes.Field
+            var t = memberType == MemberTypes.Field
                 ? ((FieldInfo)member).FieldType
                 : ((PropertyInfo)member).PropertyType;
-            if (t == typeof(System.Object)) cv = item;
-#if UNITY_EDITOR
-            else if (t.IsSubclassOf(typeof(UnityEngine.Object)))
+            if (t == typeof(object))
             {
-                int id = (int)(long)item;
-                if (id != 0) cv = UnityEditor.EditorUtility.InstanceIDToObject(id);
+                cv = item;
+            }
+#if UNITY_EDITOR
+            else if (t.IsSubclassOf(typeof(Object)))
+            {
+                var id = (int)(long)item;
+                if (id != 0) cv = EditorUtility.InstanceIDToObject(id);
                 else cv = null;
             }
 #endif
-            else if (t.IsEnum) cv = Enum.Parse(t, item as string);
-            else if (item is IDictionary) cv = DeserializeObject(t, item as Dictionary<string, object>);
-            else if (item is IList) cv = DeserializeArray(t, item as List<object>);
-            else cv = DeserializeValue(t, item);
+            else if (t.IsEnum)
+            {
+                cv = Enum.Parse(t, item as string);
+            }
+            else if (item is IDictionary)
+            {
+                cv = DeserializeObject(t, item as Dictionary<string, object>);
+            }
+            else if (item is IList)
+            {
+                cv = DeserializeArray(t, item as List<object>);
+            }
+            else
+            {
+                cv = DeserializeValue(t, item);
+            }
 
             if (memberType == MemberTypes.Field) ((FieldInfo)member).SetValue(v, cv);
             else ((PropertyInfo)member).SetValue(v, cv, null);
@@ -258,7 +262,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         private Token NextToken()
         {
-            Token result = lookAheadToken != Token.None ? lookAheadToken : NextTokenCore();
+            var result = lookAheadToken != Token.None ? lookAheadToken : NextTokenCore();
             lookAheadToken = Token.None;
             return result;
         }
@@ -371,7 +375,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Parse JSON string into JsonItem
+        ///     Parse JSON string into JsonItem
         /// </summary>
         /// <param name="json">JSON string</param>
         /// <returns>Root object</returns>
@@ -379,12 +383,12 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         {
             if (string.IsNullOrEmpty(json)) return new JsonValue(null, JsonValue.ValueType.NULL);
 
-            Json instance = new Json(json);
+            var instance = new Json(json);
             return instance.ParseValue();
         }
 
         /// <summary>
-        /// Parse JSON string into Dictonary, List and Object
+        ///     Parse JSON string into Dictonary, List and Object
         /// </summary>
         /// <param name="json">JSON string</param>
         /// <returns>Root object</returns>
@@ -392,17 +396,16 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         {
             if (string.IsNullOrEmpty(json)) return null;
 
-            Json instance = new Json(json);
+            var instance = new Json(json);
             return instance.ParseValueDirect();
         }
 
         private JsonArray ParseArray()
         {
-            JsonArray array = new JsonArray();
+            var array = new JsonArray();
             lookAheadToken = Token.None;
 
             while (true)
-            {
                 switch (LookAhead())
                 {
                     case Token.Comma:
@@ -417,16 +420,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                         array.Add(ParseValue());
                         break;
                 }
-            }
         }
 
         private List<object> ParseArrayDirect()
         {
-            List<object> array = new List<object>();
+            var array = new List<object>();
             lookAheadToken = Token.None;
 
             while (true)
-            {
                 switch (LookAhead())
                 {
                     case Token.Comma:
@@ -441,7 +442,6 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                         array.Add(ParseValueDirect());
                         break;
                 }
-            }
         }
 
         private object ParseNumber()
@@ -451,14 +451,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             index--;
 
             long n = 0;
-            bool neg = false;
+            var neg = false;
             long decimalV = 0;
             long exp = 0;
-            bool negExp = false;
+            var negExp = false;
 
             while (index < length)
             {
-                char c = json[index];
+                var c = json[index];
 
                 if (c >= '0' && c <= '9')
                 {
@@ -469,8 +469,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 {
                     decimalV = 1;
                 }
-                else if (c == '-') neg = true;
-                else if (c == '+') neg = false;
+                else if (c == '-')
+                {
+                    neg = true;
+                }
+                else if (c == '+')
+                {
+                    neg = false;
+                }
                 else if (c == 'e' || c == 'E')
                 {
                     if (decimalV == 0) decimalV = 1;
@@ -488,7 +494,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
                     break;
                 }
-                else break;
+                else
+                {
+                    break;
+                }
 
                 index++;
             }
@@ -496,7 +505,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             if (neg) n = -n;
             if (decimalV != 0)
             {
-                double v = n / (double)decimalV;
+                var v = n / (double)decimalV;
                 if (exp > 0)
                 {
                     if (negExp) v /= Math.Pow(10, exp);
@@ -511,12 +520,11 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         private JsonObject ParseObject()
         {
-            JsonObject obj = new JsonObject();
+            var obj = new JsonObject();
 
             lookAheadToken = Token.None;
 
             while (true)
-            {
                 switch (LookAhead())
                 {
                     case Token.Comma:
@@ -529,23 +537,21 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
                     default:
                     {
-                        string name = ParseString();
+                        var name = ParseString();
                         if (NextToken() != Token.Colon) throw new Exception("Expected colon at index " + index);
                         obj.Add(name, ParseValue());
                     }
                         break;
                 }
-            }
         }
 
         private Dictionary<string, object> ParseObjectDirect()
         {
-            Dictionary<string, object> obj = new Dictionary<string, object>();
+            var obj = new Dictionary<string, object>();
 
             lookAheadToken = Token.None;
 
             while (true)
-            {
                 switch (LookAhead())
                 {
                     case Token.Comma:
@@ -558,13 +564,12 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
                     default:
                     {
-                        string name = ParseString();
+                        var name = ParseString();
                         if (NextToken() != Token.Colon) throw new Exception("Expected colon at index " + index);
                         obj.Add(name, ParseValueDirect());
                     }
                         break;
                 }
-            }
         }
 
         private uint ParseSingleChar(char c1, uint multipliyer)
@@ -582,13 +587,13 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             s.Length = 0;
 
-            int runIndex = -1;
-            int l = length;
-            string p = json;
+            var runIndex = -1;
+            var l = length;
+            var p = json;
             {
                 while (index < l)
                 {
-                    char c = p[index++];
+                    var c = p[index++];
 
                     if (c == '"')
                     {
@@ -651,10 +656,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
                         case 'u':
                         {
-                            int remainingLength = l - index;
+                            var remainingLength = l - index;
                             if (remainingLength < 4) break;
 
-                            uint codePoint = ParseUnicode(p[index], p[index + 1], p[index + 2], p[index + 3]);
+                            var codePoint = ParseUnicode(p[index], p[index + 1], p[index + 2], p[index + 3]);
                             s.Append((char)codePoint);
 
                             index += 4;
@@ -669,10 +674,10 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         private uint ParseUnicode(char c1, char c2, char c3, char c4)
         {
-            uint p1 = ParseSingleChar(c1, 0x1000);
-            uint p2 = ParseSingleChar(c2, 0x100);
-            uint p3 = ParseSingleChar(c3, 0x10);
-            uint p4 = ParseSingleChar(c4, 1);
+            var p1 = ParseSingleChar(c1, 0x1000);
+            var p2 = ParseSingleChar(c2, 0x100);
+            var p3 = ParseSingleChar(c3, 0x10);
+            var p4 = ParseSingleChar(c4, 1);
 
             return p1 + p2 + p3 + p4;
         }
@@ -682,7 +687,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             switch (LookAhead())
             {
                 case Token.Number:
-                    object number = ParseNumber();
+                    var number = ParseNumber();
                     return new JsonValue(number,
                         number is double ? JsonValue.ValueType.DOUBLE : JsonValue.ValueType.LONG);
 
@@ -750,7 +755,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Serializes an object to JSON.
+        ///     Serializes an object to JSON.
         /// </summary>
         /// <param name="obj">Object</param>
         /// <param name="includeChildren"></param>
@@ -767,24 +772,22 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             if (obj is string || obj is bool || obj is int || obj is long || obj is short || obj is float ||
                 obj is double) return new JsonValue(obj);
             if (obj.GetType().IsEnum) return new JsonValue(Enum.GetName(obj.GetType(), obj));
-            if (obj is UnityEngine.Object)
-            {
+            if (obj is Object)
                 if (!includeChildren || !(obj is Component || obj is ScriptableObject))
-                    return new JsonValue((obj as UnityEngine.Object).GetInstanceID());
-            }
+                    return new JsonValue((obj as Object).GetInstanceID());
 
             if (obj is IDictionary)
             {
-                IDictionary d = obj as IDictionary;
-                JsonObject dv = new JsonObject();
-                ICollection keys = d.Keys;
-                ICollection values = d.Values;
-                IEnumerator keysEnum = keys.GetEnumerator();
-                IEnumerator valuesEnum = values.GetEnumerator();
+                var d = obj as IDictionary;
+                var dv = new JsonObject();
+                var keys = d.Keys;
+                var values = d.Values;
+                var keysEnum = keys.GetEnumerator();
+                var valuesEnum = values.GetEnumerator();
                 while (keysEnum.MoveNext() && valuesEnum.MoveNext())
                 {
-                    object k = keysEnum.Current;
-                    object v = valuesEnum.Current;
+                    var k = keysEnum.Current;
+                    var v = valuesEnum.Current;
 
                     dv.Add(k as string, Serialize(v, bindingFlags));
                 }
@@ -794,24 +797,24 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
             if (obj is IEnumerable)
             {
-                IEnumerable v = (IEnumerable)obj;
-                JsonArray array = new JsonArray();
+                var v = (IEnumerable)obj;
+                var array = new JsonArray();
                 foreach (var item in v) array.Add(Serialize(item, bindingFlags));
                 return array;
             }
 
-            JsonObject o = new JsonObject();
-            Type type = obj.GetType();
+            var o = new JsonObject();
+            var type = obj.GetType();
 
             if (Reflection.CheckIfAnonymousType(type)) bindingFlags |= BindingFlags.NonPublic;
-            IEnumerable<FieldInfo> fields = Reflection.GetFields(type, bindingFlags);
-            foreach (FieldInfo field in fields)
+            var fields = Reflection.GetFields(type, bindingFlags);
+            foreach (var field in fields)
             {
-                string fieldName = field.Name;
+                var fieldName = field.Name;
                 if (field.Attributes == (FieldAttributes.Private | FieldAttributes.InitOnly))
                 {
-                    int startIndex = fieldName.IndexOf('<') + 1;
-                    int endIndex = fieldName.IndexOf('>', startIndex);
+                    var startIndex = fieldName.IndexOf('<') + 1;
+                    var endIndex = fieldName.IndexOf('>', startIndex);
                     if (endIndex != -1 && startIndex != -1)
                         fieldName = fieldName.Substring(startIndex, endIndex - startIndex);
                     else fieldName = fieldName.Trim('<', '>');
@@ -840,22 +843,22 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
-        /// Alias of field used during deserialization.
+        ///     Alias of field used during deserialization.
         /// </summary>
         public class AliasAttribute : Attribute
         {
             /// <summary>
-            /// Aliases
+            ///     Aliases
             /// </summary>
             public readonly string[] aliases;
 
             /// <summary>
-            /// If true, the original field name will be ignored.
+            ///     If true, the original field name will be ignored.
             /// </summary>
             public readonly bool ignoreFieldName;
 
             /// <summary>
-            /// Constructor
+            ///     Constructor
             /// </summary>
             /// <param name="ignoreFieldName">If true, the original field name will be ignored.</param>
             /// <param name="aliases">Aliases</param>
@@ -868,7 +871,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             }
 
             /// <summary>
-            /// Constructor
+            ///     Constructor
             /// </summary>
             /// <param name="aliases">Aliases</param>
             public AliasAttribute(params string[] aliases) : this(false, aliases)

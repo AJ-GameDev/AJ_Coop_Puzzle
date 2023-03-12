@@ -29,7 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return new[]
                 {
-                    new Shortcut("Frame Selected Bounds", "Scene View", "SHIFT + F"),
+                    new Shortcut("Frame Selected Bounds", "Scene View", "SHIFT + F")
                 };
             }
 

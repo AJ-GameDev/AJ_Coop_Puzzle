@@ -11,12 +11,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
 
         public virtual void Draw()
         {
-            ButtonEvent buttonEvent = GUILayoutUtils.Button(content, QuickAccess.contentStyle,
+            var buttonEvent = GUILayoutUtils.Button(content, QuickAccess.contentStyle,
                 GUILayout.Width(QuickAccess.width), GUILayout.Height(QuickAccess.width));
-            if (buttonEvent == ButtonEvent.click)
-            {
-                OnClick();
-            }
+            if (buttonEvent == ButtonEvent.click) OnClick();
         }
 
         public abstract void OnClick();

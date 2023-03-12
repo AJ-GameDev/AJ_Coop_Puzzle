@@ -1,7 +1,6 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -11,19 +10,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
     [InitializeOnLoad]
     public class EnhancedHierarchy : EditorWindow
     {
-        const string PrefKey = Prefs.Prefix + "EnhancedHierarchy";
-        private static FieldInfo rightMarginField;
-        private static FieldInfo disableNativeIconField;
+        private const string PrefKey = Prefs.Prefix + "EnhancedHierarchy";
+        private static readonly FieldInfo rightMarginField;
+        private static readonly FieldInfo disableNativeIconField;
 
         private bool disableErrorIcons = true;
         private bool hideNativeIcons = true;
 
         static EnhancedHierarchy()
         {
-            Assembly assembly = Reflection.GetAssembly("EnhancedHierarchyEditor");
+            var assembly = Reflection.GetAssembly("EnhancedHierarchyEditor");
             if (assembly == null) return;
 
-            Type prefType = assembly.GetType("EnhancedHierarchy.Preferences");
+            var prefType = assembly.GetType("EnhancedHierarchy.Preferences");
             if (prefType == null) return;
 
             rightMarginField = prefType.GetField("RightMargin", Reflection.StaticLookup);
@@ -55,10 +54,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
                     Prefs.Save();
                 }
 
-                if (hideNativeIcons)
-                {
-                    SetHideNativeIcons(true);
-                }
+                if (hideNativeIcons) SetHideNativeIcons(true);
 
                 Close();
             }
@@ -68,16 +64,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
         {
             if (!isPresent) return 0;
 
-            object rm = rightMarginField.GetValue(null);
-            object wrapper = Reflection.GetFieldValue(rm, "wrapper");
+            var rm = rightMarginField.GetValue(null);
+            var wrapper = Reflection.GetFieldValue(rm, "wrapper");
             return (int)Reflection.GetFieldValue(wrapper, "value");
         }
 
         public static void OpenWindow()
         {
-            EnhancedHierarchy wnd = GetWindow<EnhancedHierarchy>(true);
+            var wnd = GetWindow<EnhancedHierarchy>(true);
             wnd.titleContent = new GUIContent("Optimize Settings");
-            Rect rect = wnd.position;
+            var rect = wnd.position;
             rect.width = 500;
             rect.height = 110;
             rect.x = (Screen.currentResolution.width - rect.width) / 2;
@@ -95,7 +91,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
         private static void SetHideNativeIcons(bool value)
         {
             if (!isPresent) return;
-            object p = disableNativeIconField.GetValue(null);
+            var p = disableNativeIconField.GetValue(null);
             Reflection.SetPropertyValue(p, "Value", value);
         }
 
@@ -103,8 +99,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
         {
             if (!isPresent) return;
 
-            object rm = rightMarginField.GetValue(null);
-            object wrapper = Reflection.GetFieldValue(rm, "wrapper");
+            var rm = rightMarginField.GetValue(null);
+            var wrapper = Reflection.GetFieldValue(rm, "wrapper");
             Reflection.SetFieldValue(wrapper, "value", margin);
             Reflection.SetFieldValue(rm, "wrapper", wrapper);
         }

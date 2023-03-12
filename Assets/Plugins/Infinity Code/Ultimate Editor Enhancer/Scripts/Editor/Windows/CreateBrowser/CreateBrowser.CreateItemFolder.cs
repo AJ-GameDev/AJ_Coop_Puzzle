@@ -11,7 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         internal class CreateItemFolder : FolderItem
         {
-            private string tooltip;
+            private readonly string tooltip;
 
             public CreateItemFolder(string[] parts, int index, string submenu)
             {
@@ -20,22 +20,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 StaticStringBuilder.Clear();
                 StaticStringBuilder.Append("GameObject");
-                for (int i = 0; i <= index; i++)
-                {
-                    StaticStringBuilder.Append("/").Append(parts[i]);
-                }
+                for (var i = 0; i <= index; i++) StaticStringBuilder.Append("/").Append(parts[i]);
 
                 tooltip = StaticStringBuilder.GetString(true);
 
                 if (parts.Length == index + 2)
                 {
-                    CreateItem child = new CreateItem(parts[index + 1], submenu);
+                    var child = new CreateItem(parts[index + 1], submenu);
                     child.parent = this;
                     children.Add(child);
                 }
                 else
                 {
-                    CreateItemFolder child = new CreateItemFolder(parts, index + 1, submenu);
+                    var child = new CreateItemFolder(parts, index + 1, submenu);
                     child.parent = this;
                     children.Add(child);
                 }
@@ -43,20 +40,23 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public void Add(string[] parts, int index, string submenu)
             {
-                string next = parts[index + 1];
-                CreateItemFolder folder = children.FirstOrDefault(c => c.label == next) as CreateItemFolder;
-                if (folder != null) folder.Add(parts, index + 1, submenu);
+                var next = parts[index + 1];
+                var folder = children.FirstOrDefault(c => c.label == next) as CreateItemFolder;
+                if (folder != null)
+                {
+                    folder.Add(parts, index + 1, submenu);
+                }
                 else
                 {
                     if (parts.Length == index + 2)
                     {
-                        CreateItem child = new CreateItem(parts[index + 1], submenu);
+                        var child = new CreateItem(parts[index + 1], submenu);
                         child.parent = this;
                         children.Add(child);
                     }
                     else
                     {
-                        CreateItemFolder child = new CreateItemFolder(parts, index + 1, submenu);
+                        var child = new CreateItemFolder(parts, index + 1, submenu);
                         child.parent = this;
                         children.Add(child);
                     }

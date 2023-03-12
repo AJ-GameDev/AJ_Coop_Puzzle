@@ -6,7 +6,6 @@ using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -19,13 +18,13 @@ namespace InfinityCode.UltimateEditorEnhancer
         private const float dropdownWidth = 80;
         private const float playPauseStopWidth = 140;
 
-        private static int toolCount;
+        private static readonly int toolCount;
         private static GUIStyle style;
 
-        private static int leftToolbarCount = 0;
+        private static int leftToolbarCount;
         private static Item[] leftToolbarItems;
 
-        private static int rightToolbarCount = 0;
+        private static int rightToolbarCount;
         private static Item[] rightToolbarItems;
 
         private static ScriptableObject currentToolbar;
@@ -40,24 +39,15 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static void AddItem(ref Item[] items, ref int count, string key, Action action, int order)
         {
             if (items == null)
-            {
                 items = new Item[8];
-            }
-            else if (count == items.Length)
-            {
-                Array.Resize(ref items, items.Length * 2);
-            }
+            else if (count == items.Length) Array.Resize(ref items, items.Length * 2);
 
             int i;
             for (i = 0; i < count; i++)
-            {
-                if (order < items[i].order) break;
-            }
+                if (order < items[i].order)
+                    break;
 
-            for (int j = count - 1; j >= i; j--)
-            {
-                items[j + 1] = items[j];
-            }
+            for (var j = count - 1; j >= i; j--) items[j + 1] = items[j];
 
             items[i] = new Item(key, action, order);
             count++;
@@ -77,7 +67,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (currentToolbar != null) return;
 
-            Object[] toolbars = UnityEngine.Resources.FindObjectsOfTypeAll(ToolbarRef.type);
+            var toolbars = UnityEngine.Resources.FindObjectsOfTypeAll(ToolbarRef.type);
             if (toolbars.Length == 0)
             {
                 currentToolbar = null;
@@ -88,7 +78,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (currentToolbar == null) return;
 
 #if UNITY_2021_1_OR_NEWER
-            VisualElement root = ToolbarRef.GetRoot(currentToolbar);
+            var root = ToolbarRef.GetRoot(currentToolbar);
 
             CreateArea(root, "ToolbarZoneLeftAlign", Justify.FlexEnd, DrawLeftToolbarItems);
             CreateArea(root, "ToolbarZoneRightAlign", Justify.FlexStart, DrawRightToolbarItems);
@@ -107,8 +97,8 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (action == null) return;
 
-            VisualElement toolbar = root.Q(zoneName);
-            VisualElement parent = new VisualElement
+            var toolbar = root.Q(zoneName);
+            var parent = new VisualElement
             {
                 style =
                 {
@@ -118,7 +108,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             };
 
-            IMGUIContainer container = new IMGUIContainer();
+            var container = new IMGUIContainer();
             container.onGUIHandler += action.Invoke;
             parent.Add(container);
             toolbar.Add(parent);
@@ -128,7 +118,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (leftToolbarCount == 0) return;
 
-            Rect rect = new Rect(0, 0, screenWidth, Screen.height);
+            var rect = new Rect(0, 0, screenWidth, Screen.height);
             rect.xMin += space * 2 + buttonWidth * toolCount + largeSpace + 128;
             rect.xMax = playButtonsPosition - space;
             rect.y = 4;
@@ -145,8 +135,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            for (int i = 0; i < leftToolbarCount; i++)
-            {
+            for (var i = 0; i < leftToolbarCount; i++)
                 try
                 {
                     leftToolbarItems[i].action();
@@ -155,7 +144,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(e);
                 }
-            }
 
             GUILayout.EndHorizontal();
         }
@@ -164,7 +152,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (rightToolbarCount == 0) return;
 
-            Rect rightRect = new Rect(0, 0, screenWidth, Screen.height);
+            var rightRect = new Rect(0, 0, screenWidth, Screen.height);
             rightRect.xMin = playButtonsPosition + style.fixedWidth * 3 + space;
             rightRect.xMax = screenWidth - space * 5 - dropdownWidth * 3 - largeSpace - buttonWidth - 78;
             rightRect.y = 4;
@@ -181,8 +169,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             GUILayout.BeginHorizontal();
 
-            for (int i = 0; i < rightToolbarCount; i++)
-            {
+            for (var i = 0; i < rightToolbarCount; i++)
                 try
                 {
                     rightToolbarItems[i].action();
@@ -191,7 +178,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(e);
                 }
-            }
 
             GUILayout.EndHorizontal();
         }
@@ -200,7 +186,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (style == null) style = new GUIStyle("CommandLeft");
 
-            float screenWidth = EditorGUIUtility.currentViewWidth;
+            var screenWidth = EditorGUIUtility.currentViewWidth;
             float playButtonsPosition = Mathf.RoundToInt((screenWidth - playPauseStopWidth) / 2);
 
             DrawLeftToolbar(screenWidth, playButtonsPosition);
@@ -211,9 +197,8 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (count == 0) return false;
 
-            int offset = 0;
-            for (int i = 0; i < count; i++)
-            {
+            var offset = 0;
+            for (var i = 0; i < count; i++)
                 if (items[i].key == key)
                 {
                     items[i].Dispose();
@@ -223,7 +208,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     items[i - offset] = items[i];
                 }
-            }
 
             count -= offset;
 
@@ -244,7 +228,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             public Action action;
             public string key;
-            public int order;
+            public readonly int order;
 
             public Item(string key, Action action, int order)
             {

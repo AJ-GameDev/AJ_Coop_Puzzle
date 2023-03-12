@@ -32,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void OnGUI()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter)
@@ -59,7 +59,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             if (OnDrawExtra != null)
-            {
                 try
                 {
                     OnDrawExtra(this);
@@ -72,12 +71,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     Log.Add(ex);
                 }
-            }
 
             EditorGUILayout.BeginHorizontal();
 
             if (OnDrawLeftButtons != null)
-            {
                 try
                 {
                     OnDrawLeftButtons(this);
@@ -86,7 +83,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     Log.Add(ex);
                 }
-            }
 
             GUILayout.FlexibleSpace();
 
@@ -98,8 +94,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static void CloseActiveInstances()
         {
-            InputDialog[] dialogs = UnityEngine.Resources.FindObjectsOfTypeAll<InputDialog>();
-            foreach (InputDialog d in dialogs) d.Close();
+            var dialogs = UnityEngine.Resources.FindObjectsOfTypeAll<InputDialog>();
+            foreach (var d in dialogs) d.Close();
         }
 
         private void InvokeOK()
@@ -120,10 +116,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             CloseActiveInstances();
 
-            Resolution r = Screen.currentResolution;
-            Vector2 size = new Vector2(300, 50);
+            var r = Screen.currentResolution;
+            var size = new Vector2(300, 50);
 
-            InputDialog window = CreateInstance<InputDialog>();
+            var window = CreateInstance<InputDialog>();
             window.minSize = size;
             window.titleContent = new GUIContent(title);
             window.text = text;

@@ -18,8 +18,8 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
                     TempContent.Get(Styles.isProSkin ? Icons.align : Icons.alignDark, "Align & Distribute"),
                     Styles.iconButton))
             {
-                GenericMenuEx menu = GenericMenuEx.Start();
-                GameObject[] gameObjects = targets.Select(t => (t as Transform).gameObject).ToArray();
+                var menu = GenericMenuEx.Start();
+                var gameObjects = targets.Select(t => (t as Transform).gameObject).ToArray();
 
                 menu.Add("Align/X/Min", () => GameObjectUtils.Align(gameObjects, 0, 1, 0, 0));
                 menu.Add("Align/X/Center", () => GameObjectUtils.Align(gameObjects, 1, 1, 0, 0));
@@ -48,7 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             if (!Prefs.componentExtraHeaderButtons) return false;
             if (targets.Length < 2) return false;
 
-            Object target = targets[0];
+            var target = targets[0];
             if (!(target is Transform)) return false;
             if (target is RectTransform) return false;
             return true;

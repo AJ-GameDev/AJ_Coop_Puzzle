@@ -2,6 +2,7 @@
 /*     https://infinity-code.com    */
 
 using System;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -12,14 +13,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
         }
 
-        public SceneBookmark(UnityEngine.Object obj) : base(obj)
+        public SceneBookmark(Object obj) : base(obj)
         {
         }
 
-        public override bool isProjectItem
-        {
-            get { return false; }
-        }
+        public override bool isProjectItem => false;
 
         public override bool HasLabel(string label)
         {

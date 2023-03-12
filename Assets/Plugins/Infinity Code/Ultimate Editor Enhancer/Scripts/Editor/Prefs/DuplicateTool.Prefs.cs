@@ -17,10 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return new[] { "Duplicate Tool" }; }
             }
 
-            public override float order
-            {
-                get { return (Order.sceneReferences + Order.improveBehaviors) / 2f; }
-            }
+            public override float order => (Order.sceneReferences + Order.improveBehaviors) / 2f;
 
             public override void Draw()
             {

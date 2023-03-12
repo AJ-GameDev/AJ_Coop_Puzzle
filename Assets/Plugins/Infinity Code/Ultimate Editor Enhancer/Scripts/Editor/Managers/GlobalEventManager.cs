@@ -12,14 +12,14 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         static GlobalEventManager()
         {
-            EditorApplication.CallbackFunction callback = EditorApplicationRef.GetGlobalEventHandler();
+            var callback = EditorApplicationRef.GetGlobalEventHandler();
             callback = EditorGlobalEvent + callback;
             EditorApplicationRef.SetGlobalEventHandler(callback);
         }
 
         private static void EditorGlobalEvent()
         {
-            for (int i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvoke();
+            for (var i = bindings.Count - 1; i >= 0; i--) bindings[i].TryInvoke();
         }
 
         public static GlobalEvent AddListener(Action action)
@@ -29,7 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class GlobalEvent
         {
-            private Action action;
+            private readonly Action action;
 
             public GlobalEvent(Action action)
             {

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
-using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -17,10 +16,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool dragObjectFields = true;
         public static bool emptyInspector = true;
         public static bool hideEmptyHelpButton = true;
-        public static bool hidePresetButton = false;
+        public static bool hidePresetButton;
         public static bool inspectorBar = true;
 
-        public static bool inspectorBarShowMaterials = false;
+        public static bool inspectorBarShowMaterials;
 
         //public static bool inspectorBarRelatedComponents = true;
         public static bool nestedEditors = true;
@@ -46,7 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         "Inspector Bar",
                         "Items On Empty Inspector",
                         "Nested Editor",
-                        "Object Field Selector",
+                        "Object Field Selector"
                     };
                 }
             }
@@ -132,7 +131,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (EditorGUI.EndChangeCheck())
                 {
                     ReorderableListInterceptor.Refresh();
-                    Object[] windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
+                    var windows = UnityEngine.Resources.FindObjectsOfTypeAll(InspectorWindowRef.type);
                     foreach (EditorWindow wnd in windows) wnd.Repaint();
                 }
 

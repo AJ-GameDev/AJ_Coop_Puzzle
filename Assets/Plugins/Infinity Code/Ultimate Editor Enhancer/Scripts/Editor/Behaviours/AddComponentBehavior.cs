@@ -15,27 +15,27 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
         static AddComponentBehavior()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidate;
             binding.OnPress += OnInvoke;
         }
 
         private static void OnInvoke()
         {
-            Event e = Event.current;
-            Vector2 position = e.mousePosition;
+            var e = Event.current;
+            var position = e.mousePosition;
             if (EditorWindow.focusedWindow != null) position += EditorWindow.focusedWindow.position.position;
             else position = HandleUtility.GUIPointToScreenPixelCoordinate(position);
 
             Vector2 size = Prefs.defaultWindowSize;
-            Rect rect = new Rect(position + new Vector2(-size.x / 2, 20), size);
+            var rect = new Rect(position + new Vector2(-size.x / 2, 20), size);
 
 #if !UNITY_EDITOR_OSX
             if (rect.yMax > Screen.currentResolution.height - 10) rect.y -= rect.height - 50;
 
             if (rect.x < 5) rect.x = 5;
-            else if (rect.xMax > Screen.currentResolution.width - 5)
-                rect.x = Screen.currentResolution.width - 5 - rect.width;
+            else if (rect.xMax > Screen.currentResolution.width - 5) rect.x =
+ Screen.currentResolution.width - 5 - rect.width;
 #endif
 
             if (wnd != null) EventManager.BroadcastClosePopup();
@@ -54,7 +54,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         {
             if (!Prefs.improveAddComponentBehaviour) return false;
             if (Selection.activeGameObject == null) return false;
-            Event e = Event.current;
+            var e = Event.current;
             if (e.keyCode != KeyCode.A) return false;
 #if !UNITY_EDITOR_OSX
             if (e.modifiers != (EventModifiers.Control | EventModifiers.Shift)) return false;

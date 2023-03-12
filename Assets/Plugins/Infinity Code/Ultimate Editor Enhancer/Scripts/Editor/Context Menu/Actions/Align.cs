@@ -10,15 +10,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
     [RequireMultipleGameObjects]
     public class Align : ActionItem
     {
-        protected override bool closeOnSelect
-        {
-            get { return false; }
-        }
+        protected override bool closeOnSelect => false;
 
-        public override float order
-        {
-            get { return -900; }
-        }
+        public override float order => -900;
 
         private static void AlignSelection(int side, float x, float y, float z)
         {
@@ -39,7 +33,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         public override void Invoke()
         {
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
             menu.Add("Align/X/Min", () => AlignSelection(0, 1, 0, 0));
             menu.Add("Align/X/Center", () => AlignSelection(1, 1, 0, 0));

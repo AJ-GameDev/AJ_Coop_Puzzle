@@ -23,7 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         static Preview()
         {
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            var binding = KeyManager.AddBinding();
             binding.OnValidate += () =>
             {
                 if (!Prefs.preview) return false;
@@ -37,10 +37,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.quickPreview, true);
         }
 
-        public static bool isActive
-        {
-            get { return texture != null; }
-        }
+        public static bool isActive => texture != null;
 
         public static PreviewItem activeItem
         {
@@ -61,7 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (items != null)
             {
-                foreach (PreviewItem item in items) item.Dispose();
+                foreach (var item in items) item.Dispose();
                 items = null;
             }
 
@@ -72,10 +69,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (activeItem == null) return;
 
-            Rect rect = SceneView.lastActiveSceneView.position;
-            Event e = Event.current;
+            var rect = SceneView.lastActiveSceneView.position;
+            var e = Event.current;
 
-            if (e.type == EventType.KeyUp) OnKeyUp(e);
+            if (e.type == EventType.KeyUp)
+            {
+                OnKeyUp(e);
+            }
             else if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.F)
@@ -86,7 +86,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     SceneView.RepaintAll();
                 }
             }
-            else if (e.type == EventType.ScrollWheel) OnScrollWheel(e);
+            else if (e.type == EventType.ScrollWheel)
+            {
+                OnScrollWheel(e);
+            }
 
             if (texture == null) return;
             if (e.modifiers != Prefs.previewModifiers)
@@ -105,7 +108,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
 
             if (style == null)
-            {
                 style = new GUIStyle(EditorStyles.helpBox)
                 {
                     alignment = TextAnchor.MiddleCenter,
@@ -114,14 +116,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         textColor = Styles.isProSkin ? Color.black : Color.white
                     }
                 };
-            }
 
-            GUIContent content =
-                new GUIContent((activeIndex + 1) + " / " + items.Length + " " + items[activeIndex].name);
-            Vector2 contentSize = style.CalcSize(content);
-            GUIContent scrollContent = new GUIContent("Mouse Scroll - Change Camera / View");
-            Vector2 scrollContentSize = style.CalcSize(scrollContent);
-            float width = Mathf.Max(scrollContentSize.x, contentSize.x) + 20;
+            var content = new GUIContent(activeIndex + 1 + " / " + items.Length + " " + items[activeIndex].name);
+            var contentSize = style.CalcSize(content);
+            var scrollContent = new GUIContent("Mouse Scroll - Change Camera / View");
+            var scrollContentSize = style.CalcSize(scrollContent);
+            var width = Mathf.Max(scrollContentSize.x, contentSize.x) + 20;
 
             GUI.Label(new Rect(5, 5, width, 20), content, style);
             GUI.Label(new Rect(5, 30, width, 20), scrollContent, style);
@@ -163,20 +163,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static void StartPreview()
         {
             if (texture != null) return;
-            SceneView view = SceneView.lastActiveSceneView;
+            var view = SceneView.lastActiveSceneView;
 
             if (view == null) return;
 
             if (EditorWindow.focusedWindow != view) view.Focus();
 
-            List<PreviewItem> tempItems = new List<PreviewItem>();
+            var tempItems = new List<PreviewItem>();
 
-            Camera mainCamera = Camera.main;
-            Camera[] cameras = Object.FindObjectsOfType<Camera>();
+            var mainCamera = Camera.main;
+            var cameras = Object.FindObjectsOfType<Camera>();
             activeIndex = 0;
-            for (int i = 0; i < cameras.Length; i++)
+            for (var i = 0; i < cameras.Length; i++)
             {
-                Camera camera = cameras[i];
+                var camera = cameras[i];
                 if (camera.GetComponent<HideInPreview>() != null) continue;
 
                 if (camera == mainCamera) activeIndex = tempItems.Count;
@@ -184,10 +184,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 tempItems.Add(new CameraItem(camera));
             }
 
-            ViewState[] states = Object.FindObjectsOfType<ViewState>();
-            for (int i = 0; i < states.Length; i++)
+            var states = Object.FindObjectsOfType<ViewState>();
+            for (var i = 0; i < states.Length; i++)
             {
-                ViewState state = states[i];
+                var state = states[i];
                 if (!state.useInPreview) continue;
 
                 tempItems.Add(new ViewStateItem(state));
@@ -217,10 +217,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 this.camera = camera;
             }
 
-            public override string name
-            {
-                get { return camera.gameObject.name; }
-            }
+            public override string name => camera.gameObject.name;
 
             public override void Dispose()
             {
@@ -236,13 +233,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (camera == null) return;
 
-                Canvas[] canvases = Object.FindObjectsOfType<Canvas>();
-                List<Canvas> modifiedCanvases = new List<Canvas>();
+                var canvases = Object.FindObjectsOfType<Canvas>();
+                var modifiedCanvases = new List<Canvas>();
 
                 try
                 {
-                    foreach (Canvas canvas in canvases)
-                    {
+                    foreach (var canvas in canvases)
                         if (canvas.renderMode == RenderMode.ScreenSpaceOverlay &&
                             canvas.targetDisplay == camera.targetDisplay)
                         {
@@ -251,13 +247,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                             canvas.worldCamera = camera;
                             canvas.planeDistance = camera.nearClipPlane * 1.1f;
                         }
-                    }
 
-                    CameraClearFlags clearFlags = camera.clearFlags;
+                    var clearFlags = camera.clearFlags;
                     if (clearFlags == CameraClearFlags.Depth || clearFlags == CameraClearFlags.Nothing)
                         camera.clearFlags = CameraClearFlags.Skybox;
-                    RenderTexture lastAT = camera.targetTexture;
-                    RenderTexture rt = camera.targetTexture = new RenderTexture((int)rect.width, (int)rect.height, 16,
+                    var lastAT = camera.targetTexture;
+                    var rt = camera.targetTexture = new RenderTexture((int)rect.width, (int)rect.height, 16,
                         RenderTextureFormat.ARGB32);
                     camera.Render();
 
@@ -281,7 +276,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     Log.Add(e);
                 }
 
-                foreach (Canvas canvas in modifiedCanvases)
+                foreach (var canvas in modifiedCanvases)
                 {
                     canvas.renderMode = RenderMode.ScreenSpaceOverlay;
                     canvas.worldCamera = null;
@@ -298,10 +293,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 this.state = state;
             }
 
-            public override string name
-            {
-                get { return state.title; }
-            }
+            public override string name => state.title;
 
             public override void Dispose()
             {
@@ -310,7 +302,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             public override void Focus()
             {
-                SceneView view = SceneView.lastActiveSceneView;
+                var view = SceneView.lastActiveSceneView;
 
                 view.orthographic = state.is2D;
                 view.pivot = state.pivot;
@@ -320,28 +312,27 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             public override void Render(Rect rect)
             {
-                RenderTexture renderTexture =
+                var renderTexture =
                     new RenderTexture((int)rect.width, (int)rect.height, 16, RenderTextureFormat.ARGB32);
                 RenderTexture.active = renderTexture;
 
-                SceneView sceneView = SceneView.lastActiveSceneView;
-                Camera sceneCamera = sceneView.camera;
-                RenderTexture lastAT = sceneCamera.activeTexture;
-                CameraClearFlags clearFlags = sceneCamera.clearFlags;
+                var sceneView = SceneView.lastActiveSceneView;
+                var sceneCamera = sceneView.camera;
+                var lastAT = sceneCamera.activeTexture;
+                var clearFlags = sceneCamera.clearFlags;
                 if (clearFlags == CameraClearFlags.Depth || clearFlags == CameraClearFlags.Nothing)
                     sceneCamera.clearFlags = CameraClearFlags.Skybox;
                 sceneCamera.targetTexture = renderTexture;
 
-                Vector3 pivot = sceneView.pivot;
-                float size = sceneView.size;
-                Quaternion rotation = sceneView.rotation;
-                bool is2D = sceneView.in2DMode;
+                var pivot = sceneView.pivot;
+                var size = sceneView.size;
+                var rotation = sceneView.rotation;
+                var is2D = sceneView.in2DMode;
 
                 state.SetView(sceneCamera);
                 sceneCamera.Render();
 
-                Texture2D texture =
-                    new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+                var texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
                 texture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
                 texture.Apply();
 
@@ -349,7 +340,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 Preview.texture = texture;
 
                 sceneView.camera.orthographic = is2D;
-                Transform t = sceneView.camera.transform;
+                var t = sceneView.camera.transform;
                 if (is2D)
                 {
                     sceneView.camera.orthographicSize = size;

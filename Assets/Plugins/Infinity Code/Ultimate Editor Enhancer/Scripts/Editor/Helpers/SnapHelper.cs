@@ -10,10 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static class SnapHelper
     {
-        public static bool enabled
-        {
-            get { return ProGrids.snapEnabled || EditorSnapSettings.gridSnapEnabled; }
-        }
+        public static bool enabled => ProGrids.snapEnabled || EditorSnapSettings.gridSnapEnabled;
 
         public static float value
         {

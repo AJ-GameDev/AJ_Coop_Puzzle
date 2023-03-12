@@ -12,40 +12,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
     {
         private static void DrawDocumentation()
         {
-            if (GUILayout.Button("Local Documentation"))
-            {
-                Links.OpenLocalDocumentation();
-            }
+            if (GUILayout.Button("Local Documentation")) Links.OpenLocalDocumentation();
 
-            if (GUILayout.Button("Online Documentation"))
-            {
-                Links.OpenDocumentation();
-            }
+            if (GUILayout.Button("Online Documentation")) Links.OpenDocumentation();
 
             GUILayout.Space(10);
         }
 
         private static void DrawExtra()
         {
-            if (GUILayout.Button("Getting Started"))
-            {
-                GettingStarted.OpenWindow();
-            }
+            if (GUILayout.Button("Getting Started")) GettingStarted.OpenWindow();
 
-            if (GUILayout.Button("Changelog"))
-            {
-                Links.OpenChangelog();
-            }
+            if (GUILayout.Button("Changelog")) Links.OpenChangelog();
 
-            if (GUILayout.Button("Shortcuts"))
-            {
-                Shortcuts.OpenWindow();
-            }
+            if (GUILayout.Button("Shortcuts")) Shortcuts.OpenWindow();
 
-            if (GUILayout.Button("Settings"))
-            {
-                Settings.OpenSettings();
-            }
+            if (GUILayout.Button("Settings")) Settings.OpenSettings();
 
             GUILayout.Space(10);
         }
@@ -63,23 +45,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                 "Please don't forget to leave a review on the store page if you liked Ultimate Editor Enhancer, this helps us a lot!",
                 MessageType.Warning);
 
-            if (GUILayout.Button("Rate & Review"))
-            {
-                Links.OpenReviews();
-            }
+            if (GUILayout.Button("Rate & Review")) Links.OpenReviews();
         }
 
         private void DrawSupport()
         {
-            if (GUILayout.Button("Support"))
-            {
-                Links.OpenSupport();
-            }
+            if (GUILayout.Button("Support")) Links.OpenSupport();
 
-            if (GUILayout.Button("Forum"))
-            {
-                Links.OpenForum();
-            }
+            if (GUILayout.Button("Forum")) Links.OpenForum();
 
             GUILayout.Space(10);
         }

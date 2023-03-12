@@ -1,31 +1,20 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-using System;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 {
     public class Hierarchy : PopupWindowItem
     {
-        public override Texture icon
-        {
-            get { return EditorIconContents.hierarchyWindow.image; }
-        }
+        public override Texture icon => EditorIconContents.hierarchyWindow.image;
 
-        protected override string label
-        {
-            get { return "Hierarchy"; }
-        }
+        protected override string label => "Hierarchy";
 
-        public override float order
-        {
-            get { return -80; }
-        }
+        public override float order => -80;
 
         private static void FinalizeWindow(EditorWindow window)
         {
@@ -34,13 +23,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         protected override void ShowTab(Vector2 mousePosition)
         {
-            Type windowType = SceneHierarchyWindowRef.type;
+            var windowType = SceneHierarchyWindowRef.type;
             Vector2 windowSize = Prefs.defaultWindowSize;
-            Rect rect = new Rect(GUIUtility.GUIToScreenPoint(mousePosition) - windowSize / 2, Vector2.zero);
+            var rect = new Rect(GUIUtility.GUIToScreenPoint(mousePosition) - windowSize / 2, Vector2.zero);
 
-            Rect windowRect = new Rect(rect.position, windowSize);
+            var windowRect = new Rect(rect.position, windowSize);
 
-            EditorWindow window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
+            var window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
             window.Show();
             window.Focus();
             window.position = windowRect;
@@ -50,13 +39,13 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         protected override void ShowUtility(Vector2 mousePosition)
         {
-            Type windowType = SceneHierarchyWindowRef.type;
+            var windowType = SceneHierarchyWindowRef.type;
             Vector2 windowSize = Prefs.defaultWindowSize;
-            Rect rect = new Rect(GUIUtility.GUIToScreenPoint(mousePosition) - windowSize / 2, Vector2.zero);
+            var rect = new Rect(GUIUtility.GUIToScreenPoint(mousePosition) - windowSize / 2, Vector2.zero);
 
-            Rect windowRect = new Rect(rect.position, windowSize);
+            var windowRect = new Rect(rect.position, windowSize);
 
-            EditorWindow window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
+            var window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
             window.ShowUtility();
             window.Focus();
             window.position = windowRect;
@@ -66,14 +55,14 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         protected override void ShowPopup(Vector2 mousePosition)
         {
-            Type windowType = SceneHierarchyWindowRef.type;
+            var windowType = SceneHierarchyWindowRef.type;
             Vector2 windowSize = Prefs.defaultWindowSize;
-            Rect rect = new Rect(GUIUtility.GUIToScreenPoint(mousePosition) - windowSize / 2, Vector2.zero);
+            var rect = new Rect(GUIUtility.GUIToScreenPoint(mousePosition) - windowSize / 2, Vector2.zero);
 
-            Rect windowRect = new Rect(rect.position, windowSize);
+            var windowRect = new Rect(rect.position, windowSize);
             if (windowRect.y < 40) windowRect.y = 40;
 
-            EditorWindow window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
+            var window = ScriptableObject.CreateInstance(windowType) as EditorWindow;
             window.position = windowRect;
             window.ShowPopup();
             window.Focus();
@@ -84,9 +73,9 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
             };
             PinAndClose.Show(window, windowRect, window.Close, () =>
             {
-                EditorWindow wnd = Object.Instantiate(window);
+                var wnd = Object.Instantiate(window);
                 wnd.Show();
-                Rect wRect = window.position;
+                var wRect = window.position;
                 wRect.yMin -= PinAndClose.HEIGHT;
                 wnd.position = wRect;
                 wnd.maxSize = new Vector2(4000f, 4000f);

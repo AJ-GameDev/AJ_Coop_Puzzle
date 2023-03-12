@@ -12,34 +12,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
     public class HelpIconButtonInterceptor : StatedInterceptor<HelpIconButtonInterceptor>
     {
-        private static Dictionary<Type, bool> typeCache = new Dictionary<Type, bool>();
+        private static readonly Dictionary<Type, bool> typeCache = new();
 
-        protected override MethodInfo originalMethod
-        {
-            get => EditorGUIRef.helpIconButtonMethod;
-        }
+        protected override MethodInfo originalMethod => EditorGUIRef.helpIconButtonMethod;
 
-        protected override string prefixMethodName
-        {
-            get => nameof(HelpIconButtonPrefix);
-        }
+        protected override string prefixMethodName => nameof(HelpIconButtonPrefix);
 
-        protected override InitType initType
-        {
-            get => InitType.gui;
-        }
+        protected override InitType initType => InitType.gui;
 
-        public override bool state
-        {
-            get => Prefs.hideEmptyHelpButton;
-        }
+        public override bool state => Prefs.hideEmptyHelpButton;
 
         private static bool HelpIconButtonPrefix(Rect position, Object[] objs)
         {
-            Object obj = objs[0];
+            var obj = objs[0];
             if (!(obj is MonoBehaviour)) return true;
 
-            Type type = obj.GetType();
+            var type = obj.GetType();
             if (type.FullName.StartsWith("UnityEngine.")) return true;
 
             bool v;

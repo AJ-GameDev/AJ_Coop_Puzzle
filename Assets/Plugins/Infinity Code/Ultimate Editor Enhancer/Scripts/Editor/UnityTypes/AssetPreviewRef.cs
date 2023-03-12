@@ -13,20 +13,15 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         private static Type _type;
         private static MethodInfo _getMiniTypeThumbnailFromClassIDMethod;
 
-        public static Type type
-        {
-            get => typeof(AssetPreview);
-        }
+        public static Type type => typeof(AssetPreview);
 
         private static MethodInfo getMiniTypeThumbnailFromClassIDMethod
         {
             get
             {
                 if (_getMiniTypeThumbnailFromClassIDMethod == null)
-                {
                     _getMiniTypeThumbnailFromClassIDMethod = Reflection.GetMethod(type,
                         "GetMiniTypeThumbnailFromClassID", new[] { typeof(int) }, Reflection.StaticLookup);
-                }
 
                 return _getMiniTypeThumbnailFromClassIDMethod;
             }

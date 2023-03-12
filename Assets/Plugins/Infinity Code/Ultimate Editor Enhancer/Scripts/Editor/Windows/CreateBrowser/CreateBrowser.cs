@@ -36,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         [NonSerialized] private string searchText;
 
-        private int selectedIndex = 0;
+        private int selectedIndex;
         private int totalItems;
 
         private void OnEnable()
@@ -48,7 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             InitProviders();
 
             selectedIndex = 0;
-            foreach (Provider provider in providers)
+            foreach (var provider in providers)
             {
                 if (provider.items.Count == 0) continue;
                 selectedItem = provider.items[0];
@@ -61,9 +61,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (OnClose != null) OnClose(this);
 
             if (providers != null)
-            {
-                foreach (Provider p in providers) p.Dispose();
-            }
+                foreach (var p in providers)
+                    p.Dispose();
 
             filterItems = null;
 
@@ -87,12 +86,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (!ProcessEvents()) return;
 
             EditorGUILayout.BeginHorizontal();
-            bool filterChanged = DrawFilterTextField();
+            var filterChanged = DrawFilterTextField();
             if (GUILayoutUtils.ToolbarButton("?")) Links.OpenDocumentation("object-placer");
             EditorGUILayout.EndHorizontal();
 
-            PrefabItem currentPrefab = selectedItem as PrefabItem;
-            Event e = Event.current;
+            var currentPrefab = selectedItem as PrefabItem;
+            var e = Event.current;
             allowSelect = e.type == EventType.MouseMove && !e.control && !e.command && scrollRect.HasValue &&
                           scrollRect.Value.Contains(e.mousePosition);
 
@@ -105,14 +104,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (selectedFolder == null) DrawRootItems();
                 else DrawSubItems();
             }
-            else DrawFilteredItems();
+            else
+            {
+                DrawFilteredItems();
+            }
 
             EditorGUILayout.EndScrollView();
 
-            if (e.type != EventType.Layout && e.type != EventType.Used)
-            {
-                scrollRect = GUILayoutUtility.GetLastRect();
-            }
+            if (e.type != EventType.Layout && e.type != EventType.Used) scrollRect = GUILayoutUtility.GetLastRect();
 
             if (currentPrefab != null) currentPrefab.DrawPreview();
 
@@ -128,7 +127,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUI.SetNextControlName("UEECreateSearchTextField");
             EditorGUI.BeginChangeCheck();
             searchText = GUILayoutUtils.ToolbarSearchField(searchText);
-            bool changed = EditorGUI.EndChangeCheck();
+            var changed = EditorGUI.EndChangeCheck();
 
             if (resetSelection && Event.current.type == EventType.Repaint)
             {
@@ -143,19 +142,17 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void DrawFilteredItems()
         {
             if (filterItems.Count > 0)
-            {
-                foreach (Item item in filterItems)
+                foreach (var item in filterItems)
                 {
                     if (instance == null) return;
                     item.Draw();
                 }
-            }
             else EditorGUILayout.LabelField("Nothing found.");
         }
 
         private void DrawRootItems()
         {
-            foreach (Provider provider in providers)
+            foreach (var provider in providers)
             {
                 if (instance == null) return;
                 provider.Draw();
@@ -166,27 +163,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            FolderItem current = selectedFolder;
+            var current = selectedFolder;
 
             if (selectedFolder.parent != null)
-            {
                 if (GUILayoutUtils.ToolbarButton(EditorIconContents.animationFirstKey))
                 {
                     selectedFolder = null;
                     selectedItem = null;
                     return;
                 }
-            }
 
-            if (GUILayoutUtils.ToolbarButton(EditorIconContents.animationPrevKey))
-            {
-                SelectParent();
-            }
+            if (GUILayoutUtils.ToolbarButton(EditorIconContents.animationPrevKey)) SelectParent();
 
             EditorGUILayout.LabelField(current.title);
             EditorGUILayout.EndHorizontal();
 
-            foreach (Item item in current.children)
+            foreach (var item in current.children)
             {
                 item.Draw();
                 if (instance == null) return;
@@ -215,15 +207,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private bool ProcessEvents()
         {
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.DownArrow) SelectNext();
                 else if (e.keyCode == KeyCode.UpArrow) SelectPrev();
                 else if (e.keyCode == KeyCode.KeypadEnter || e.keyCode == KeyCode.Return)
-                {
                     return SelectCurrent();
-                }
                 else if (e.keyCode == KeyCode.Backspace && string.IsNullOrEmpty(searchText)) SelectParent();
             }
 
@@ -234,15 +224,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (selectedFolder == null) return;
 
-            FolderItem f = selectedFolder;
+            var f = selectedFolder;
             selectedFolder = selectedFolder.parent;
-            if (selectedFolder != null) selectedIndex = selectedFolder.children.IndexOf(f);
+            if (selectedFolder != null)
+            {
+                selectedIndex = selectedFolder.children.IndexOf(f);
+            }
             else
             {
-                int nextStart = 0;
-                foreach (Provider provider in providers)
+                var nextStart = 0;
+                foreach (var provider in providers)
                 {
-                    int index = provider.IndexOf(f);
+                    var index = provider.IndexOf(f);
                     if (index != -1)
                     {
                         selectedIndex = index + nextStart;
@@ -262,7 +255,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (selectedItem == null) return false;
 
-            bool ret = selectedItem is FolderItem;
+            var ret = selectedItem is FolderItem;
 
             selectedItem.OnClick();
             Event.current.Use();
@@ -296,9 +289,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (selectedIndex >= totalItems) selectedIndex = 0;
 
-                int remain = selectedIndex;
+                var remain = selectedIndex;
 
-                foreach (Provider provider in providers)
+                foreach (var provider in providers)
                 {
                     if (provider.count > remain)
                     {
@@ -341,9 +334,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 if (selectedIndex < 0) selectedIndex = totalItems - 1;
 
-                int remain = selectedIndex;
+                var remain = selectedIndex;
 
-                foreach (Provider provider in providers)
+                foreach (var provider in providers)
                 {
                     if (provider.count > remain)
                     {
@@ -364,9 +357,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             filterItems.Clear();
             if (string.IsNullOrEmpty(searchText)) return;
 
-            string pattern = SearchableItem.GetPattern(searchText);
+            var pattern = SearchableItem.GetPattern(searchText);
 
-            foreach (Provider provider in providers) provider.Filter(pattern, filterItems);
+            foreach (var provider in providers) provider.Filter(pattern, filterItems);
 
             filterItems = filterItems.OrderByDescending(i => i.accuracy).Take(Prefs.createBrowserMaxFilterItems)
                 .ToList();
@@ -400,11 +393,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else
             {
                 selectedIndex = 0;
-                bool match = false;
-                int nextStart = 0;
-                foreach (Provider provider in providers)
+                var match = false;
+                var nextStart = 0;
+                foreach (var provider in providers)
                 {
-                    int index = provider.IndexOf(selectedItem);
+                    var index = provider.IndexOf(selectedItem);
                     if (index != -1)
                     {
                         match = true;

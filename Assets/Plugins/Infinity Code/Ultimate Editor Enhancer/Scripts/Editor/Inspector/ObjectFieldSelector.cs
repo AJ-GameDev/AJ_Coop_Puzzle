@@ -4,7 +4,6 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
@@ -22,7 +21,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
     [InitializeOnLoad]
     public static class ObjectFieldSelector
     {
-        private static bool blockMouseUp = false;
+        private static bool blockMouseUp;
 
         static ObjectFieldSelector()
         {
@@ -45,7 +44,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             if (!Prefs.objectFieldSelector) return;
             if (property == null) return;
 
-            Event e = Event.current;
+            var e = Event.current;
             if (e.type == EventType.MouseUp && blockMouseUp)
             {
                 blockMouseUp = false;
@@ -55,27 +54,27 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
             if (e.type != EventType.MouseDown || e.button != 1) return;
 
-            Rect rect = new Rect(position);
+            var rect = new Rect(position);
             rect.xMin = rect.xMax - 16;
             if (!rect.Contains(e.mousePosition)) return;
 
-            SerializedObject serializedObject = property.serializedObject;
+            var serializedObject = property.serializedObject;
             if (serializedObject == null) return;
 
-            Object[] targets = serializedObject.targetObjects;
-            Object target = targets[0];
-            Type type = target.GetType();
-            FieldInfo field = Reflection.GetField(type, property.propertyPath, true);
+            var targets = serializedObject.targetObjects;
+            var target = targets[0];
+            var type = target.GetType();
+            var field = Reflection.GetField(type, property.propertyPath, true);
             if (field == null) return;
 
-            Type fieldType = field.FieldType;
+            var fieldType = field.FieldType;
 
             Object[] objects = null;
             GUIContent[] contents = null;
 
             if (fieldType.IsSubclassOf(typeof(Component)))
             {
-                PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+                var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
                 if (prefabStage != null)
                 {
                     objects = prefabStage.prefabContentsRoot.GetComponentsInChildren(fieldType, true);
@@ -102,9 +101,9 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
                     contents[0] = new GUIContent("None");
 
-                    for (int i = 1; i < objects.Length; i++)
+                    for (var i = 1; i < objects.Length; i++)
                     {
-                        Component component = objects[i] as Component;
+                        var component = objects[i] as Component;
                         StaticStringBuilder.Clear();
                         StaticStringBuilder.Append(component.name)
                             .Append(" (")
@@ -131,10 +130,10 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                     contents = new GUIContent[objects.Length];
                     contents[0] = new GUIContent("None");
 
-                    for (int i = 1; i < objects.Length; i++)
+                    for (var i = 1; i < objects.Length; i++)
                     {
-                        Object obj2 = objects[i];
-                        ScriptableObject so = obj2 as ScriptableObject;
+                        var obj2 = objects[i];
+                        var so = obj2 as ScriptableObject;
                         contents[i] = new GUIContent(so.name, AssetDatabase.GetAssetPath(so));
                     }
                 }
@@ -143,20 +142,15 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             {
                 objects = Object.FindObjectsOfType<GameObject>();
                 contents = new GUIContent[objects.Length];
-                for (int i = 0; i < objects.Length; i++)
-                {
-                    contents[i] = new GUIContent(objects[i].name);
-                }
+                for (var i = 0; i < objects.Length; i++) contents[i] = new GUIContent(objects[i].name);
             }
             else
             {
                 Debug.Log(fieldType);
                 objects = UnityEngine.Resources.FindObjectsOfTypeAll(fieldType);
                 contents = new GUIContent[objects.Length];
-                for (int i = 0; i < objects.Length; i++)
-                {
+                for (var i = 0; i < objects.Length; i++)
                     contents[i] = new GUIContent(objects[i].name, AssetDatabase.GetAssetPath(objects[i]));
-                }
             }
 
             blockMouseUp = true;
@@ -169,8 +163,8 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             FlatSelectorWindow.Show(position, contents, -1).OnSelect += index =>
             {
                 Undo.SetCurrentGroupName("Modified Property");
-                int group = Undo.GetCurrentGroup();
-                for (int i = 0; i < targets.Length; i++)
+                var group = Undo.GetCurrentGroup();
+                for (var i = 0; i < targets.Length; i++)
                 {
                     Undo.RecordObject(targets[i], "Modified Property");
                     field.SetValue(targets[i], objects[index]);

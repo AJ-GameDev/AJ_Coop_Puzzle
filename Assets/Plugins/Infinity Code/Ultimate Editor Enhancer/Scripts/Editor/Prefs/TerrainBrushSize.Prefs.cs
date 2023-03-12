@@ -43,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Change size of Terrain Brush", "Scene View", terrainBrushSizeModifiers,
                         "Mouse Wheel"),
                     new Shortcut("Fast Change size of Terrain Brush", "Scene View", terrainBrushSizeBoostModifiers,
-                        "Mouse Wheel"),
+                        "Mouse Wheel")
                 };
             }
 

@@ -9,8 +9,8 @@ using InfinityCode.UltimateEditorEnhancer.EditorMenus;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -21,67 +21,61 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void AddCollectionsToContextMenu(GameObject[] targets, GenericMenuEx menu)
         {
-            bool hasGroupTag = false;
+            var hasGroupTag = false;
 
-            string[] tags = UnityEditorInternal.InternalEditorUtility.tags;
-            foreach (string t in tags)
-            {
+            var tags = InternalEditorUtility.tags;
+            foreach (var t in tags)
                 if (t == "Collection")
                 {
                     hasGroupTag = true;
                     break;
                 }
-            }
 
             if (!hasGroupTag) return;
 
-            GameObject[] groups = GameObject.FindGameObjectsWithTag("Collection");
+            var groups = GameObject.FindGameObjectsWithTag("Collection");
             if (groups.Length == 0) return;
 
-            Transform firstParent = targets[0].transform.parent;
-            string activeGroup = (firstParent != null && firstParent.tag == "Collection")
+            var firstParent = targets[0].transform.parent;
+            var activeGroup = firstParent != null && firstParent.tag == "Collection"
                 ? firstParent.gameObject.name
                 : null;
 
             menu.Add("Collections/None", string.IsNullOrEmpty(activeGroup), () => MoveToGroup(targets, null));
 
-            foreach (GameObject group in groups.OrderBy(g => g.name))
+            foreach (var group in groups.OrderBy(g => g.name))
             {
-                GameObject g = group;
-                string groupName = g.name;
+                var g = group;
+                var groupName = g.name;
                 menu.Add("Collections/" + groupName, groupName == activeGroup, () => MoveToGroup(targets, g));
             }
         }
 
         private static void AddLayersToContextMenu(GameObject[] targets, GenericMenuEx menu)
         {
-            bool isMultiple = targets.Length > 1;
-            string[] layers = UnityEditorInternal.InternalEditorUtility.layers;
-            GameObject firstTarget = targets[0];
+            var isMultiple = targets.Length > 1;
+            var layers = InternalEditorUtility.layers;
+            var firstTarget = targets[0];
 
-            foreach (string layer in layers)
+            foreach (var layer in layers)
             {
-                bool isSameLayer = false;
-                int layerIndex = LayerMask.NameToLayer(layer);
+                var isSameLayer = false;
+                var layerIndex = LayerMask.NameToLayer(layer);
                 if (firstTarget.layer == layerIndex)
                 {
                     isSameLayer = true;
                     if (isMultiple)
-                    {
-                        for (int i = 1; i < targets.Length; i++)
-                        {
+                        for (var i = 1; i < targets.Length; i++)
                             if (firstTarget.layer != targets[i].layer)
                             {
                                 isSameLayer = false;
                                 break;
                             }
-                        }
-                    }
                 }
 
                 menu.Add("Layers/" + layer, isSameLayer, () =>
                 {
-                    foreach (GameObject target in targets)
+                    foreach (var target in targets)
                     {
                         target.layer = layerIndex;
                         EditorUtility.SetDirty(target);
@@ -95,36 +89,32 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void AddTagsToContextMenu(GameObject[] targets, GenericMenuEx menu)
         {
-            bool isMultiple = targets.Length > 1;
-            GameObject firstTarget = targets[0];
-            string[] tags = UnityEditorInternal.InternalEditorUtility.tags;
+            var isMultiple = targets.Length > 1;
+            var firstTarget = targets[0];
+            var tags = InternalEditorUtility.tags;
 
             menu.Add("Tags/New", false, CreateNewTag, targets);
             menu.AddSeparator("Tags/");
 
-            for (int i = 0; i < tags.Length; i++)
+            for (var i = 0; i < tags.Length; i++)
             {
-                string tag = tags[i];
-                bool isSameTag = false;
+                var tag = tags[i];
+                var isSameTag = false;
                 if (firstTarget.tag == tag)
                 {
                     isSameTag = true;
                     if (isMultiple)
-                    {
-                        for (int j = 1; j < targets.Length; j++)
-                        {
+                        for (var j = 1; j < targets.Length; j++)
                             if (firstTarget.tag != targets[j].tag)
                             {
                                 isSameTag = false;
                                 break;
                             }
-                        }
-                    }
                 }
 
                 menu.Add("Tags/" + tag, isSameTag, () =>
                 {
-                    foreach (GameObject target in targets)
+                    foreach (var target in targets)
                     {
                         target.tag = tag;
                         EditorUtility.SetDirty(target);
@@ -135,15 +125,15 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void Align(GameObject[] targets, int side, float xMul, float yMul, float zMul)
         {
-            Bounds bounds = new Bounds();
-            int count = 0;
+            var bounds = new Bounds();
+            var count = 0;
 
-            for (int i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
-                GameObject go1 = targets[i];
+                var go1 = targets[i];
                 if (go1.scene.name == null) continue;
 
-                Renderer r1 = go1.GetComponent<Renderer>();
+                var r1 = go1.GetComponent<Renderer>();
 
                 if (count == 0)
                 {
@@ -167,12 +157,12 @@ namespace InfinityCode.UltimateEditorEnhancer
             else v = bounds.max;
 
             Undo.SetCurrentGroupName("Align GameObjects");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
-            foreach (GameObject go in targets)
+            foreach (var go in targets)
             {
                 if (go.scene.name == null) continue;
-                Renderer r = go.GetComponent<Renderer>();
+                var r = go.GetComponent<Renderer>();
                 Undo.RecordObject(go.transform, "Align GameObjects");
                 if (r != null)
                 {
@@ -181,12 +171,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                     else if (side == 1) v2 = r.bounds.center;
                     else v2 = r.bounds.max;
 
-                    Vector3 offset = v2 - v;
+                    var offset = v2 - v;
                     go.transform.position -= new Vector3(offset.x * xMul, offset.y * yMul, offset.z * zMul);
                 }
                 else
                 {
-                    Vector3 offset = go.transform.position - v;
+                    var offset = go.transform.position - v;
                     go.transform.position -= new Vector3(offset.x * xMul, offset.y * yMul, offset.z * zMul);
                 }
             }
@@ -196,14 +186,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static bool AnyOutermostPrefabRoots(GameObject[] targets)
         {
-            foreach (GameObject go in targets)
-            {
+            foreach (var go in targets)
                 if (go != null && PrefabUtility.IsPartOfNonAssetPrefabInstance(go) &&
                     PrefabUtility.IsOutermostPrefabInstanceRoot(go))
-                {
                     return true;
-                }
-            }
 
             return false;
         }
@@ -214,7 +200,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (!PrefabUtility.IsAnyPrefabInstanceRoot(target)) return false;
             if (PrefabUtility.GetPrefabInstanceStatus(target) != PrefabInstanceStatus.Connected) return false;
 
-            GameObject asset = PrefabUtilityRef.GetOriginalSourceOrVariantRoot(target);
+            var asset = PrefabUtilityRef.GetOriginalSourceOrVariantRoot(target);
             if (asset == null || PrefabUtility.IsPartOfImmutablePrefab(asset)) return false;
 
             return true;
@@ -229,18 +215,18 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (string.IsNullOrEmpty(tag)) return false;
 
-            SerializedObject tagManager =
+            var tagManager =
                 new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+            var tagsProp = tagManager.FindProperty("tags");
 
-            for (int i = 0; i < tagsProp.arraySize; i++)
+            for (var i = 0; i < tagsProp.arraySize; i++)
             {
-                SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+                var t = tagsProp.GetArrayElementAtIndex(i);
                 if (t.stringValue.Equals(tag)) return true;
             }
 
             tagsProp.InsertArrayElementAtIndex(0);
-            SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
+            var n = tagsProp.GetArrayElementAtIndex(0);
             n.stringValue = tag;
 
             tagManager.ApplyModifiedProperties();
@@ -249,20 +235,20 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void Distribute(GameObject[] targets, float xMul, float yMul, float zMul)
         {
-            Bounds bounds = new Bounds();
-            int count = 0;
-            Vector3 size = new Vector3();
+            var bounds = new Bounds();
+            var count = 0;
+            var size = new Vector3();
 
             if (xMul > 0) targets = targets.OrderBy(t => t.transform.position.x).ToArray();
             else if (yMul > 0) targets = targets.OrderBy(t => t.transform.position.y).ToArray();
             else if (zMul > 0) targets = targets.OrderBy(t => t.transform.position.z).ToArray();
 
-            for (int i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
-                GameObject go = targets[i];
+                var go = targets[i];
                 if (go.scene.name == null) continue;
 
-                Renderer r = go.GetComponent<Renderer>();
+                var r = go.GetComponent<Renderer>();
 
                 if (count == 0)
                 {
@@ -271,7 +257,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                         bounds = r.bounds;
                         size = r.bounds.size;
                     }
-                    else bounds = new Bounds(go.transform.position, Vector3.zero);
+                    else
+                    {
+                        bounds = new Bounds(go.transform.position, Vector3.zero);
+                    }
                 }
                 else
                 {
@@ -280,7 +269,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                         bounds.Encapsulate(r.bounds);
                         size += r.bounds.size;
                     }
-                    else bounds.Encapsulate(go.transform.position);
+                    else
+                    {
+                        bounds.Encapsulate(go.transform.position);
+                    }
                 }
 
                 count++;
@@ -288,27 +280,27 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (count <= 2) return;
 
-            Vector3 shift = (bounds.size - size) / (count - 1);
-            Vector3 nextPoint = bounds.min;
+            var shift = (bounds.size - size) / (count - 1);
+            var nextPoint = bounds.min;
 
             Undo.SetCurrentGroupName("Distribute GameObjects");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
-            foreach (GameObject go in targets)
+            foreach (var go in targets)
             {
                 if (go.scene.name == null) continue;
-                Renderer r = go.GetComponent<Renderer>();
+                var r = go.GetComponent<Renderer>();
                 Undo.RecordObject(go.transform, "Distribute GameObjects");
                 if (r != null)
                 {
-                    Vector3 targetPoint = nextPoint + r.bounds.size / 2;
-                    Vector3 offset = go.transform.position - targetPoint;
+                    var targetPoint = nextPoint + r.bounds.size / 2;
+                    var offset = go.transform.position - targetPoint;
                     go.transform.position -= new Vector3(offset.x * xMul, offset.y * yMul, offset.z * zMul);
                     nextPoint += r.bounds.size;
                 }
                 else
                 {
-                    Vector3 offset = go.transform.position - nextPoint;
+                    var offset = go.transform.position - nextPoint;
                     go.transform.position -= new Vector3(offset.x * xMul, offset.y * yMul, offset.z * zMul);
                 }
 
@@ -327,10 +319,10 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (gameObject == null || gameObject.scene.name == null) return new Bounds();
 
-            Transform t = gameObject.transform;
-            Quaternion rotation = t.rotation;
-            Vector3 localScale = t.localScale;
-            Vector3 lossyScale = t.lossyScale;
+            var t = gameObject.transform;
+            var rotation = t.rotation;
+            var localScale = t.localScale;
+            var lossyScale = t.lossyScale;
             t.rotation = Quaternion.identity;
             if (Math.Abs(lossyScale.x) < float.Epsilon) lossyScale.x = 1;
             if (Math.Abs(lossyScale.y) < float.Epsilon) lossyScale.y = 1;
@@ -338,14 +330,12 @@ namespace InfinityCode.UltimateEditorEnhancer
             t.localScale = new Vector3(localScale.x / lossyScale.x, localScale.y / lossyScale.y,
                 localScale.z / lossyScale.z);
 
-            Bounds bounds = new Bounds();
-            bool isFirst = true;
+            var bounds = new Bounds();
+            var isFirst = true;
 
-            Renderer[] rs = gameObject.GetComponentsInChildren<Renderer>();
+            var rs = gameObject.GetComponentsInChildren<Renderer>();
             if (rs != null && rs.Length != 0)
-            {
-                foreach (Renderer renderer in rs)
-                {
+                foreach (var renderer in rs)
                     if (isFirst)
                     {
                         bounds = renderer.bounds;
@@ -355,8 +345,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         bounds.Encapsulate(renderer.bounds);
                     }
-                }
-            }
 
             t.rotation = rotation;
             t.localScale = localScale;
@@ -373,11 +361,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static string GetPsIconLabel(string label, int maxLength = 4)
         {
             StaticStringBuilder.Clear();
-            int l = 0;
-            string text = Prefs.RemoveIconPrefix(label);
-            for (int i = 0; i < text.Length; i++)
+            var l = 0;
+            var text = Prefs.RemoveIconPrefix(label);
+            for (var i = 0; i < text.Length; i++)
             {
-                char c = text[i];
+                var c = text[i];
                 if (!char.IsUpper(c) && !char.IsDigit(c)) continue;
                 l++;
                 if (l > 1) c = char.ToLowerInvariant(c);
@@ -412,7 +400,6 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static string[] GetTypesDisplayNames()
         {
             if (typeNames == null)
-            {
                 typeNames = new[]
                 {
                     "AnimationClip",
@@ -433,7 +420,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     "Texture",
                     "VideoClip"
                 };
-            }
 
             return typeNames;
         }
@@ -441,11 +427,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static void MoveToGroup(GameObject[] targets, GameObject container)
         {
             Undo.SetCurrentGroupName("Move To Group");
-            int group = Undo.GetCurrentGroup();
+            var group = Undo.GetCurrentGroup();
 
-            Transform parent = container != null ? container.transform : null;
+            var parent = container != null ? container.transform : null;
 
-            foreach (GameObject target in targets) Undo.SetTransformParent(target.transform, parent, target.name);
+            foreach (var target in targets) Undo.SetTransformParent(target.transform, parent, target.name);
             Undo.CollapseUndoOperations(group);
         }
 
@@ -456,7 +442,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void SetActive(GameObject[] targets, bool value)
         {
-            foreach (GameObject go in targets)
+            foreach (var go in targets)
             {
                 go.SetActive(value);
                 EditorUtility.SetDirty(go);
@@ -475,7 +461,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static void SetCustomTag(GameObject[] targets, string tag)
         {
             if (!CreateTag(tag)) return;
-            foreach (GameObject target in targets)
+            foreach (var target in targets)
             {
                 target.tag = tag;
                 EditorUtility.SetDirty(target);
@@ -484,11 +470,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void SetLossyScale(Transform transform, Vector3 scale)
         {
-            Transform t = transform;
+            var t = transform;
             while (t.parent != null)
             {
                 t = t.parent;
-                Vector3 s = t.localScale;
+                var s = t.localScale;
                 if (Math.Abs(s.x * s.y * s.z) < float.Epsilon) break;
 
                 scale.x /= s.x;
@@ -503,9 +489,9 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (targets.Length == 0) return;
 
-            GenericMenuEx menu = GenericMenuEx.Start();
+            var menu = GenericMenuEx.Start();
 
-            bool isActive = targets.All(t => t.activeInHierarchy);
+            var isActive = targets.All(t => t.activeInHierarchy);
             menu.Add("Active", isActive, () => SetActive(targets, !isActive));
             menu.AddSeparator();
 
@@ -525,7 +511,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             });
             menu.AddSeparator();
 
-            bool isMultiple = targets.Length > 1;
+            var isMultiple = targets.Length > 1;
 
             AddLayersToContextMenu(targets, menu);
             AddTagsToContextMenu(targets, menu);
@@ -535,12 +521,12 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (!isMultiple)
             {
-                GameObject firstTarget = targets[0];
+                var firstTarget = targets[0];
 
                 Bookmarks.InsertBookmarkMenu(menu, firstTarget);
 
-                GameObject target = firstTarget;
-                string assetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(target);
+                var target = firstTarget;
+                var assetPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(target);
 
                 if (!string.IsNullOrEmpty(assetPath))
                 {
@@ -548,7 +534,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         menu.Add("Open Model", () =>
                         {
-                            GameObject asset = PrefabUtilityRef.GetOriginalSourceOrVariantRoot(target);
+                            var asset = PrefabUtilityRef.GetOriginalSourceOrVariantRoot(target);
                             AssetDatabase.OpenAsset(asset);
                             EditorMenu.Close();
                         });
@@ -556,18 +542,16 @@ namespace InfinityCode.UltimateEditorEnhancer
                     else
                     {
                         if (CanOpenPrefab(target))
-                        {
                             menu.Add("Open Prefab Asset", () =>
                             {
                                 PrefabStageUtilityRef.OpenPrefab(assetPath, target);
                                 EditorMenu.Close();
                             });
-                        }
                     }
 
                     menu.Add("Select Prefab Asset", () =>
                     {
-                        Object asset = AssetDatabase.LoadMainAssetAtPath(assetPath);
+                        var asset = AssetDatabase.LoadMainAssetAtPath(assetPath);
                         Selection.activeObject = asset;
                         EditorGUIUtility.PingObject(asset.GetInstanceID());
                         EditorMenu.Close();
@@ -589,10 +573,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 });
             }
 
-            if (isMultiple)
-            {
-                menu.Add("Group %g", () => Group.GroupTargets(targets));
-            }
+            if (isMultiple) menu.Add("Group %g", () => Group.GroupTargets(targets));
 
             if (targets.Any(t => t.transform.childCount > 0))
                 menu.Add("Ungroup", () =>
@@ -613,14 +594,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void UnpackPrefab(PrefabUnpackMode unpackMode, GameObject[] targets)
         {
-            foreach (GameObject go in targets)
-            {
+            foreach (var go in targets)
                 if (go != null && PrefabUtility.IsPartOfNonAssetPrefabInstance(go) &&
                     PrefabUtility.IsOutermostPrefabInstanceRoot(go))
-                {
                     PrefabUtility.UnpackPrefabInstance(go, unpackMode, InteractionMode.UserAction);
-                }
-            }
         }
     }
 }
