@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Pegasus
 {
@@ -8,37 +8,13 @@ namespace Pegasus
     /// Editor for flythrough manager
     /// </summary>
     [CustomEditor(typeof(PegasusCapture))]
+
     public class PegasusCaptureEditor : Editor
     {
-        /// <summary>
-        /// The tooltips
-        /// </summary>
-        static Dictionary<string, string> m_tooltips = new Dictionary<string, string>
-        {
-            {
-                "Capture Key",
-                "Hit this key at runtime to capture the camera location and orientation, and add it to your Pegasus Path."
-            },
-            {
-                "Target Camera",
-                "This is the camera that will be used to get location and orientation information from for your Pegasus Path"
-            },
-            {
-                "Pegasus Path",
-                "This is the path object that path information can be stored in. You can delete it after you have created your Pegasus."
-            },
-            {
-                "Enable On Start",
-                "This will enable the capturer on start. It must be renabled after the creation of every Pegasus."
-            },
-            { "Clear On Start", "This will clear any previous locations out of your path when you start your scene." },
-            { "Show Reticule", "This will show or hide your targeting reticule." },
-        };
-
         private GUIStyle m_boxStyle;
+        private GUIStyle m_wrapStyle;
         private PegasusCapture m_capture;
         private bool m_environment = false;
-        private GUIStyle m_wrapStyle;
 
         private void OnEnable()
         {
@@ -103,25 +79,18 @@ namespace Pegasus
             }
 
             //Text intro
-            GUILayout.BeginVertical(
-                string.Format("Pegasus ({0}.{1})", PegasusConstants.MajorVersion, PegasusConstants.MinorVersion),
-                m_boxStyle);
+            GUILayout.BeginVertical(string.Format("Pegasus ({0}.{1})", PegasusConstants.MajorVersion, PegasusConstants.MinorVersion), m_boxStyle);
             GUILayout.Space(20);
-            EditorGUILayout.LabelField(
-                "Welcome to Pegasus Capture!\nPress Play and then your selected hot key to capture POI for your flythrough. Then press Create Pegasus to create a Pegasus fly through after you have finshed.\nNOTE: You can adjust the rotation & position damping on the Pegasus you create to make your play back more accurate.",
-                m_wrapStyle);
+            EditorGUILayout.LabelField("Welcome to Pegasus Capture!\nPress Play and then your selected hot key to capture POI for your flythrough. Then press Create Pegasus to create a Pegasus fly through after you have finshed.\nNOTE: You can adjust the rotation & position damping on the Pegasus you create to make your play back more accurate.", m_wrapStyle);
             GUILayout.EndVertical();
 
             EditorGUI.BeginChangeCheck();
 
             GUILayout.Space(5);
 
-            KeyCode keyCodeCapture =
-                (KeyCode)EditorGUILayout.EnumPopup(GetLabel("Capture Key"), m_capture.m_keyCodeCapture);
-            Camera mainCamera = (Camera)EditorGUILayout.ObjectField(GetLabel("Target Camera"), m_capture.m_mainCamera,
-                typeof(Camera), true);
-            PegasusPath path = (PegasusPath)EditorGUILayout.ObjectField(GetLabel("Pegasus Path"), m_capture.m_path,
-                typeof(PegasusPath), false);
+            KeyCode keyCodeCapture = (KeyCode)EditorGUILayout.EnumPopup(GetLabel("Capture Key"), m_capture.m_keyCodeCapture);
+            Camera mainCamera = (Camera)EditorGUILayout.ObjectField(GetLabel("Target Camera"), m_capture.m_mainCamera, typeof(Camera), true);
+            PegasusPath path = (PegasusPath) EditorGUILayout.ObjectField(GetLabel("Pegasus Path"), m_capture.m_path, typeof(PegasusPath), false);
             bool enableOnStart = EditorGUILayout.Toggle(GetLabel("Enable On Start"), m_capture.m_enableOnStart);
             bool clearOnStart = EditorGUILayout.Toggle(GetLabel("Clear On Start"), m_capture.m_clearOnStart);
             bool showReticule = EditorGUILayout.Toggle(GetLabel("Show Reticule"), m_capture.m_showReticule);
@@ -179,14 +148,12 @@ namespace Pegasus
 
             m_environment = true;
 
-            string currBuildSettings =
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            string currBuildSettings = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
 
             //Check for and inject 
             if (!currBuildSettings.Contains("PEGASUS_PRESENT"))
             {
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
-                    currBuildSettings + ";PEGASUS_PRESENT");
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, currBuildSettings + ";PEGASUS_PRESENT");
             }
         }
 
@@ -224,8 +191,23 @@ namespace Pegasus
             }
             else
             {
+
                 return new GUIContent(name);
             }
         }
+
+        /// <summary>
+        /// The tooltips
+        /// </summary>
+        static Dictionary<string, string> m_tooltips = new Dictionary<string, string>
+        {
+            { "Capture Key", "Hit this key at runtime to capture the camera location and orientation, and add it to your Pegasus Path." },
+            { "Target Camera", "This is the camera that will be used to get location and orientation information from for your Pegasus Path" },
+            { "Pegasus Path", "This is the path object that path information can be stored in. You can delete it after you have created your Pegasus." },
+            { "Enable On Start", "This will enable the capturer on start. It must be renabled after the creation of every Pegasus." },
+            { "Clear On Start", "This will clear any previous locations out of your path when you start your scene." },
+            { "Show Reticule", "This will show or hide your targeting reticule." },
+        };
+
     }
 }

@@ -18,7 +18,7 @@ namespace Pegasus
             for (int i = 0; i < inputCount; i++)
             {
                 float inputWeight = playable.GetInputWeight(i);
-                ScriptPlayable<PegasusBehaviour> inputPlayable = (ScriptPlayable<PegasusBehaviour>)playable.GetInput(i);
+                ScriptPlayable<PegasusBehaviour> inputPlayable = (ScriptPlayable<PegasusBehaviour>) playable.GetInput(i);
                 PegasusBehaviour input = inputPlayable.GetBehaviour();
 
                 if (manager == null)

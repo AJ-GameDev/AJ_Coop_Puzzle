@@ -1,26 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Pegasus
 {
     [CustomEditor(typeof(TriggerControlPegasus))]
     public class PegasusTriggerEditor : Editor
     {
-        /// <summary>
-        /// The tooltips
-        /// </summary>
-        private static Dictionary<string, string> m_tooltips = new Dictionary<string, string>
-        {
-            {
-                "Min Height From",
-                "Used to control how poi, lookat target and flythrough path heights are constrained. Manager - use the managers settings, collision - use whatever it collides with, terrain - use the terrain height, none - don't constrain."
-            },
-        };
-
         GUIStyle m_boxStyle;
-        TriggerControlPegasus m_trigger;
         GUIStyle m_wrapStyle;
+        TriggerControlPegasus m_trigger;
 
         /// <summary>
         /// This is called when we select the poi in the editor
@@ -70,8 +59,7 @@ namespace Pegasus
 
             GUILayout.Space(5);
 
-            PegasusManager poiTarget = (PegasusManager)EditorGUILayout.ObjectField(GetLabel("Target Pegasus"),
-                m_trigger.m_pegasus, typeof(PegasusManager), true);
+            PegasusManager poiTarget = (PegasusManager)EditorGUILayout.ObjectField(GetLabel("Target Pegasus"), m_trigger.m_pegasus, typeof(PegasusManager), true);
             PegasusConstants.PoiPegasusTriggerAction actionOnStart = m_trigger.m_actionOnStart;
             PegasusConstants.PoiPegasusTriggerAction actionOnEnd = m_trigger.m_actionOnEnd;
             bool disabled = m_trigger.m_disabled;
@@ -79,12 +67,8 @@ namespace Pegasus
 
             if (poiTarget != null)
             {
-                actionOnStart =
-                    (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On Start"),
-                        actionOnStart);
-                actionOnEnd =
-                    (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On End"),
-                        actionOnEnd);
+                actionOnStart = (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On Start"), actionOnStart);
+                actionOnEnd = (PegasusConstants.PoiPegasusTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On End"), actionOnEnd);
                 disableAfterActioned = EditorGUILayout.Toggle(GetLabel("Disable After Actioned"), disableAfterActioned);
                 disabled = EditorGUILayout.Toggle(GetLabel("Disabled"), disabled);
             }
@@ -147,5 +131,13 @@ namespace Pegasus
                 return new GUIContent(name);
             }
         }
+
+        /// <summary>
+        /// The tooltips
+        /// </summary>
+        private static Dictionary<string, string> m_tooltips = new Dictionary<string, string>
+        {
+            { "Min Height From", "Used to control how poi, lookat target and flythrough path heights are constrained. Manager - use the managers settings, collision - use whatever it collides with, terrain - use the terrain height, none - don't constrain." },
+        };
     }
 }

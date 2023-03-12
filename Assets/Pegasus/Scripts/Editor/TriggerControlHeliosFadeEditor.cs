@@ -67,16 +67,14 @@ namespace Pegasus
             Color startColor = m_trigger.m_startColour;
             Color endColor = m_trigger.m_endColour;
 
-            actionOnStart =
- (PegasusConstants.PoiHeliosTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On Start"), actionOnStart);
+            actionOnStart = (PegasusConstants.PoiHeliosTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On Start"), actionOnStart);
             if (actionOnStart != PegasusConstants.PoiHeliosTriggerAction.DoNothing)
             {
                 startColor = EditorGUILayout.ColorField(GetLabel("Color"), startColor);
                 startDuration = EditorGUILayout.Slider(GetLabel("Duration"), startDuration, 0.1f, 10f);
             }
 
-            actionOnEnd =
- (PegasusConstants.PoiHeliosTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On End"), actionOnEnd);
+            actionOnEnd = (PegasusConstants.PoiHeliosTriggerAction)EditorGUILayout.EnumPopup(GetLabel("Action On End"), actionOnEnd);
             if (actionOnEnd != PegasusConstants.PoiHeliosTriggerAction.DoNothing)
             {
                 endColor = EditorGUILayout.ColorField(GetLabel("Color"), endColor);

@@ -37,8 +37,7 @@ namespace Pegasus
             {
                 if (poi.m_manager.m_displayDebug == true)
                 {
-                    Debug.Log(string.Format("Udpated trigger on {0} - {1} {2:0.00}", poi.m_manager.name, poi.name,
-                        progress));
+                    Debug.Log(string.Format("Udpated trigger on {0} - {1} {2:0.00}", poi.m_manager.name, poi.name, progress));
                 }
             }
         }

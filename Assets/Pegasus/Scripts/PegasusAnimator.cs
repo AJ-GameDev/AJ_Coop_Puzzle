@@ -12,51 +12,38 @@ namespace Pegasus
         [Header("Character And Animator")]
         [Tooltip("Drop your character here. By default it will select the character this script is attached to.")]
         public Transform m_character;
-
-        [Tooltip(
-            "Drop your animator here. By default it will select the animator on the character this script is attached to.")]
+        [Tooltip("Drop your animator here. By default it will select the animator on the character this script is attached to.")]
         public Animator m_animator;
-
         [Tooltip("Select your initial animation state. This will be played immediately on start at runtime.")]
         public PegasusConstants.PegasusAnimationState m_animationState = PegasusConstants.PegasusAnimationState.Idle;
         //private PegasusConstants.PegasusAnimationState m_lastAnimationState = PegasusConstants.PegasusAnimationState.Idle;
 
         //Override the animations that get played - changed only at the start of the playback
         [Header("Optional Animation Overrides")]
-        [Tooltip(
-            "Add your idle animation override here. This is optional, and the default animation will be used instead if not supplied.")]
+        [Tooltip("Add your idle animation override here. This is optional, and the default animation will be used instead if not supplied.")]
         public AnimationClip m_idleAnimation;
-
-        [Tooltip(
-            "Add your walk animation override here. This is optional, and the default animation will be used instead if not supplied.")]
+        [Tooltip("Add your walk animation override here. This is optional, and the default animation will be used instead if not supplied.")]
         public AnimationClip m_walkAnimation;
-
-        [Tooltip(
-            "Add your run animation override here. This is optional, and the default animation will be used instead if not supplied.")]
+        [Tooltip("Add your run animation override here. This is optional, and the default animation will be used instead if not supplied.")]
         public AnimationClip m_runAnimation;
 
         //Typical idle, walk & run speeds - override to influence animation speeds
         [Header("Walk & Run Speeds (m/sec)")]
-        [Tooltip(
-            "Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
+        [Tooltip("Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
         public float m_walkSpeed = 2f;
-
-        [Tooltip(
-            "Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
+        [Tooltip("Walk animations will play when the character movement is greater than the idle speed and less than this speed.")]
         public float m_maxWalkSpeed = 3.5f;
-
         [Tooltip("Run animations will play when the character movement is greater than the walk speed.")]
         public float m_runSpeed = 7f;
 
-        private float m_animationMultiplier = 1f;
-        private int m_animationMultiplierHash = Animator.StringToHash("AnimationMultiplier");
-        private int m_animationStateHash = Animator.StringToHash("AnimationState");
-        private Vector3 m_lastPosition = Vector3.zero;
-        private float m_lastSpeed = float.MinValue;
-        private float m_speed = 0f;
-
         //Internal variables
         private float m_speedDamping = 0.7f;
+        private float m_speed = 0f;
+        private float m_lastSpeed = float.MinValue;
+        private Vector3 m_lastPosition = Vector3.zero;
+        private float m_animationMultiplier = 1f;
+        private int m_animationStateHash = Animator.StringToHash("AnimationState");
+        private int m_animationMultiplierHash = Animator.StringToHash("AnimationMultiplier");
 
         void Start()
         {
@@ -78,12 +65,10 @@ namespace Pegasus
                 {
                     ReplaceClip(m_animator, "HumanoidIdle", m_idleAnimation);
                 }
-
                 if (m_walkAnimation != null)
                 {
                     ReplaceClip(m_animator, "HumanoidWalk", m_walkAnimation);
                 }
-
                 if (m_runAnimation != null)
                 {
                     ReplaceClip(m_animator, "HumanoidRun", m_runAnimation);
@@ -190,15 +175,13 @@ namespace Pegasus
         /// <param name="overrideClip">New clip</param>
         private void ReplaceClip(Animator animator, string clipName, AnimationClip overrideClip)
         {
-            AnimatorOverrideController overrideController =
-                animator.runtimeAnimatorController as AnimatorOverrideController;
+            AnimatorOverrideController overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
             if (overrideController == null)
             {
                 overrideController = new AnimatorOverrideController();
                 overrideController.name = "PegasusRuntimeController";
                 overrideController.runtimeAnimatorController = animator.runtimeAnimatorController;
             }
-
             overrideController[clipName] = overrideClip;
             if (ReferenceEquals(animator.runtimeAnimatorController, overrideController) == false)
             {

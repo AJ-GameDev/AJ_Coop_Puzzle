@@ -12,84 +12,71 @@ namespace Pegasus
         public Transform m_target;
 
         //Attachment & rotation to terrain
-        [Header("Local Overrides")] [Tooltip("Always show gizmo's, even when not selected")]
+        [Header("Local Overrides")]
+        [Tooltip("Always show gizmo's, even when not selected")]
         public bool m_alwaysShowGizmos = false;
-
         [Tooltip("Ground character to terrain")]
         public bool m_groundToTerrain = true;
-
         [Tooltip("Rotate character to terrain. Best for quadrapeds.")]
         public bool m_rotateToTerrain = false;
-
         [Tooltip("Avoid collisions with terrain trees.")]
         public bool m_avoidTreeCollisions = false;
-
         [Tooltip("Avoid collisions with objects on the object collision layer.")]
         public bool m_avoidObjectCollisions = false;
-
-        [Tooltip("Distance to check for collisions. Bigger values will slow your system down.")] [Range(1f, 10f)]
+        [Tooltip("Distance to check for collisions. Bigger values will slow your system down.")]
+        [Range(1f, 10f)]
         public float m_collisionRange = 2f;
-
         [Tooltip("Layers to check for collisions on. Ensure that your terrain is NOT included in these layers.")]
         public LayerMask m_objectCollisionLayer;
 
-        //Target walk & run speeds
-        [Header("Character Speeds")] [Tooltip("Walk speed")]
-        public float m_walkSpeed = 2f;
+        private int m_currentCollisionCount = 0;
+        private RaycastHit[] m_currentCollisionHitArray;
+        private int m_currentTreeCollisionCount = 0;
+        private List<TreeManager.TreeStruct> m_currentTreeCollisionHitArray = new List<TreeManager.TreeStruct>();
+        private TreeManager m_terrainTreeManager;
+        private Dictionary<int, Collider> m_myColliders = new Dictionary<int, Collider>();
 
-        [Tooltip("Run speed")] public float m_runSpeed = 7f;
+        //Target walk & run speeds
+        [Header("Character Speeds")]
+        [Tooltip("Walk speed")]
+        public float m_walkSpeed = 2f;
+        [Tooltip("Run speed")]
+        public float m_runSpeed = 7f;
 
         //Determine when we can stop
-        [Header("Distance Thresholds")] [Tooltip("Minimum distance from target that character can stop.")]
+        [Header("Distance Thresholds")]
+        [Tooltip("Minimum distance from target that character can stop.")]
         public float m_stopDistanceMin = 0.05f;
-
         [Tooltip("Maximum distance from target that character can stop.")]
         public float m_stopDistanceMax = 0.05f;
+        private float m_currentStopDistance = 0.05f;
+        private bool m_updateStopDistance = false;
 
         //Speed beypond which we should run
-        [Tooltip(
-            "Character will run if further away from target than this distance, otherwise will walk or is stopped.")]
+        [Tooltip("Character will run if further away from target than this distance, otherwise will walk or is stopped.")]
         public float m_runIfFurtherThan = 15f;
 
         [Header("Change Rates")]
-        [Range(0.001f, 3f),
-         Tooltip("Turn rate. Lower values produce smoother turns, larger values produce more accurate turns.")]
+        [Range(0.001f, 3f), Tooltip("Turn rate. Lower values produce smoother turns, larger values produce more accurate turns.")]
         public float m_turnChange = 1.5f;
-
-        [Range(0.001f, 3f),
-         Tooltip(
-             "Movement rate. Lower values produce smoother movement, larger values produce more accurate movement.")]
+        [Range(0.001f, 3f), Tooltip("Movement rate. Lower values produce smoother movement, larger values produce more accurate movement.")]
         public float m_movementChange = 1.5f;
 
         [Header("Path Randomisation")]
-        [Range(0.0f, 2f),
-         Tooltip(
-             "Deviation rate. Smaller values produce slower more subtle deviations, larger values produce more obvious and rapid deviations.")]
+        [Range(0.0f, 2f), Tooltip("Deviation rate. Smaller values produce slower more subtle deviations, larger values produce more obvious and rapid deviations.")]
         public float m_deviationRate = 0f;
-
         [Tooltip("Deviation range in X plane")]
         public float m_maxDeviationX = 0f;
-
         [Tooltip("Deviation range in Y plane")]
         public float m_maxDeviationY = 0f;
-
         [Tooltip("Deviation range in Z plane")]
         public float m_maxDeviationZ = 0f;
 
-        private int m_currentCollisionCount = 0;
-        private RaycastHit[] m_currentCollisionHitArray;
-        private float m_currentMovementDistance = 0f;
-        private float m_currentStopDistance = 0.05f;
-        private int m_currentTreeCollisionCount = 0;
-        private List<TreeManager.TreeStruct> m_currentTreeCollisionHitArray = new List<TreeManager.TreeStruct>();
-        private Vector3 m_currentVelocity = Vector3.zero;
-        private float m_distanceToTarget = 0f;
-        private Dictionary<int, Collider> m_myColliders = new Dictionary<int, Collider>();
-
         //Internal
         private Vector3 m_targetPosition = Vector3.zero;
-        private TreeManager m_terrainTreeManager;
-        private bool m_updateStopDistance = false;
+        private float m_distanceToTarget = 0f;
+        private float m_currentMovementDistance = 0f;
+        private Vector3 m_currentVelocity = Vector3.zero;
 
         // Use this for initialization
         void Start()
@@ -98,14 +85,12 @@ namespace Pegasus
             {
                 return;
             }
-
             m_updateStopDistance = false;
             m_targetPosition = m_target.position;
             m_distanceToTarget = (m_targetPosition - transform.position).magnitude;
             m_currentStopDistance = UnityEngine.Random.Range(m_stopDistanceMin, m_stopDistanceMax);
             m_currentCollisionCount = 0;
-            m_currentCollisionHitArray =
-                new RaycastHit[20]; //Change the size here if you want more collisions to be considered
+            m_currentCollisionHitArray = new RaycastHit[20]; //Change the size here if you want more collisions to be considered
 
             //Load up terrain trees if we are avoiding collisions
             if (m_avoidTreeCollisions)
@@ -162,16 +147,13 @@ namespace Pegasus
                 {
                     targetRotation = new Vector3(targetOffset.x, targetOffset.y, targetOffset.z);
                 }
-
                 if (targetRotation == Vector3.zero)
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity,
-                        m_turnChange * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.identity, m_turnChange * Time.deltaTime);
                 }
                 else
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetRotation),
-                        m_turnChange * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetRotation), m_turnChange * Time.deltaTime);
                 }
 
                 //Move
@@ -180,9 +162,7 @@ namespace Pegasus
                 {
                     distanceToMove = Time.deltaTime * m_runSpeed;
                 }
-
-                m_currentMovementDistance = Mathf.Lerp(m_currentMovementDistance, distanceToMove,
-                    m_movementChange * Time.deltaTime);
+                m_currentMovementDistance = Mathf.Lerp(m_currentMovementDistance, distanceToMove, m_movementChange * Time.deltaTime);
                 m_currentVelocity = transform.forward * m_currentMovementDistance;
                 transform.position += m_currentVelocity;
                 m_currentVelocity *= (1f / Time.deltaTime); //Determine velocity per second
@@ -229,8 +209,7 @@ namespace Pegasus
                 if (m_rotateToTerrain)
                 {
                     Vector3 terrainLocalPos = terrain.transform.InverseTransformPoint(position);
-                    Vector3 normalizedPos = new Vector3(
-                        Mathf.InverseLerp(0.0f, terrain.terrainData.size.x, terrainLocalPos.x),
+                    Vector3 normalizedPos = new Vector3(Mathf.InverseLerp(0.0f, terrain.terrainData.size.x, terrainLocalPos.x),
                         Mathf.InverseLerp(0.0f, terrain.terrainData.size.y, terrainLocalPos.y),
                         Mathf.InverseLerp(0.0f, terrain.terrainData.size.z, terrainLocalPos.z));
                     Vector3 normal = terrain.terrainData.GetInterpolatedNormal(normalizedPos.x, normalizedPos.z);
@@ -243,9 +222,7 @@ namespace Pegasus
             if (m_avoidObjectCollisions)
             {
                 //Do sphere cast
-                m_currentCollisionCount = Physics.SphereCastNonAlloc(transform.position, m_collisionRange,
-                    transform.forward, m_currentCollisionHitArray, 0f, m_objectCollisionLayer,
-                    QueryTriggerInteraction.UseGlobal);
+                m_currentCollisionCount = Physics.SphereCastNonAlloc(transform.position, m_collisionRange, transform.forward, m_currentCollisionHitArray, 0f, m_objectCollisionLayer, QueryTriggerInteraction.UseGlobal);
             }
 
             if (m_avoidTreeCollisions)
@@ -256,27 +233,9 @@ namespace Pegasus
                     m_terrainTreeManager = new TreeManager();
                     m_terrainTreeManager.LoadTreesFromTerrain();
                 }
-
                 //Do tree check
-                m_currentTreeCollisionCount = m_terrainTreeManager.GetTrees(transform.position,
-                    m_collisionRange + (m_collisionRange / 2f), ref m_currentTreeCollisionHitArray);
+                m_currentTreeCollisionCount = m_terrainTreeManager.GetTrees(transform.position, m_collisionRange + (m_collisionRange / 2f), ref m_currentTreeCollisionHitArray);
             }
-        }
-
-        /// <summary>
-        /// Draw gizmos when not selected
-        /// </summary>
-        private void OnDrawGizmos()
-        {
-            DrawGizmos(false);
-        }
-
-        /// <summary>
-        /// Draw gizmos when selected
-        /// </summary>
-        private void OnDrawGizmosSelected()
-        {
-            DrawGizmos(true);
         }
 
         /// <summary>
@@ -288,13 +247,10 @@ namespace Pegasus
             //Offset target position by noise
             if (m_deviationRate > 0f)
             {
-                float noise =
-                    (-0.5f + Mathf.PerlinNoise(targetPosition.x * m_deviationRate,
-                        targetPosition.z * m_deviationRate)) * 2f;
+                float noise = (-0.5f + Mathf.PerlinNoise(targetPosition.x * m_deviationRate, targetPosition.z * m_deviationRate)) * 2f;
                 Vector3 offset = new Vector3(noise * m_maxDeviationX, noise * m_maxDeviationY, noise * m_maxDeviationZ);
                 targetPosition += offset;
             }
-
             //And retrun
             return targetPosition;
         }
@@ -356,7 +312,7 @@ namespace Pegasus
                 repulsion = Mathf.Abs(1f - (distanceSqr / sqrCollisionRange));
                 if (repulsion > 0f)
                 {
-                    scale = repulsion * (sqrCollisionRange / distanceSqr);
+                    scale = repulsion * (sqrCollisionRange / distanceSqr); 
                     desiredVelocity *= scale;
                     //Debug.DrawRay(position, desiredVelocity, Color.cyan);
                     targetOffset += desiredVelocity;
@@ -410,8 +366,23 @@ namespace Pegasus
                     }
                 }
             }
-
             return null;
+        }
+
+        /// <summary>
+        /// Draw gizmos when not selected
+        /// </summary>
+        private void OnDrawGizmos()
+        {
+            DrawGizmos(false);
+        }
+
+        /// <summary>
+        /// Draw gizmos when selected
+        /// </summary>
+        private void OnDrawGizmosSelected()
+        {
+            DrawGizmos(true);
         }
 
         /// <summary>
@@ -443,14 +414,13 @@ namespace Pegasus
                 {
                     Gizmos.DrawLine(transform.position, m_currentCollisionHitArray[i].transform.position);
                 }
-
                 for (int i = 0; i < m_currentTreeCollisionCount; i++)
                 {
                     Gizmos.DrawLine(transform.position, m_currentTreeCollisionHitArray[i].position);
                 }
             }
-
             Gizmos.color = gCol;
         }
     }
 }
+
