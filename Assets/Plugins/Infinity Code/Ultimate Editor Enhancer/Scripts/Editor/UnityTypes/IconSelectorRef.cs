@@ -26,16 +26,14 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_showAtPositionMethod == null)
-                    _showAtPositionMethod = type.GetMethod("ShowAtPosition", Reflection.StaticLookup, null,
-                        new[] { typeof(Object), typeof(Rect), typeof(bool) }, null);
+                if (_showAtPositionMethod == null) _showAtPositionMethod = type.GetMethod("ShowAtPosition", Reflection.StaticLookup, null, new[] { typeof(Object), typeof(Rect), typeof(bool) }, null);
                 return _showAtPositionMethod;
             }
         }
 
         public static bool ShowAtPosition(Object target, Rect rect, bool showLabelIcons)
         {
-            return (bool)showAtPositionMethod.Invoke(null, new object[] { target, rect, showLabelIcons });
+            return (bool)showAtPositionMethod.Invoke(null, new object[] {target, rect, showLabelIcons});
         }
     }
 }

@@ -8,11 +8,11 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public class HierarchyItem
     {
-        public GameObject gameObject;
-        public bool hovered;
         public int id;
         public Rect rect;
+        public GameObject gameObject;
         public Object target;
+        public bool hovered;
 
         public void Set(int id, Rect rect)
         {

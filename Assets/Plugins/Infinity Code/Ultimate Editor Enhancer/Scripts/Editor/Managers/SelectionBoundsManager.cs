@@ -16,17 +16,6 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static Bounds _bounds;
         private static Vector3[] fourCorners = new Vector3[4];
 
-        static SelectionBoundsManager()
-        {
-            renderers = new List<Renderer>();
-            rectTransforms = new List<RectTransform>();
-            Selection.selectionChanged += OnSelectionChanged;
-
-            SceneViewManager.AddListener(OnSceneView);
-
-            OnSelectionChanged();
-        }
-
         public static Bounds bounds
         {
             get { return _bounds; }
@@ -61,6 +50,17 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static List<RectTransform> rectTransforms { get; }
         private static List<Renderer> renderers { get; }
+
+        static SelectionBoundsManager()
+        {
+            renderers = new List<Renderer>();
+            rectTransforms = new List<RectTransform>();
+            Selection.selectionChanged += OnSelectionChanged;
+
+            SceneViewManager.AddListener(OnSceneView);
+
+            OnSelectionChanged();
+        }
 
         private static void OnSceneView(SceneView scene)
         {

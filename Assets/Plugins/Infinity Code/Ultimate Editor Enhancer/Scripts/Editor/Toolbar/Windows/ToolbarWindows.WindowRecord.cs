@@ -10,8 +10,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
     {
         public class WindowRecord
         {
-            public string title;
             public Type type;
+            public string title;
             public bool used;
 
             public WindowRecord(EditorWindow window)

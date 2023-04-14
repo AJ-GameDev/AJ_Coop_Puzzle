@@ -41,8 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_getCurveEditorRectMethod == null)
-                    _getCurveEditorRectMethod = type.GetMethod("GetCurveEditorRect", Reflection.InstanceLookup);
+                if (_getCurveEditorRectMethod == null) _getCurveEditorRectMethod = type.GetMethod("GetCurveEditorRect", Reflection.InstanceLookup);
                 return _getCurveEditorRectMethod;
             }
         }
@@ -60,8 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_onCurveChangedField == null)
-                    _onCurveChangedField = type.GetField("m_OnCurveChanged", Reflection.InstanceLookup);
+                if (_onCurveChangedField == null) _onCurveChangedField = type.GetField("m_OnCurveChanged", Reflection.InstanceLookup);
                 return _onCurveChangedField;
             }
         }
@@ -70,8 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_refreshShownCurvesMethod == null)
-                    _refreshShownCurvesMethod = type.GetMethod("RefreshShownCurves", Reflection.InstanceLookup);
+                if (_refreshShownCurvesMethod == null) _refreshShownCurvesMethod = type.GetMethod("RefreshShownCurves", Reflection.InstanceLookup);
                 return _refreshShownCurvesMethod;
             }
         }
@@ -80,9 +77,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_sendEventMethod == null)
-                    _sendEventMethod = type.GetMethod("SendEvent", Reflection.InstanceLookup, null,
-                        new[] { typeof(string), typeof(bool) }, null);
+                if (_sendEventMethod == null) _sendEventMethod = type.GetMethod("SendEvent", Reflection.InstanceLookup, null, new []{typeof(string), typeof(bool)}, null);
                 return _sendEventMethod;
             }
         }
@@ -119,7 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void SendEvent(EditorWindow window, string eventName, bool exitGUI)
         {
-            sendEventMethod.Invoke(window, new object[] { eventName, exitGUI });
+            sendEventMethod.Invoke(window, new object[] {eventName, exitGUI});
         }
 
         public static void SetCurve(AnimationCurve curve)

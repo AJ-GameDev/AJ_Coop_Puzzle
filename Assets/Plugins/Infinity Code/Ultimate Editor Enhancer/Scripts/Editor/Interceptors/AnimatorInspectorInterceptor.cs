@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
@@ -22,10 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             get => Prefs.animatorInspectorClips;
         }
 
-        protected override string postfixMethodName
-        {
-            get => nameof(OnInspectorGUIPostfix);
-        }
+        protected override string postfixMethodName { get => nameof(OnInspectorGUIPostfix); }
 
         private static void OnInspectorGUIPostfix(Editor __instance)
         {

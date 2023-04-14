@@ -10,14 +10,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         public class CameraStateItem : ViewItem
         {
-            private bool _useInPreview = true;
             public Camera camera;
-
-            public CameraStateItem(Camera camera)
-            {
-                this.camera = camera;
-                _useInPreview = camera.gameObject.GetComponent<HideInPreview>() == null;
-            }
+            private bool _useInPreview = true;
 
             public override bool useInPreview
             {
@@ -29,8 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     _useInPreview = value;
                     if (!value)
                     {
-                        if (camera.gameObject.GetComponent<HideInPreview>() == null)
-                            camera.gameObject.AddComponent<HideInPreview>();
+                        if (camera.gameObject.GetComponent<HideInPreview>() == null) camera.gameObject.AddComponent<HideInPreview>();
                     }
                     else DestroyImmediate(camera.gameObject.GetComponent<HideInPreview>());
                 }
@@ -48,6 +41,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     if (camera != null) return camera.name;
                     return string.Empty;
                 }
+            }
+
+            public CameraStateItem(Camera camera)
+            {
+                this.camera = camera;
+                _useInPreview = camera.gameObject.GetComponent<HideInPreview>() == null;
             }
 
             public override void PrepareMenu(GenericMenuEx menu)

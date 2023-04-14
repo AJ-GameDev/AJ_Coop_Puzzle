@@ -1,10 +1,12 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 {

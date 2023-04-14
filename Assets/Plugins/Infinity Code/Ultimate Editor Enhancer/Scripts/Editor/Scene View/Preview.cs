@@ -21,6 +21,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static int activeIndex;
         private static GUIStyle style;
 
+        public static bool isActive
+        {
+            get { return texture != null; }
+        }
+
+        public static PreviewItem activeItem
+        {
+            get
+            {
+                if (items == null || items.Length <= activeIndex) return null;
+                return items[activeIndex];
+            }
+        }
+
         static Preview()
         {
             KeyManager.KeyBinding binding = KeyManager.AddBinding();
@@ -37,20 +51,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.quickPreview, true);
         }
 
-        public static bool isActive
-        {
-            get { return texture != null; }
-        }
-
-        public static PreviewItem activeItem
-        {
-            get
-            {
-                if (items == null || items.Length <= activeIndex) return null;
-                return items[activeIndex];
-            }
-        }
-
         private static void Dispose()
         {
             if (texture != null)
@@ -58,7 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 Object.DestroyImmediate(texture);
                 texture = null;
             }
-
+            
             if (items != null)
             {
                 foreach (PreviewItem item in items) item.Dispose();
@@ -111,13 +111,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     alignment = TextAnchor.MiddleCenter,
                     normal =
                     {
-                        textColor = Styles.isProSkin ? Color.black : Color.white
+                        textColor = Styles.isProSkin? Color.black: Color.white
                     }
                 };
             }
-
-            GUIContent content =
-                new GUIContent((activeIndex + 1) + " / " + items.Length + " " + items[activeIndex].name);
+            
+            GUIContent content = new GUIContent((activeIndex + 1) + " / " + items.Length + " " + items[activeIndex].name);
             Vector2 contentSize = style.CalcSize(content);
             GUIContent scrollContent = new GUIContent("Mouse Scroll - Change Camera / View");
             Vector2 scrollContentSize = style.CalcSize(scrollContent);
@@ -154,7 +153,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static void OnKeyUp(Event e)
         {
             if (texture == null) return;
-
+            
             Dispose();
             e.Use();
             SceneView.RepaintAll();
@@ -212,14 +211,14 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             public Camera camera;
 
-            public CameraItem(Camera camera)
-            {
-                this.camera = camera;
-            }
-
             public override string name
             {
                 get { return camera.gameObject.name; }
+            }
+
+            public CameraItem(Camera camera)
+            {
+                this.camera = camera;
             }
 
             public override void Dispose()
@@ -254,11 +253,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     }
 
                     CameraClearFlags clearFlags = camera.clearFlags;
-                    if (clearFlags == CameraClearFlags.Depth || clearFlags == CameraClearFlags.Nothing)
-                        camera.clearFlags = CameraClearFlags.Skybox;
+                    if (clearFlags == CameraClearFlags.Depth || clearFlags == CameraClearFlags.Nothing) camera.clearFlags = CameraClearFlags.Skybox;
                     RenderTexture lastAT = camera.targetTexture;
-                    RenderTexture rt = camera.targetTexture = new RenderTexture((int)rect.width, (int)rect.height, 16,
-                        RenderTextureFormat.ARGB32);
+                    RenderTexture rt = camera.targetTexture = new RenderTexture((int)rect.width, (int)rect.height, 16, RenderTextureFormat.ARGB32);
                     camera.Render();
 
                     texture = new Texture2D((int)rect.width, (int)rect.height, TextureFormat.RGB24, false);
@@ -293,14 +290,14 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             public ViewState state;
 
-            public ViewStateItem(ViewState state)
-            {
-                this.state = state;
-            }
-
             public override string name
             {
                 get { return state.title; }
+            }
+
+            public ViewStateItem(ViewState state)
+            {
+                this.state = state;
             }
 
             public override void Dispose()
@@ -320,16 +317,14 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             public override void Render(Rect rect)
             {
-                RenderTexture renderTexture =
-                    new RenderTexture((int)rect.width, (int)rect.height, 16, RenderTextureFormat.ARGB32);
+                RenderTexture renderTexture = new RenderTexture((int)rect.width, (int)rect.height, 16, RenderTextureFormat.ARGB32);
                 RenderTexture.active = renderTexture;
 
                 SceneView sceneView = SceneView.lastActiveSceneView;
                 Camera sceneCamera = sceneView.camera;
                 RenderTexture lastAT = sceneCamera.activeTexture;
                 CameraClearFlags clearFlags = sceneCamera.clearFlags;
-                if (clearFlags == CameraClearFlags.Depth || clearFlags == CameraClearFlags.Nothing)
-                    sceneCamera.clearFlags = CameraClearFlags.Skybox;
+                if (clearFlags == CameraClearFlags.Depth || clearFlags == CameraClearFlags.Nothing) sceneCamera.clearFlags = CameraClearFlags.Skybox;
                 sceneCamera.targetTexture = renderTexture;
 
                 Vector3 pivot = sceneView.pivot;
@@ -340,8 +335,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 state.SetView(sceneCamera);
                 sceneCamera.Render();
 
-                Texture2D texture =
-                    new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+                Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
                 texture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
                 texture.Apply();
 
@@ -373,3 +367,4 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         }
     }
 }
+ 

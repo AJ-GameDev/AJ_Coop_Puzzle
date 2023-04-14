@@ -43,7 +43,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 SceneManager.SetActiveScene(scene);
                 sceneChanged = true;
             }
-
             GameObject go = new GameObject("Ultimate Editor Enhancer References");
             go.tag = "EditorOnly";
             r = go.AddComponent<SceneReferences>();

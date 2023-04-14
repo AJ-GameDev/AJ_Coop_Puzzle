@@ -16,9 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_toolbarSearchFieldMethod == null)
-                    _toolbarSearchFieldMethod = type.GetMethod("ToolbarSearchField", Reflection.StaticLookup, null,
-                        new[] { typeof(string), typeof(GUILayoutOption[]) }, null);
+                if (_toolbarSearchFieldMethod == null) _toolbarSearchFieldMethod = type.GetMethod("ToolbarSearchField", Reflection.StaticLookup, null, new[] {typeof(string), typeof(GUILayoutOption[])}, null);
                 return _toolbarSearchFieldMethod;
             }
         }

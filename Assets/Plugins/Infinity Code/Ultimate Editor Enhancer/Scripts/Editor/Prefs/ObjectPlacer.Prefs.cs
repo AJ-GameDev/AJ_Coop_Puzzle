@@ -35,33 +35,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -42; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!objectPlacer) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Place Object", "Scene View", objectPlacerModifiers, "RMB"),
-                    new Shortcut("Place With Alignment", "Create Browser", "ENTER"),
-                    new Shortcut("Place Without Alignment", "Create Browser", "SHIFT + ENTER"),
-
-                    new Shortcut("Place In Root With Alignment", "Create Browser",
-#if !UNITY_EDITOR_OSX
-                        "CTRL + ENTER"
-#else
-                        "CMD + ENTER"
-#endif
-                    ),
-                    new Shortcut("Place In Root Without Alignment", "Create Browser",
-#if !UNITY_EDITOR_OSX
-                        "CTRL + SHIFT + ENTER"
-#else
-                        "CMD + SHIFT + ENTER"
-#endif
-                    ),
-                };
-            }
-
             public override void Draw()
             {
                 objectPlacer = EditorGUILayout.ToggleLeft("Object Placer", objectPlacer, EditorStyles.boldLabel);
@@ -77,6 +50,33 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.EndDisabledGroup();
 
                 EditorGUI.indentLevel--;
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!objectPlacer) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Place Object", "Scene View", objectPlacerModifiers, "RMB"),
+                    new Shortcut("Place With Alignment", "Create Browser", "ENTER"),
+                    new Shortcut("Place Without Alignment", "Create Browser", "SHIFT + ENTER"),
+
+                    new Shortcut("Place In Root With Alignment", "Create Browser", 
+#if !UNITY_EDITOR_OSX
+                        "CTRL + ENTER"
+#else
+                        "CMD + ENTER"
+#endif
+                        ),
+                    new Shortcut("Place In Root Without Alignment", "Create Browser", 
+#if !UNITY_EDITOR_OSX
+                        "CTRL + SHIFT + ENTER"
+#else
+                        "CMD + SHIFT + ENTER"
+#endif
+                        ),
+                };
             }
         }
     }

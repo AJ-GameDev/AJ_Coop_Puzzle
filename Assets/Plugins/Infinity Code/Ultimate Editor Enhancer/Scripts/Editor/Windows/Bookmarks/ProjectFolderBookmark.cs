@@ -1,6 +1,7 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -44,12 +45,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             items = temp.ToArray();
         }
 
-        public class Item : BookmarkItem
+        public class Item: BookmarkItem
         {
-            public readonly string filename;
-            public readonly string[] labels;
             public readonly string path;
+            public readonly string[] labels;
+            public readonly string filename;
             public readonly string shortFilename;
+
+            public override bool canBeRemoved
+            {
+                get => false;
+            }
+
+            public override bool isProjectItem
+            {
+                get => true;
+            }
 
             public Item(string path)
             {
@@ -63,22 +74,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 FileInfo info = new FileInfo(path);
                 filename = info.Name;
-                if (info.Extension.Length > 0)
-                    shortFilename = filename.Substring(0, filename.Length - info.Extension.Length);
+                if (info.Extension.Length > 0) shortFilename = filename.Substring(0, filename.Length - info.Extension.Length);
                 else shortFilename = filename;
 
                 title = shortFilename;
                 tooltip = path;
-            }
 
-            public override bool canBeRemoved
-            {
-                get => false;
-            }
-
-            public override bool isProjectItem
-            {
-                get => true;
             }
 
             protected override int GetSearchCount()

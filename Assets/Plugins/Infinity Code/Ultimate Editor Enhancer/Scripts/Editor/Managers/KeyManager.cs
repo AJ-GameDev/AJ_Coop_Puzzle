@@ -71,14 +71,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class KeyBinding
         {
-            private bool control;
-            private KeyCode keyCode;
             public Action OnPress;
             public Action OnPressOnRelease;
             public Action OnRelease;
             public Func<bool> OnValidate;
-            private bool shift;
             private bool useValidate;
+            private KeyCode keyCode;
+            private bool shift;
+            private bool control;
 
             internal KeyBinding()
             {
@@ -120,7 +120,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     Event e = Event.current;
                     if (e.keyCode != keyCode || e.shift != shift || e.control != control) return;
                 }
-
+                
                 try
                 {
                     if (OnPress != null) OnPress();

@@ -17,11 +17,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             get { return -990; }
         }
 
-        public bool Validate()
-        {
-            return Prefs.actionsAddComponent || Selection.gameObjects.Length > 1;
-        }
-
         protected override void Init()
         {
             guiContent = new GUIContent(Icons.addComponent, "Add Component");
@@ -43,6 +38,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             wnd.position = rect;
 
             PinAndClose.Show(wnd, rect, wnd.Close, "Add Component");
+        }
+
+        public bool Validate()
+        {
+            return Prefs.actionsAddComponent || Selection.gameObjects.Length > 1;
         }
     }
 }

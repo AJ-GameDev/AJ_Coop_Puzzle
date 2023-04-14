@@ -14,7 +14,7 @@ using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class HierarchyToolbarInterceptor : StatedInterceptor<HierarchyToolbarInterceptor>
+    public class HierarchyToolbarInterceptor: StatedInterceptor<HierarchyToolbarInterceptor>
     {
         private static GUIContent filterByType;
 
@@ -62,8 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 
                 Rect lastRect = GUILayoutUtils.lastRect;
                 GUIContent[] contents = types.OrderBy(t => t).Select(t => new GUIContent(t)).ToArray();
-                FlatSelectorWindow.Show(new Rect(new Vector2(lastRect.x, lastRect.yMax), Vector2.zero), contents, -1)
-                    .OnSelect += i =>
+                FlatSelectorWindow.Show(new Rect(new Vector2(lastRect.x, lastRect.yMax), Vector2.zero), contents, -1).OnSelect += i =>
                 {
                     if (i < 0 || i >= contents.Length) return;
 

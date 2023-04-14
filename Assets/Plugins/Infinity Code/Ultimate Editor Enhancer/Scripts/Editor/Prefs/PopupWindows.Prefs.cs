@@ -46,36 +46,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -90; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!popupWindows) return new Shortcut[0];
-
-                List<Shortcut> shortcuts = new List<Shortcut>();
-
-                if (popupWindowPopup)
-                {
-                    shortcuts.Add(new Shortcut("Show Window As Popup", "Context Menu/Windows",
-                        popupWindowPopupModifiers, "LMB"));
-                }
-
-                if (popupWindowUtility)
-                {
-                    shortcuts.Add(new Shortcut("Show Window As Utility", "Context Menu/Windows",
-                        popupWindowUtilityModifiers, "LMB"));
-                }
-
-                if (popupWindowTab)
-                {
-                    shortcuts.Add(new Shortcut("Show Window As Tab", "Context Menu/Windows", popupWindowTabModifiers,
-                        "LMB"));
-                }
-
-                shortcuts.Add(new Shortcut("Show Context Menu For Component", "Context Menu/Windows", "RMB"));
-                shortcuts.Add(new Shortcut("Start Drag Component", "Context Menu/Components", "Drag Item"));
-
-                return shortcuts;
-            }
-
             public override void Draw()
             {
                 popupWindows = EditorGUILayout.ToggleLeft("Windows Section", popupWindows, EditorStyles.label);
@@ -88,8 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (popupWindowPopup && popupWindowUtility && popupWindowPopupModifiers == popupWindowUtilityModifiers)
                 {
-                    EditorGUILayout.HelpBox("The modifiers for Popup and Utility must be different.",
-                        MessageType.Error);
+                    EditorGUILayout.HelpBox("The modifiers for Popup and Utility must be different.", MessageType.Error);
                 }
 
                 DrawFieldWithModifiers("Tab Windows", ref popupWindowTab, ref popupWindowTabModifiers);
@@ -98,7 +67,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     EditorGUILayout.HelpBox("The modifiers for Popup and Tab must be different.", MessageType.Error);
                 }
-
                 if (popupWindowTab && popupWindowUtility && popupWindowTabModifiers == popupWindowUtilityModifiers)
                 {
                     EditorGUILayout.HelpBox("The modifiers for Utility and Tab must be different.", MessageType.Error);
@@ -114,6 +82,33 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.EndDisabledGroup();
                 EditorGUI.indentLevel--;
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!popupWindows) return new Shortcut[0];
+
+                List<Shortcut> shortcuts = new List<Shortcut>();
+
+                if (popupWindowPopup)
+                {
+                    shortcuts.Add(new Shortcut("Show Window As Popup", "Context Menu/Windows", popupWindowPopupModifiers, "LMB"));
+                }
+
+                if (popupWindowUtility)
+                {
+                    shortcuts.Add(new Shortcut("Show Window As Utility", "Context Menu/Windows", popupWindowUtilityModifiers, "LMB"));
+                }
+
+                if (popupWindowTab)
+                {
+                    shortcuts.Add(new Shortcut("Show Window As Tab", "Context Menu/Windows", popupWindowTabModifiers, "LMB"));
+                }
+
+                shortcuts.Add(new Shortcut("Show Context Menu For Component", "Context Menu/Windows", "RMB"));
+                shortcuts.Add(new Shortcut("Start Drag Component", "Context Menu/Components", "Drag Item"));
+
+                return shortcuts;
             }
         }
     }

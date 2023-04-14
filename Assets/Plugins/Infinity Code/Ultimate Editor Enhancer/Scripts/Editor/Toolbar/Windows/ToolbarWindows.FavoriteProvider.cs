@@ -20,7 +20,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 {
                     menu.Add("Favorites/" + window.title, window.Open);
                 }
-
                 if (ReferenceManager.favoriteWindows.Count > 0) menu.AddSeparator("Favorites/");
                 menu.Add("Favorites/Edit", Settings.OpenFavoriteWindowsSettings);
                 hasItems = true;

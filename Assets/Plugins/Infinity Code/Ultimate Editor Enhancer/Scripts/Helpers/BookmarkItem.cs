@@ -15,14 +15,36 @@ namespace InfinityCode.UltimateEditorEnhancer
         public string type;
         public Object target;
 
-        [NonSerialized] public Texture preview;
+        [NonSerialized]
+        public string tooltip;
 
-        [NonSerialized] public bool previewLoaded;
+        [NonSerialized]
+        public Texture preview;
 
-        [NonSerialized] public string tooltip;
+        [NonSerialized]
+        public bool previewLoaded;
+
+        public GameObject gameObject
+        {
+            get
+            {
+                if (target == null) return null;
+                if (target is Component) return (target as Component).gameObject;
+                if (target is GameObject) return target as GameObject;
+                return null;
+            }
+        }
+
+        public abstract bool isProjectItem { get; }
+
+        public virtual bool canBeRemoved
+        {
+            get => true;
+        }
 
         public BookmarkItem()
         {
+
         }
 
         public BookmarkItem(Object obj)
@@ -48,24 +70,6 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 tooltip = title = obj.name;
             }
-        }
-
-        public GameObject gameObject
-        {
-            get
-            {
-                if (target == null) return null;
-                if (target is Component) return (target as Component).gameObject;
-                if (target is GameObject) return target as GameObject;
-                return null;
-            }
-        }
-
-        public abstract bool isProjectItem { get; }
-
-        public virtual bool canBeRemoved
-        {
-            get => true;
         }
 
         public static StringBuilder GetTransformPath(Transform t)

@@ -17,12 +17,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private static HashSet<int> hierarchyWindows;
         private static bool inited = false;
 
-        static BestIconDrawer()
-        {
-            hierarchyWindows = new HashSet<int>();
-            HierarchyItemDrawer.Register("BestIconDrawer", DrawItem);
-        }
-
         private static Texture prefabIcon
         {
             get
@@ -39,6 +33,12 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 if (_unityLogoTexture == null) _unityLogoTexture = EditorIconContents.unityLogo.image;
                 return _unityLogoTexture;
             }
+        }
+
+        static BestIconDrawer()
+        {
+            hierarchyWindows = new HashSet<int>();
+            HierarchyItemDrawer.Register("BestIconDrawer", DrawItem);
         }
 
         private static void DrawItem(HierarchyItem item)
@@ -65,7 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             const int iconSize = 16;
 
             Rect rect = item.rect;
-            Rect iconRect = new Rect(rect) { width = iconSize, height = iconSize };
+            Rect iconRect = new Rect(rect) {width = iconSize, height = iconSize};
             iconRect.y += (rect.height - iconSize) / 2;
             GUI.DrawTexture(iconRect, texture, ScaleMode.ScaleToFit);
         }

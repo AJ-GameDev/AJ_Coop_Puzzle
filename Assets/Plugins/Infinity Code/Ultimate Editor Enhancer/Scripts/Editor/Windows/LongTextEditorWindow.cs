@@ -10,22 +10,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     public class LongTextEditorWindow : EditorWindow
     {
         private string _text;
-        private EventManager.EventBinding binding;
+        private string originalText;
 
         public Action<string> OnClose;
-        private string originalText;
         private GUIStyle style;
-
-        private void OnEnable()
-        {
-            binding = EventManager.AddBinding(EventManager.ClosePopupEvent);
-            binding.OnInvoke += b => Close();
-        }
+        private EventManager.EventBinding binding;
 
         private void OnDestroy()
         {
             EventManager.RemoveBinding(binding);
             if (OnClose != null) OnClose(_text);
+        }
+
+        private void OnEnable()
+        {
+            binding = EventManager.AddBinding(EventManager.ClosePopupEvent);
+            binding.OnInvoke += b => Close();
         }
 
         private void OnGUI()
@@ -74,7 +74,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 Close();
             }
-
             EditorGUILayout.EndHorizontal();
         }
 

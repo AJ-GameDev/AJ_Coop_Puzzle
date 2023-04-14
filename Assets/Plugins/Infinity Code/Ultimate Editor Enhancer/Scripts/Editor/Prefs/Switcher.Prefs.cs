@@ -42,17 +42,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return Order.switcher; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!switcher) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Switch Between Scene View and Game View", "Scene View or Game View",
-                        switcherWindowsModifiers, switcherWindowsKeyCode),
-                };
-            }
-
             public override void Draw()
             {
                 switcher = EditorGUILayout.ToggleLeft("Switcher", switcher);
@@ -60,15 +49,23 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.BeginDisabledGroup(!switcher);
 
-                DrawFieldWithHotKey("Game View <-> Scene View", ref switcherWindows, ref switcherWindowsKeyCode,
-                    ref switcherWindowsModifiers);
+                DrawFieldWithHotKey("Game View <-> Scene View", ref switcherWindows, ref switcherWindowsKeyCode, ref switcherWindowsModifiers);
                 switcherWindowsPause = EditorGUILayout.ToggleLeft("Pause When Switching", switcherWindowsPause);
-                switchToGameViewOnPlay = EditorGUILayout.ToggleLeft("Switch To Game View When Entering Play Mode",
-                    switchToGameViewOnPlay);
+                switchToGameViewOnPlay = EditorGUILayout.ToggleLeft("Switch To Game View When Entering Play Mode", switchToGameViewOnPlay);
 
                 EditorGUI.indentLevel--;
 
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!switcher) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Switch Between Scene View and Game View", "Scene View or Game View", switcherWindowsModifiers, switcherWindowsKeyCode), 
+                };
             }
         }
     }

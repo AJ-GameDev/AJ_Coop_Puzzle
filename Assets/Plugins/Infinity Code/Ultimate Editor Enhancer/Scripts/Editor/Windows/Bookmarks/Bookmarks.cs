@@ -12,20 +12,36 @@ using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     [InitializeOnLoad]
     public partial class Bookmarks : EditorWindow
     {
-        static Bookmarks()
-        {
-            SceneReferences.OnUpdateInstances += OnUpdateSceneReferences;
+        #region Fields
 
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
-            binding.OnValidate += OnValidate;
-            binding.OnPress += () => ShowWindow();
-        }
+        private static ProjectFolderBookmark[] _folders;
+        private static Dictionary<SceneReferences, List<SceneBookmark>> _sceneItems;
+        private static string[] cachedLabels;
+        private static GUIContent clearContent;
+        private static List<BookmarkItem> filteredItems;
+        private static GUIContent filterByLabelContent;
+        private static GUIContent filterByTypeContent;
+        private static List<ProjectBookmark> selectedFolderItems;
+        private static List<BookmarkItem> selectedFoldersStack;
+        private static double lastClickTime;
+        private static Bookmarks instance;
+        private static BookmarkItem removeItem;
+
+        private string _filter = "";
+        private string activeLabel;
+        private bool focusOnSearch;
+        private Vector2 scrollPosition;
+        private bool showProjectItems = true;
+        private bool showSceneItems = true;
+
+        #endregion
 
         private static Texture2D emptyTexture { get; set; }
 
@@ -71,15 +87,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (projectItems.Count > 0)
                 {
                     // 0 - Replace, 1 - Ignore, 2 - Append
-                    int action = EditorUtility.DisplayDialogComplex("Import Bookmarks",
-                        "Bookmarks already contain project items", "Replace", "Ignore", "Append");
+                    int action = EditorUtility.DisplayDialogComplex("Import Bookmarks", "Bookmarks already contain project items", "Replace", "Ignore", "Append");
                     if (action == 1) return;
                     if (action == 0)
                     {
                         ReferenceManager.bookmarks.Clear();
                     }
                 }
-
+                
                 foreach (JsonItem v in value)
                 {
                     string path = v.V<string>("path");
@@ -97,7 +112,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static List<ProjectBookmark> projectItems
         {
-            get { return ReferenceManager.bookmarks; }
+            get
+            {
+                return ReferenceManager.bookmarks;
+            }
         }
 
         public static Dictionary<SceneReferences, List<SceneBookmark>> sceneItems
@@ -114,8 +132,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         if (sr.bookmarks.Count > 0) _sceneItems.Add(sr, sr.bookmarks);
                     }
 
-                    _sceneItems = _sceneItems.OrderBy(p => p.Key.gameObject.scene.name)
-                        .ToDictionary(p => p.Key, p => p.Value);
+                    _sceneItems = _sceneItems.OrderBy(p => p.Key.gameObject.scene.name).ToDictionary(p => p.Key, p => p.Value);
                 }
 
                 return _sceneItems;
@@ -124,91 +141,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static GUIContent visibleContent { get; private set; }
 
-        private void OnEnable()
+        static Bookmarks()
         {
-            instance = this;
-            minSize = new Vector2(250, 250);
+            SceneReferences.OnUpdateInstances += OnUpdateSceneReferences;
 
-            gridSize = EditorPrefs.GetInt(GridSizePref, 16);
-
-            showContent = new GUIContent(Styles.isProSkin ? Icons.openNewWhite : Icons.openNewBlack, "Show");
-            closeContent = new GUIContent(Styles.isProSkin ? Icons.closeWhite : Icons.closeBlack, "Remove");
-
-            hiddenContent = EditorIconContents.sceneVisibilityHiddenHover;
-            visibleContent = EditorIconContents.sceneVisibilityVisibleHover;
+            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            binding.OnValidate += OnValidate;
+            binding.OnPress += () => ShowWindow();
         }
 
-        private void OnDestroy()
-        {
-            if (selectedFolderItems != null)
-            {
-                foreach (ProjectBookmark item in selectedFolderItems) item.Dispose();
-                selectedFolderItems = null;
-            }
-
-            selectedFoldersStack = null;
-            if (_folders != null)
-            {
-                foreach (ProjectFolderBookmark folder in _folders) folder.Dispose();
-                _folders = null;
-            }
-
-            cachedLabels = null;
-            instance = null;
-        }
-
-        private void OnGUI()
-        {
-            if (instance == null) instance = this;
-            if (emptyTexture == null) emptyTexture = Resources.CreateSinglePixelTexture(1f, 0f);
-            if (showContentStyle == null || showContentStyle.normal.background == null)
-            {
-                showContentStyle = new GUIStyle(Styles.transparentButton);
-                showContentStyle.margin.top = 6;
-                showContentStyle.margin.left = 6;
-            }
-
-            if (selectedStyle == null)
-            {
-                selectedStyle = new GUIStyle(Styles.selectedRow);
-                selectedStyle.fixedHeight = 0;
-            }
-
-            if (removeItem != null) Remove(removeItem.target);
-
-            ProcessEvents();
-            Toolbar();
-
-            if (selectedFoldersStack != null && selectedFoldersStack.Count > 0)
-            {
-                FolderItemsToolbar();
-            }
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-
-            removeItem = null;
-            DrawItems();
-
-            if (removeItem != null)
-            {
-                Remove(removeItem.target);
-                removeItem = null;
-                Save();
-                UpdateFilteredItems();
-            }
-
-            EditorGUILayout.EndScrollView();
-
-            BottomBar();
-        }
-
-        private static bool OnValidate()
-        {
-            return Prefs.bookmarksHotKey && Event.current.modifiers == Prefs.bookmarksModifiers &&
-                   Event.current.keyCode == Prefs.bookmarksKeyCode;
-        }
-
-        public static void Add(Object target)
+        public static void Add(Object target) 
         {
             if (target == null) return;
 
@@ -244,13 +186,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             rect.xMin = rect.xMax - 100;
             rect.x -= 3;
             int id = FixedIDs.BOOKMARKS_GRID_SIZE;
-            gridSize = (int)GUI.Slider(rect, gridSize, 0, minGridSize, maxGridSize, GUI.skin.horizontalSlider,
-                GUI.skin.horizontalSliderThumb, true, id);
+            gridSize = (int) GUI.Slider(rect, gridSize, 0, minGridSize, maxGridSize, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, true, id);
             if (EditorGUI.EndChangeCheck())
             {
                 EditorPrefs.SetInt(GridSizePref, gridSize);
             }
-
             EditorGUILayout.EndHorizontal();
         }
 
@@ -286,12 +226,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawClearButton()
         {
-            if (clearContent == null)
-                clearContent = new GUIContent(EditorIconContents.treeEditorTrash.image, "Delete all bookmarks");
+            if (clearContent == null) clearContent = new GUIContent(EditorIconContents.treeEditorTrash.image, "Delete all bookmarks");
 
             if (!GUILayoutUtils.ToolbarButton(clearContent)) return;
-            if (!EditorUtility.DisplayDialog("Clear Bookmarks", "Do you really want to clear your bookmarks?", "Clear",
-                    "Cancel")) return;
+            if (!EditorUtility.DisplayDialog("Clear Bookmarks", "Do you really want to clear your bookmarks?", "Clear", "Cancel")) return;
 
             ReferenceManager.bookmarks.Clear();
             ReferenceManager.Save();
@@ -339,9 +277,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (cachedLabels.Length == 0) return;
 
-            if (filterByLabelContent == null)
-                filterByLabelContent =
-                    new GUIContent(EditorGUIUtility.IconContent("FilterByLabel").image, "Filter by Label");
+            if (filterByLabelContent == null) filterByLabelContent = new GUIContent(EditorGUIUtility.IconContent("FilterByLabel").image, "Filter by Label");
             filterByLabelContent.text = activeLabel;
             if (!GUILayoutUtils.ToolbarButton(filterByLabelContent)) return;
 
@@ -362,7 +298,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     UpdateFilteredItems();
                 });
             }
-
             menu.Show();
         }
 
@@ -395,7 +330,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     else filter += ":" + name;
                 });
             }
-
             menu.Show();
         }
 
@@ -422,7 +356,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         bool multiScene = sceneItems.Count > 1;
                         foreach (var pair in sceneItems)
                         {
-                            string label = multiScene ? pair.Key.gameObject.scene.name : string.Empty;
+                            string label = multiScene? pair.Key.gameObject.scene.name: string.Empty;
                             if (gridSize > minGridSize) DrawGridItems(pair.Value, label);
                             else
                             {
@@ -558,10 +492,92 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else menu.Add("Add Bookmark", () => Add(target));
         }
 
+        private void OnDestroy()
+        {
+            if (selectedFolderItems != null)
+            {
+                foreach (ProjectBookmark item in selectedFolderItems) item.Dispose();
+                selectedFolderItems = null;
+            }
+
+            selectedFoldersStack = null;
+            if (_folders != null)
+            {
+                foreach (ProjectFolderBookmark folder in _folders) folder.Dispose();
+                _folders = null;
+            }
+
+            cachedLabels = null;
+            instance = null;
+        }
+
+        private void OnEnable()
+        {
+            instance = this;
+            minSize = new Vector2(250, 250);
+
+            gridSize = EditorPrefs.GetInt(GridSizePref, 16);
+
+            showContent = new GUIContent(Styles.isProSkin? Icons.openNewWhite: Icons.openNewBlack, "Show");
+            closeContent = new GUIContent(Styles.isProSkin ? Icons.closeWhite: Icons.closeBlack, "Remove");
+
+            hiddenContent = EditorIconContents.sceneVisibilityHiddenHover;
+            visibleContent = EditorIconContents.sceneVisibilityVisibleHover;
+        }
+
+        private void OnGUI()
+        {
+            if (instance == null) instance = this;
+            if (emptyTexture == null) emptyTexture = Resources.CreateSinglePixelTexture(1f, 0f);
+            if (showContentStyle == null || showContentStyle.normal.background == null)
+            {
+                showContentStyle = new GUIStyle(Styles.transparentButton);
+                showContentStyle.margin.top = 6;
+                showContentStyle.margin.left = 6;
+            }
+            if (selectedStyle == null)
+            {
+                selectedStyle = new GUIStyle(Styles.selectedRow);
+                selectedStyle.fixedHeight = 0;
+            }
+
+            if (removeItem != null) Remove(removeItem.target);
+
+            ProcessEvents();
+            Toolbar();
+
+            if (selectedFoldersStack != null && selectedFoldersStack.Count > 0)
+            {
+                FolderItemsToolbar();
+            }
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+            removeItem = null;
+            DrawItems();
+
+            if (removeItem != null)
+            {
+                Remove(removeItem.target);
+                removeItem = null;
+                Save();
+                UpdateFilteredItems();
+            }
+
+            EditorGUILayout.EndScrollView();
+
+            BottomBar();
+        }
+
         private static void OnUpdateSceneReferences()
         {
             _sceneItems = null;
             if (instance != null) instance.UpdateFilteredItems();
+        }
+
+        private static bool OnValidate()
+        {
+            return Prefs.bookmarksHotKey && Event.current.modifiers == Prefs.bookmarksModifiers && Event.current.keyCode == Prefs.bookmarksKeyCode;
         }
 
         private void ProcessEvents()
@@ -584,8 +600,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             else if (e.type == EventType.KeyDown)
             {
-                if (e.keyCode == KeyCode.F &&
-                    (e.modifiers == EventModifiers.Control || e.modifiers == EventModifiers.Command))
+                if (e.keyCode == KeyCode.F && (e.modifiers == EventModifiers.Control || e.modifiers == EventModifiers.Command))
                 {
                     focusOnSearch = true;
                     e.Use();
@@ -737,7 +752,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     menu.AddSeparator();
                     menu.Add("Remove Bookmark", () => RemoveLate(item));
                 }
-
                 menu.Show();
             }
             else ShowOtherContextMenu(item);
@@ -796,7 +810,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Vector2 size = Prefs.defaultWindowSize;
                 wnd.position = new Rect(screenPoint - size / 2, size);
             }
-
             return wnd;
         }
 
@@ -867,29 +880,5 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             filteredItems = query.OrderByDescending(i => i.accuracy).ToList();
         }
-
-        #region Fields
-
-        private static ProjectFolderBookmark[] _folders;
-        private static Dictionary<SceneReferences, List<SceneBookmark>> _sceneItems;
-        private static string[] cachedLabels;
-        private static GUIContent clearContent;
-        private static List<BookmarkItem> filteredItems;
-        private static GUIContent filterByLabelContent;
-        private static GUIContent filterByTypeContent;
-        private static List<ProjectBookmark> selectedFolderItems;
-        private static List<BookmarkItem> selectedFoldersStack;
-        private static double lastClickTime;
-        private static Bookmarks instance;
-        private static BookmarkItem removeItem;
-
-        private string _filter = "";
-        private string activeLabel;
-        private bool focusOnSearch;
-        private Vector2 scrollPosition;
-        private bool showProjectItems = true;
-        private bool showSceneItems = true;
-
-        #endregion
     }
 }

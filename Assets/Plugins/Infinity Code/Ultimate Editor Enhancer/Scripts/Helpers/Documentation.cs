@@ -7,5 +7,6 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public class Documentation : ScriptableObject
     {
+
     }
 }

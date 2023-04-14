@@ -17,10 +17,8 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_searchFieldGUIMethod == null)
                 {
-                    _searchFieldGUIMethod = type.GetMethod("SearchFieldGUI", Reflection.InstanceLookup, null,
-                        new[] { typeof(float) }, null);
+                    _searchFieldGUIMethod = type.GetMethod("SearchFieldGUI", Reflection.InstanceLookup, null, new[] { typeof(float) }, null);
                 }
-
                 return _searchFieldGUIMethod;
             }
         }

@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
-    public class ViewStateReadme : MonoBehaviour
+    public class ViewStateReadme: MonoBehaviour
     {
+
     }
 }

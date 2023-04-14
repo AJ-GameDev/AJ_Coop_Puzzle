@@ -11,8 +11,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         public class CreateProvider : Provider
         {
-            public string[] skipMenuItems =
-            {
+            public string[] skipMenuItems = {
                 "GameObject/Create Empty Child".ToLower(),
                 "GameObject/Create Empty Parent".ToLower(),
                 "GameObject/Group".ToLower(),

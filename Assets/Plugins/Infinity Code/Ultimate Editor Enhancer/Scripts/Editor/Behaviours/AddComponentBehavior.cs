@@ -34,8 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             if (rect.yMax > Screen.currentResolution.height - 10) rect.y -= rect.height - 50;
 
             if (rect.x < 5) rect.x = 5;
-            else if (rect.xMax > Screen.currentResolution.width - 5)
-                rect.x = Screen.currentResolution.width - 5 - rect.width;
+            else if (rect.xMax > Screen.currentResolution.width - 5) rect.x = Screen.currentResolution.width - 5 - rect.width;
 #endif
 
             if (wnd != null) EventManager.BroadcastClosePopup();

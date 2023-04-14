@@ -30,6 +30,19 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -34; }
             }
 
+            public override void Draw()
+            {
+                jumpToPoint = EditorGUILayout.ToggleLeft("Jump To Point", jumpToPoint);
+                highJumpToPoint = EditorGUILayout.ToggleLeft("High Jump To Point", highJumpToPoint);
+
+#if UNITY_EDITOR_OSX
+                string alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CMD + SHIFT + SHIFT)";
+#else
+                string alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CTRL + SHIFT + SHIFT)";
+#endif
+                alternativeJumpShortcut = EditorGUILayout.ToggleLeft(alternativeLabel, alternativeJumpShortcut);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 List<Shortcut> shortcuts = new List<Shortcut>();
@@ -37,8 +50,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (jumpToPoint)
                 {
                     shortcuts.Add(new Shortcut("Jump To Point", "Scene View", "SHIFT + MMB"));
-                    if (alternativeJumpShortcut)
-                        shortcuts.Add(new Shortcut("Jump To Point", "Scene View", "SHIFT + SHIFT"));
+                    if (alternativeJumpShortcut) shortcuts.Add(new Shortcut("Jump To Point", "Scene View", "SHIFT + SHIFT"));
                 }
 
                 if (highJumpToPoint)
@@ -51,24 +63,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                     string shortcut2 = "CTRL + SHIFT + SHIFT";
 #endif
                     shortcuts.Add(new Shortcut("High Jump To Point", "Scene View", shortcut));
-                    if (alternativeJumpShortcut)
-                        shortcuts.Add(new Shortcut("High Jump To Point", "Scene View", shortcut2));
+                    if (alternativeJumpShortcut) shortcuts.Add(new Shortcut("High Jump To Point", "Scene View", shortcut2));
                 }
-
-                return shortcuts;
-            }
-
-            public override void Draw()
-            {
-                jumpToPoint = EditorGUILayout.ToggleLeft("Jump To Point", jumpToPoint);
-                highJumpToPoint = EditorGUILayout.ToggleLeft("High Jump To Point", highJumpToPoint);
-
-#if UNITY_EDITOR_OSX
-                string alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CMD + SHIFT + SHIFT)";
-#else
-                string alternativeLabel = "Alternative Jump Shortcuts (SHIFT + SHIFT, CTRL + SHIFT + SHIFT)";
-#endif
-                alternativeJumpShortcut = EditorGUILayout.ToggleLeft(alternativeLabel, alternativeJumpShortcut);
+                    return shortcuts;
             }
         }
     }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
 {
-    public class AlignTool : TransformEditorTool
+    public class AlignTool: TransformEditorTool
     {
         private GUIStyle rightLabel;
 
@@ -42,12 +42,10 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
             {
                 GameObjectUtils.Align(Selection.gameObjects, 0, 1, 0, 0);
             }
-
             if (GUILayout.Button("Center"))
             {
                 GameObjectUtils.Align(Selection.gameObjects, 1, 1, 0, 0);
             }
-
             if (GUILayout.Button("Max"))
             {
                 GameObjectUtils.Align(Selection.gameObjects, 2, 1, 0, 0);
@@ -71,12 +69,10 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
             {
                 GameObjectUtils.Align(Selection.gameObjects, 0, 0, 1, 0);
             }
-
             if (GUILayout.Button("Center"))
             {
                 GameObjectUtils.Align(Selection.gameObjects, 1, 0, 1, 0);
             }
-
             if (GUILayout.Button("Max"))
             {
                 GameObjectUtils.Align(Selection.gameObjects, 2, 0, 1, 0);
@@ -100,12 +96,10 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
             {
                 GameObjectUtils.Align(Selection.gameObjects, 0, 0, 0, 1);
             }
-
             if (GUILayout.Button("Center"))
             {
                 GameObjectUtils.Align(Selection.gameObjects, 1, 0, 0, 1);
             }
-
             if (GUILayout.Button("Max"))
             {
                 GameObjectUtils.Align(Selection.gameObjects, 2, 0, 0, 1);
@@ -125,7 +119,7 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
 
         public override void Init()
         {
-            _content = new GUIContent(Styles.isProSkin ? Icons.align : Icons.alignDark, "Align & Distribute");
+            _content = new GUIContent(Styles.isProSkin? Icons.align: Icons.alignDark, "Align & Distribute");
         }
 
         public override bool Validate()

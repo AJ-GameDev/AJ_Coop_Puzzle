@@ -12,13 +12,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
     [EditorTool("Pivot Tool")]
     public class PivotTool : EditorTool
     {
-        public enum Mode
-        {
-            move,
-            setPivot,
-            setOrientation
-        }
-
         private static GUIContent activeContent;
         private static Vector3 firstPoint;
         private static Texture handleIcon;
@@ -121,8 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 Color clr = Handles.color;
 
                 Handles.color = Color.blue;
-                Handles.DrawLine(position - rotation * Vector3.forward * 1000,
-                    position + rotation * Vector3.forward * 1000);
+                Handles.DrawLine(position - rotation * Vector3.forward * 1000, position + rotation * Vector3.forward * 1000);
 
                 Handles.color = Color.red;
                 Handles.DrawLine(position - rotation * Vector3.left * 1000, position + rotation * Vector3.left * 1000);
@@ -172,8 +164,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             {
                 handleSize = HandleUtility.GetHandleSize(position);
                 HandleUtilityRef.FindNearestVertex(e.mousePosition, out position);
-                Handles.RectangleHandleCap(-1, position, (window as SceneView).camera.transform.rotation,
-                    handleSize * 0.125f, eventType);
+                Handles.RectangleHandleCap(-1, position, (window as SceneView).camera.transform.rotation, handleSize * 0.125f, eventType);
                 Handles.Label(position + new Vector3(1, -1, 0) * handleSize * 0.125f, handleIcon);
                 if (eventType == EventType.MouseDown && e.button == 0)
                 {
@@ -187,14 +178,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 if (pointIndex == 1)
                 {
                     handleSize = HandleUtility.GetHandleSize(firstPoint);
-                    Handles.RectangleHandleCap(-1, firstPoint, (window as SceneView).camera.transform.rotation,
-                        handleSize * 0.125f, eventType);
+                    Handles.RectangleHandleCap(-1, firstPoint, (window as SceneView).camera.transform.rotation, handleSize * 0.125f, eventType);
                 }
 
                 handleSize = HandleUtility.GetHandleSize(position);
                 HandleUtilityRef.FindNearestVertex(e.mousePosition, out position);
-                Handles.RectangleHandleCap(-1, position, (window as SceneView).camera.transform.rotation,
-                    handleSize * 0.125f, eventType);
+                Handles.RectangleHandleCap(-1, position, (window as SceneView).camera.transform.rotation, handleSize * 0.125f, eventType);
                 Handles.Label(position + new Vector3(1, -1, 0) * handleSize, handleIcon);
 
                 if (pointIndex == 1)
@@ -253,6 +242,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 transform.position = position;
                 transform.rotation = rotation;
             }
+        }
+
+        public enum Mode
+        {
+            move,
+            setPivot,
+            setOrientation
         }
     }
 }

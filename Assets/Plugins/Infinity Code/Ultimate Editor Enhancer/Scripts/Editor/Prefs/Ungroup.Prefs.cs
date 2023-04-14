@@ -32,6 +32,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
+            public override void Draw()
+            {
+                DrawFieldWithHotKey("Ungroup", ref ungroup, ref ungroupKeyCode, ref ungroupModifiers, EditorStyles.label, 17);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!ungroup) return new Shortcut[0];
@@ -40,12 +45,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     new Shortcut("Ungroup GameObjects", "Everywhere", ungroupModifiers, ungroupKeyCode),
                 };
-            }
-
-            public override void Draw()
-            {
-                DrawFieldWithHotKey("Ungroup", ref ungroup, ref ungroupKeyCode, ref ungroupModifiers,
-                    EditorStyles.label, 17);
             }
         }
     }

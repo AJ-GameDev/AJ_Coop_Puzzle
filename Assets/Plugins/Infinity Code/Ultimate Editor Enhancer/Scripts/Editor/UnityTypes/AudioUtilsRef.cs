@@ -24,11 +24,9 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 #if UNITY_2020_2_OR_NEWER
                     _isClipPlayingMethod = type.GetMethod("IsPreviewClipPlaying", Reflection.StaticLookup);
 #else
-                    _isClipPlayingMethod =
- type.GetMethod("IsClipPlaying", Reflection.StaticLookup, null, new[] { typeof(AudioClip) }, null);
+                    _isClipPlayingMethod = type.GetMethod("IsClipPlaying", Reflection.StaticLookup, null, new[] { typeof(AudioClip) }, null);
 #endif
                 }
-
                 return _isClipPlayingMethod;
             }
         }
@@ -40,14 +38,11 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 if (_playClipMethod == null)
                 {
 #if UNITY_2020_2_OR_NEWER
-                    _playClipMethod = type.GetMethod("PlayPreviewClip", Reflection.StaticLookup, null,
-                        new[] { typeof(AudioClip), typeof(int), typeof(bool) }, null);
+                    _playClipMethod = type.GetMethod("PlayPreviewClip", Reflection.StaticLookup, null, new[] { typeof(AudioClip), typeof(int), typeof(bool) }, null);
 #else
-                    _playClipMethod =
- type.GetMethod("PlayClip", Reflection.StaticLookup, null, new[] { typeof(AudioClip), typeof(int), typeof(bool) }, null);
+                    _playClipMethod = type.GetMethod("PlayClip", Reflection.StaticLookup, null, new[] { typeof(AudioClip), typeof(int), typeof(bool) }, null);
 #endif
                 }
-
                 return _playClipMethod;
             }
         }
@@ -64,7 +59,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                     _stopAllClipsMethod = type.GetMethod("StopAllClips", Reflection.StaticLookup);
 #endif
                 }
-
                 return _stopAllClipsMethod;
             }
         }
@@ -78,11 +72,9 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 #if UNITY_2020_2_OR_NEWER
                     _stopClipMethod = type.GetMethod("PausePreviewClip", Reflection.StaticLookup);
 #else
-                    _stopClipMethod =
- type.GetMethod("StopClip", Reflection.StaticLookup, null, new[] { typeof(AudioClip) }, null);
+                    _stopClipMethod = type.GetMethod("StopClip", Reflection.StaticLookup, null, new[] { typeof(AudioClip) }, null);
 #endif
                 }
-
                 return _stopClipMethod;
             }
         }
@@ -98,12 +90,13 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static bool IsClipPlaying(AudioClip clip)
         {
-            return (bool)isClipPlayingMethod.Invoke(null, new object[] { clip });
+            
+            return (bool)isClipPlayingMethod.Invoke(null, new object[] {clip});
         }
 
         public static void PlayClip(AudioClip clip, int startSample = 0, bool loop = false)
         {
-            playClipMethod.Invoke(null, new object[] { clip, startSample, loop });
+            playClipMethod.Invoke(null, new object[] { clip, startSample, loop});
         }
 
         public static void StopAllClips()
@@ -113,7 +106,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void StopClip(AudioClip clip)
         {
-            stopClipMethod.Invoke(null, new object[] { clip });
+            stopClipMethod.Invoke(null, new object[] {clip});
         }
     }
 }

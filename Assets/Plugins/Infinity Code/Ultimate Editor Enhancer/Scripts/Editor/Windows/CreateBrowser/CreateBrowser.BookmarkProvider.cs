@@ -41,6 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public override void Filter(string pattern, List<Item> filteredItems)
             {
+
             }
         }
     }

@@ -5,7 +5,8 @@
   },
   {
     "title": "Standalone Tools",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Bookmarks",
         "image": "Bookmarks.png",
@@ -17,7 +18,8 @@
         "title": "Context Menu",
         "added": 1.0,
         "updated": 1.0,
-        "slides": [
+        "slides":
+        [
           {
             "title": "How to open",
             "image": "Open Context Menu.png",
@@ -52,7 +54,8 @@
             "title": "Actions",
             "image": "Actions.png",
             "help": "actions",
-            "slides": [
+            "slides":
+            [
               {
                 "title": "History Action",
                 "image": "History Action.png",
@@ -92,7 +95,8 @@
       },
       {
         "title": "Toolbar",
-        "slides": [
+        "slides": 
+        [
           {
             "title": "Timer & Timescale",
             "image": "Timer and Timescale.png",
@@ -113,7 +117,8 @@
   },
   {
     "title": "Scene View Tools",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Highlighter",
         "image": "Highlighter.png",
@@ -134,7 +139,8 @@
         "help": "object-toolbar",
         "added": 2.02,
         "updated": 2.02,
-        "slides": [
+        "slides":
+        [
           {
             "title": "Related Components",
             "image": "Related Components.png",
@@ -164,7 +170,8 @@
         "help": "tool-values",
         "added": 2.0,
         "updated": 2.0,
-        "slides": [
+        "slides":
+        [
           {
             "title": "Transform Editor Window",
             "image": "Transform Editor Tools.png",
@@ -187,7 +194,8 @@
         "help": "waila-what-am-i-looking-at",
         "added": 1.0,
         "updated": 1.0,
-        "slides": [
+        "slides":
+        [
           {
             "title": "Smart Selection",
             "image": "Smart Selection.png",
@@ -208,7 +216,8 @@
   },
   {
     "title": "Navigation Tools",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Frame Selected Bounds",
         "image": "Frame Selected Bounds.png",
@@ -236,7 +245,8 @@
         "help": "view-gallery",
         "added": 1.03,
         "updated": 1.03,
-        "slides": [
+        "slides":
+        [
           {
             "title": "View State for Selection",
             "image": "View State for Selection.png",
@@ -264,7 +274,8 @@
   },
   {
     "title": "GameObject Tools",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Add Component by Shortcut",
         "image": "Add Component by Shortcut.png",
@@ -339,7 +350,8 @@
   },
   {
     "title": "Inspector Tools",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Align and Distribute",
         "image": "Component Header - Align and Distribute.png",
@@ -409,7 +421,8 @@
         "help": "saving-components-at-runtime",
         "added": 3.01,
         "updated": 3.01,
-        "slides": [
+        "slides":
+        [
           {
             "title": "Saving Single Field",
             "image": "Saving Single Field.png",
@@ -430,7 +443,8 @@
   },
   {
     "title": "Hierarchy Tools",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Backgrounds",
         "image": "Hierarchy Backgrounds.png",
@@ -505,7 +519,8 @@
   },
   {
     "title": "Interacting with Windows",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Switch Between Scene and Game Views",
         "image": "Switcher.png",
@@ -524,7 +539,8 @@
   },
   {
     "title": "Behavior Improvements",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Change Value of Number Fields Using Arrow",
         "image": "Change Value of Numeric Fields.png",
@@ -564,7 +580,8 @@
   },
   {
     "title": "Integration",
-    "slides": [
+    "slides":
+    [
       {
         "title": "Real World Terrain",
         "image": "Real World Terrain Extra.png",

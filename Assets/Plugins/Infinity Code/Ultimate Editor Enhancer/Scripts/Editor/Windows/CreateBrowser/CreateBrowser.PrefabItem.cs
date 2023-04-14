@@ -12,10 +12,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         public class PrefabItem : Item
         {
-            private GameObject asset;
             public string path;
-
-            [NonSerialized] private bool previewLoaded;
+            [NonSerialized]
+            private bool previewLoaded;
+            private GameObject asset;
 
             public PrefabItem(string label, string path)
             {
@@ -68,9 +68,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         }
                         catch
                         {
+
                         }
                     }
-                    else GUI.changed = true;
+                    else GUI.changed = true; 
 
                     if (asset != null)
                     {
@@ -122,8 +123,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     previewEditor = Editor.CreateEditor(AssetDatabase.LoadAssetAtPath<GameObject>(path));
                 }
 
-                if (previewEditor != null)
-                    previewEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetRect(128, 128), Styles.grayRow);
+                if (previewEditor != null) previewEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetRect(128, 128), Styles.grayRow);
             }
 
             protected override void InitContent()

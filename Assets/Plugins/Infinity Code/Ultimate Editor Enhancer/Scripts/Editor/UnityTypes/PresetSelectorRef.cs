@@ -19,13 +19,11 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_drawPresetButtonMethod == null)
                 {
-                    Type[] parameters =
-                    {
+                    Type[] parameters = {
                         typeof(Rect),
                         typeof(Object[])
                     };
-                    _drawPresetButtonMethod = type.GetMethod("DrawPresetButton", Reflection.StaticLookup, null,
-                        parameters, null);
+                    _drawPresetButtonMethod = type.GetMethod("DrawPresetButton", Reflection.StaticLookup, null, parameters, null);
                 }
 
                 return _drawPresetButtonMethod;

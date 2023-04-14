@@ -3,21 +3,15 @@
 
 using System;
 using System.Linq;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
     [Serializable]
     public class ProjectBookmark : BookmarkItem
     {
-        [NonSerialized] private string _path;
-
-        public ProjectBookmark()
-        {
-        }
-
-        public ProjectBookmark(UnityEngine.Object obj) : base(obj)
-        {
-        }
+        [NonSerialized]
+        private string _path;
 
         public override bool isProjectItem
         {
@@ -37,6 +31,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 return _path;
             }
+        }
+
+        public ProjectBookmark()
+        {
+
+        }
+
+        public ProjectBookmark(UnityEngine.Object obj):base(obj)
+        {
+
         }
 
         public override bool HasLabel(string label)

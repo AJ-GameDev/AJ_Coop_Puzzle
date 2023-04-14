@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class NumberFieldInterceptor : StatedInterceptor<NumberFieldInterceptor>
+    public class NumberFieldInterceptor: StatedInterceptor<NumberFieldInterceptor>
     {
         private static string recycledText;
 
@@ -87,7 +87,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                         recycledText = longVal.ToString();
                         GUI.changed = true;
                     }
-#else
+#else 
                     if (value.isDouble)
                     {
                         if (!double.IsInfinity(value.doubleVal) && !double.IsNaN(value.doubleVal))

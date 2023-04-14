@@ -29,16 +29,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!group) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Show Tool Values", "Scene View", toolValuesModifiers),
-                };
-            }
-
             public override void Draw()
             {
                 showToolValues = EditorGUILayout.ToggleLeft("Show Tool Values In SceneView", showToolValues);
@@ -47,6 +37,16 @@ namespace InfinityCode.UltimateEditorEnhancer
                 GUILayout.Label("Modifiers", GUILayout.Width(modifierLabelWidth + 15));
                 toolValuesModifiers = DrawModifiers(toolValuesModifiers, true);
                 EditorGUILayout.EndHorizontal();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!group) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Show Tool Values", "Scene View", toolValuesModifiers),
+                };
             }
         }
     }

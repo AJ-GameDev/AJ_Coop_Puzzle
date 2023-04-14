@@ -18,9 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_drawFoldoutInspectorMethod == null)
-                    _drawFoldoutInspectorMethod = type.GetMethod("DrawFoldoutInspector", Reflection.StaticLookup, null,
-                        new[] { typeof(UnityEngine.Object), typeof(Editor).MakeByRefType() }, null);
+                if (_drawFoldoutInspectorMethod == null) _drawFoldoutInspectorMethod = type.GetMethod("DrawFoldoutInspector", Reflection.StaticLookup, null, new []{typeof(UnityEngine.Object), typeof(Editor).MakeByRefType()}, null);
                 return _drawFoldoutInspectorMethod;
             }
         }
@@ -29,9 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_drawHeaderGUIMethod == null)
-                    _drawHeaderGUIMethod = type.GetMethod("DrawHeaderGUI", Reflection.StaticLookup, null,
-                        new[] { typeof(Editor), typeof(string), typeof(float) }, null);
+                if (_drawHeaderGUIMethod == null) _drawHeaderGUIMethod = type.GetMethod("DrawHeaderGUI", Reflection.StaticLookup, null, new[] { typeof(Editor), typeof(string), typeof(float) }, null);
                 return _drawHeaderGUIMethod;
             }
         }
@@ -40,8 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_targetTitleProp == null)
-                    _targetTitleProp = type.GetProperty("targetTitle", Reflection.InstanceLookup);
+                if (_targetTitleProp == null) _targetTitleProp = type.GetProperty("targetTitle", Reflection.InstanceLookup);
                 return _targetTitleProp;
             }
         }
@@ -53,13 +48,13 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static Rect DrawHeaderGUI(Editor editor)
         {
-            return (Rect)drawHeaderGUIMethod.Invoke(null, new object[] { editor, GetTargetTitle(editor), 10 });
+            return (Rect)drawHeaderGUIMethod.Invoke(null, new object[]{editor, GetTargetTitle(editor), 10});
             //return (Rect) Editor.DrawHeaderGUI(editor, editor.targetTitle, 10f);
         }
 
         private static string GetTargetTitle(Editor editor)
         {
-            return (string)targetTitleProp.GetValue(editor);
+            return (string) targetTitleProp.GetValue(editor);
         }
     }
 }

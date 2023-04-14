@@ -17,10 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static IList activeItems;
         private static GUIStyle audioClipButtonStyle;
         private static GUIContent closeContent;
-
-        private static Dictionary<SceneReferences, ReorderableList> sceneItemsList =
-            new Dictionary<SceneReferences, ReorderableList>();
-
+        private static Dictionary<SceneReferences, ReorderableList> sceneItemsList = new Dictionary<SceneReferences, ReorderableList>();
         private static GUIContent showContent;
         private static GUIStyle showContentStyle;
         private static ReorderableList projectItemsList;
@@ -50,14 +47,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             r.xMin = r.xMax - 20;
             r.y += 2;
 
-            if (selectedFolderItems == null && item.canBeRemoved &&
-                GUI.Button(r, closeContent, Styles.transparentButton)) removeItem = item;
+            if (selectedFolderItems == null && item.canBeRemoved && GUI.Button(r, closeContent, Styles.transparentButton)) removeItem = item;
         }
 
         private void DrawRowFirstButton(BookmarkItem item, ref Rect rect)
         {
             showContent.tooltip = GetShowTooltip(item);
-            Rect r = new Rect(rect) { width = 20 };
+            Rect r = new Rect(rect) {width = 20};
             r.y += 2;
             rect.xMin += 20;
             if (!GUI.Button(r, showContent, showContentStyle)) return;
@@ -91,7 +87,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (item.preview == null || !item.previewLoaded) InitPreview(item);
 
-            Rect r = new Rect(rect) { width = 20 };
+            Rect r = new Rect(rect) {width = 20};
             rect.xMin += 20;
             ButtonEvent event1 = GUILayoutUtils.Button(r, TempContent.Get(item.preview), GUIStyle.none);
             return event1;
@@ -114,8 +110,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 bool hidden = SceneVisibilityStateRef.IsGameObjectHidden(item.gameObject);
                 if (GUI.Button(r, hidden ? hiddenContent : visibleContent, Styles.transparentButton))
                 {
-                    SceneVisibilityManagerRef.ToggleVisibility(SceneVisibilityManagerRef.GetInstance(), item.gameObject,
-                        true);
+                    SceneVisibilityManagerRef.ToggleVisibility(SceneVisibilityManagerRef.GetInstance(), item.gameObject, true);
                 }
             }
 

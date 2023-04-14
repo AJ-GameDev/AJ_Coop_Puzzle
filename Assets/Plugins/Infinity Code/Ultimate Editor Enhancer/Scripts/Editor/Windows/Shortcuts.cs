@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
-    public class Shortcuts : EditorWindow
+    public class Shortcuts: EditorWindow
     {
         private static Prefs.Shortcut[] _shortcuts;
         private static string[] _contexts;
-        private int contextIndex = 0;
-        private string filter = "";
-        private IEnumerable<Prefs.Shortcut> filteredShortcuts;
         private Vector2 scrollPosition;
+        private string filter = "";
+        private int contextIndex = 0;
+        private IEnumerable<Prefs.Shortcut> filteredShortcuts;
 
         private static Prefs.Shortcut[] shortcuts
         {
@@ -37,9 +37,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             get
             {
-                if (_contexts == null)
-                    _contexts = new[] { "-" }.Concat(shortcuts.Select(s => s.context).Distinct().OrderBy(s => s))
-                        .ToArray();
+                if (_contexts == null) _contexts = new[] { "-" }.Concat(shortcuts.Select(s => s.context).Distinct().OrderBy(s => s)).ToArray();
                 return _contexts;
             }
         }
@@ -89,16 +87,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (EditorGUI.EndChangeCheck())
             {
                 filteredShortcuts = shortcuts;
-                if (!string.IsNullOrEmpty(filter))
-                    filteredShortcuts = filteredShortcuts.Where(s =>
-                        s.action.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
+                if (!string.IsNullOrEmpty(filter)) filteredShortcuts = filteredShortcuts.Where(s => s.action.ToLowerInvariant().Contains(filter.ToLowerInvariant()));
                 if (contextIndex != 0)
                 {
                     string context = contexts[contextIndex].ToLowerInvariant();
                     filteredShortcuts = filteredShortcuts.Where(s => s.context.ToLowerInvariant().Contains(context));
                 }
             }
-
             EditorGUILayout.Space();
             EditorGUILayout.EndHorizontal();
 

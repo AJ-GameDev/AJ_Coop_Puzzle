@@ -16,9 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_openPrefabMethod == null)
-                    _openPrefabMethod = type.GetMethod("OpenPrefab", Reflection.StaticLookup, null,
-                        new[] { typeof(string), typeof(GameObject) }, null);
+                if (_openPrefabMethod == null) _openPrefabMethod = type.GetMethod("OpenPrefab", Reflection.StaticLookup, null, new[] {typeof(string), typeof(GameObject)}, null);
                 return _openPrefabMethod;
             }
         }
@@ -35,14 +33,13 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                     _type = Reflection.GetEditorType("Experimental.SceneManagement.PrefabStageUtility");
 #endif
                 }
-
                 return _type;
             }
         }
 
         public static void OpenPrefab(string path, GameObject gameObject = null)
         {
-            openPrefabMethod.Invoke(null, new object[] { path, gameObject });
+            openPrefabMethod.Invoke(null, new object[] {path, gameObject});
         }
     }
 }

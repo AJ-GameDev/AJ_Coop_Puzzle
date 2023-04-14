@@ -152,7 +152,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                         menu.Add("View States/Delete/All States", DeleteAllViewStates);
                         menu.AddSeparator("View States/Delete/");
                     }
-
                     menu.Add("View States/Delete/" + views[i].title, DeleteViewState, views[i]);
                 }
             }

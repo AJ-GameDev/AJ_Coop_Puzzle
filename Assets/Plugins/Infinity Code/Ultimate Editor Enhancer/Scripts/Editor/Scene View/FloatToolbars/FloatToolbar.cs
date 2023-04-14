@@ -13,19 +13,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private bool _isDirty = true;
         protected ToolbarAlign align;
+        protected Vector2 position;
+        protected Rect rect;
         protected bool isDragging;
         private bool lastVisible;
-        protected Vector2 position;
         private Vector2 pressMousePosition;
-        protected Rect rect;
-
-        public FloatToolbar()
-        {
-            SceneViewManager.OnValidateOpenContextMenu += OnValidateOpenContextMenu;
-            EditorApplication.quitting += OnQuitting;
-            Reset();
-            Load();
-        }
 
         protected virtual Rect areaRect
         {
@@ -43,19 +35,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public bool hasLeftAlign
         {
-            get
-            {
-                return align == ToolbarAlign.left || align == ToolbarAlign.topLeft || align == ToolbarAlign.bottomLeft;
-            }
+            get { return align == ToolbarAlign.left || align == ToolbarAlign.topLeft || align == ToolbarAlign.bottomLeft; }
         }
 
         public bool hasRightAlign
         {
-            get
-            {
-                return align == ToolbarAlign.right || align == ToolbarAlign.topRight ||
-                       align == ToolbarAlign.bottomRight;
-            }
+            get { return align == ToolbarAlign.right || align == ToolbarAlign.topRight || align == ToolbarAlign.bottomRight; }
         }
 
         public bool hasVerticalCenterAlign
@@ -70,16 +55,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public bool hasBottomAlign
         {
-            get
-            {
-                return align == ToolbarAlign.bottom || align == ToolbarAlign.bottomLeft ||
-                       align == ToolbarAlign.bottomRight;
-            }
+            get { return align == ToolbarAlign.bottom || align == ToolbarAlign.bottomLeft || align == ToolbarAlign.bottomRight; }
         }
 
         public bool hasHorizontalCenterAlign
         {
             get { return align == ToolbarAlign.left || align == ToolbarAlign.right; }
+        }
+
+        public FloatToolbar()
+        {
+            SceneViewManager.OnValidateOpenContextMenu += OnValidateOpenContextMenu;
+            EditorApplication.quitting += OnQuitting;
+            Reset();
+            Load();
         }
 
         protected abstract void DrawBackground();
@@ -113,26 +102,32 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         protected virtual void OnDisable()
         {
+
         }
 
         protected virtual void OnHeaderClick()
         {
+
         }
 
         protected virtual void OnLoad(JsonItem json)
         {
+
         }
 
         protected virtual void OnQuitting()
         {
+
         }
 
         protected virtual void OnPositionChanged(Rect screenRect)
         {
+
         }
 
         protected virtual void OnSave(JsonObject json)
         {
+
         }
 
         public void OnSceneViewGUI(SceneView sceneView)
@@ -169,8 +164,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
                 PrepareToolbar(viewRect);
 
-                GUI.DrawTexture(new Rect(areaRect.x - 1, areaRect.y - 1, areaRect.width + 2, areaRect.height + 2),
-                    borderTexture, ScaleMode.StretchToFill);
+                GUI.DrawTexture(new Rect(areaRect.x - 1, areaRect.y - 1, areaRect.width + 2, areaRect.height + 2), borderTexture, ScaleMode.StretchToFill);
 
                 GUILayout.BeginArea(areaRect);
 
@@ -181,6 +175,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
             catch
             {
+
             }
         }
 
@@ -191,10 +186,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         protected virtual void PrepareHeaderContextMenu(GenericMenuEx menu)
         {
+
         }
 
         protected virtual void PrepareToolbar(Rect sceneRect)
         {
+
         }
 
         private void ProcessHeaderDrag(Rect sceneRect, Rect headerRect)
@@ -303,6 +300,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         protected virtual void Reset()
         {
+
         }
 
         protected void Save()

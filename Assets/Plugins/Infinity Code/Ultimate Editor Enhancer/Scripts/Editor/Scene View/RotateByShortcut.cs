@@ -111,8 +111,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (EditorWindow.mouseOverWindow is SceneView &&
                 (e.control || e.command) && e.shift &&
                 (
-                    k == KeyCode.UpArrow || k == KeyCode.DownArrow ||
-                    k == KeyCode.LeftArrow || k == KeyCode.RightArrow ||
+                    k == KeyCode.UpArrow || k == KeyCode.DownArrow || 
+                    k == KeyCode.LeftArrow || k == KeyCode.RightArrow || 
                     k == KeyCode.PageDown || k == KeyCode.PageUp
                 ))
             {

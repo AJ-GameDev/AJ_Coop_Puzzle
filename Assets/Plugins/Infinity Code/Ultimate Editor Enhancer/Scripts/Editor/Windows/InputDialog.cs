@@ -9,13 +9,34 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public class InputDialog : EditorWindow
     {
+        public Action<InputDialog> OnClose;
+        public Action<InputDialog> OnDrawExtra;
+        public Action<InputDialog> OnDrawLeftButtons;
+
         public string text;
 
         private bool focusControl = true;
         private Action<string> okCallback;
-        public Action<InputDialog> OnClose;
-        public Action<InputDialog> OnDrawExtra;
-        public Action<InputDialog> OnDrawLeftButtons;
+
+        private static void CloseActiveInstances()
+        {
+            InputDialog[] dialogs = UnityEngine.Resources.FindObjectsOfTypeAll<InputDialog>();
+            foreach (InputDialog d in dialogs) d.Close();
+        }
+
+        private void InvokeOK()
+        {
+            try
+            {
+                okCallback(text);
+            }
+            catch (Exception e)
+            {
+                Log.Add(e);
+            }
+
+            Close();
+        }
 
         private void OnDestroy()
         {
@@ -94,26 +115,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (GUILayout.Button("Cancel", GUILayout.Width(70))) Close();
 
             EditorGUILayout.EndHorizontal();
-        }
-
-        private static void CloseActiveInstances()
-        {
-            InputDialog[] dialogs = UnityEngine.Resources.FindObjectsOfTypeAll<InputDialog>();
-            foreach (InputDialog d in dialogs) d.Close();
-        }
-
-        private void InvokeOK()
-        {
-            try
-            {
-                okCallback(text);
-            }
-            catch (Exception e)
-            {
-                Log.Add(e);
-            }
-
-            Close();
         }
 
         public static InputDialog Show(string title, string text, Action<string> okCallback)

@@ -7,9 +7,17 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
-    public class About : EditorWindow
+    public class About: EditorWindow
     {
         private string years = DateTime.Now.Year.ToString();
+
+        [MenuItem(WindowsHelper.MenuPath + "About", false, 130)]
+        public static void OpenWindow()
+        {
+            About window = GetWindow<About>(true, "About", true);
+            window.minSize = new Vector2(200, 100);
+            window.maxSize = new Vector2(200, 100);
+        }
 
         public void OnGUI()
         {
@@ -23,14 +31,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUILayout.Label("version " + Version.version, textStyle);
             GUILayout.Label("created by Infinity Code", textStyle);
             GUILayout.Label(years, textStyle);
-        }
-
-        [MenuItem(WindowsHelper.MenuPath + "About", false, 130)]
-        public static void OpenWindow()
-        {
-            About window = GetWindow<About>(true, "About", true);
-            window.minSize = new Vector2(200, 100);
-            window.maxSize = new Vector2(200, 100);
         }
     }
 }

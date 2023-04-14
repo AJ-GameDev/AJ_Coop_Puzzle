@@ -21,10 +21,12 @@ namespace InfinityCode.UltimateEditorEnhancer.TransformEditorTools
 
         public virtual void OnDisable()
         {
+
         }
 
         public virtual void OnEnable()
         {
+
         }
 
         public abstract void Draw();

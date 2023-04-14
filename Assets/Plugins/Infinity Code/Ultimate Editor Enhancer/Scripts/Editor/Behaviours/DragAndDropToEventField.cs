@@ -4,6 +4,7 @@
 using InfinityCode.UltimateEditorEnhancer.PropertyDrawers;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 {

@@ -107,8 +107,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             style.Draw(rect, content, false, false, false, false);
         }
 
-        public static ButtonEvent ToggleButton(GUIContent content, GUIStyle style, bool isActive,
-            params GUILayoutOption[] options)
+        public static ButtonEvent ToggleButton(GUIContent content, GUIStyle style, bool isActive, params GUILayoutOption[] options)
         {
             Event e = Event.current;
 
@@ -162,8 +161,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             return ButtonEvent.none;
         }
 
-        public static bool ToggleButton(ref bool toggled, GUIContent content, GUIStyle toggleButtonStyle,
-            params GUILayoutOption[] options)
+        public static bool ToggleButton(ref bool toggled, GUIContent content, GUIStyle toggleButtonStyle, params GUILayoutOption[] options)
         {
             Rect rect = GUILayoutUtility.GetRect(content, toggleButtonStyle, options);
             EditorGUI.BeginChangeCheck();

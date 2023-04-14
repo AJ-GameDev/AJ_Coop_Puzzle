@@ -31,8 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static StringBuilder AppendEscaped(string value, string[] escapeChars)
         {
-            if (escapeChars == null || escapeChars.Length % 2 != 0)
-                throw new Exception("Length of escapeChars must be N * 2");
+            if (escapeChars == null || escapeChars.Length % 2 != 0) throw new Exception("Length of escapeChars must be N * 2");
             for (int i = 0; i < value.Length; i++)
             {
                 bool escaped = false;

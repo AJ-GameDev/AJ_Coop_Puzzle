@@ -10,7 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public partial class CreateBrowser
     {
-        public class PrefabProvider : Provider
+        public class PrefabProvider: Provider
         {
             public override float order
             {
@@ -26,8 +26,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 items = new List<Item>();
 
-                string[] blacklist =
-                    Prefs.createBrowserBlacklist.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] blacklist = Prefs.createBrowserBlacklist.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
                 CacheItems(blacklist, "t:prefab");
                 CacheItems(blacklist, "t:model");
@@ -50,7 +49,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 bool hasBlacklist = blacklist.Length > 0;
 
-                string[] assets = AssetDatabase.FindAssets(filter, new[] { "Assets" });
+                string[] assets = AssetDatabase.FindAssets(filter, new[] {"Assets"});
                 foreach (string guid in assets)
                 {
                     string assetPath = AssetDatabase.GUIDToAssetPath(guid);

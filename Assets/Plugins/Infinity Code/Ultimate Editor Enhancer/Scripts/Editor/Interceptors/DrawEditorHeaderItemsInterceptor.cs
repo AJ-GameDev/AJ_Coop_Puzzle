@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class DrawEditorHeaderItemsInterceptor : StatedInterceptor<DrawEditorHeaderItemsInterceptor>
+    public class DrawEditorHeaderItemsInterceptor: StatedInterceptor<DrawEditorHeaderItemsInterceptor>
     {
         private static bool inited;
 
@@ -31,24 +31,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             get { return Prefs.componentExtraHeaderButtons; }
         }
 
-        private static void DrawEditorHeaderItemsPostfix(ref Rect __result, Rect rectangle, Object[] targetObjs,
-            float spacing)
+        private static void DrawEditorHeaderItemsPostfix(ref Rect __result, Rect rectangle, Object[] targetObjs, float spacing)
         {
             if (!Prefs.componentExtraHeaderButtons) return;
             if (inited) return;
 
-            IList s_EditorHeaderItemsMethods =
-                Reflection.GetStaticFieldValue<IList>(typeof(EditorGUIUtility), "s_EditorHeaderItemsMethods");
+            IList s_EditorHeaderItemsMethods = Reflection.GetStaticFieldValue<IList>(typeof(EditorGUIUtility), "s_EditorHeaderItemsMethods");
             if (s_EditorHeaderItemsMethods == null) return;
 
             inited = true;
             var methods = TypeCache.GetMethodsWithAttribute<ComponentHeaderButtonAttribute>();
-            Type headerItemDelegate = Reflection.GetEditorType("EditorGUIUtility+HeaderItemDelegate");
-            foreach (MethodInfo method in methods)
-                s_EditorHeaderItemsMethods.Add(Delegate.CreateDelegate(headerItemDelegate, method));
+            Type headerItemDelegate = Reflection.GetEditorType("EditorGUIUtility+HeaderItemDelegate"); 
+            foreach (MethodInfo method in methods) s_EditorHeaderItemsMethods.Add(Delegate.CreateDelegate(headerItemDelegate, method));
 
-            Reflection.SetStaticFieldValue(typeof(EditorGUIUtility), "s_EditorHeaderItemsMethods",
-                s_EditorHeaderItemsMethods);
+            Reflection.SetStaticFieldValue(typeof(EditorGUIUtility), "s_EditorHeaderItemsMethods", s_EditorHeaderItemsMethods);
 
             GUI.changed = true;
         }

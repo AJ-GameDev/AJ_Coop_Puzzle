@@ -13,17 +13,22 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         private static LocalSettings _instance;
 
-        [SerializeField] private bool _askMaximizeGameView = true;
+        [SerializeField]
+        private bool _askMaximizeGameView = true;
 
-        [SerializeField] private bool _collapseQuickAccessBar = false;
+        [SerializeField]
+        private bool _collapseQuickAccessBar = false;
 
-        [SerializeField] private bool _enhancedHierarchyShown;
+        [SerializeField]
+        private bool _enhancedHierarchyShown;
 
-        [SerializeField] private bool _hideObjectToolbar;
+        [SerializeField]
+        private bool _hideObjectToolbar;
 
-        [SerializeField] private int _upgradeID = 0;
+        [SerializeField]
+        private int _upgradeID = 0;
 
-        public static bool askMaximizeGameView
+        public static bool askMaximizeGameView 
         {
             get { return _instance._askMaximizeGameView; }
             set
@@ -44,7 +49,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 Save();
             }
         }
-
+        
 
         public static bool enhancedHierarchyShown
         {
@@ -104,6 +109,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         Log.Add(e);
                     }
+
                 }
 
                 if (_instance == null)
@@ -143,6 +149,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
             catch
             {
+
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -10,13 +11,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
     [InitializeOnLoad]
     public static class Cinemachine
     {
+        public static bool isPresent { get; }
+
         static Cinemachine()
         {
             Assembly assembly = Reflection.GetAssembly("Cinemachine");
             if (assembly != null) isPresent = true;
         }
-
-        public static bool isPresent { get; }
 
         public static bool ContainBrain(GameObject gameObject)
         {

@@ -30,6 +30,19 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return Order.objectToolbar; }
             }
 
+            public override void Draw()
+            {
+                objectToolbar = EditorGUILayout.ToggleLeft("Object Toolbar", objectToolbar);
+                EditorGUI.indentLevel++;
+
+                EditorGUI.BeginDisabledGroup(!objectToolbar);
+                objectToolbarVisibleRules = (SceneViewVisibleRules)EditorGUILayout.EnumPopup("Visible Rules", objectToolbarVisibleRules);
+                objectToolbarOpenBestComponent = EditorGUILayout.ToggleLeft("Open Best Component", objectToolbarOpenBestComponent);
+                EditorGUI.EndDisabledGroup();
+
+                EditorGUI.indentLevel--;
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!objectToolbar) return new Shortcut[0];
@@ -43,21 +56,6 @@ namespace InfinityCode.UltimateEditorEnhancer
 #endif
                     new Shortcut("Open Component In Object Toolbar", "Scene View", "ALT + {1-9}"),
                 };
-            }
-
-            public override void Draw()
-            {
-                objectToolbar = EditorGUILayout.ToggleLeft("Object Toolbar", objectToolbar);
-                EditorGUI.indentLevel++;
-
-                EditorGUI.BeginDisabledGroup(!objectToolbar);
-                objectToolbarVisibleRules =
-                    (SceneViewVisibleRules)EditorGUILayout.EnumPopup("Visible Rules", objectToolbarVisibleRules);
-                objectToolbarOpenBestComponent =
-                    EditorGUILayout.ToggleLeft("Open Best Component", objectToolbarOpenBestComponent);
-                EditorGUI.EndDisabledGroup();
-
-                EditorGUI.indentLevel--;
             }
         }
     }

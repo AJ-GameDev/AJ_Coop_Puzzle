@@ -19,13 +19,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static Rect screenRect;
         private static KeyManager.KeyBinding binding;
 
-        static SmartSelection()
-        {
-            Waila.OnClose += OnClose;
-            Waila.OnDrawModeExternal += OnDrawModeExternal;
-            Waila.OnUpdateTooltipsExternal += OnUpdateTooltipsExternal;
-        }
-
         private static GUIStyle areaStyle
         {
             get
@@ -42,6 +35,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
                 return _areaStyle;
             }
+        }
+
+        static SmartSelection()
+        {
+            Waila.OnClose += OnClose;
+            Waila.OnDrawModeExternal += OnDrawModeExternal;
+            Waila.OnUpdateTooltipsExternal += OnUpdateTooltipsExternal;
         }
 
         private static void Close()
@@ -118,8 +118,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 RectOffset margin = style.margin;
                 RectOffset padding = style.padding;
 
-                Rect r = new Rect(screenRect.x + 5, screenRect.y + margin.top + padding.top, screenRect.width - 10,
-                    style.lineHeight + margin.vertical + padding.vertical);
+                Rect r = new Rect(screenRect.x + 5, screenRect.y + margin.top + padding.top, screenRect.width - 10, style.lineHeight + margin.vertical + padding.vertical);
 
                 GUI.Label(r, "Select GameObject:", style);
                 r.y += r.height + margin.bottom;
@@ -167,8 +166,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 }
                 else if (type == EventType.KeyDown)
                 {
-                    if (e.keyCode != KeyCode.None && !KeyManager.IsModifier(e.keyCode) &&
-                        e.keyCode != Prefs.wailaSmartSelectionKeyCode)
+                    if (e.keyCode != KeyCode.None && !KeyManager.IsModifier(e.keyCode) && e.keyCode != Prefs.wailaSmartSelectionKeyCode)
                     {
                         Waila.mode = 0;
                         UnityEditor.Tools.hidden = false;
@@ -220,8 +218,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static bool OnUpdateTooltipsExternal()
         {
-            if (Prefs.wailaShowAllNamesUnderCursor &&
-                Event.current.modifiers == Prefs.wailaShowAllNamesUnderCursorModifiers)
+            if (Prefs.wailaShowAllNamesUnderCursor && Event.current.modifiers == Prefs.wailaShowAllNamesUnderCursorModifiers)
             {
                 UpdateAllTooltips();
                 return true;
@@ -230,8 +227,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             return false;
         }
 
-        private static bool PrepareBubble(List<GameObject> targets, GUIStyle style, RectOffset margin, float height,
-            RectOffset padding, Vector2 slashSize, int rightMargin, float width)
+        private static bool PrepareBubble(List<GameObject> targets, GUIStyle style, RectOffset margin, float height, RectOffset padding, Vector2 slashSize, int rightMargin, float width)
         {
             int count = 0;
 
@@ -276,6 +272,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 position += EditorWindow.focusedWindow.position.position;
                 position -= SceneView.lastActiveSceneView.position.position;
+
             }
 
             if (position.x < 5) position.x = 5;
@@ -298,7 +295,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 UpdateAllTooltips();
             }
-
             if (targets == null || targets.Count == 0) return;
 
             if (Prefs.wailaSmartSelectionStyle != SmartSelectionStyle.bubble) FlatSmartSelectionWindow.Show();
@@ -348,8 +344,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             while (count < 20)
             {
-                GameObject go =
-                    HandleUtility.PickGameObject(Event.current.mousePosition, false, Waila.targets.ToArray());
+                GameObject go = HandleUtility.PickGameObject(Event.current.mousePosition, false, Waila.targets.ToArray());
                 if (go == null) break;
 
                 Waila.targets.Add(go);

@@ -3,8 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using InfinityCode.UltimateEditorEnhancer.Editors;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -20,7 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 EditorSceneManager.sceneOpened -= OnSceneOpened;
                 EditorSceneManager.sceneOpened += OnSceneOpened;
-
+                
                 EditorSceneManager.sceneClosed -= OnSceneClosed;
                 EditorSceneManager.sceneClosed += OnSceneClosed;
             };
@@ -48,9 +51,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             if (paths.Count > 0)
             {
-                int result = EditorUtility.DisplayDialogComplex("Scene(s) Have Been Modified",
-                    "Do you want to save the changes you made in the scenes:\n" + String.Join("\n", paths) +
-                    "\n\nYour changes will be lost if you don't save them.", "Save", "Don't Save", "Cancel");
+                int result = EditorUtility.DisplayDialogComplex("Scene(s) Have Been Modified", "Do you want to save the changes you made in the scenes:\n" + String.Join("\n", paths) + "\n\nYour changes will be lost if you don't save them.", "Save", "Don't Save", "Cancel");
                 if (result == 2) return false;
 
                 if (result == 0)
@@ -115,7 +116,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static void UpdateInstances()
         {
-            HideFlags hideFlags = Prefs.hideSceneReferences ? HideFlags.HideInHierarchy : HideFlags.None;
+            HideFlags hideFlags = Prefs.hideSceneReferences? HideFlags.HideInHierarchy: HideFlags.None;
 
             SceneReferences.UpdateInstances();
             foreach (SceneReferences r in SceneReferences.instances)

@@ -13,15 +13,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         internal abstract class Record : SearchableItem
         {
-            internal const int maxLabelLength = 65;
-            private static List<string> tempSearch;
-            private Texture2D _assetPreview;
-            protected GUIContent _content;
-            protected string _label;
-            protected string _tooltip;
             protected long lastClickTime;
+            internal const int maxLabelLength = 65;
+            protected string _label;
             protected string[] search;
+            protected string _tooltip;
+            private static List<string> tempSearch;
             public bool used;
+            protected GUIContent _content;
+            private Texture2D _assetPreview;
 
             protected GUIContent content
             {
@@ -86,7 +86,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                             {
                                 state = ProcessDoubleClick(e);
                             }
-
                             lastClickTime = ticks;
                             e.Use();
                         }
@@ -130,6 +129,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             protected virtual void PrepareContextMenuExtraItems(GenericMenuEx menu)
             {
+                
             }
 
             protected virtual int ProcessDoubleClick(Event e)
@@ -157,7 +157,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 isDragStarted = true;
                 DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new[] { target };
+                DragAndDrop.objectReferences = new[] {target};
                 DragAndDrop.StartDrag("Dragging " + target.name);
                 e.Use();
             }
@@ -172,6 +172,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             public virtual void UpdateGameObjectName(GameObject go)
             {
+
             }
         }
     }

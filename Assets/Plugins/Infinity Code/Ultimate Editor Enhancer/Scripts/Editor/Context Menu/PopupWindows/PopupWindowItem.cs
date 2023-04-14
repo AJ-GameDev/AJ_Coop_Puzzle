@@ -12,7 +12,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         public virtual GUIContent guiContent
         {
-            get { return _guiContent; }
+            get
+            {
+                return _guiContent;
+            }
         }
 
         public virtual Texture icon
@@ -52,10 +55,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 try
                 {
                     if (Prefs.popupWindowTab && Prefs.popupWindowTabModifiers == e.modifiers) ShowTab(e.mousePosition);
-                    else if (Prefs.popupWindowUtility && Prefs.popupWindowUtilityModifiers == e.modifiers)
-                        ShowUtility(e.mousePosition);
-                    else if (Prefs.popupWindowPopup && Prefs.popupWindowPopupModifiers == e.modifiers)
-                        ShowPopup(e.mousePosition);
+                    else if (Prefs.popupWindowUtility && Prefs.popupWindowUtilityModifiers == e.modifiers) ShowUtility(e.mousePosition);
+                    else if (Prefs.popupWindowPopup && Prefs.popupWindowPopupModifiers == e.modifiers) ShowPopup(e.mousePosition);
                 }
                 catch (Exception ex)
                 {
@@ -96,7 +97,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 {
                     Log.Add(e);
                 }
-
                 EditorMenu.Close();
             });
             menu.Add("Open As Utility", () =>
@@ -109,7 +109,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 {
                     Log.Add(e);
                 }
-
                 EditorMenu.Close();
             });
             menu.Add("Open As DropDown", () =>
@@ -122,7 +121,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 {
                     Log.Add(e);
                 }
-
                 EditorMenu.Close();
             });
             menu.Show();
@@ -134,10 +132,12 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
         protected virtual void ShowTab(Vector2 mousePosition)
         {
+            
         }
 
         protected virtual void ShowUtility(Vector2 mousePosition)
         {
+            
         }
     }
 }

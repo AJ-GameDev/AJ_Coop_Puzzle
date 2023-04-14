@@ -19,8 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (string.IsNullOrEmpty(_assetFolder))
                 {
-                    string[] paths = Directory.GetFiles(Application.dataPath, "Ultimate Editor Enhancer.asmdef",
-                        SearchOption.AllDirectories);
+                    string[] paths = Directory.GetFiles(Application.dataPath, "Ultimate Editor Enhancer.asmdef", SearchOption.AllDirectories);
                     if (paths.Length != 0)
                     {
                         FileInfo info = new FileInfo(paths[0]);
@@ -53,8 +52,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (string.IsNullOrEmpty(_settingsFolder))
                 {
                     DirectoryInfo info = new DirectoryInfo(assetFolder);
-                    _settingsFolder = info.Parent.FullName.Substring(Application.dataPath.Length - 6) +
-                                      "/Ultimate Editor Enhancer Settings/";
+                    _settingsFolder = info.Parent.FullName.Substring(Application.dataPath.Length - 6) + "/Ultimate Editor Enhancer Settings/";
                 }
 
                 return _settingsFolder;

@@ -15,17 +15,22 @@ namespace InfinityCode.UltimateEditorEnhancer
     [Serializable]
     public class ReferenceManager : ScriptableObject
     {
+        [SerializeField]
+        private List<ProjectBookmark> _bookmarks = new List<ProjectBookmark>();
+
+        [SerializeField]
+        private List<FavoriteWindowItem> _favoriteWindows = new List<FavoriteWindowItem>();
+
+        [SerializeField]
+        private List<HeaderRule> _headerRules = new List<HeaderRule>();
+
+        [SerializeField]
+        private List<QuickAccessItem> _quickAccessItems = new List<QuickAccessItem>();
+
+        [SerializeField]
+        private List<SceneHistoryItem> _sceneHistory = new List<SceneHistoryItem>();
+
         private static ReferenceManager _instance;
-
-        [SerializeField] private List<ProjectBookmark> _bookmarks = new List<ProjectBookmark>();
-
-        [SerializeField] private List<FavoriteWindowItem> _favoriteWindows = new List<FavoriteWindowItem>();
-
-        [SerializeField] private List<HeaderRule> _headerRules = new List<HeaderRule>();
-
-        [SerializeField] private List<QuickAccessItem> _quickAccessItems = new List<QuickAccessItem>();
-
-        [SerializeField] private List<SceneHistoryItem> _sceneHistory = new List<SceneHistoryItem>();
 
         public static ReferenceManager instance
         {
@@ -77,6 +82,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         Log.Add(e);
                     }
+
                 }
 
                 if (_instance == null)
@@ -111,11 +117,13 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             try
             {
-                EditorUtility.SetDirty(_instance);
+                EditorUtility.SetDirty(_instance); 
             }
             catch
             {
+
             }
+
         }
     }
 }

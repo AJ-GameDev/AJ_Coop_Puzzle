@@ -18,7 +18,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static Renderer[] lastRenderers;
         private static RectTransform lastRectTransform;
         private static Vector3[] rectTransformCorners;
-        private static Transform lastNoRendererTransform;
+        private static Transform lastNoRendererTransform; 
+
+        public static GameObject lastGameObject { get; private set; }
 
         static Highlighter()
         {
@@ -28,8 +30,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             EditorApplication.update += EditorUpdate;
             viewDict = new Dictionary<SceneView, SceneViewOutline>();
         }
-
-        public static GameObject lastGameObject { get; private set; }
 
         private static void DrawHierarchyItem(HierarchyItem item)
         {
@@ -187,8 +187,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (Event.current.type != EventType.Repaint) return;
 
             if (lastRectTransform != null) DrawRectTransformBounds();
-            else if (Prefs.highlightNoRenderer && lastNoRendererTransform != null &&
-                     !(EditorWindow.mouseOverWindow is SceneView))
+            else if (Prefs.highlightNoRenderer && lastNoRendererTransform != null && !(EditorWindow.mouseOverWindow is SceneView))
             {
                 Vector3 position = lastNoRendererTransform.position;
                 float size = HandleUtility.GetHandleSize(position);
@@ -215,11 +214,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         [ExecuteInEditMode]
         public class SceneViewOutline : MonoBehaviour
         {
-            private CommandBuffer _buffer;
-            private Material _childMaterial;
-            private Material _material;
-            private Shader _shader;
             private bool useRenderImage;
+            private CommandBuffer _buffer;
+            private Material _material;
+            private Material _childMaterial;
+            private Shader _shader;
 
             private CommandBuffer buffer
             {
@@ -244,8 +243,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 get
                 {
-                    if (_shader == null)
-                        _shader = Shader.Find("Hidden/InfinityCode/UltimateEditorEnhancer/SceneViewHighlight");
+                    if (_shader == null) _shader = Shader.Find("Hidden/InfinityCode/UltimateEditorEnhancer/SceneViewHighlight");
                     return _shader;
                 }
             }
@@ -298,8 +296,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 Material m = material;
 
                 int id = 1;
-                foreach (Renderer r in renderers.OrderBy(r => SortingLayer.GetLayerValueFromID(r.sortingLayerID))
-                             .ThenBy(r => r.sortingOrder))
+                foreach (Renderer r in renderers.OrderBy(r => SortingLayer.GetLayerValueFromID(r.sortingLayerID)).ThenBy(r => r.sortingOrder))
                 {
                     int count = 1;
                     if (r is MeshRenderer)
@@ -307,7 +304,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         MeshFilter f = r.GetComponent<MeshFilter>();
                         if (f != null && f.sharedMesh != null) count = f.sharedMesh.subMeshCount;
                     }
-                    else
+                    else 
                     {
                         SkinnedMeshRenderer smr = r as SkinnedMeshRenderer;
                         if (smr != null && smr.sharedMesh != null) count = smr.sharedMesh.subMeshCount;

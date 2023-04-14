@@ -12,11 +12,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private static Texture2D _hoveredTexture;
         private static Color lastColor;
 
-        static Highlighter()
-        {
-            HierarchyItemDrawer.Register("Highlighter2", DrawHierarchyItem, 1);
-        }
-
         private static Texture2D hoveredTexture
         {
             get
@@ -35,9 +30,13 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                     _hoveredTexture = Resources.CreateSinglePixelTexture(Prefs.highlightHierarchyRowColor);
                     lastColor = Prefs.highlightHierarchyRowColor;
                 }
-
                 return _hoveredTexture;
             }
+        }
+
+        static Highlighter()
+        {
+            HierarchyItemDrawer.Register("Highlighter2", DrawHierarchyItem, 1);
         }
 
         private static void DrawHierarchyItem(HierarchyItem item)
@@ -51,7 +50,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 if (e.modifiers == Prefs.hierarchyIconsModifiers) SceneTools.Highlighter.Highlight(item.gameObject);
                 else SceneTools.Highlighter.Highlight(null);
             }
-
             if (Prefs.highlightHierarchyRow && e.type == EventType.Repaint) HighlightRow(item.rect, item.gameObject);
         }
 

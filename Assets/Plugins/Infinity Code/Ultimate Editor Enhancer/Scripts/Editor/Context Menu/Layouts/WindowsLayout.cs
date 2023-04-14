@@ -8,21 +8,20 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 {
-    public class WindowsLayout : MainLayoutItem<WindowsLayout, PopupWindowItem>
+    public class WindowsLayout: MainLayoutItem<WindowsLayout, PopupWindowItem>
     {
         public override float order
         {
             get { return -1000; }
         }
 
-        protected override void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal,
-            ref bool flipVertical)
+        protected override void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical)
         {
             rect = new Rect(position, Vector2.zero);
             foreach (PopupWindowItem item in items)
             {
                 if (!item.isActive) continue;
-
+                
                 Vector2 size = item.size;
                 rect.width = Mathf.Max(size.x, rect.width);
                 rect.height += size.y;

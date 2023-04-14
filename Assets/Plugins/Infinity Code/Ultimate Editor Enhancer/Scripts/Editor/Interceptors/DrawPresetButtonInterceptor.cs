@@ -6,7 +6,7 @@ using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class DrawPresetButtonInterceptor : StatedInterceptor<DrawPresetButtonInterceptor>
+    public class DrawPresetButtonInterceptor: StatedInterceptor<DrawPresetButtonInterceptor>
     {
         protected override InitType initType
         {

@@ -8,7 +8,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public partial class ViewGallery
     {
-        public abstract class ViewItem : SearchableItem
+        public abstract class ViewItem: SearchableItem
         {
             public Texture2D texture;
             public abstract bool useInPreview { get; set; }
@@ -35,10 +35,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     GUI.Box(new RectOffset(2, 2, 2, 2).Add(rect), string.Empty, selectedStyle);
                     if (!toggleRect.Contains(e.mousePosition)) ProcessEvents(e, ref status);
                 }
-
                 GUI.Box(rect, new GUIContent(texture), GUIStyle.none);
-                GUI.Label(new Rect(rect.center.x - maxLabelWidth / 2, rect.yMax + 5, maxLabelWidth, 15), name,
-                    Styles.centeredLabel);
+                GUI.Label(new Rect(rect.center.x - maxLabelWidth / 2, rect.yMax + 5, maxLabelWidth, 15), name, Styles.centeredLabel);
                 if (allowPreview)
                 {
                     EditorGUI.BeginChangeCheck();

@@ -9,9 +9,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public partial class CreateBrowser
     {
-        internal class PrefabItemFolder : FolderItem
+        internal class PrefabItemFolder: FolderItem
         {
             private List<string> skippedLabels;
+
+            public override string title
+            {
+                get
+                {
+                    if (skippedLabels == null) return label;
+                    return skippedLabels.Last();
+                }
+            }
 
             public PrefabItemFolder(string[] parts, int index, string path)
             {
@@ -32,15 +41,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     PrefabItemFolder child = new PrefabItemFolder(parts, index + 1, path);
                     child.parent = this;
                     children.Add(child);
-                }
-            }
-
-            public override string title
-            {
-                get
-                {
-                    if (skippedLabels == null) return label;
-                    return skippedLabels.Last();
                 }
             }
 

@@ -26,3 +26,4 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         }
     }
 }
+

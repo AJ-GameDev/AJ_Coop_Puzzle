@@ -17,6 +17,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static int index = -1;
         private static bool ignoreNextAdd = false;
 
+        public static List<SelectionRecord> records
+        {
+            get { return _records; }
+        }
+
+        public static int activeIndex
+        {
+            get { return index; }
+        }
+
         static SelectionHistory()
         {
             Selection.selectionChanged += SelectionChanged;
@@ -31,16 +41,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
             _records = new List<SelectionRecord>();
             if (Selection.instanceIDs.Length > 0) Add(Selection.instanceIDs);
-        }
-
-        public static List<SelectionRecord> records
-        {
-            get { return _records; }
-        }
-
-        public static int activeIndex
-        {
-            get { return index; }
         }
 
         public static void Add(params int[] ids)

@@ -18,9 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_openPropertyEditorMethod == null)
-                    _openPropertyEditorMethod = type.GetMethod("OpenPropertyEditor", Reflection.StaticLookup, null,
-                        new[] { typeof(UnityEngine.Object), typeof(bool) }, null);
+                if (_openPropertyEditorMethod == null) _openPropertyEditorMethod = type.GetMethod("OpenPropertyEditor", Reflection.StaticLookup, null, new[] { typeof(UnityEngine.Object), typeof(bool) }, null);
                 return _openPropertyEditorMethod;
             }
         }
@@ -36,7 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static EditorWindow OpenPropertyEditor(Object obj, bool showWindow = true)
         {
-            return openPropertyEditorMethod.Invoke(null, new[] { obj, showWindow }) as EditorWindow;
+            return openPropertyEditorMethod.Invoke(null, new []{obj, showWindow}) as EditorWindow;
         }
     }
 }

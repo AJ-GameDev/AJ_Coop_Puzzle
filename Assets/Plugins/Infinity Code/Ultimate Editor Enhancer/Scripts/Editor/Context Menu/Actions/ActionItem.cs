@@ -21,8 +21,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             set { _guiContent = value; }
         }
 
-        public abstract void Invoke();
-
         public virtual float order
         {
             get { return 0; }
@@ -57,9 +55,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                 {
                     Log.Add(e);
                 }
-
+                
                 if (closeOnSelect) EditorMenu.Close();
             }
         }
+
+        public abstract void Invoke();
     }
 }

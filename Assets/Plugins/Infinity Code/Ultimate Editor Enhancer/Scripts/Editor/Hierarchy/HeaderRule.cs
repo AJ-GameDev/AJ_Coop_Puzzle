@@ -19,11 +19,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         public FontStyle textStyle = FontStyle.Bold;
 
         private Color _backgroundColor;
+        private Color _textColor;
+        private TextAlignment _textAlign = TextAlignment.Center;
+        private FontStyle _textStyle = FontStyle.Bold;
 
         private GUIStyle _headerStyle;
-        private TextAlignment _textAlign = TextAlignment.Center;
-        private Color _textColor;
-        private FontStyle _textStyle = FontStyle.Bold;
 
         private GUIStyle headerStyle
         {
@@ -92,7 +92,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                         break;
                     }
                 }
-
                 if (j == trimChars.Length) break;
             }
 
@@ -108,7 +107,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                         break;
                     }
                 }
-
                 if (j == trimChars.Length) break;
             }
 

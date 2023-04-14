@@ -4,15 +4,15 @@
 using System.Collections.Generic;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 {
     public abstract class InspectorInjector
     {
-        private List<EditorWindow> failedWindows;
         private double initTime;
+        private List<EditorWindow> failedWindows;
 
         protected static VisualElement GetMainContainer(EditorWindow wnd)
         {

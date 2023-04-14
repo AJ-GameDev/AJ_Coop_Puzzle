@@ -49,7 +49,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _alignVerticallyCenter = EditorGUIUtility.IconContent("align_vertically_center");
                 }
-
                 return _alignVerticallyCenter;
             }
         }
@@ -62,7 +61,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _animationFirstKey = EditorGUIUtility.IconContent("Animation.FirstKey");
                 }
-
                 return _animationFirstKey;
             }
         }
@@ -75,7 +73,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _animationPrevKey = EditorGUIUtility.IconContent("Animation.PrevKey");
                 }
-
                 return _animationPrevKey;
             }
         }
@@ -88,7 +85,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _avatarPivot = EditorGUIUtility.IconContent("AvatarPivot");
                 }
-
                 return _avatarPivot;
             }
         }
@@ -101,7 +97,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _consoleErrorIconSmall = EditorGUIUtility.IconContent("console.erroricon.sml");
                 }
-
                 return _consoleErrorIconSmall;
             }
         }
@@ -114,7 +109,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _dropdown = EditorGUIUtility.IconContent("icon dropdown");
                 }
-
                 return _dropdown;
             }
         }
@@ -127,7 +121,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _editIconSmall = EditorGUIUtility.IconContent("editicon.sml");
                 }
-
                 return _editIconSmall;
             }
         }
@@ -140,7 +133,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _folderIcon = EditorGUIUtility.IconContent("Folder Icon");
                 }
-
                 return _folderIcon;
             }
         }
@@ -153,7 +145,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _folderOpenedIcon = EditorGUIUtility.IconContent("FolderOpened Icon");
                 }
-
                 return _folderOpenedIcon;
             }
         }
@@ -166,8 +157,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _gameObject = EditorGUIUtility.IconContent("GameObject Icon");
                 }
-
                 return _gameObject;
+                
             }
         }
 
@@ -179,7 +170,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _hierarchyWindow = EditorGUIUtility.IconContent("UnityEditor.HierarchyWindow");
                 }
-
                 return _hierarchyWindow;
             }
         }
@@ -192,7 +182,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _inspectorWindow = EditorGUIUtility.IconContent("UnityEditor.InspectorWindow");
                 }
-
                 return _inspectorWindow;
             }
         }
@@ -205,7 +194,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _linked = EditorGUIUtility.IconContent("Linked");
                 }
-
                 return _linked;
             }
         }
@@ -218,7 +206,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _pauseButtonOn = EditorGUIUtility.IconContent("d_PauseButton On");
                 }
-
                 return _pauseButtonOn;
             }
         }
@@ -231,7 +218,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _prefabIcon = EditorGUIUtility.IconContent("Prefab Icon");
                 }
-
                 return _prefabIcon;
             }
         }
@@ -244,7 +230,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _playButtonOn = EditorGUIUtility.IconContent("d_PlayButton On");
                 }
-
                 return _playButtonOn;
             }
         }
@@ -257,7 +242,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _popup = EditorGUIUtility.IconContent("_Popup");
                 }
-
                 return _popup;
             }
         }
@@ -270,7 +254,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _project = EditorGUIUtility.IconContent("Project");
                 }
-
                 return _project;
             }
         }
@@ -283,7 +266,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _rectTransformBlueprint = EditorGUIUtility.IconContent("RectTransformBlueprint");
                 }
-
                 return _rectTransformBlueprint;
             }
         }
@@ -323,7 +305,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _sceneVisibilityHiddenHover = EditorGUIUtility.IconContent("scenevis_hidden_hover");
                 }
-
                 return _sceneVisibilityHiddenHover;
             }
         }
@@ -336,7 +317,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _sceneVisibilityVisibleHover = EditorGUIUtility.IconContent("scenevis_visible_hover");
                 }
-
                 return _sceneVisibilityVisibleHover;
             }
         }
@@ -349,20 +329,17 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _settings = EditorGUIUtility.IconContent("Settings");
                 }
-
                 return _settings;
             }
         }
 
-        public static GUIContent toolHandleGlobal
-        {
+        public static GUIContent toolHandleGlobal {
             get
             {
                 if (_toolHandleGlobal == null)
                 {
                     _toolHandleGlobal = EditorGUIUtility.IconContent("ToolHandleGlobal");
                 }
-
                 return _toolHandleGlobal;
             }
         }
@@ -375,7 +352,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _toolbarPlus = EditorGUIUtility.IconContent("Toolbar Plus");
                 }
-
                 return _toolbarPlus;
             }
         }
@@ -388,7 +364,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _treeEditorTrash = EditorGUIUtility.IconContent("TreeEditor.Trash");
                 }
-
                 return _treeEditorTrash;
             }
         }
@@ -401,7 +376,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _unlinked = EditorGUIUtility.IconContent("Unlinked");
                 }
-
                 return _unlinked;
             }
         }
@@ -414,7 +388,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _unityLogo = EditorGUIUtility.IconContent("UnityLogo");
                 }
-
                 return _unityLogo;
             }
         }
@@ -427,7 +400,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _verticalLayoutGroup = EditorGUIUtility.IconContent("VerticalLayoutGroup Icon");
                 }
-
                 return _verticalLayoutGroup;
             }
         }
@@ -440,7 +412,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     _winBtnWinMax = EditorGUIUtility.IconContent("winbtn_win_max");
                 }
-
                 return _winBtnWinMax;
             }
         }

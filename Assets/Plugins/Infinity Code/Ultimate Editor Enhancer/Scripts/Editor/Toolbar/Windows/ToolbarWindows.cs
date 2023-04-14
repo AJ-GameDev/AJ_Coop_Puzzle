@@ -62,7 +62,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
                     return;
                 }
-
                 tempWindows.Add(window);
             }
 
@@ -76,12 +75,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 else
                 {
                     Type type = w.GetType();
-                    if (type == typeof(LayoutWindow) ||
-                        type == typeof(PinAndClose) ||
-                        type == typeof(ComponentWindow) ||
-                        type == typeof(Search) ||
-                        type == typeof(CreateBrowser) ||
-                        type == typeof(InputDialog)) continue;
+                    if (type == typeof(LayoutWindow) || 
+                        type == typeof(PinAndClose) || 
+                        type == typeof(ComponentWindow) || 
+                        type == typeof(Search) || 
+                        type == typeof(CreateBrowser) || 
+                        type == typeof(InputDialog)) continue; 
                     record = new WindowRecord(w);
                     windows.Add(key, record);
                 }
@@ -153,21 +152,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                             {
                                 if (Selection.activeGameObject != null)
                                 {
-                                    SceneHierarchyWindowRef.SetExpandedRecursive(newWindow,
-                                        Selection.activeGameObject.GetInstanceID(), true);
+                                    SceneHierarchyWindowRef.SetExpandedRecursive(newWindow, Selection.activeGameObject.GetInstanceID(), true);
                                 }
                                 else
                                 {
                                     object sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(newWindow);
-                                    SceneHierarchyRef.SetScenesExpanded(sceneHierarchy,
-                                        new List<string> { SceneManager.GetActiveScene().name });
+                                    SceneHierarchyRef.SetScenesExpanded(sceneHierarchy, new List<string> { SceneManager.GetActiveScene().name });
                                 }
                             }
 
                             return;
                         }
                     }
-
                     window.maximized = false;
                     window.Repaint();
                     break;

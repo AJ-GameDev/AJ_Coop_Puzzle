@@ -7,34 +7,42 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
-    [Serializable]
+    [Serializable] 
     public abstract class AutoSizePopupWindow : PopupWindow
     {
-        [SerializeField] public bool closeOnLossFocus = true;
+        public Action<AutoSizePopupWindow> OnClose;
+        public Action<Rect> OnPositionChanged;
 
-        [SerializeField] public bool closeOnCompileOrPlay = true;
+        protected Action OnPin;
 
-        [SerializeField] public bool drawTitle = false;
+        [NonSerialized]
+        public AutoSize adjustHeight = AutoSize.ignore;
+
+        [SerializeField]
+        public bool closeOnLossFocus = true;
+
+        [SerializeField]
+        public bool closeOnCompileOrPlay = true;
+
+        [SerializeField]
+        public bool drawTitle = false;
+
+        [NonSerialized]
+        public Vector2 scrollPosition;
+
+        [NonSerialized]
+        public bool wasMoved;
 
         public float maxHeight = 400;
-
-        [NonSerialized] private GUIStyle _contentAreaStyle;
-
-        [NonSerialized] public AutoSize adjustHeight = AutoSize.ignore;
 
         private bool isDragging;
         private bool isTooBig;
         private GUIContent labelContent;
         private Vector2 lastMousePosition;
-        public Action<AutoSizePopupWindow> OnClose;
-
-        protected Action OnPin;
-        public Action<Rect> OnPositionChanged;
         private float prevBottom = 0;
 
-        [NonSerialized] public Vector2 scrollPosition;
-
-        [NonSerialized] public bool wasMoved;
+        [NonSerialized]
+        private GUIStyle _contentAreaStyle;
 
         protected GUIStyle contentAreaStyle
         {
@@ -53,63 +61,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 return _contentAreaStyle;
             }
-        }
-
-        protected virtual void OnDestroy()
-        {
-            if (OnClose != null) OnClose(this);
-        }
-
-        protected override void OnGUI()
-        {
-            if (closeOnLossFocus && focusedWindow != this && focusedWindow != null)
-            {
-                if (ValidateCloseOnLossFocus())
-                {
-                    Close();
-                    return;
-                }
-            }
-
-            if (drawTitle) DrawTitle();
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            GUILayoutUtils.nestedEditorMargin = 14;
-            try
-            {
-                OnContentGUI();
-            }
-            catch (ExitGUIException e)
-            {
-                throw e;
-            }
-            catch (Exception e)
-            {
-                Log.Add(e);
-            }
-            finally
-            {
-                GUILayoutUtils.nestedEditorMargin = 0;
-            }
-
-            if (adjustHeight != AutoSize.ignore)
-            {
-                float b = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(0)).yMin;
-                Event e = Event.current;
-                if (e.type == EventType.Repaint)
-                {
-                    float bottom = b + 5;
-                    if (drawTitle) bottom += 20;
-
-                    if (Mathf.Abs(bottom - position.height) > 1 && Math.Abs(prevBottom - bottom) > float.Epsilon)
-                    {
-                        AdjustHeight(bottom);
-                        prevBottom = bottom;
-                    }
-                }
-            }
-
-            EditorGUILayout.EndScrollView();
         }
 
         private void AdjustHeight(float bottom)
@@ -178,14 +129,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             DrawLabel();
 
-            if (OnPin != null && GUILayout.Button(PinAndClose.tabContent, Styles.transparentButton, GUILayout.Width(12),
-                    GUILayout.Height(12)))
+            if (OnPin != null && GUILayout.Button(PinAndClose.tabContent, Styles.transparentButton, GUILayout.Width(12), GUILayout.Height(12)))
             {
                 OnPin();
             }
-
-            if (GUILayout.Button(PinAndClose.closeContent, Styles.transparentButton, GUILayout.Width(12),
-                    GUILayout.Height(12)))
+            if (GUILayout.Button(PinAndClose.closeContent, Styles.transparentButton, GUILayout.Width(12), GUILayout.Height(12)))
             {
                 Close();
             }
@@ -195,9 +143,66 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         protected virtual void InvokePin()
         {
+            
         }
 
         protected abstract void OnContentGUI();
+
+        protected virtual void OnDestroy()
+        {
+            if (OnClose != null) OnClose(this);
+        }
+
+        protected override void OnGUI()
+        {
+            if (closeOnLossFocus && focusedWindow != this && focusedWindow != null)
+            {
+                if (ValidateCloseOnLossFocus())
+                {
+                    Close();
+                    return;
+                }
+            }
+
+            if (drawTitle) DrawTitle();
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            GUILayoutUtils.nestedEditorMargin = 14;
+            try
+            {
+                OnContentGUI();
+            }
+            catch (ExitGUIException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                Log.Add(e);
+            }
+            finally
+            {
+                GUILayoutUtils.nestedEditorMargin = 0;
+            }
+
+            if (adjustHeight != AutoSize.ignore)
+            {
+                float b = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.Height(0)).yMin;
+                Event e = Event.current;
+                if (e.type == EventType.Repaint)
+                {
+                    float bottom = b + 5;
+                    if (drawTitle) bottom += 20;
+
+                    if (Mathf.Abs(bottom - position.height) > 1 && Math.Abs(prevBottom - bottom) > float.Epsilon)
+                    {
+                        AdjustHeight(bottom);
+                        prevBottom = bottom;
+                    }
+                }
+            }
+            EditorGUILayout.EndScrollView();
+        }
 
         private void ProcessLabelEvents(Rect labelRect)
         {

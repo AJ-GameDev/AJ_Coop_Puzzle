@@ -31,17 +31,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -70; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!breadcrumbs) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Show All Parents", "Context Menu/Breadcrumbs", breadcrumbsParentShowAllModifiers),
-                    new Shortcut("Show Context Menu For GameObject", "Context Menu/Breadcrumbs", "RMB"),
-                };
-            }
-
             public override void Draw()
             {
                 breadcrumbs = EditorGUILayout.ToggleLeft("Breadcrumbs", breadcrumbs, EditorStyles.label);
@@ -67,14 +56,24 @@ namespace InfinityCode.UltimateEditorEnhancer
                 DrawFieldWithModifiers("Up", ref breadcrumbsParentUp, ref breadcrumbsParentUpModifiers);
                 DrawFieldWithModifiers("Show All", ref breadcrumbsParentShowAll, ref breadcrumbsParentShowAllModifiers);
 
-                if (breadcrumbsParentUp && breadcrumbsParentShowAll &&
-                    breadcrumbsParentUpModifiers == breadcrumbsParentShowAllModifiers)
+                if (breadcrumbsParentUp && breadcrumbsParentShowAll && breadcrumbsParentUpModifiers == breadcrumbsParentShowAllModifiers)
                 {
                     EditorGUILayout.HelpBox("The modifiers for Up and Show All must be different.", MessageType.Error);
                 }
 
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!breadcrumbs) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Show All Parents", "Context Menu/Breadcrumbs", breadcrumbsParentShowAllModifiers),
+                    new Shortcut("Show Context Menu For GameObject", "Context Menu/Breadcrumbs", "RMB"),
+                };
             }
         }
     }

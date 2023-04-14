@@ -69,34 +69,22 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static void AppendRotation()
         {
             StaticStringBuilder.Append("Rotation (");
-            StaticStringBuilder.Append(sameRotationX
-                ? firstTransform.eulerAngles.x.ToString("F2", Culture.numberFormat)
-                : "---");
+            StaticStringBuilder.Append(sameRotationX ? firstTransform.eulerAngles.x.ToString("F2", Culture.numberFormat) : "---");
             StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameRotationY
-                ? firstTransform.eulerAngles.y.ToString("F2", Culture.numberFormat)
-                : "---");
+            StaticStringBuilder.Append(sameRotationY ? firstTransform.eulerAngles.y.ToString("F2", Culture.numberFormat) : "---");
             StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameRotationZ
-                ? firstTransform.eulerAngles.z.ToString("F2", Culture.numberFormat)
-                : "---");
+            StaticStringBuilder.Append(sameRotationZ ? firstTransform.eulerAngles.z.ToString("F2", Culture.numberFormat) : "---");
             StaticStringBuilder.Append(")");
         }
 
         private static void AppendScale()
         {
             StaticStringBuilder.Append("Scale (");
-            StaticStringBuilder.Append(sameScaleX
-                ? firstTransform.localScale.x.ToString("F2", Culture.numberFormat)
-                : "---");
+            StaticStringBuilder.Append(sameScaleX ? firstTransform.localScale.x.ToString("F2", Culture.numberFormat) : "---");
             StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameScaleY
-                ? firstTransform.localScale.y.ToString("F2", Culture.numberFormat)
-                : "---");
+            StaticStringBuilder.Append(sameScaleY ? firstTransform.localScale.y.ToString("F2", Culture.numberFormat) : "---");
             StaticStringBuilder.Append(", ");
-            StaticStringBuilder.Append(sameScaleZ
-                ? firstTransform.localScale.z.ToString("F2", Culture.numberFormat)
-                : "---");
+            StaticStringBuilder.Append(sameScaleZ ? firstTransform.localScale.z.ToString("F2", Culture.numberFormat) : "---");
             StaticStringBuilder.Append(")");
         }
 
@@ -142,8 +130,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             lastScreenPosition = screenPoint;
 
-            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2,
-                size.x, size.y);
+            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2, size.x, size.y);
             Event e = Event.current;
 
             if (e.type == EventType.Repaint) GUI.Label(rect, content, style);
@@ -237,8 +224,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             firstTransform = null;
             if (Selection.gameObjects.Length == 0) return;
 
-            samePositionX = samePositionY = samePositionZ =
-                sameRotationX = sameRotationY = sameRotationZ = sameScaleX = sameScaleY = sameScaleZ = true;
+            samePositionX = samePositionY = samePositionZ = sameRotationX = sameRotationY = sameRotationZ = sameScaleX = sameScaleY = sameScaleZ = true;
 
             int[] instanceIDs = Selection.instanceIDs;
 

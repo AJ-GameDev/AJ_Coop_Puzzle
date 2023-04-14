@@ -36,6 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 
         protected virtual void Init()
         {
+
         }
 
         [InitializeOnLoadMethod]
@@ -64,6 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                 }
                 catch
                 {
+                    
                 }
             }
 
@@ -78,9 +80,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                 }
                 catch
                 {
+
                 }
             }
-
             Debug.unityLogger.logEnabled = true;
         }
 
@@ -123,10 +125,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         {
             if (harmony == null || originalMethod == null || patch == null) return;
 
-            if (!string.IsNullOrEmpty(prefixMethodName))
-                harmony.Unpatch(originalMethod, AccessTools.Method(GetType(), prefixMethodName));
-            if (!string.IsNullOrEmpty(postfixMethodName))
-                harmony.Unpatch(originalMethod, AccessTools.Method(GetType(), postfixMethodName));
+            if (!string.IsNullOrEmpty(prefixMethodName)) harmony.Unpatch(originalMethod, AccessTools.Method(GetType(), prefixMethodName));
+            if (!string.IsNullOrEmpty(postfixMethodName)) harmony.Unpatch(originalMethod, AccessTools.Method(GetType(), postfixMethodName));
             patch = null;
         }
 

@@ -21,25 +21,21 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static readonly float cameraViewLerpEnd1 = Mathf.Cos(0.2617994f);
         private static readonly float cameraViewLerpStart2 = Mathf.Cos(2.96706f);
         private static readonly float cameraViewLerpEnd2 = Mathf.Cos(3.054326f);
-
-        private static Vector3[] axisVector =
-        {
+        private static Vector3[] axisVector = {
             Vector3.right,
             Vector3.up,
             Vector3.forward
         };
 
-        private static int[] nextIndex =
-        {
+        private static int[] nextIndex = {
             1,
             2,
             0
         };
 
-        private static Color[] axisColor =
-        {
-            new Color(0.8588235f, 0.2431373f, 0.1137255f, 0.93f),
-            new Color(0.6039216f, 0.9529412f, 0.282353f, 0.93f),
+        private static Color[] axisColor = {
+            new Color(0.8588235f, 0.2431373f, 0.1137255f, 0.93f), 
+            new Color(0.6039216f, 0.9529412f, 0.282353f, 0.93f), 
             new Color(0.227451f, 0.4784314f, 0.972549f, 0.93f)
         };
 
@@ -47,16 +43,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static Vector3 planarHandlesOctant = Vector3.one;
 
-        private static Vector3[] verts =
-        {
+        private static Vector3[] verts = {
             Vector3.zero,
             Vector3.zero,
             Vector3.zero,
             Vector3.zero
         };
 
-        private static int[] axisDrawOrder =
-        {
+        private static int[] axisDrawOrder = {
             0,
             1,
             2
@@ -65,8 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static Vector3 axisHandlesOctant = Vector3.one;
         internal static float staticBlend = 0.6f;
 
-        private static string[] axisNames =
-        {
+        private static string[] axisNames = {
             "xAxis",
             "yAxis",
             "zAxis"
@@ -74,8 +67,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         internal static Color disabledHandleColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 
-        private static int[] prevPlaneIndex =
-        {
+        private static int[] prevPlaneIndex = {
             5,
             3,
             4
@@ -94,11 +86,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                 case EventType.MouseMove:
                 case EventType.Layout:
                     Vector3 vector3 = rotation * Vector3.forward;
-                    HandleUtility.AddControl(controlID,
-                        HandleUtility.DistanceToLine(position, position + (vector3 + coneOffset) * (size * 0.9f)));
+                    HandleUtility.AddControl(controlID, HandleUtility.DistanceToLine(position, position + (vector3 + coneOffset) * (size * 0.9f)));
 #if UNITY_2020_3_OR_NEWER
-                    HandleUtility.AddControl(controlID,
-                        HandleUtility.DistanceToCone(position + (vector3 + coneOffset) * size, rotation, size * 0.2f));
+                    HandleUtility.AddControl(controlID, HandleUtility.DistanceToCone(position + (vector3 + coneOffset) * size, rotation, size * 0.2f));
 #else
                     HandleUtility.AddControl(controlID, HandleUtility.DistanceToCircle(position + (vector3 + coneOffset) * size, size * 0.2f));
 #endif
@@ -113,7 +103,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         lineThickness += 1;
                         size1 *= 1.05f;
                     }
-
                     Camera current = Camera.current;
                     bool flag = Vector3.Dot(current != null ? current.transform.forward : -rhs, rhs) < 0.0;
                     Vector3 position1 = position + (rhs + coneOffset) * size;
@@ -124,7 +113,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         Handles.ConeHandleCap(controlID, position1, rotation, size1, eventType);
                         break;
                     }
-
                     Handles.ConeHandleCap(controlID, position1, rotation, size1, eventType);
                     Handles.DrawLine(position, p2, lineThickness);
 #else
@@ -159,7 +147,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             int index2 = (planePrimaryAxis + 1) % 3;
             int axis = (planePrimaryAxis + 2) % 3;
             Color color = Handles.color;
-
+            
             float alpha = 0.8f;
             if (GUIUtility.hotControl == id) Handles.color = Handles.selectedColor;
             else
@@ -171,11 +159,9 @@ namespace InfinityCode.UltimateEditorEnhancer
             Handles.color = ToActiveColorSpace(Handles.color);
             if (GUIUtility.hotControl == 0)
             {
-                planarHandlesOctant[planePrimaryAxis] =
-                    viewVectorDrawSpace[planePrimaryAxis] > 0.00999999977648258 ? -1f : 1f;
+                planarHandlesOctant[planePrimaryAxis] = viewVectorDrawSpace[planePrimaryAxis] > 0.00999999977648258 ? -1f : 1f;
                 planarHandlesOctant[index2] = viewVectorDrawSpace[index2] > 0.00999999977648258 ? -1f : 1f;
             }
-
             Vector3 b = planarHandlesOctant;
             b[axis] = 0.0f;
             b = rotation * (b * handleSize * 0.5f);
@@ -205,9 +191,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 snap = new Vector2((float)num3, (float)num4);
             }
             else snap = Vector2.zero;
-
-            position = Handles.Slider2D(id, position, b, handleDir, slideDir1, slideDir2, handleSize * 0.5f,
-                capFunction, snap, false);
+            position = Handles.Slider2D(id, position, b, handleDir, slideDir1, slideDir2, handleSize * 0.5f, capFunction, snap, false);
             Handles.color = color;
             return position;
         }
@@ -233,9 +217,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             Camera current = Camera.current;
             Matrix4x4 matrix = (Handles.matrix * Matrix4x4.TRS(position, rotation, Vector3.one)).inverse;
-            Vector3 cameraViewFrom = current.orthographic
-                ? matrix.MultiplyVector(current.transform.forward).normalized
-                : matrix.MultiplyVector(position - current.transform.position).normalized;
+            Vector3 cameraViewFrom = current.orthographic ? matrix.MultiplyVector(current.transform.forward).normalized : matrix.MultiplyVector(position - current.transform.position).normalized;
 
             float handleSize = HandleUtility.GetHandleSize(position);
             for (int axis = 0; axis < 3; ++axis)
@@ -244,32 +226,25 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (ids[axis] == GUIUtility.hotControl)
                 {
                     float num = Vector3.Dot(cameraViewFrom, axisVector[axis]);
-                    v = Mathf.Max(Mathf.InverseLerp(cameraViewLerpStart1, cameraViewLerpEnd1, num),
-                        Mathf.InverseLerp(cameraViewLerpStart2, cameraViewLerpEnd2, num));
+                    v = Mathf.Max(Mathf.InverseLerp(cameraViewLerpStart1, cameraViewLerpEnd1, num), Mathf.InverseLerp(cameraViewLerpStart2, cameraViewLerpEnd2, num));
                 }
-
                 cameraViewLerp[axis] = v;
             }
-
-            for (int index = 0; index < 3; ++index)
-                cameraViewLerp[3 + index] = Mathf.Max(cameraViewLerp[index], cameraViewLerp[(index + 1) % 3]);
+            for (int index = 0; index < 3; ++index) cameraViewLerp[3 + index] = Mathf.Max(cameraViewLerp[index], cameraViewLerp[(index + 1) % 3]);
             bool isAnyAxis = ids.Has(GUIUtility.hotControl);
             Vector3 vector3_3 = Vector3.one * 0.25f;
             for (int planePrimaryAxis = 0; planePrimaryAxis < 3; ++planePrimaryAxis)
             {
-                if (ShouldShow(3 + planePrimaryAxis) &&
-                    (!isAnyAxis || ids[3 + planePrimaryAxis] == GUIUtility.hotControl))
+                if (ShouldShow(3 + planePrimaryAxis) && (!isAnyAxis || ids[3 + planePrimaryAxis] == GUIUtility.hotControl))
                 {
                     float cameraLerp = isAnyAxis ? 0.0f : cameraViewLerp[3 + planePrimaryAxis];
                     if (cameraLerp <= 0.600000023841858)
                     {
                         float num = Mathf.Max(vector3_3[planePrimaryAxis], vector3_3[nextIndex[planePrimaryAxis]]);
-                        position = DoPlanarHandle(ids[3 + planePrimaryAxis], planePrimaryAxis, position, rotation,
-                            handleSize * num, cameraLerp, cameraViewFrom);
+                        position = DoPlanarHandle(ids[3 + planePrimaryAxis], planePrimaryAxis, position, rotation, handleSize * num, cameraLerp, cameraViewFrom);
                     }
                 }
             }
-
             CalcDrawOrder(cameraViewFrom, axisDrawOrder);
 
             bool guiEnabled = !GUI.enabled;
@@ -299,7 +274,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         Handles.color = Handles.selectedColor;
                     }
                 }
-
                 Handles.color = ToActiveColorSpace(Handles.color);
                 int id = ids[axis];
                 double size = handleSize;
@@ -308,7 +282,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 if (!SnapHelper.enabled) snap = EditorSnapSettings.move[axis];
                 position = Handles.Slider(id, position, Vector3.zero, direction, (float)size, capFunction, (float)snap);
             }
-
             if (SnapHelper.enabled) position = SnapHelper.Snap(position);
             Handles.color = color;
             return position;
@@ -324,8 +297,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         internal static bool IsHovering(int cid)
         {
 #if UNITY_2020_3_OR_NEWER
-            return cid == HandleUtility.nearestControl && GUIUtility.hotControl == 0 &&
-                   !UnityEditor.Tools.viewToolActive;
+            return cid == HandleUtility.nearestControl && GUIUtility.hotControl == 0 && !UnityEditor.Tools.viewToolActive;
 #else
             return cid == HandleUtility.nearestControl && GUIUtility.hotControl == 0;
 #endif

@@ -15,6 +15,70 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     [Serializable]
     public class ComponentWindow : AutoSizePopupWindow
     {
+        #region Actions
+
+        //public static Action<ComponentWindow> OnDestroyWindow;
+        //public static Predicate<ComponentWindow> OnDrawContent;
+        //public static Action<ComponentWindow, Rect> OnDrawHeader;
+        //public static Predicate<ComponentWindow> OnValidateEditor;
+
+        #endregion
+
+        #region Fields
+
+        #region Static
+
+        private static ComponentWindow autoPopupWindow;
+        private static GUIContent bookmarkContent;
+        private static GUIContent debugContent;
+        private static GUIContent debugOnContent;
+        private static GUIStyle inspectorBigStyle;
+        private static GUIContent removeBookmarkContent;
+        private static GUIContent selectContent;
+        private static GUIContent titleSettingsIcon;
+
+        #endregion
+
+
+        public bool allowInitEditor = true;
+
+        [SerializeField]
+        public bool displayGameObject = true;
+        
+        [SerializeField]
+        public bool isPopup;
+
+        [SerializeField]
+        private Component _component;
+
+        [SerializeField]
+        private string componentID;
+
+        private bool destroyAnyway;
+
+        [NonSerialized]
+        private Editor editor;
+
+        [NonSerialized]
+        private bool isDebug;
+
+        [NonSerialized]
+        private bool isMissed = false;
+        
+        [NonSerialized]
+        private SerializedObject serializedObject;
+
+        [NonSerialized]
+        private List<SearchableProperty> searchableProperties;
+
+        [NonSerialized]
+        private string filter;
+        
+        [NonSerialized]
+        private List<SearchableProperty> filteredItems;
+
+        #endregion
+
         public Component component
         {
             get { return _component; }
@@ -26,97 +90,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     componentID = GlobalObjectId.GetGlobalObjectIdSlow(value).ToString();
                     if (editor != null) DestroyImmediate(editor);
                     InitEditor();
+
+
                 }
             }
-        }
-
-        private void OnEnable()
-        {
-            FreeReferences();
-            isDebug = false;
-            allowInitEditor = true;
-
-            selectContent = EditorIconContents.rectTransformBlueprint;
-            selectContent.tooltip = "Select GameObject";
-
-            bookmarkContent = new GUIContent(Styles.isProSkin ? Icons.starWhite : Icons.starBlack, "Bookmark");
-            removeBookmarkContent = new GUIContent(Icons.starYellow, "Remove Bookmark");
-
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-            CompilationPipeline.compilationStarted -= OnCompilationStarted;
-            CompilationPipeline.compilationStarted += OnCompilationStarted;
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            searchableProperties = null;
-            serializedObject = null;
-
-            FreeReferences();
-            _component = null;
-
-            if (autoPopupWindow == this) autoPopupWindow = null;
-
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        }
-
-        protected override void OnGUI()
-        {
-            if (EditorApplication.isCompiling)
-            {
-                FreeEditor();
-                return;
-            }
-
-            if (_component == null)
-            {
-                if (!isMissed)
-                {
-                    GlobalObjectId gid;
-                    if (!string.IsNullOrEmpty(componentID) && GlobalObjectId.TryParse(componentID, out gid))
-                    {
-                        _component = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) as Component;
-                        isMissed = _component == null;
-                    }
-                    else isMissed = true;
-                }
-
-                if (isMissed)
-                {
-                    if (GUILayout.Button("Try to restore"))
-                    {
-                        GlobalObjectId gid;
-                        if (!string.IsNullOrEmpty(componentID) && GlobalObjectId.TryParse(componentID, out gid))
-                        {
-                            _component = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) as Component;
-                            isMissed = _component == null;
-                        }
-                    }
-
-                    EditorGUILayout.LabelField("Component is missed.");
-                    return;
-                }
-            }
-
-            if (editor == null && allowInitEditor)
-            {
-                if (_component is Terrain) TryRestoreTerrainEditor();
-                else InitEditor();
-            }
-
-            if (editor == null && !isDebug) return;
-
-            if (isPopup)
-            {
-                GUIStyle style = GUI.skin.box;
-                style.normal.textColor = Color.blue;
-                GUI.Box(new Rect(0, 0, position.width, position.height), GUIContent.none, style);
-            }
-
-            base.OnGUI();
         }
 
         private void CacheSerializedObject()
@@ -132,7 +109,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             do
             {
                 searchableProperties.Add(new SearchableProperty(p));
-            } while (p.NextVisible(true));
+            }
+            while (p.NextVisible(true));
 
             if (!string.IsNullOrEmpty(filter)) UpdateFilteredItems();
         }
@@ -143,8 +121,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (inspectorBigStyle == null)
             {
-                inspectorBigStyle =
-                    new GUIStyle(Reflection.GetStaticPropertyValue<GUIStyle>(typeof(EditorStyles), "inspectorBig"));
+                inspectorBigStyle = new GUIStyle(Reflection.GetStaticPropertyValue<GUIStyle>(typeof(EditorStyles), "inspectorBig"));
                 inspectorBigStyle.margin = new RectOffset(1, 1, 0, 0);
             }
 
@@ -161,7 +138,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             GUILayout.EndHorizontal();
             Rect lastRect = GUILayoutUtility.GetLastRect();
             Rect r = new Rect(lastRect.x, lastRect.y, lastRect.width, lastRect.height);
-
+            
             DrawHeaderPreview(r);
             DrawHeaderComponent(r);
             DrawHeaderIcons(r);
@@ -205,7 +182,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else if (e.type == EventType.MouseDrag && r2.Contains(e.mousePosition))
             {
                 DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new[] { _component };
+                DragAndDrop.objectReferences = new[] {_component};
 
                 DragAndDrop.StartDrag("Drag " + _component.name);
                 e.Use();
@@ -218,8 +195,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             r.y += 27;
 
             bool containBookmark = Bookmarks.Contain(component);
-            if (GUI.Button(new Rect(r.xMax - 18, r.y, 16, 16),
-                    containBookmark ? removeBookmarkContent : bookmarkContent, Styles.transparentButton))
+            if (GUI.Button(new Rect(r.xMax - 18, r.y, 16, 16), containBookmark ? removeBookmarkContent : bookmarkContent, Styles.transparentButton))
             {
                 if (e.modifiers == EventModifiers.Control)
                 {
@@ -236,8 +212,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (debugContent == null) debugContent = new GUIContent(Icons.debug, "Debug");
             if (debugOnContent == null) debugOnContent = new GUIContent(Icons.debugOn, "Debug");
 
-            if (GUI.Button(new Rect(r.width - 36, r.y, 16, 16), isDebug ? debugOnContent : debugContent,
-                    Styles.transparentButton))
+            if (GUI.Button(new Rect(r.width - 36, r.y, 16, 16), isDebug ? debugOnContent : debugContent, Styles.transparentButton))
             {
                 ToggleDebugMode();
             }
@@ -277,7 +252,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             else if (e.type == EventType.MouseDrag && r.Contains(e.mousePosition))
             {
                 DragAndDrop.PrepareStartDrag();
-                DragAndDrop.objectReferences = new[] { _component.gameObject };
+                DragAndDrop.objectReferences = new[] {_component.gameObject};
 
                 DragAndDrop.StartDrag("Drag " + _component.gameObject.name);
                 e.Use();
@@ -295,8 +270,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             float offset = settingsSize.x * 2;
 
-            EditorGUIUtilityRef.DrawEditorHeaderItems(
-                new Rect(r.xMax - offset, r.y + 5f, settingsSize.x, settingsSize.y), new Object[] { component }, 0);
+            EditorGUIUtilityRef.DrawEditorHeaderItems(new Rect(r.xMax - offset, r.y + 5f, settingsSize.x, settingsSize.y), new Object[] { component }, 0);
         }
 
         private void DrawHeaderPreview(Rect r)
@@ -321,7 +295,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 CacheSerializedObject();
                 if (serializedObject == null) return;
             }
-
             serializedObject.Update();
 
             bool wideMode = EditorGUIUtility.wideMode;
@@ -340,8 +313,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             else
             {
-                foreach (SearchableProperty item in filteredItems)
-                    EditorGUILayout.PropertyField(serializedObject.FindProperty(item.path));
+                foreach (SearchableProperty item in filteredItems) EditorGUILayout.PropertyField(serializedObject.FindProperty(item.path));
             }
 
             EditorGUIUtility.wideMode = wideMode;
@@ -353,8 +325,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             if (editor == null) return;
 
-            if (destroyAnyway || editor.GetType().ToString() != "UnityEditor.TerrainInspector")
-                DestroyImmediate(editor);
+            if (destroyAnyway || editor.GetType().ToString() != "UnityEditor.TerrainInspector") DestroyImmediate(editor);
             editor = null;
         }
 
@@ -416,16 +387,104 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
                 catch
                 {
-                }
 
+                }
                 EditorGUILayout.EndVertical();
             }
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            searchableProperties = null;
+            serializedObject = null;
+
+            FreeReferences();
+            _component = null; 
+
+            if (autoPopupWindow == this) autoPopupWindow = null;
+
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+
+        private void OnEnable()
+        {
+            FreeReferences();
+            isDebug = false;
+            allowInitEditor = true;
+
+            selectContent = EditorIconContents.rectTransformBlueprint;
+            selectContent.tooltip = "Select GameObject";
+
+            bookmarkContent = new GUIContent(Styles.isProSkin ? Icons.starWhite: Icons.starBlack, "Bookmark");
+            removeBookmarkContent = new GUIContent(Icons.starYellow, "Remove Bookmark");
+
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            CompilationPipeline.compilationStarted -= OnCompilationStarted;
+            CompilationPipeline.compilationStarted += OnCompilationStarted;
+        }
+
+        protected override void OnGUI()
+        {
+            if (EditorApplication.isCompiling)
+            {
+                FreeEditor();
+                return;
+            }
+
+            if (_component == null)
+            {
+                if (!isMissed)
+                {
+                    GlobalObjectId gid;
+                    if (!string.IsNullOrEmpty(componentID) && GlobalObjectId.TryParse(componentID, out gid))
+                    {
+                        _component = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) as Component;
+                        isMissed = _component == null;
+                    }
+                    else isMissed = true;
+                }
+
+                if (isMissed)
+                {
+                    if (GUILayout.Button("Try to restore"))
+                    {
+                        GlobalObjectId gid;
+                        if (!string.IsNullOrEmpty(componentID) && GlobalObjectId.TryParse(componentID, out gid))
+                        {
+                            _component = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) as Component;
+                            isMissed = _component == null;
+                        }
+                    }
+
+                    EditorGUILayout.LabelField("Component is missed.");
+                    return;
+                }
+            }
+
+            if (editor == null && allowInitEditor) 
+            {
+                if (_component is Terrain) TryRestoreTerrainEditor();
+                else InitEditor();
+            }
+
+            if (editor == null && !isDebug) return;
+
+            if (isPopup)
+            {
+                GUIStyle style = GUI.skin.box;
+                style.normal.textColor = Color.blue;
+                GUI.Box(new Rect(0, 0, position.width, position.height), GUIContent.none, style);
+            }
+
+            base.OnGUI();
+        }
+
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode)
-                allowInitEditor = false;
+            if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode) allowInitEditor = false;
             else
             {
                 allowInitEditor = true;
@@ -444,8 +503,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             Texture2D texture2D = AssetPreview.GetAssetPreview(component);
             if (texture2D == null) texture2D = AssetPreview.GetMiniThumbnail(component);
 
-            wnd.titleContent = new GUIContent(component.GetType().Name + " (" + component.gameObject.name + ")",
-                texture2D);
+            wnd.titleContent = new GUIContent(component.GetType().Name + " (" + component.gameObject.name + ")", texture2D);
             wnd.component = component;
             wnd.minSize = Vector2.one;
             wnd.closeOnLossFocus = false;
@@ -460,7 +518,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Vector2 size = Prefs.defaultWindowSize;
                 wnd.position = new Rect(screenPoint - size / 2, size);
             }
-
             return wnd;
         }
 
@@ -481,7 +538,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (!rect.HasValue)
             {
-                Vector2 mousePosition = e != null ? e.mousePosition : new Vector2(Screen.width / 2, Screen.height / 2);
+                Vector2 mousePosition = e != null? e.mousePosition: new Vector2(Screen.width / 2, Screen.height / 2);
                 Vector2 position = GUIUtility.GUIToScreenPoint(mousePosition);
                 Vector2 size = Prefs.defaultWindowSize;
                 rect = new Rect(position - size / 2, size);
@@ -490,7 +547,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             Rect r = rect.Value;
             if (r.y < 30) r.y = 30;
             wnd.position = r
-                ;
+;
             wnd.ShowPopup();
             wnd.Focus();
             wnd.adjustHeight = AutoSize.top;
@@ -526,8 +583,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             wnd.ShowUtility();
             wnd.Focus();
             Vector2 size = Prefs.defaultWindowSize;
-            if (Event.current != null)
-                wnd.position = new Rect(GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - size / 2, size);
+            if (Event.current != null) wnd.position = new Rect(GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - size / 2, size);
             return wnd;
         }
 
@@ -546,7 +602,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (component is Terrain) TryRestoreTerrainEditor();
                 else InitEditor();
             }
-
             allowInitEditor = !isDebug;
         }
 
@@ -557,7 +612,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 InitEditor();
                 if (editor != null) return true;
             }
-
+            
             EditorGUILayout.HelpBox("Select Terrain GameObject", MessageType.Info);
             if (GUILayout.Button("Select"))
             {
@@ -576,8 +631,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             string pattern = SearchableItem.GetPattern(filter);
-            filteredItems = searchableProperties.Where(p => p.UpdateAccuracy(pattern) > 0)
-                .OrderByDescending(p => p.accuracy).ToList();
+            filteredItems = searchableProperties.Where(p => p.UpdateAccuracy(pattern) > 0).OrderByDescending(p => p.accuracy).ToList();
         }
 
         public class SearchableProperty : SearchableItem
@@ -601,58 +655,5 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 return displayName;
             }
         }
-
-        #region Actions
-
-        //public static Action<ComponentWindow> OnDestroyWindow;
-        //public static Predicate<ComponentWindow> OnDrawContent;
-        //public static Action<ComponentWindow, Rect> OnDrawHeader;
-        //public static Predicate<ComponentWindow> OnValidateEditor;
-
-        #endregion
-
-        #region Fields
-
-        #region Static
-
-        private static ComponentWindow autoPopupWindow;
-        private static GUIContent bookmarkContent;
-        private static GUIContent debugContent;
-        private static GUIContent debugOnContent;
-        private static GUIStyle inspectorBigStyle;
-        private static GUIContent removeBookmarkContent;
-        private static GUIContent selectContent;
-        private static GUIContent titleSettingsIcon;
-
-        #endregion
-
-
-        public bool allowInitEditor = true;
-
-        [SerializeField] public bool displayGameObject = true;
-
-        [SerializeField] public bool isPopup;
-
-        [SerializeField] private Component _component;
-
-        [SerializeField] private string componentID;
-
-        private bool destroyAnyway;
-
-        [NonSerialized] private Editor editor;
-
-        [NonSerialized] private bool isDebug;
-
-        [NonSerialized] private bool isMissed = false;
-
-        [NonSerialized] private SerializedObject serializedObject;
-
-        [NonSerialized] private List<SearchableProperty> searchableProperties;
-
-        [NonSerialized] private string filter;
-
-        [NonSerialized] private List<SearchableProperty> filteredItems;
-
-        #endregion
     }
 }

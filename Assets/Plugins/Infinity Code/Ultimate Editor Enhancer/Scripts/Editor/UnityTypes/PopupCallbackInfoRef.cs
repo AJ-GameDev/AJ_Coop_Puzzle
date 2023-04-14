@@ -17,9 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_getSelectedValueForControlMethod == null)
-                    _getSelectedValueForControlMethod = Reflection.GetMethod(type, "GetSelectedValueForControl",
-                        new[] { typeof(int), typeof(int) }, Reflection.StaticLookup);
+                if (_getSelectedValueForControlMethod == null) _getSelectedValueForControlMethod = Reflection.GetMethod(type, "GetSelectedValueForControl", new[] {typeof(int), typeof(int)}, Reflection.StaticLookup);
                 return _getSelectedValueForControlMethod;
             }
         }
@@ -37,9 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_setEnumValueDelegateMethod == null)
-                    _setEnumValueDelegateMethod = Reflection.GetMethod(type, "SetEnumValueDelegate",
-                        new[] { typeof(object), typeof(string[]), typeof(int) }, Reflection.InstanceLookup);
+                if (_setEnumValueDelegateMethod == null) _setEnumValueDelegateMethod = Reflection.GetMethod(type, "SetEnumValueDelegate", new[] {typeof(object), typeof(string[]), typeof(int)}, Reflection.InstanceLookup);
                 return _setEnumValueDelegateMethod;
             }
         }
@@ -60,13 +56,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static int GetSelectedValueForControl(int controlID, int selected)
         {
-            return (int)getSelectedValueForControlMethod.Invoke(null, new object[] { controlID, selected });
+            return (int) getSelectedValueForControlMethod.Invoke(null, new object[] {controlID, selected});
         }
 
         public static Action<object, string[], int> GetSetEnumValueDelegate(object instance)
         {
-            return (Action<object, string[], int>)Delegate.CreateDelegate(typeof(Action<object, string[], int>),
-                instance, setEnumValueDelegateMethod);
+            return (Action<object, string[], int>) Delegate.CreateDelegate(typeof(Action<object, string[], int>), instance, setEnumValueDelegateMethod);
         }
 
         public static void SetInstance(object instance)

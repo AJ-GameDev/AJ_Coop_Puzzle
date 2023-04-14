@@ -12,8 +12,8 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             public override IEnumerable<string> keywords
             {
-                get
-                {
+                get 
+                { 
                     return JumpToPointManager.GetKeywords()
                         .Concat(PreviewManager.GetKeywords())
                         .Concat(FrameSelectedBoundsManager.GetKeywords())

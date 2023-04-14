@@ -9,9 +9,9 @@ namespace InfinityCode.UltimateEditorEnhancer
     public static class Styles
     {
         public const float ProLabel = 0.7f;
+        public static Color ProLabelColor = new Color(ProLabel, ProLabel, ProLabel);
         public const float ProButton = 0.2f;
         public const float ProButtonHover = 0.25f;
-        public static Color ProLabelColor = new Color(ProLabel, ProLabel, ProLabel);
 
         private static GUIStyle _appToolbarButtonLeft;
         private static GUIStyle _buttonAlignLeft;
@@ -45,7 +45,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     _appToolbarButtonLeft = "AppToolbarButtonLeft";
                     _appToolbarButtonLeft.fixedHeight = 22;
                 }
-
                 return _appToolbarButtonLeft;
             }
         }
@@ -56,14 +55,12 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (_buttonAlignLeft == null)
                 {
-                    _buttonAlignLeft = new GUIStyle(EditorGUIUtility
-                        .GetBuiltinSkin(isProSkin ? EditorSkin.Scene : EditorSkin.Inspector).button)
+                    _buttonAlignLeft = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(isProSkin? EditorSkin.Scene: EditorSkin.Inspector).button)
                     {
                         alignment = TextAnchor.MiddleLeft,
                         fixedHeight = 20,
                     };
                 }
-
                 return _buttonAlignLeft;
             }
         }
@@ -79,7 +76,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         padding = new RectOffset(22, 6, 2, 3)
                     };
                 }
-
                 return _buttonWithToggleAlignLeft;
             }
         }
@@ -128,7 +124,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     };
                 }
 
-                return _colorField;
+                return _colorField; 
             }
         }
 
@@ -201,7 +197,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static bool isProSkin
         {
-            get { return EditorGUIUtility.isProSkin; }
+            get
+            {
+                return EditorGUIUtility.isProSkin;
+            }
         }
 
         public static GUIStyle multilineLabel
@@ -230,10 +229,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     {
                         normal =
                         {
-                            background =
-                                Resources.CreateSinglePixelTexture(isProSkin
-                                    ? (Color)new Color32(45, 45, 48, 255)
-                                    : Color.white)
+                            background = Resources.CreateSinglePixelTexture(isProSkin? (Color)new Color32(45, 45, 48, 255) : Color.white)
                         },
                         margin = new RectOffset(0, 0, 0, 0),
                         overflow = new RectOffset(0, 0, 0, 0),
@@ -291,8 +287,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_selectedRowTexture == null)
-                    _selectedRowTexture = Resources.CreateSinglePixelTexture(62, 125, 231, 255);
+                if (_selectedRowTexture == null) _selectedRowTexture = Resources.CreateSinglePixelTexture(62, 125, 231, 255);
 
                 return _selectedRowTexture;
             }
@@ -393,8 +388,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         normal =
                         {
                             background = Resources.CreateSinglePixelTexture(255, 255, 255, 255)
-                        },
-                        margin = new RectOffset(0, 0, 0, 0)
+                        }, margin = new RectOffset(0, 0, 0, 0)
                     };
                 }
 
@@ -404,8 +398,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         internal static GUIStyle GetStyle(string styleName)
         {
-            return GUI.skin.FindStyle(styleName) ??
-                   EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).FindStyle(styleName);
+            return GUI.skin.FindStyle(styleName) ?? EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).FindStyle(styleName);
         }
     }
 }

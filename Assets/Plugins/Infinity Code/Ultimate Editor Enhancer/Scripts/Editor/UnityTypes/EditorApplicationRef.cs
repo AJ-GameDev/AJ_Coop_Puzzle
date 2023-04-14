@@ -20,9 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_globalEventsField == null)
-                    _globalEventsField =
-                        type.GetField("globalEventHandler", BindingFlags.Static | BindingFlags.NonPublic);
+                if (_globalEventsField == null) _globalEventsField = type.GetField("globalEventHandler", BindingFlags.Static | BindingFlags.NonPublic);
                 return _globalEventsField;
             }
         }

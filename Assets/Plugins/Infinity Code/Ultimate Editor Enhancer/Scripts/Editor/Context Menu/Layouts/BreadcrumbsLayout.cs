@@ -13,29 +13,27 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
     public class BreadcrumbsLayout : MainLayoutItem
     {
         private bool _isActive = true;
+        private GUIContent labelContent;
+        private GUIContent upButtonContent;
+        private GUIContent rightButtonContent;
         private GUIContent downButtonContent;
+        private Vector2 labelSize;
+        private bool hasParents;
         private bool hasChilds;
         private bool hasNeighbors;
-        private bool hasParents;
         private bool isMultiple;
-        private GUIContent labelContent;
-        private Vector2 labelSize;
         private string newName;
-        private GUIContent rightButtonContent;
         private GameObject[] targets;
-        private GUIContent upButtonContent;
 
         public override bool isActive
         {
             get { return _isActive; }
         }
 
-        private void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal,
-            ref bool flipVertical)
+        private void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical)
         {
             GUIStyle style = EditorStyles.whiteLabel;
-            Vector2 size = labelSize = style.CalcSize(labelContent) +
-                                       new Vector2(style.margin.horizontal, style.margin.vertical);
+            Vector2 size = labelSize = style.CalcSize(labelContent) + new Vector2(style.margin.horizontal, style.margin.vertical);
 
             int countButtons = 0;
             if (hasParents) countButtons++;
@@ -99,7 +97,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                     SceneViewManager.OnNextGUI += EditorMenu.ShowInLastPosition;
                 });
             }
-
             menu.Show();
         }
 
@@ -115,8 +112,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                 return;
             }
 
-            if (!Prefs.breadcrumbsParentShowAll ||
-                Event.current.modifiers != Prefs.breadcrumbsParentShowAllModifiers) return;
+            if (!Prefs.breadcrumbsParentShowAll || Event.current.modifiers != Prefs.breadcrumbsParentShowAllModifiers) return;
 
             List<GameObject> items = new List<GameObject>();
             GameObject g = Selection.activeGameObject;
@@ -137,7 +133,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                     SceneViewManager.OnNextGUI += EditorMenu.ShowInLastPosition;
                 });
             }
-
             menu.Show();
         }
 
@@ -178,7 +173,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             DrawParentsButton();
             EditorGUI.BeginChangeCheck();
 
-            bool enabled = targets.All(t => t.activeSelf);
+            bool enabled = targets.All(t => t.activeSelf); 
             enabled = EditorGUILayout.Toggle(enabled);
             if (EditorGUI.EndChangeCheck())
             {
@@ -188,7 +183,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                     EditorUtility.SetDirty(target);
                 }
             }
-
             EditorGUILayout.LabelField(labelContent, EditorStyles.whiteLabel, GUILayout.Width(labelSize.x));
             if (GUILayoutUtility.GetLastRect().Contains(e.mousePosition))
             {
@@ -220,8 +214,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             EditorGUILayout.EndHorizontal();
         }
 
-        public override void Prepare(GameObject[] targets, Vector2 position, ref Vector2 offset,
-            ref bool flipHorizontal, ref bool flipVertical)
+        public override void Prepare(GameObject[] targets, Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical)
         {
             _isActive = false;
             if (wnd != null) wnd.Close();
@@ -245,15 +238,12 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
                 }
                 else
                 {
-                    GameObject[] rootGameObjects =
-                        UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+                    GameObject[] rootGameObjects = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
                     hasNeighbors = rootGameObjects.Length > 1;
                 }
             }
 
-            if (!isMultiple)
-                labelContent = new GUIContent(targets[0].name,
-                    GameObjectUtils.GetTransformPath(targets[0].transform).ToString());
+            if (!isMultiple) labelContent = new GUIContent(targets[0].name, GameObjectUtils.GetTransformPath(targets[0].transform).ToString());
             else
             {
                 StringBuilder tooltipBuilder = new StringBuilder();

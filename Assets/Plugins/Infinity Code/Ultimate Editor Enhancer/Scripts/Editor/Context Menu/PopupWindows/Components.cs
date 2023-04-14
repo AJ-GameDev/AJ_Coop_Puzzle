@@ -25,14 +25,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
             get { return 100; }
         }
 
-        public bool Validate()
-        {
-            if (!Prefs.componentsInPopupWindow) return false;
-            if (targets == null || targets.Length != 1) return false;
-
-            return true;
-        }
-
         protected override void CalcSize()
         {
             labelSize = EditorStyles.whiteLabel.CalcSize(labelContent);
@@ -70,8 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Components:", EditorStyles.whiteLabel, GUILayout.Width(labelSize.x));
 
-            if (Prefs.componentsInPopupWindowAddComponent &&
-                GUILayout.Button(addContent, EditorStyles.whiteLabel, GUILayout.ExpandWidth(false)))
+            if (Prefs.componentsInPopupWindowAddComponent && GUILayout.Button(addContent, EditorStyles.whiteLabel, GUILayout.ExpandWidth(false)))
             {
                 Vector2 s = Prefs.defaultWindowSize;
                 Rect rect = new Rect(GUIUtility.GUIToScreenPoint(e.mousePosition) - s / 2, s);
@@ -79,7 +70,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 EditorMenu.Close();
                 AddComponent.ShowAddComponent(rect);
             }
-
             EditorGUILayout.EndHorizontal();
 
             for (int i = 0; i < components.Length; i++)
@@ -103,10 +93,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 {
                     if (e.button == 0)
                     {
-                        if (Prefs.popupWindowTab && Prefs.popupWindowTabModifiers == e.modifiers)
-                            ComponentWindow.Show(component);
-                        else if (Prefs.popupWindowUtility && Prefs.popupWindowUtilityModifiers == e.modifiers)
-                            ComponentWindow.ShowUtility(component);
+                        if (Prefs.popupWindowTab && Prefs.popupWindowTabModifiers == e.modifiers) ComponentWindow.Show(component);
+                        else if (Prefs.popupWindowUtility && Prefs.popupWindowUtilityModifiers == e.modifiers) ComponentWindow.ShowUtility(component);
                         else if (Prefs.popupWindowPopup && Prefs.popupWindowPopupModifiers == e.modifiers)
                         {
                             EditorWindow wnd = ComponentWindow.ShowPopup(component);
@@ -116,7 +104,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                                 b.Remove();
                             };
                         }
-
                         EditorMenu.Close();
                     }
                     else if (e.button == 1)
@@ -142,8 +129,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
 
             ButtonEvent state = ButtonEvent.none;
 
-            if (e.type == EventType.Repaint)
-                Styles.buttonWithToggleAlignLeft.Draw(rect, content, isHover, hasMouseControl, false, false);
+            if (e.type == EventType.Repaint) Styles.buttonWithToggleAlignLeft.Draw(rect, content, isHover, hasMouseControl, false, false);
             else if (e.type == EventType.MouseDrag)
             {
                 if (hasMouseControl)
@@ -215,12 +201,19 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                     else content.text = ObjectNames.NicifyVariableName(type.Name);
                 }
                 else content.text = ObjectNames.NicifyVariableName(type.Name);
-
                 contents[i] = content;
             }
 
             labelContent = new GUIContent("Components:");
             addContent = new GUIContent("+", "Add Component");
+        }
+
+        public bool Validate()
+        {
+            if (!Prefs.componentsInPopupWindow) return false;
+            if (targets == null || targets.Length != 1) return false;
+
+            return true;
         }
 
         private void WaitCloseContextMenu()

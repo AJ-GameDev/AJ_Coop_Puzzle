@@ -11,24 +11,22 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
     {
         private static MethodInfo _tempContentMethodTexture;
 
-        private static MethodInfo _tempContentMethodString;
-
         private static MethodInfo tempContentMethodTexture
         {
             get
             {
-                if (_tempContentMethodTexture == null)
-                    _tempContentMethodTexture = Reflection.GetMethod(type, "Temp", new[] { typeof(Texture) });
+                if (_tempContentMethodTexture == null) _tempContentMethodTexture = Reflection.GetMethod(type, "Temp", new[] { typeof(Texture) });
                 return _tempContentMethodTexture;
             }
         }
+
+        private static MethodInfo _tempContentMethodString;
 
         private static MethodInfo tempContentMethodString
         {
             get
             {
-                if (_tempContentMethodString == null)
-                    _tempContentMethodString = Reflection.GetMethod(type, "Temp", new[] { typeof(string) });
+                if (_tempContentMethodString == null) _tempContentMethodString = Reflection.GetMethod(type, "Temp", new[] { typeof(string) });
                 return _tempContentMethodString;
             }
         }
@@ -45,7 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static GUIContent TempContent(Texture texture)
         {
-            return (GUIContent)tempContentMethodTexture.Invoke(null, new object[] { texture });
+            return (GUIContent)tempContentMethodTexture.Invoke(null, new object[] {texture});
         }
     }
 }

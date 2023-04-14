@@ -20,8 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             else
             {
                 object sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(window);
-                SceneHierarchyRef.SetScenesExpanded(sceneHierarchy,
-                    new List<string> { SceneManager.GetActiveScene().name });
+                SceneHierarchyRef.SetScenesExpanded(sceneHierarchy, new List<string> { SceneManager.GetActiveScene().name });
             }
         }
 
@@ -29,7 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             EditorWindow hierarchyWindow = SceneHierarchyWindowRef.GetLastInteractedHierarchy();
             if (hierarchyWindow == null) return false;
-
+            
             object sceneHierarchy = SceneHierarchyWindowRef.GetSceneHierarchy(hierarchyWindow);
             if (sceneHierarchy == null) return false;
 

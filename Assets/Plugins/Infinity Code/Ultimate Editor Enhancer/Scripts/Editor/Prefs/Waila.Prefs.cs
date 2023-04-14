@@ -17,16 +17,12 @@ namespace InfinityCode.UltimateEditorEnhancer
 
 #if !UNITY_EDITOR_OSX
         public static EventModifiers wailaShowNameUnderCursorModifiers = EventModifiers.Control;
-
-        public static EventModifiers wailaShowAllNamesUnderCursorModifiers =
-            EventModifiers.Control | EventModifiers.Shift;
-
+        public static EventModifiers wailaShowAllNamesUnderCursorModifiers = EventModifiers.Control | EventModifiers.Shift;
         public static KeyCode wailaSmartSelectionKeyCode = KeyCode.Space;
         public static EventModifiers wailaSmartSelectionModifiers = EventModifiers.Control | EventModifiers.Shift;
 #else
         public static EventModifiers wailaShowNameUnderCursorModifiers = EventModifiers.Command;
-        public static EventModifiers wailaShowAllNamesUnderCursorModifiers =
- EventModifiers.Command | EventModifiers.Shift;
+        public static EventModifiers wailaShowAllNamesUnderCursorModifiers = EventModifiers.Command | EventModifiers.Shift;
         public static KeyCode wailaSmartSelectionKeyCode = KeyCode.Space;
         public static EventModifiers wailaSmartSelectionModifiers = EventModifiers.Command | EventModifiers.Shift;
 #endif
@@ -52,6 +48,23 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -50; }
             }
 
+            public override void Draw()
+            {
+                waila = EditorGUILayout.ToggleLeft("Waila (What Am I Looking At)", waila);
+                EditorGUI.indentLevel++;
+
+                EditorGUI.BeginDisabledGroup(!waila);
+
+                DrawFieldWithModifiers("Show Name Under Cursor", ref wailaShowNameUnderCursor, ref wailaShowNameUnderCursorModifiers, labelWidth + 40);
+                DrawFieldWithModifiers("Show All Names Under Cursor", ref wailaShowAllNamesUnderCursor, ref wailaShowAllNamesUnderCursorModifiers, labelWidth + 40);
+                DrawFieldWithHotKey("Smart Selection", ref wailaSmartSelection, ref wailaSmartSelectionKeyCode, ref wailaSmartSelectionModifiers);
+                wailaSmartSelectionStyle = (SmartSelectionStyle)EditorGUILayout.EnumPopup("Smart Selection Style", wailaSmartSelectionStyle);
+
+                EditorGUI.indentLevel--;
+
+                EditorGUI.EndDisabledGroup();
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!waila) return new Shortcut[0];
@@ -60,44 +73,20 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (wailaShowNameUnderCursor)
                 {
-                    shortcuts.Add(new Shortcut("Show Name Of GameObject Under Cursor", "Scene View",
-                        wailaShowNameUnderCursorModifiers));
+                    shortcuts.Add(new Shortcut("Show Name Of GameObject Under Cursor", "Scene View", wailaShowNameUnderCursorModifiers));
                 }
 
                 if (wailaShowAllNamesUnderCursor)
                 {
-                    shortcuts.Add(new Shortcut("Show Names Of All GameObject Under Cursor", "Scene View",
-                        wailaShowAllNamesUnderCursorModifiers));
+                    shortcuts.Add(new Shortcut("Show Names Of All GameObject Under Cursor", "Scene View", wailaShowAllNamesUnderCursorModifiers));
                 }
 
                 if (wailaSmartSelection)
                 {
-                    shortcuts.Add(new Shortcut("Start Smart Selection", "Scene View", wailaSmartSelectionModifiers,
-                        wailaSmartSelectionKeyCode));
+                    shortcuts.Add(new Shortcut("Start Smart Selection", "Scene View", wailaSmartSelectionModifiers, wailaSmartSelectionKeyCode));
                 }
 
                 return shortcuts;
-            }
-
-            public override void Draw()
-            {
-                waila = EditorGUILayout.ToggleLeft("Waila (What Am I Looking At)", waila);
-                EditorGUI.indentLevel++;
-
-                EditorGUI.BeginDisabledGroup(!waila);
-
-                DrawFieldWithModifiers("Show Name Under Cursor", ref wailaShowNameUnderCursor,
-                    ref wailaShowNameUnderCursorModifiers, labelWidth + 40);
-                DrawFieldWithModifiers("Show All Names Under Cursor", ref wailaShowAllNamesUnderCursor,
-                    ref wailaShowAllNamesUnderCursorModifiers, labelWidth + 40);
-                DrawFieldWithHotKey("Smart Selection", ref wailaSmartSelection, ref wailaSmartSelectionKeyCode,
-                    ref wailaSmartSelectionModifiers);
-                wailaSmartSelectionStyle =
-                    (SmartSelectionStyle)EditorGUILayout.EnumPopup("Smart Selection Style", wailaSmartSelectionStyle);
-
-                EditorGUI.indentLevel--;
-
-                EditorGUI.EndDisabledGroup();
             }
         }
     }

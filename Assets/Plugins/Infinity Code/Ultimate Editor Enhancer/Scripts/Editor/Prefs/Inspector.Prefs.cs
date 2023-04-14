@@ -19,9 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool hideEmptyHelpButton = true;
         public static bool hidePresetButton = false;
         public static bool inspectorBar = true;
-
         public static bool inspectorBarShowMaterials = false;
-
         //public static bool inspectorBarRelatedComponents = true;
         public static bool nestedEditors = true;
         public static NestedEditorSide nestedEditorsSide = NestedEditorSide.right;
@@ -63,9 +61,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                 _expandLongTextFields = EditorGUILayout.ToggleLeft("Expand Long Text Fields", _expandLongTextFields);
 
                 DrawInspectorBar();
-
+                
                 emptyInspector = EditorGUILayout.ToggleLeft("Items On Empty Inspector", emptyInspector);
-
+                
                 DrawNestedEditor();
 
                 objectFieldSelector = EditorGUILayout.ToggleLeft("Object Field Selector", objectFieldSelector);
@@ -93,14 +91,12 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             private static void DrawExtraHeaderButtons()
             {
-                componentExtraHeaderButtons =
-                    EditorGUILayout.ToggleLeft("Extra Header Buttons", componentExtraHeaderButtons);
+                componentExtraHeaderButtons = EditorGUILayout.ToggleLeft("Extra Header Buttons", componentExtraHeaderButtons);
                 EditorGUI.BeginDisabledGroup(!componentExtraHeaderButtons);
                 EditorGUI.indentLevel++;
                 boxColliderDetect = EditorGUILayout.ToggleLeft("Box Collider Detect Size", boxColliderDetect);
                 saveComponentRuntime = EditorGUILayout.ToggleLeft("Save Component At Runtime", saveComponentRuntime);
-                transformInspectorGlobalValues =
-                    EditorGUILayout.ToggleLeft("Transform Global Values", transformInspectorGlobalValues);
+                transformInspectorGlobalValues = EditorGUILayout.ToggleLeft("Transform Global Values", transformInspectorGlobalValues);
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
             }
@@ -124,11 +120,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.indentLevel++;
                 EditorGUI.BeginDisabledGroup(!nestedEditors);
 
-                nestedEditorsSide = (NestedEditorSide)EditorGUILayout.EnumPopup("Side", nestedEditorsSide);
+                nestedEditorsSide = (NestedEditorSide) EditorGUILayout.EnumPopup("Side", nestedEditorsSide);
 
                 EditorGUI.BeginChangeCheck();
-                nestedEditorInReorderableList =
-                    EditorGUILayout.ToggleLeft("Show In Reorderable List", nestedEditorInReorderableList);
+                nestedEditorInReorderableList = EditorGUILayout.ToggleLeft("Show In Reorderable List", nestedEditorInReorderableList);
                 if (EditorGUI.EndChangeCheck())
                 {
                     ReorderableListInterceptor.Refresh();

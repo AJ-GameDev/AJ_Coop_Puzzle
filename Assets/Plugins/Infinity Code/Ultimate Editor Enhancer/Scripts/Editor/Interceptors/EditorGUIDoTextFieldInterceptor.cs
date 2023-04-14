@@ -58,9 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
             bool passwordField
         )
         {
-            if (OnPrefix != null)
-                OnPrefix(editor, id, ref position, ref text, style, allowedletters, ref changed, reset, multiline,
-                    passwordField);
+            if (OnPrefix != null) OnPrefix(editor, id, ref position, ref text, style, allowedletters, ref changed, reset, multiline, passwordField);
         }
 
         private static void DoTextFieldPostfix(
@@ -78,8 +76,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         {
             if (OnPostfix != null)
             {
-                OnPostfix(editor, id, ref position, ref __result, style, allowedletters, ref changed, reset, multiline,
-                    passwordField);
+                OnPostfix(editor, id, ref position, ref __result, style, allowedletters, ref changed, reset, multiline, passwordField);
             }
         }
     }

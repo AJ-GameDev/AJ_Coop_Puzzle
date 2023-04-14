@@ -18,8 +18,8 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_doListElementsMethod == null)
                 {
-                    _doListElementsMethod = type.GetMethod("DoListElements", Reflection.InstanceLookup, null,
-                        new[]
+                    _doListElementsMethod = type.GetMethod("DoListElements", Reflection.InstanceLookup, null, 
+                        new []
                         {
                             typeof(Rect),
 #if UNITY_2020_2_OR_NEWER
@@ -27,7 +27,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 #endif
                         }, null);
                 }
-
                 return _doListElementsMethod;
             }
         }
@@ -44,8 +43,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_invalidateCacheMethod == null)
-                    _invalidateCacheMethod = type.GetMethod("InvalidateCache", Reflection.InstanceLookup);
+                if (_invalidateCacheMethod == null) _invalidateCacheMethod = type.GetMethod("InvalidateCache", Reflection.InstanceLookup);
                 return _invalidateCacheMethod;
             }
         }
@@ -56,8 +54,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_clearCacheMethod == null) _clearCacheMethod =
- type.GetMethod("ClearCache", Reflection.InstanceLookup);
+                if (_clearCacheMethod == null) _clearCacheMethod = type.GetMethod("ClearCache", Reflection.InstanceLookup);
                 return _clearCacheMethod;
             }
         }

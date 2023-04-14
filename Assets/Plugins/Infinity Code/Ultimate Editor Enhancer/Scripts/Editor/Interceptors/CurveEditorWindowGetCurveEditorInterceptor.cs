@@ -9,8 +9,7 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class
-        CurveEditorWindowGetCurveEditorInterceptor : StatedInterceptor<CurveEditorWindowGetCurveEditorInterceptor>
+    public class CurveEditorWindowGetCurveEditorInterceptor : StatedInterceptor<CurveEditorWindowGetCurveEditorInterceptor>
     {
         public static Func<EditorWindow, Rect> OnGetCurveEditorRect;
 

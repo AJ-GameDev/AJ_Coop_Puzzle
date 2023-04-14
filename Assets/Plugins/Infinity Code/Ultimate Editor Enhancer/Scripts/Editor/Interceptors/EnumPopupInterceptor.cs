@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class EnumPopupInterceptor : StatedInterceptor<EnumPopupInterceptor>
+    public class EnumPopupInterceptor: StatedInterceptor<EnumPopupInterceptor>
     {
         protected override MethodInfo originalMethod
         {
@@ -50,16 +50,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                         {
                             object instance = Activator.CreateInstance(PopupCallbackInfoRef.type, controlID);
                             PopupCallbackInfoRef.SetInstance(instance);
-                            FlatSelectorWindow.Show(position, popupValues, EditorGUI.showMixedValue ? -1 : selected)
-                                .OnSelect += i =>
-                            {
-                                PopupCallbackInfoRef.GetSetEnumValueDelegate(instance).Invoke(null, null, i);
-                            };
+                            FlatSelectorWindow.Show(position, popupValues, EditorGUI.showMixedValue ? -1 : selected).OnSelect += i => { PopupCallbackInfoRef.GetSetEnumValueDelegate(instance).Invoke(null, null, i); };
                             GUIUtility.keyboardControl = controlID;
                             e.Use();
                         }
                     }
-
                     break;
                 case EventType.KeyDown:
                     if (MainActionKeyForControl(e, controlID))
@@ -73,15 +68,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
                         {
                             object instance = Activator.CreateInstance(PopupCallbackInfoRef.type, controlID);
                             PopupCallbackInfoRef.SetInstance(instance);
-                            FlatSelectorWindow.Show(position, popupValues, EditorGUI.showMixedValue ? -1 : selected)
-                                .OnSelect += i =>
-                            {
-                                PopupCallbackInfoRef.GetSetEnumValueDelegate(instance).Invoke(null, null, i);
-                            };
+                            FlatSelectorWindow.Show(position, popupValues, EditorGUI.showMixedValue ? -1 : selected).OnSelect += i => { PopupCallbackInfoRef.GetSetEnumValueDelegate(instance).Invoke(null, null, i); };
                             e.Use();
                         }
                     }
-
                     break;
             }
         }
@@ -90,9 +80,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         {
             if (GUIUtility.keyboardControl != controlId) return false;
             bool flag = e.alt || e.shift || e.command || e.control;
-            return e.type == EventType.KeyDown &&
-                   (e.keyCode == KeyCode.Space || e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter) &&
-                   !flag;
+            return e.type == EventType.KeyDown && (e.keyCode == KeyCode.Space || e.keyCode == KeyCode.Return || e.keyCode == KeyCode.KeypadEnter) && !flag;
         }
     }
 }

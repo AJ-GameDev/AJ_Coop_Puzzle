@@ -34,16 +34,6 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static Plane plane2D;
         private static Plane plane3D;
 
-        static SceneViewManager()
-        {
-            rectElements = new Dictionary<int, VisualElement>();
-
-            SceneView.beforeSceneGui += SceneGUI;
-
-            plane3D = new Plane(Vector3.up, Vector3.zero);
-            plane2D = new Plane(Vector3.back, Vector3.zero);
-        }
-
         public static GameObject lastGameObjectUnderCursor
         {
             get { return _lastGameObjectUnderCursor; }
@@ -67,6 +57,16 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static Vector3 lastNormal
         {
             get { return _lastNormal; }
+        }
+
+        static SceneViewManager()
+        {
+            rectElements = new Dictionary<int, VisualElement>();
+
+            SceneView.beforeSceneGui += SceneGUI;
+
+            plane3D = new Plane(Vector3.up, Vector3.zero);
+            plane2D = new Plane(Vector3.back, Vector3.zero);
         }
 
         public static void AddListener(Action<SceneView> invoke, float weight = 0, bool late = false)
@@ -105,8 +105,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 #if !UNITY_2021_2_OR_NEWER
             Rect rect = view.position;
             rect.yMin += 20;
-            if (UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null) rect.yMax
- -= 25;
+            if (UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null) rect.yMax -= 25;
             return rect;
 #else
 
@@ -186,8 +185,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 Selection.activeGameObject = HandleUtility.PickGameObject(e.mousePosition, false);
             }
 
-            if (Prefs.contextMenuOnRightClick && (e.modifiers == Prefs.rightClickModifiers ||
-                                                  e.modifiers == Prefs.pickGameObjectModifiers))
+            if (Prefs.contextMenuOnRightClick && (e.modifiers == Prefs.rightClickModifiers || e.modifiers == Prefs.pickGameObjectModifiers))
             {
 #if !UNITY_2021_1
                 Vector2 position = e.mousePosition;
@@ -208,7 +206,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     if (listeners[i].Invoke == invoke) listeners.RemoveAt(i);
                 }
             }
-
             if (lateListeners != null)
             {
                 for (int i = lateListeners.Count - 1; i >= 0; i--)
@@ -231,7 +228,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Log.Add(exception);
                 }
-
                 OnNextGUI = null;
             }
 
@@ -279,8 +275,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 MeshFilter meshFilter = _lastGameObjectUnderCursor.GetComponent<MeshFilter>();
                 RaycastHit hit;
 
-                if (meshFilter != null && meshFilter.sharedMesh != null && HandleUtilityRef.IntersectRayMesh(_screenRay,
-                        meshFilter.sharedMesh, meshFilter.transform.localToWorldMatrix, out hit))
+                if (meshFilter != null && meshFilter.sharedMesh != null && HandleUtilityRef.IntersectRayMesh(_screenRay, meshFilter.sharedMesh, meshFilter.transform.localToWorldMatrix, out hit))
                 {
                     _lastWorldPosition = hit.point;
                     _lastNormal = hit.normal;
@@ -301,8 +296,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                         RectTransform rectTransform = _lastGameObjectUnderCursor.GetComponent<RectTransform>();
                         if (rectTransform != null)
                         {
-                            RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, pixelCoordinate,
-                                view.camera, out _lastWorldPosition);
+                            RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, pixelCoordinate, view.camera, out _lastWorldPosition);
                             _lastNormal = Vector3.forward;
                         }
                     }

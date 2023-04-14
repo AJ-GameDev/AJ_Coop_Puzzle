@@ -70,8 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnBrowserPrefab(string assetPath)
         {
-            GameObject go =
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
+            GameObject go = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
             Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
             PlaceObject(go);
         }
@@ -109,10 +108,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             RectTransform rectTransform = go.GetComponent<RectTransform>();
             Vector2 sizeDelta = rectTransform != null ? rectTransform.sizeDelta : Vector2.zero;
-            bool isDefaultTarget = (e.modifiers & EventModifiers.Control) == 0 &&
-                                   (e.modifiers & EventModifiers.Command) == 0;
-            CreateBrowserTarget target =
-                isDefaultTarget ? Prefs.createBrowserDefaultTarget : Prefs.createBrowserAlternativeTarget;
+            bool isDefaultTarget = (e.modifiers & EventModifiers.Control) == 0 && (e.modifiers & EventModifiers.Command) == 0;
+            CreateBrowserTarget target = isDefaultTarget ? Prefs.createBrowserDefaultTarget : Prefs.createBrowserAlternativeTarget;
 
             if ((target == CreateBrowserTarget.sibling || target == CreateBrowserTarget.child) && parent != null)
             {
@@ -131,7 +128,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 }
                 else parent = null;
             }
-
             bool allowDown = true;
             bool useCanvas = parent != null && parent.GetComponent<RectTransform>() != null;
             bool hasRectTransform = rectTransform != null;
@@ -178,10 +174,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (useCanvas && rectTransform != null)
             {
                 Vector3 pos = rectTransform.localPosition;
-                if (Math.Abs(rectTransform.anchorMin.x) < float.Epsilon &&
-                    Math.Abs(rectTransform.anchorMax.x - 1) < float.Epsilon) pos.x = 0;
-                if (Math.Abs(rectTransform.anchorMin.y) < float.Epsilon &&
-                    Math.Abs(rectTransform.anchorMax.y - 1) < float.Epsilon) pos.y = 0;
+                if (Math.Abs(rectTransform.anchorMin.x) < float.Epsilon && Math.Abs(rectTransform.anchorMax.x - 1) < float.Epsilon) pos.x = 0;
+                if (Math.Abs(rectTransform.anchorMin.y) < float.Epsilon && Math.Abs(rectTransform.anchorMax.y - 1) < float.Epsilon) pos.y = 0;
 
                 rectTransform.localPosition = pos;
                 rectTransform.sizeDelta = sizeDelta;

@@ -13,13 +13,14 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         public abstract class StandalonePrefManager : PrefManager
         {
+
         }
 
 
-        public abstract class StandalonePrefManager<T> : StandalonePrefManager where T : StandalonePrefManager<T>
+        public abstract class StandalonePrefManager<T>: StandalonePrefManager where T: StandalonePrefManager<T>
         {
-            private static StandalonePrefManager<T> _instance;
             private EditorWindow _settingsWindow;
+            private static StandalonePrefManager<T> _instance;
 
             private static StandalonePrefManager<T> instance
             {
@@ -34,8 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 get
                 {
-                    if (_settingsWindow == null)
-                        _settingsWindow = EditorWindow.GetWindow(ProjectSettingsWindowRef.type);
+                    if (_settingsWindow == null) _settingsWindow = EditorWindow.GetWindow(ProjectSettingsWindowRef.type);
                     return _settingsWindow;
                 }
             }
@@ -51,11 +51,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     throw e;
                 }
-                catch (Exception e)
+                catch (Exception e) 
                 {
                     Log.Add(e);
                 }
-
                 if (EditorGUI.EndChangeCheck())
                 {
                     Save();

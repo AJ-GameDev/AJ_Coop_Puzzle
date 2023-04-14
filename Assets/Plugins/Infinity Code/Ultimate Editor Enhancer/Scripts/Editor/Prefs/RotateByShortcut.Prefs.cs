@@ -18,6 +18,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return new[] { "Rotate By Shortcut" }; }
             }
 
+            public override void Draw()
+            {
+                rotateByShortcut = EditorGUILayout.ToggleLeft("Rotate By Shortcut", rotateByShortcut);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!rotateByShortcut) return new Shortcut[0];
@@ -35,14 +40,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                     new Shortcut("Rotate Selection From Myself -90°", "Scene View", modifiers, KeyCode.UpArrow),
                     new Shortcut("Rotate Selection To Myself +90°", "Scene View", modifiers, KeyCode.DownArrow),
                     new Shortcut("Rotate Selection By View Clockwise -90°", "Scene View", modifiers, KeyCode.PageUp),
-                    new Shortcut("Rotate Selection By View Counterclockwise +90°", "Scene View", modifiers,
-                        KeyCode.PageDown),
+                    new Shortcut("Rotate Selection By View Counterclockwise +90°", "Scene View", modifiers, KeyCode.PageDown),
                 };
-            }
-
-            public override void Draw()
-            {
-                rotateByShortcut = EditorGUILayout.ToggleLeft("Rotate By Shortcut", rotateByShortcut);
             }
         }
     }

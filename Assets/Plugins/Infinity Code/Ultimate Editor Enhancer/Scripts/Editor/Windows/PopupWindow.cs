@@ -10,7 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     [Serializable]
     public abstract class PopupWindow : EditorWindow
     {
-        private static Texture2D _background;
+        private static Texture2D _background; 
 
         protected static Texture2D background
         {

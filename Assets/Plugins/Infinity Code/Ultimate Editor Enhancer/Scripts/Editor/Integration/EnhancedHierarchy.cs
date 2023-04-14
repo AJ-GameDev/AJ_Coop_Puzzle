@@ -9,14 +9,16 @@ using UnityEngine;
 namespace InfinityCode.UltimateEditorEnhancer.Integration
 {
     [InitializeOnLoad]
-    public class EnhancedHierarchy : EditorWindow
+    public class EnhancedHierarchy: EditorWindow
     {
         const string PrefKey = Prefs.Prefix + "EnhancedHierarchy";
-        private static FieldInfo rightMarginField;
-        private static FieldInfo disableNativeIconField;
 
         private bool disableErrorIcons = true;
         private bool hideNativeIcons = true;
+        private static FieldInfo rightMarginField;
+        private static FieldInfo disableNativeIconField;
+
+        public static bool isPresent { get; }
 
         static EnhancedHierarchy()
         {
@@ -36,15 +38,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
             EditorApplication.delayCall += ResolveConflicts;
         }
 
-        public static bool isPresent { get; }
+        public static int GetRightMargin()
+        {
+            if (!isPresent) return 0;
+
+            object rm = rightMarginField.GetValue(null);
+            object wrapper = Reflection.GetFieldValue(rm, "wrapper");
+            return (int) Reflection.GetFieldValue(wrapper, "value");
+        }
 
         private void OnGUI()
         {
-            EditorGUILayout.HelpBox(
-                "Ultimate Editor Enhancer has detected the presence of Enhanced Hierarchy in the project.\nFor the best work of both assets together, we recommend the following changes in the settings:",
-                MessageType.Warning);
-            disableErrorIcons =
-                EditorGUILayout.ToggleLeft("Ultimate Editor Enhancer / Show Error Icons - OFF", disableErrorIcons);
+            EditorGUILayout.HelpBox("Ultimate Editor Enhancer has detected the presence of Enhanced Hierarchy in the project.\nFor the best work of both assets together, we recommend the following changes in the settings:", MessageType.Warning);
+            disableErrorIcons = EditorGUILayout.ToggleLeft("Ultimate Editor Enhancer / Show Error Icons - OFF", disableErrorIcons);
             hideNativeIcons = EditorGUILayout.ToggleLeft("Enhanced Hierarchy / Hide Native Icon - ON", hideNativeIcons);
 
             if (GUILayout.Button("Apply"))
@@ -64,15 +70,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
             }
         }
 
-        public static int GetRightMargin()
-        {
-            if (!isPresent) return 0;
-
-            object rm = rightMarginField.GetValue(null);
-            object wrapper = Reflection.GetFieldValue(rm, "wrapper");
-            return (int)Reflection.GetFieldValue(wrapper, "value");
-        }
-
         public static void OpenWindow()
         {
             EnhancedHierarchy wnd = GetWindow<EnhancedHierarchy>(true);
@@ -82,7 +79,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
             rect.height = 110;
             rect.x = (Screen.currentResolution.width - rect.width) / 2;
             rect.y = (Screen.currentResolution.height - rect.height) / 2;
-            wnd.position = rect;
+            wnd.position = rect; 
         }
 
         private static void ResolveConflicts()

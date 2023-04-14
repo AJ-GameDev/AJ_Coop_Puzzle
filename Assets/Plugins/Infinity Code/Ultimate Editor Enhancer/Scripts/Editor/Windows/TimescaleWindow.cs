@@ -50,13 +50,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     float v;
                     if (float.TryParse(s, out v))
                     {
-                        if (v < 0)
-                            EditorUtility.DisplayDialog("Error",
-                                "TimeScale is out of range. The value cannot be less than 0.0.", "OK");
-                        else if (v > 100)
-                            EditorUtility.DisplayDialog("Error",
-                                "TimeScale is out of range. When running in the editor this value needs to be less than or equal to 100.0",
-                                "OK");
+                        if (v < 0) EditorUtility.DisplayDialog("Error", "TimeScale is out of range. The value cannot be less than 0.0.", "OK");
+                        else if (v > 100) EditorUtility.DisplayDialog("Error", "TimeScale is out of range. When running in the editor this value needs to be less than or equal to 100.0", "OK");
                         else Time.timeScale = v;
                     }
                 });

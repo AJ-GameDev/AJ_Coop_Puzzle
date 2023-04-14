@@ -19,8 +19,8 @@ namespace InfinityCode.UltimateEditorEnhancer
         public class FavoriteWindowsManager : StandalonePrefManager<FavoriteWindowsManager>
         {
             private ReorderableList reorderableList;
-            private Vector2 scrollPositon;
             private bool waitWindowChanged;
+            private Vector2 scrollPositon;
 
             public static JsonArray json
             {
@@ -38,8 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     if (ReferenceManager.favoriteWindows.Count > 0)
                     {
-                        if (!EditorUtility.DisplayDialog("Import Favorite Windows",
-                                "Favorite Windows already contain items", "Replace", "Ignore")) return;
+                        if (!EditorUtility.DisplayDialog("Import Favorite Windows", "Favorite Windows already contain items", "Replace", "Ignore")) return;
                     }
 
                     ReferenceManager.favoriteWindows.Clear();
@@ -51,13 +50,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                         item.className = ji.Value<string>("className");
                         if (migrationReplace)
                         {
-                            item.className = item.className.Replace("InfinityCode.uContextPro",
-                                    "InfinityCode.UltimateEditorEnhancer")
+                            item.className = item.className.Replace("InfinityCode.uContextPro", "InfinityCode.UltimateEditorEnhancer")
                                 .Replace("InfinityCode.uContext", "InfinityCode.UltimateEditorEnhancer")
                                 .Replace("uContext-Editor", "UltimateEditorEnhancer-Editor")
                                 .Replace("uContext-Pro-Editor", "UltimateEditorEnhancer-Editor");
                         }
-
                         ReferenceManager.favoriteWindows.Add(item);
                     }
                 }
@@ -85,8 +82,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (reorderableList == null)
                 {
-                    reorderableList = new ReorderableList(ReferenceManager.favoriteWindows, typeof(FavoriteWindowItem),
-                        true, true, true, true);
+                    reorderableList = new ReorderableList(ReferenceManager.favoriteWindows, typeof(FavoriteWindowItem), true, true, true, true);
                     reorderableList.drawHeaderCallback += DrawHeader;
                     reorderableList.drawElementCallback += DrawElement;
                     reorderableList.onAddCallback += AddItem;
@@ -97,16 +93,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-                favoriteWindowsInContextMenu =
-                    EditorGUILayout.ToggleLeft("Favorite Windows In Context Menu", favoriteWindowsInContextMenu);
+                favoriteWindowsInContextMenu = EditorGUILayout.ToggleLeft("Favorite Windows In Context Menu", favoriteWindowsInContextMenu);
                 reorderableList.DoLayoutList();
 
                 EditorGUILayout.EndScrollView();
 
                 if (waitWindowChanged)
                 {
-                    EditorGUILayout.HelpBox("Set the focus on the window you want to add to the favorites.",
-                        MessageType.Info);
+                    EditorGUILayout.HelpBox("Set the focus on the window you want to add to the favorites.", MessageType.Info);
 
                     if (GUILayout.Button("Stop Pick"))
                     {

@@ -10,8 +10,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     [InitializeOnLoad]
     public static class JumpToPoint
     {
-        public const double MAX_SHIFT_DELAY = 0.3;
         public static double lastShiftPressed;
+        public const double MAX_SHIFT_DELAY = 0.3;
 
         static JumpToPoint()
         {
@@ -59,8 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (!isJump && Prefs.alternativeJumpShortcut && EditorWindow.mouseOverWindow is SceneView)
             {
-                bool isAlternativeShortcut = e.type == EventType.KeyUp && !e.control && !e.command &&
-                                             (e.keyCode == KeyCode.LeftShift || e.keyCode == KeyCode.RightShift);
+                bool isAlternativeShortcut = e.type == EventType.KeyUp && !e.control && !e.command && (e.keyCode == KeyCode.LeftShift || e.keyCode == KeyCode.RightShift);
                 if (isAlternativeShortcut)
                 {
                     double timeDelta = EditorApplication.timeSinceStartup - lastShiftPressed;

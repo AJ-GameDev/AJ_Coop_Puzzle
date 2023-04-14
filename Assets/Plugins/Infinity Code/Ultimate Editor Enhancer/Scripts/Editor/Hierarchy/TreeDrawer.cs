@@ -14,11 +14,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
         private static Texture2D _lineIcon;
         private static Texture2D _middleIcon;
 
-        static TreeDrawer()
-        {
-            HierarchyItemDrawer.Register("TreeDrawer", DrawTree);
-        }
-
         public static Texture2D endIcon
         {
             get
@@ -47,6 +42,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             }
         }
 
+        static TreeDrawer()
+        {
+            HierarchyItemDrawer.Register("TreeDrawer", DrawTree);
+        }
+
         private static void DrawTree(HierarchyItem item)
         {
             if (!Prefs.hierarchyTree || Event.current.type != EventType.Repaint) return;
@@ -68,13 +68,11 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
             if (parent.childCount == 1 || transform.GetSiblingIndex() == parent.childCount - 1)
             {
-                if (endIcon != null)
-                    GUI.DrawTexture(rect, endIcon, ScaleMode.ScaleToFit, true, 0, color, borderWidths, Vector4.zero);
+                if (endIcon != null) GUI.DrawTexture(rect, endIcon, ScaleMode.ScaleToFit, true, 0, color, borderWidths, Vector4.zero);
             }
             else
             {
-                if (middleIcon != null)
-                    GUI.DrawTexture(rect, middleIcon, ScaleMode.ScaleToFit, true, 0, color, borderWidths, Vector4.zero);
+                if (middleIcon != null) GUI.DrawTexture(rect, middleIcon, ScaleMode.ScaleToFit, true, 0, color, borderWidths, Vector4.zero);
             }
 
             while (parent != null && parent.parent != null)
@@ -84,9 +82,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 if (parent.GetSiblingIndex() < parent.parent.childCount - 1)
                 {
                     color = GetColor(item, parent);
-                    if (lineIcon != null)
-                        GUI.DrawTexture(rect, lineIcon, ScaleMode.ScaleToFit, true, 0, color, borderWidths,
-                            Vector4.zero);
+                    if (lineIcon != null) GUI.DrawTexture(rect, lineIcon, ScaleMode.ScaleToFit, true, 0, color, borderWidths, Vector4.zero);
                 }
 
                 parent = parent.parent;
@@ -107,7 +103,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             {
                 return GetColorFromTexture(textureName);
             }
-
+            
             while (t != null)
             {
                 GameObject go = t.gameObject;

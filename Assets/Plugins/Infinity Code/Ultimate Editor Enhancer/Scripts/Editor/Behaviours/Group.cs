@@ -12,7 +12,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
     public static class Group
     {
         public const string COLLECTION_TAG = "Collection";
-        private const int DIALOG_HEIGHT = 105;
 
         private static string defaultName = "Group";
         private static GameObject[] _targets;
@@ -20,23 +19,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static bool createCollection = false;
         private static int align = 0;
         private static Transform parent;
+        private const int DIALOG_HEIGHT = 105;
 
-        private static GUIContent[] singleAlign =
+        private static GUIContent[] singleAlign = 
         {
-            new GUIContent("Original Position"),
-            new GUIContent("Center Position"),
+            new GUIContent("Original Position"), 
+            new GUIContent("Center Position"), 
             new GUIContent("Zero Local Position")
         };
-
-        private static int[] singleAlignValues = { 2, 0, 1 };
-
+        private static int[] singleAlignValues = {2, 0, 1};
         private static GUIContent[] multipleAlign =
         {
-            new GUIContent("Center Position"),
+            new GUIContent("Center Position"), 
             new GUIContent("Zero Local Position")
         };
-
-        private static int[] multipleAlignValues = { 0, 1 };
+        private static int[] multipleAlignValues = { 0, 1};
         private static GUIContent[] alignContents;
         private static int[] alignValues;
 
@@ -72,8 +69,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             if (p1 == null || p2 == null) return null;
             if (p1 == p2) return p1;
 
-            List<Transform> rp1 = new List<Transform> { p1 };
-            List<Transform> rp2 = new List<Transform> { p2 };
+            List<Transform> rp1 = new List<Transform>{p1};
+            List<Transform> rp2 = new List<Transform>{p2};
 
             Transform tp1 = p1;
             Transform tp2 = p2;
@@ -126,7 +123,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             string name = defaultName;
             if (targets.Length == 1) name = targets[0].name + " Container";
 
-            dialog = InputDialog.Show("Enter name of GameObject", name, OnCreateGroup);
+            dialog = InputDialog.Show("Enter name of GameObject", name, OnCreateGroup); 
             dialog.OnClose += OnDialogClose;
             dialog.OnDrawExtra += OnDialogExtra;
             dialog.OnDrawLeftButtons += OnDrawLeftButtons;
@@ -154,7 +151,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 GameObjectUtils.SetCustomTag(go, COLLECTION_TAG);
                 go.AddComponent<FlattenCollection>();
             }
-
             Undo.RegisterCreatedObjectUndo(go, go.name);
 
             if (parent != null) Undo.SetTransformParent(go.transform, parent, go.name);

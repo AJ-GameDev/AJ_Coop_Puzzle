@@ -14,66 +14,25 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private const string SEARCHFIELD_NAME = "UEEFlatSelectorSearchTextField";
         private const int ITEM_HEIGHT = 16;
         private const int EXTRA_HEIGHT = 28;
-        private static FlatSelectorWindow instance;
-
-        private GUIContent[] contents;
-        private string filterText;
-        private bool ignoreItemSelect;
-        private List<int> items;
-        private ListView listView;
 
         public Action<int> OnSelect;
-        private bool resetSelection = true;
+
+        private GUIContent[] contents;
         private int selected;
+        private string filterText;
+        private bool resetSelection = true;
+        private ListView listView;
+        private static FlatSelectorWindow instance;
+        private List<int> items;
+        private bool ignoreItemSelect;
         private Texture selectedTexture;
 
         static FlatSelectorWindow()
         {
             EventManager.AddBinding(EventManager.ClosePopupEvent).OnInvoke += b =>
             {
-                if (instance != null) instance.Close();
+                if (instance != null) instance.Close(); 
             };
-        }
-
-        private void OnDestroy()
-        {
-            contents = null;
-            listView = null;
-            instance = null;
-            OnSelect = null;
-        }
-
-        private void OnGUI()
-        {
-            if (focusedWindow != this) Close();
-
-            Event e = Event.current;
-            if (e.type == EventType.KeyDown)
-            {
-                if (e.keyCode == KeyCode.Escape) Close();
-                else if (e.keyCode == KeyCode.DownArrow)
-                {
-                    ignoreItemSelect = true;
-                    e.Use();
-                    if (listView.selectedIndex == items.Count - 1) listView.selectedIndex = 0;
-                    else listView.selectedIndex++;
-                    ignoreItemSelect = false;
-                }
-                else if (e.keyCode == KeyCode.UpArrow)
-                {
-                    ignoreItemSelect = true;
-                    e.Use();
-                    if (listView.selectedIndex == 0 || listView.selectedIndex == -1)
-                        listView.selectedIndex = items.Count - 1;
-                    else listView.selectedIndex--;
-                    ignoreItemSelect = false;
-                }
-                else if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.Space || e.keyCode == KeyCode.KeypadEnter)
-                {
-                    if (listView.selectedIndex != -1 && OnSelect != null) OnSelect(items[listView.selectedIndex]);
-                    Close();
-                }
-            }
         }
 
         private void DrawFilterTextField()
@@ -148,10 +107,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Event e = Event.current;
                 if (e.type == EventType.KeyDown)
                 {
-                    if (e.keyCode != KeyCode.KeypadEnter && e.keyCode != KeyCode.Return &&
-                        e.keyCode != KeyCode.Space) return;
+                    if (e.keyCode != KeyCode.KeypadEnter && e.keyCode != KeyCode.Return && e.keyCode != KeyCode.Space) return;
                 }
-
                 if (OnSelect != null) OnSelect(items[listView.selectedIndex]);
                 Close();
             };
@@ -167,6 +124,47 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             ignoreItemSelect = true;
             listView.selectedIndex = selected;
             ignoreItemSelect = false;
+        }
+
+        private void OnDestroy()
+        {
+            contents = null;
+            listView = null;
+            instance = null;
+            OnSelect = null;
+        }
+
+        private void OnGUI()
+        {
+            if (focusedWindow != this) Close();
+
+            Event e = Event.current;
+            if (e.type == EventType.KeyDown)
+            {
+                if (e.keyCode == KeyCode.Escape) Close();
+                else if (e.keyCode == KeyCode.DownArrow)
+                {
+                    ignoreItemSelect = true;
+                    e.Use();
+                    if (listView.selectedIndex == items.Count - 1) listView.selectedIndex = 0;
+                    else listView.selectedIndex++;
+                    ignoreItemSelect = false;
+                }
+                else if (e.keyCode == KeyCode.UpArrow)
+                {
+                    ignoreItemSelect = true;
+                    e.Use();
+                    if (listView.selectedIndex == 0 || listView.selectedIndex == -1) listView.selectedIndex = items.Count - 1;
+                    else listView.selectedIndex--;
+                    ignoreItemSelect = false;
+                    
+                }
+                else if (e.keyCode == KeyCode.Return || e.keyCode == KeyCode.Space || e.keyCode == KeyCode.KeypadEnter)
+                {
+                    if (listView.selectedIndex != -1 && OnSelect != null) OnSelect(items[listView.selectedIndex]);
+                    Close();
+                }
+            }
         }
 
         public static FlatSelectorWindow Show(Rect rect, GUIContent[] contents, int selected)

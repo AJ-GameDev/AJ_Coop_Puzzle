@@ -1,6 +1,7 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -27,37 +28,25 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class HighlightManager : StandalonePrefManager<HighlightManager>, IHasShortcutPref
         {
+
             private const string highlightRowLabel = "Highlight Hierarchy Row";
 
             public override IEnumerable<string> keywords
             {
-                get
+                get { return new[]
                 {
-                    return new[]
-                    {
-                        "Highlighter",
-                        "Color",
-                        "Highlight On Waila",
-                        "Highlight On Hierarchy",
-                        "Hierarchy Row Color",
-                        "Highlight Hierarchy Row"
-                    };
-                }
+                    "Highlighter", 
+                    "Color", 
+                    "Highlight On Waila", 
+                    "Highlight On Hierarchy", 
+                    "Hierarchy Row Color", 
+                    "Highlight Hierarchy Row"
+                }; }
             }
 
             public override float order
             {
                 get { return -47; }
-            }
-
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!highlight || !highlightOnHierarchy) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Highlight GameObject In Scene View", "Hierarchy", highlightOnHierarchyModifiers)
-                };
             }
 
             public override void Draw()
@@ -69,16 +58,13 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 highlightColor = EditorGUILayout.ColorField("Renderer Color", highlightColor);
                 highlightUIColor = EditorGUILayout.ColorField("UI Color", highlightUIColor);
-                highlightHierarchyRowColor =
-                    EditorGUILayout.ColorField("Hierarchy Row Color", highlightHierarchyRowColor);
-
+                highlightHierarchyRowColor = EditorGUILayout.ColorField("Hierarchy Row Color", highlightHierarchyRowColor);
+                
                 highlightOnWaila = EditorGUILayout.ToggleLeft("Highlight On Waila", highlightOnWaila);
-                DrawFieldWithModifiers("Highlight On Hierarchy", ref highlightOnHierarchy,
-                    ref highlightOnHierarchyModifiers);
+                DrawFieldWithModifiers("Highlight On Hierarchy", ref highlightOnHierarchy, ref highlightOnHierarchyModifiers);
                 highlightHierarchyRow = EditorGUILayout.ToggleLeft(highlightRowLabel, highlightHierarchyRow);
 
-                highlightNoRenderer =
-                    EditorGUILayout.ToggleLeft("Highlight Objects Without Renderer", highlightNoRenderer);
+                highlightNoRenderer = EditorGUILayout.ToggleLeft("Highlight Objects Without Renderer", highlightNoRenderer);
                 EditorGUI.BeginDisabledGroup(!highlightNoRenderer);
                 EditorGUI.indentLevel++;
                 highlightNoRendererColor = EditorGUILayout.ColorField("Arrow Color", highlightNoRendererColor);
@@ -87,6 +73,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!highlight || !highlightOnHierarchy) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Highlight GameObject In Scene View", "Hierarchy", highlightOnHierarchyModifiers)
+                };
             }
         }
     }

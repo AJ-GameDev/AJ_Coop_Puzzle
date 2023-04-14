@@ -19,10 +19,8 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_addMenuItemsMethod == null)
                 {
-                    _addMenuItemsMethod = type.GetMethod("AddMenuItems", Reflection.InstanceLookup, null,
-                        new[] { typeof(SerializedProperty), typeof(GenericMenu) }, null);
+                    _addMenuItemsMethod = type.GetMethod("AddMenuItems", Reflection.InstanceLookup, null, new[] { typeof(SerializedProperty), typeof(GenericMenu) }, null);
                 }
-
                 return _addMenuItemsMethod;
             }
         }

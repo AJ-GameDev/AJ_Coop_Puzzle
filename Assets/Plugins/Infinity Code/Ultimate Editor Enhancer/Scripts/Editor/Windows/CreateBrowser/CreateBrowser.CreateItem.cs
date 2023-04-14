@@ -9,13 +9,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         internal class CreateItem : Item
         {
-            private static GUIContent plusIconContent;
             public string submenu;
+            private static GUIContent plusIconContent;
 
             public CreateItem(string label, string submenu)
             {
                 this.label = label;
                 this.submenu = submenu;
+                
             }
 
             protected override void InitContent()

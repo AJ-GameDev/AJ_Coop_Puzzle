@@ -10,8 +10,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 {
     public class ActionsLayout : MainLayoutItem<ActionsLayout, ActionItem>
     {
-        protected override void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal,
-            ref bool flipVertical)
+        protected override void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical)
         {
             rect = new Rect(position, Vector2.zero);
             foreach (ActionItem item in items)
@@ -30,8 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 
             if (rect.x % width < 11 + rect.width) offset.x = rect.width + 11 - rect.x % width;
 #if !UNITY_EDITOR_OSX
-            else if (flipHorizontal && rect.xMin % width + rect.width > width - 11)
-                offset.x = width - 11 - rect.xMin % width - rect.width;
+            else if (flipHorizontal && rect.xMin % width + rect.width > width - 11) offset.x = width - 11 - rect.xMin % width - rect.width;
 #endif
 
 #if !UNITY_EDITOR_OSX

@@ -16,9 +16,38 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             private static Dictionary<int, int> typeHashes;
             private static List<string> typeNames;
             private static List<string> nicifyNames;
-            private string _type;
 
             public Component component;
+            private string _type;
+
+            public GameObject gameObject
+            {
+                get => component.gameObject;
+            }
+
+            public override Object target
+            {
+                get => component;
+            }
+
+            public override string tooltip
+            {
+                get
+                {
+                    if (_tooltip == null)
+                    {
+                        _tooltip = GameObjectUtils.GetTransformPath(component.transform).Append(" (")
+                            .Append(ObjectNames.NicifyVariableName(component.GetType().Name)).Append(")").ToString();
+                    }
+
+                    return _tooltip;
+                }
+            }
+
+            public override string type
+            {
+                get => _type;
+            }
 
             public ComponentRecord(Component component)
             {
@@ -57,35 +86,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         gameObjectName + " " + nicifyName
                     };
                 }
-            }
-
-            public GameObject gameObject
-            {
-                get => component.gameObject;
-            }
-
-            public override Object target
-            {
-                get => component;
-            }
-
-            public override string tooltip
-            {
-                get
-                {
-                    if (_tooltip == null)
-                    {
-                        _tooltip = GameObjectUtils.GetTransformPath(component.transform).Append(" (")
-                            .Append(ObjectNames.NicifyVariableName(component.GetType().Name)).Append(")").ToString();
-                    }
-
-                    return _tooltip;
-                }
-            }
-
-            public override string type
-            {
-                get => _type;
             }
 
             private void GetNames(Type type, out string componentName, out string nicifyName)

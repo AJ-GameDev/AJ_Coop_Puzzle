@@ -9,10 +9,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     [Serializable]
     public class SceneHistoryItem : SearchableItem
     {
+        [NonSerialized]
+        public bool exists;
+
         public string name;
         public string path;
-
-        [NonSerialized] public bool exists;
 
         public void CheckExists()
         {

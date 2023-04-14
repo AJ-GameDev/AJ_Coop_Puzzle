@@ -8,30 +8,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public partial class ViewGallery
     {
-        internal class ViewStateItem : ViewItem
+        internal class ViewStateItem: ViewItem
         {
-            public bool is2D;
             public Vector3 pivot;
-            public bool renderUI = false;
-            public Quaternion rotation;
             public float size;
+            public Quaternion rotation;
             public string title;
-            public SceneView view;
             public ViewState viewState;
-
-            public ViewStateItem()
-            {
-            }
-
-            public ViewStateItem(ViewState viewState)
-            {
-                this.viewState = viewState;
-                pivot = viewState.pivot;
-                size = viewState.size;
-                rotation = viewState.rotation;
-                title = viewState.title;
-                is2D = viewState.is2D;
-            }
+            public bool is2D;
+            public SceneView view;
+            public bool renderUI = false;
 
             public override bool useInPreview
             {
@@ -54,6 +40,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public override string name
             {
                 get { return title; }
+            }
+
+            public ViewStateItem()
+            {
+
+            }
+
+            public ViewStateItem(ViewState viewState)
+            {
+                this.viewState = viewState;
+                pivot = viewState.pivot;
+                size = viewState.size;
+                rotation = viewState.rotation;
+                title = viewState.title;
+                is2D = viewState.is2D;
             }
 
             public override void PrepareMenu(GenericMenuEx menu)

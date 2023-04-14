@@ -30,7 +30,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static Vector3 GetSize()
+        public static Vector3 GetSize() 
         {
             return (Vector3)sizeProp.GetValue(null);
         }

@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -68,7 +69,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     accuracy = v;
                     return accuracy;
                 }
-
                 if (accuracy < v) accuracy = v;
             }
 
@@ -271,7 +271,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     _accuracy = v;
                     return _accuracy;
                 }
-
                 if (_accuracy < v) _accuracy = v;
             }
 

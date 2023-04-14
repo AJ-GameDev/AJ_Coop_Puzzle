@@ -9,6 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
     {
         public RequireSelectedAttribute()
         {
+
         }
 
         public override bool Validate()

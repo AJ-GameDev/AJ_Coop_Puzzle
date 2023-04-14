@@ -9,5 +9,6 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
     [CustomEditor(typeof(Component), true, isFallback = true)]
     public class ComponentEditor : Editor
     {
+
     }
 }

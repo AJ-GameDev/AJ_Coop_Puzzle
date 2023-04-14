@@ -30,12 +30,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static Action invokeItemAction;
         private static Rect rect;
 
-        static QuickAccess()
-        {
-            SceneViewManager.OnValidateOpenContextMenu += OnValidateOpenContextMenu;
-            SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.quickAccessBar, true);
-        }
-
         public static GUIStyle activeContentStyle
         {
             get
@@ -105,10 +99,15 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             get
             {
-                if (_collapseLineTexture == null)
-                    _collapseLineTexture = Resources.CreateSinglePixelTexture(0.3f, 0.8f, 0.3f, 0.6f);
+                if (_collapseLineTexture == null) _collapseLineTexture = Resources.CreateSinglePixelTexture(0.3f, 0.8f, 0.3f, 0.6f);
                 return _collapseLineTexture;
             }
+        }
+
+        static QuickAccess()
+        {
+            SceneViewManager.OnValidateOpenContextMenu += OnValidateOpenContextMenu;
+            SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.quickAccessBar, true);
         }
 
         public static void CheckActiveWindow()
@@ -120,7 +119,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         {
             if (activeWindow == null) return;
 
-            if (EditorMenu.allowCloseWindow) activeWindow.Close();
+            if (EditorMenu.allowCloseWindow) activeWindow.Close(); 
             activeWindow = null;
             activeWindowIndex = -1;
         }
@@ -137,8 +136,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             float minIntend = GetMinIntend();
             float maxIntend = Prefs.quickAccessBarIndentMax;
 
-            GUI.DrawTexture(new Rect(0, minIntend, rect.width, rect.height - minIntend - maxIntend), background,
-                ScaleMode.StretchToFill);
+            GUI.DrawTexture(new Rect(0, minIntend, rect.width, rect.height - minIntend - maxIntend), background, ScaleMode.StretchToFill);
         }
 
         private static void DrawCollapseArea(float minIntend, float maxIntend)
@@ -152,8 +150,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (e.type == EventType.Repaint)
             {
-                GUI.DrawTexture(new Rect(rect.width, minIntend, 3, rect.height - minIntend - maxIntend),
-                    collapseLineTexture, ScaleMode.StretchToFill);
+                GUI.DrawTexture(new Rect(rect.width, minIntend, 3, rect.height - minIntend - maxIntend), collapseLineTexture, ScaleMode.StretchToFill);
             }
             else if (e.type == EventType.MouseDown)
             {
@@ -203,8 +200,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 GUIStyle style = activeWindowIndex == index ? activeContentStyle : contentStyle;
                 int padding = Mathf.RoundToInt(rect.width / 2 * (1 - item.iconScale));
                 style.padding = new RectOffset(padding, padding, padding, padding);
-                ButtonEvent buttonEvent = GUILayoutUtils.Button(item.content, style, GUILayout.Width(width),
-                    GUILayout.Height(width));
+                ButtonEvent buttonEvent = GUILayoutUtils.Button(item.content, style, GUILayout.Width(width), GUILayout.Height(width));
                 if (buttonEvent == ButtonEvent.press)
                 {
                     if (e.button == 0)
@@ -254,6 +250,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
             catch
             {
+                
             }
 
             invokeItemAction = null;
@@ -272,7 +269,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     _visible = v;
                 }
             }
-
             if (!_visible) return;
 
             Rect viewRect = SceneViewManager.GetRect(sceneView);
@@ -293,8 +289,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     {
                         if (e.type == EventType.Repaint)
                         {
-                            GUI.DrawTexture(new Rect(0, minIntend, 3, rect.height - minIntend - maxIntend),
-                                collapseLineTexture, ScaleMode.StretchToFill);
+                            GUI.DrawTexture(new Rect(0, minIntend, 3, rect.height - minIntend - maxIntend), collapseLineTexture, ScaleMode.StretchToFill);
                         }
                         else if (e.type == EventType.MouseDown)
                         {
@@ -320,7 +315,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 {
                     Debug.LogException(exception);
                 }
-
                 GUILayout.EndArea();
 
                 DrawCollapseArea(minIntend, maxIntend);
@@ -329,6 +323,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
             catch
             {
+                
             }
         }
 

@@ -13,12 +13,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             get { return 950; }
         }
 
-        public bool Validate()
-        {
-            Updater.CheckNewVersionAvailable();
-            return Updater.hasNewVersion;
-        }
-
         protected override void Init()
         {
             guiContent = new GUIContent(Icons.updateAvailable, "Update Available");
@@ -27,6 +21,12 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
         public override void Invoke()
         {
             Updater.OpenWindow();
+        }
+
+        public bool Validate()
+        {
+            Updater.CheckNewVersionAvailable();
+            return Updater.hasNewVersion;
         }
     }
 }

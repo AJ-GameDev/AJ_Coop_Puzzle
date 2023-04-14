@@ -26,7 +26,6 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 go.transform.SetParent(active.transform.parent);
                 go.transform.SetSiblingIndex(active.transform.GetSiblingIndex());
             }
-
             Undo.RegisterCreatedObjectUndo(go, go.name);
             Selection.activeGameObject = go;
             return go;

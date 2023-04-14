@@ -19,8 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_getOriginalSourceOrVariantRootMethod == null)
                 {
-                    _getOriginalSourceOrVariantRootMethod = Reflection.GetMethod(type, "GetOriginalSourceOrVariantRoot",
-                        new[] { typeof(Object) }, Reflection.StaticLookup);
+                    _getOriginalSourceOrVariantRootMethod = Reflection.GetMethod(type, "GetOriginalSourceOrVariantRoot", new[] { typeof(Object) }, Reflection.StaticLookup);
                 }
 
                 return _getOriginalSourceOrVariantRootMethod;

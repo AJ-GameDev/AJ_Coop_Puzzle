@@ -124,8 +124,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             content.tooltip = StaticStringBuilder.GetString(true);
 
             int controlId = GUIUtility.GetControlID(NestedEditorHash, FocusType.Passive, area);
-            if (e.type == EventType.Repaint)
-                GUIStyle.none.Draw(area, content, controlId, false, area.Contains(e.mousePosition));
+            if (e.type == EventType.Repaint) GUIStyle.none.Draw(area, content, controlId, false, area.Contains(e.mousePosition));
 
             GUI.color = color;
         }

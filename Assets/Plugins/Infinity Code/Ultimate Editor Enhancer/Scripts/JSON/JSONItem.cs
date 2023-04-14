@@ -34,16 +34,6 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// <returns>Element</returns>
         public abstract JsonItem this[string key] { get; }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public virtual IEnumerator<JsonItem> GetEnumerator()
-        {
-            return null;
-        }
-
         /// <summary>
         /// Serializes the object and adds to the current json node.
         /// </summary>
@@ -74,7 +64,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// <returns>Object</returns>
         public T Deserialize<T>(BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
-            return (T)Deserialize(typeof(T), bindingFlags);
+            return (T) Deserialize(typeof(T), bindingFlags);
         }
 
         /// <summary>
@@ -82,8 +72,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// </summary>
         /// <param name="type">Type</param>
         /// <returns>Object</returns>
-        public abstract object Deserialize(Type type,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public);
+        public abstract object Deserialize(Type type, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public);
 
         /// <summary>
         /// Get all elements with the key on the first or the deeper levels of the current element.
@@ -97,6 +86,16 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// </summary>
         /// <param name="b">StringBuilder instance</param>
         public abstract void ToJSON(StringBuilder b);
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public virtual IEnumerator<JsonItem> GetEnumerator()
+        {
+            return null;
+        }
 
         public override string ToString()
         {
@@ -119,7 +118,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// <returns>Value</returns>
         public virtual T Value<T>()
         {
-            return (T)Value(typeof(T));
+            return (T) Value(typeof(T));
         }
 
         /// <summary>

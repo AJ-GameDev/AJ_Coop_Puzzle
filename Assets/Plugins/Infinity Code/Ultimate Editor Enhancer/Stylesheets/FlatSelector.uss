@@ -29,7 +29,7 @@
 }
 
 .flatselector-separator {
-    height: 1px;
+	height: 1px;
     margin-top: 7px;
     margin-bottom: 7px;
     background-color: gray;

@@ -6,6 +6,7 @@ using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
 
+
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public class PinAndClose : PopupWindow
@@ -16,13 +17,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static GUIContent _tabContent;
         public bool closeOnLossFocus = true;
 
+        private Action OnPin;
+        private Action OnClose;
+
         private EditorWindow _targetWindow;
         private bool isDragging;
         private GUIContent labelContent;
         private Vector2 lastMousePosition;
-        private Action OnClose;
-
-        private Action OnPin;
         private Rect targetRect;
         private bool waitDragAndDropEnds;
         private bool waitRestoreAfterPicker;
@@ -40,7 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             get
             {
-                if (_tabContent == null) _tabContent = new GUIContent(Icons.pin, "To Tab Window");
+                if (_tabContent == null) _tabContent = new GUIContent(Icons.pin, "To Tab Window"); 
                 return _tabContent;
             }
         }
@@ -50,10 +51,37 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             get { return _targetWindow; }
         }
 
+        private void DrawLabel()
+        {
+            if (labelContent != null)
+            {
+                float maxWidth = position.width - 35;
+                if (OnPin != null) maxWidth -= 20;
+                
+                GUILayout.Label(labelContent, EditorStyles.whiteLabel, GUILayout.MaxWidth(maxWidth));
+            }
+            EditorGUILayout.Space();
+
+            ProcessLabelEvents(GUILayoutUtility.GetLastRect());
+        }
+
+        private bool InvokeClose()
+        {
+            if (OnClose != null) OnClose();
+            Close();
+            return true;
+        }
+
+        private void InvokePin()
+        {
+            OnPin();
+            Close();
+        }
+
         protected void OnDestroy()
         {
             OnPin = null;
-            OnClose = null;
+            OnClose = null; 
 
             if (_targetWindow != null) _targetWindow.Close();
             _targetWindow = null;
@@ -71,8 +99,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (closeOnLossFocus && focusedWindow != this && focusedWindow != _targetWindow)
                 {
-                    if (waitRestoreAfterPicker &&
-                        (focusedWindow == null || focusedWindow.GetType() != ObjectSelectorRef.type))
+                    if (waitRestoreAfterPicker && (focusedWindow == null || focusedWindow.GetType() != ObjectSelectorRef.type))
                     {
                         _targetWindow.Focus();
                         waitRestoreAfterPicker = false;
@@ -87,8 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     }
                 }
 
-                if (!isDragging && targetRect != _targetWindow.position &&
-                    _targetWindow.position.position != Vector2.zero) SetRect(_targetWindow.position);
+                if (!isDragging && targetRect != _targetWindow.position && _targetWindow.position.position != Vector2.zero) SetRect(_targetWindow.position);
 
                 base.OnGUI();
 
@@ -96,10 +122,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 DrawLabel();
 
-                if (OnPin != null && GUILayout.Button(tabContent, Styles.transparentButton, GUILayout.Width(12),
-                        GUILayout.Height(12))) InvokePin();
-                if (GUILayout.Button(closeContent, Styles.transparentButton, GUILayout.Width(12), GUILayout.Height(12)))
-                    InvokeClose();
+                if (OnPin != null && GUILayout.Button(tabContent, Styles.transparentButton, GUILayout.Width(12), GUILayout.Height(12))) InvokePin();
+                if (GUILayout.Button(closeContent, Styles.transparentButton, GUILayout.Width(12), GUILayout.Height(12))) InvokeClose();
 
                 EditorGUILayout.EndHorizontal();
             }
@@ -113,34 +137,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             Repaint();
-        }
-
-        private void DrawLabel()
-        {
-            if (labelContent != null)
-            {
-                float maxWidth = position.width - 35;
-                if (OnPin != null) maxWidth -= 20;
-
-                GUILayout.Label(labelContent, EditorStyles.whiteLabel, GUILayout.MaxWidth(maxWidth));
-            }
-
-            EditorGUILayout.Space();
-
-            ProcessLabelEvents(GUILayoutUtility.GetLastRect());
-        }
-
-        private bool InvokeClose()
-        {
-            if (OnClose != null) OnClose();
-            Close();
-            return true;
-        }
-
-        private void InvokePin()
-        {
-            OnPin();
-            Close();
         }
 
         private void OnTargetRectChanged(Rect rect)
@@ -215,8 +211,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             return Show(window, inspectorRect, OnClose, null, label);
         }
 
-        public static PinAndClose Show(EditorWindow window, Rect inspectorRect, Action OnClose, Action OnLock = null,
-            string label = null)
+        public static PinAndClose Show(EditorWindow window, Rect inspectorRect, Action OnClose, Action OnLock = null, string label = null)
         {
             PinAndClose wnd = CreateInstance<PinAndClose>();
             wnd.minSize = new Vector2(10, 10);
@@ -232,7 +227,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             ComponentWindow cw = window as ComponentWindow;
             if (cw != null)
             {
-                cw.OnPositionChanged += wnd.OnTargetRectChanged;
+                cw.OnPositionChanged += wnd.OnTargetRectChanged; 
             }
 
             return wnd;
@@ -253,16 +248,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     waitDragAndDropEnds = false;
                     _targetWindow.Focus();
                 }
-
                 return false;
             }
-
             if (focusedWindow != null && focusedWindow.GetType() == ObjectSelectorRef.type)
             {
                 waitRestoreAfterPicker = true;
                 return false;
             }
-
             return InvokeClose();
         }
 

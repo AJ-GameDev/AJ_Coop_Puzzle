@@ -15,9 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         [MenuItem(MENU_ITEM, false, 85)]
         public static void Select()
         {
-            List<string> prefabPaths = Selection.gameObjects
-                .Where(g => g.scene.name != null && PrefabUtility.IsPartOfAnyPrefab(g))
-                .Select(g => PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(g)).Distinct().ToList();
+            List<string> prefabPaths = Selection.gameObjects.Where(g => g.scene.name != null && PrefabUtility.IsPartOfAnyPrefab(g)).Select(g => PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(g)).Distinct().ToList();
             GameObject[] allObjects = Object.FindObjectsOfType<GameObject>(true);
             List<GameObject> result = new List<GameObject>();
 

@@ -35,8 +35,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (Preview.isActive) return;
 
             Event e = Event.current;
-            if (e.type != EventType.ScrollWheel || e.modifiers != Prefs.terrainBrushSizeModifiers &&
-                e.modifiers != Prefs.terrainBrushSizeBoostModifiers) return;
+            if (e.type != EventType.ScrollWheel || e.modifiers != Prefs.terrainBrushSizeModifiers && e.modifiers != Prefs.terrainBrushSizeBoostModifiers) return;
 
             Editor editor = TerrainInspectorRef.GetActiveTerrainInspectorInstance();
             if (editor == null) return;
@@ -53,8 +52,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             float delta = e.delta.y;
             if (e.modifiers == Prefs.terrainBrushSizeBoostModifiers) delta *= 10;
-            size = Mathf.Clamp(size + delta, 0.1f,
-                Mathf.Round(Mathf.Min(terrain.terrainData.size.x, terrain.terrainData.size.z) * 15f / 16f));
+            size = Mathf.Clamp(size + delta, 0.1f, Mathf.Round(Mathf.Min(terrain.terrainData.size.x, terrain.terrainData.size.z) * 15f / 16f));
 
             if (value == 2) PaintTreesToolRef.SetBrushSize(instance, size);
             else TerrainInspectorRef.SetBrushSize(editor, size);

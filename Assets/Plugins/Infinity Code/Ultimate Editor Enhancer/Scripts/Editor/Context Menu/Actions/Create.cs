@@ -34,7 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             CheckDuplicateAudioListeners(active);
 
             if (targets == null || targets.Length == 0) return;
-
+            
             GameObject go = targets[0];
             if (go == null || active == go) return;
 
@@ -101,7 +101,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                 if (targets[0].transform.parent != null) menu.Add("Sibling", () => ShowCreateBrowser(2));
                 menu.Add("Parent", () => ShowCreateBrowser(3));
             }
-
             menu.Add("Temporary", () => ShowCreateBrowser(4));
             menu.Show();
         }
@@ -111,8 +110,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             Undo.SetCurrentGroupName("Instantiate Prefab");
             int group = Undo.GetCurrentGroup();
 
-            Selection.activeGameObject =
-                PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(assetPath)) as GameObject;
             Undo.RegisterCreatedObjectUndo(Selection.activeGameObject, "Instantiate");
             ApplyType();
             Undo.CollapseUndoOperations(group);
@@ -127,7 +125,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             {
                 addRectTransform = targets.All(t => t.GetComponent<RectTransform>() != null);
             }
-
             EditorApplication.ExecuteMenuItem(menuItem);
             ApplyType();
 

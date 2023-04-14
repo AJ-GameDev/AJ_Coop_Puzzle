@@ -33,31 +33,26 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         public bool alignWindowToBar = true;
         public QuickAccessWindowMode windowMode = QuickAccessWindowMode.popup;
 
-        [NonSerialized] private GUIContent _content;
-
+        [NonSerialized]
+        private GUIContent _content;
         private Type _methodType;
 
-        [NonSerialized] private ScriptableObject _scriptableObject;
+        [NonSerialized]
+        private ScriptableObject _scriptableObject;
 
-        [NonSerialized] private string _typeName;
+        [NonSerialized]
+        private string _typeName;
 
-        [NonSerialized] private QuickAccessAction actionObject;
+        [NonSerialized]
+        private QuickAccessAction actionObject;
 
-        [NonSerialized] private bool contentMissed;
+        [NonSerialized]
+        private bool contentMissed;
 
-        [NonSerialized] private bool methodTypeMissed;
-
-        [NonSerialized] private bool scriptableObjectMissed;
-
-        public QuickAccessItem()
-        {
-        }
-
-        public QuickAccessItem(QuickAccessItemType type)
-        {
-            this.type = type;
-            if (type == QuickAccessItemType.window) settings = new string[2];
-        }
+        [NonSerialized]
+        private bool methodTypeMissed;
+        [NonSerialized]
+        private bool scriptableObjectMissed;
 
         public GUIContent content
         {
@@ -72,11 +67,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                             _content = new GUIContent("", tooltip);
                             return _content;
                         }
-
+                        
                         contentMissed = true;
                         return null;
                     }
-
+                    
                     if (icon == QuickAccessItemIcon.text)
                     {
                         string text = iconSettings.Substring(0, Mathf.Min(3, iconSettings.Length));
@@ -101,12 +96,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                                 text = c.text
                             };
                         }
-
                         Debug.unityLogger.logEnabled = true;
                         contentMissed = _content == null;
                     }
                 }
-
                 return _content;
             }
         }
@@ -123,7 +116,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         public JsonObject json
         {
-            get { return Json.Serialize(this) as JsonObject; }
+            get
+            {
+                return Json.Serialize(this) as JsonObject;
+            }
         }
 
         public string typeName
@@ -163,14 +159,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     settings[1] = null;
                     return;
                 }
-
                 if (settings[0] == value.AssemblyQualifiedName) return;
                 settings[0] = value.AssemblyQualifiedName;
                 settings[1] = null;
             }
         }
 
-        public ScriptableObject scriptableObject
+        public ScriptableObject scriptableObject 
         {
             get
             {
@@ -186,6 +181,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     }
                     catch
                     {
+                        
                     }
 
                     scriptableObjectMissed = _scriptableObject != null;
@@ -199,9 +195,20 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 scriptableObjectMissed = value == null;
                 if (!scriptableObjectMissed)
                 {
-                    settings[0] = AssetDatabase.GetAssetPath(value);
+                    settings[0] = AssetDatabase.GetAssetPath(value); 
                 }
             }
+        }
+
+        public QuickAccessItem()
+        {
+
+        }
+
+        public QuickAccessItem(QuickAccessItemType type)
+        {
+            this.type = type;
+            if (type == QuickAccessItemType.window) settings = new string[2];
         }
 
         public void DrawAction()
@@ -213,9 +220,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (actionObject == null)
             {
-                Type t = TypeCache.GetTypesDerivedFrom<QuickAccessAction>()
-                    .FirstOrDefault(i => i.FullName == settings[0]);
-
+                Type t = TypeCache.GetTypesDerivedFrom<QuickAccessAction>().FirstOrDefault(i => i.FullName == settings[0]);
+                
                 if (t == null)
                 {
                     methodTypeMissed = true;
@@ -247,7 +253,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             else if (type == QuickAccessItemType.scriptableObject) InvokeScriptableObject();
         }
 
-        private void InvokeMenuItem()
+        private  void InvokeMenuItem()
         {
             string menuPath = settings[0];
             if (string.IsNullOrEmpty(menuPath)) return;
@@ -266,8 +272,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (scriptableObject == null) return;
 
             Rect rect = new Rect();
-            Vector2 pos = new Vector2(QuickAccess.invokeItemRect.xMax,
-                QuickAccess.invokeItemRect.y + PinAndClose.HEIGHT + 40);
+            Vector2 pos = new Vector2(QuickAccess.invokeItemRect.xMax, QuickAccess.invokeItemRect.y + PinAndClose.HEIGHT + 40);
             rect.position = GUIUtility.GUIToScreenPoint(pos);
             rect.size = Prefs.defaultWindowSize;
             AutoSize autoSize = AutoSize.top;
@@ -316,8 +321,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             Type windowType = Type.GetType(settings[0]);
             if (windowType == null)
             {
-                EditorUtility.DisplayDialog("Error",
-                    "Can't find the window class. Please delete the entry and add again.", "OK");
+                EditorUtility.DisplayDialog("Error", "Can't find the window class. Please delete the entry and add again.", "OK");
                 return;
             }
 
@@ -347,14 +351,13 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 Debug.LogException(e);
             }
 
-            Vector2 pos = new Vector2(QuickAccess.invokeItemRect.xMax,
-                QuickAccess.invokeItemRect.y + PinAndClose.HEIGHT + toolbarOffset);
+            Vector2 pos = new Vector2(QuickAccess.invokeItemRect.xMax, QuickAccess.invokeItemRect.y + PinAndClose.HEIGHT + toolbarOffset);
 #if !(!UNITY_2021_1_OR_NEWER || UNITY_2021_2_OR_NEWER)
             pos += SceneView.lastActiveSceneView.position.position;
 #endif
 
             rect.position = GUIUtility.GUIToScreenPoint(pos);
-            rect.size = useCustomWindowSize ? customWindowSize : Prefs.defaultWindowSize;
+            rect.size = useCustomWindowSize? customWindowSize: Prefs.defaultWindowSize;
 
             if (rect.center.y > Screen.currentResolution.height * 0.7f)
             {

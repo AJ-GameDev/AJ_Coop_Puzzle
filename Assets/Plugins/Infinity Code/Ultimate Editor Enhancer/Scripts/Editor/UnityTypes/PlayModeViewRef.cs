@@ -25,12 +25,10 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_playModeViewsField == null)
-                    _playModeViewsField = type.GetField("s_PlayModeViews", Reflection.StaticLookup);
+                if (_playModeViewsField == null) _playModeViewsField = type.GetField("s_PlayModeViews", Reflection.StaticLookup);
                 return _playModeViewsField;
             }
         }
-
         public static IList GetPlayModeViews()
         {
             return (IList)playModeViewsField.GetValue(null);

@@ -49,7 +49,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                     _type = Reflection.GetEditorType("LogEntry", "UnityEditorInternal");
                     if (_type == null) _type = Reflection.GetEditorType("LogEntry");
                 }
-
                 return _type;
             }
         }
@@ -66,7 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static string GetMessage(object instance)
         {
-            return (string)messageField.GetValue(instance);
+            return (string) messageField.GetValue(instance);
         }
     }
 }

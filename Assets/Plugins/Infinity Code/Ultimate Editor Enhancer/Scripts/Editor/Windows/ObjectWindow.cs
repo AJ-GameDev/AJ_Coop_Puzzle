@@ -17,19 +17,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         public Object[] targets;
         private Editor editor;
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            if (editor != null)
-            {
-                DestroyImmediate(editor);
-                editor = null;
-            }
-
-            targets = null;
-        }
-
         protected override void OnContentGUI()
         {
             if (editor == null)
@@ -45,7 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 {
                     EditorGUILayout.BeginVertical(contentAreaStyle);
                     editor.OnInspectorGUI();
-
+                    
                     if (editor.GetType().IsSubclassOf(AssetImporterEditorRef.type))
                     {
                         EditorGUILayout.BeginHorizontal();
@@ -53,10 +40,22 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         TextureImporterInspectorRef.OnApplyRevertGUI(editor);
                         EditorGUILayout.EndHorizontal();
                     }
-
                     EditorGUILayout.EndVertical();
                 }
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (editor != null)
+            {
+                DestroyImmediate(editor);
+                editor = null;
+            }
+
+            targets = null;
         }
 
         public static ObjectWindow Show(Object[] targets, bool autosize = true)
@@ -78,7 +77,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Vector2 size = Prefs.defaultWindowSize;
                 wnd.position = new Rect(screenPoint - size / 2, size);
             }
-
             return wnd;
         }
 

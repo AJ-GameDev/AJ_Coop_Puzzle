@@ -44,34 +44,17 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -34; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!zoomShortcut) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Fast Move Forward", "Scene View", zoomShortcutModifiers, zoomInShortcutKeyCode),
-                    new Shortcut("Fast Move Backward", "Scene View", zoomShortcutModifiers, zoomOutShortcutKeyCode),
-                    new Shortcut("Super Fast Move Forward", "Scene View", zoomBoostShortcutModifiers,
-                        zoomInShortcutKeyCode),
-                    new Shortcut("Super Fast Move Backward", "Scene View", zoomBoostShortcutModifiers,
-                        zoomOutShortcutKeyCode),
-                };
-            }
-
             public override void Draw()
             {
                 zoomShortcut = EditorGUILayout.ToggleLeft("Zoom By Shortcut", zoomShortcut);
-
+                
                 EditorGUI.BeginDisabledGroup(!zoomShortcut);
                 EditorGUI.indentLevel++;
 
                 float oldLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = labelWidth + 5;
-                zoomInShortcutKeyCode =
-                    (KeyCode)EditorGUILayout.EnumPopup("Zoom In Hot Key", zoomInShortcutKeyCode, GUILayout.Width(420));
-                zoomOutShortcutKeyCode = (KeyCode)EditorGUILayout.EnumPopup("Zoom Out Hot Key", zoomOutShortcutKeyCode,
-                    GUILayout.Width(420));
+                zoomInShortcutKeyCode = (KeyCode)EditorGUILayout.EnumPopup("Zoom In Hot Key", zoomInShortcutKeyCode, GUILayout.Width(420));
+                zoomOutShortcutKeyCode = (KeyCode)EditorGUILayout.EnumPopup("Zoom Out Hot Key", zoomOutShortcutKeyCode, GUILayout.Width(420));
                 EditorGUIUtility.labelWidth = oldLabelWidth;
 
                 EditorGUILayout.BeginHorizontal();
@@ -88,6 +71,19 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!zoomShortcut) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Fast Move Forward", "Scene View", zoomShortcutModifiers, zoomInShortcutKeyCode), 
+                    new Shortcut("Fast Move Backward", "Scene View", zoomShortcutModifiers, zoomOutShortcutKeyCode),
+                    new Shortcut("Super Fast Move Forward", "Scene View", zoomBoostShortcutModifiers, zoomInShortcutKeyCode),
+                    new Shortcut("Super Fast Move Backward", "Scene View", zoomBoostShortcutModifiers, zoomOutShortcutKeyCode),
+                };
             }
         }
     }

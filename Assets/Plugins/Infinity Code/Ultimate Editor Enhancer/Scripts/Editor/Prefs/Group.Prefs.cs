@@ -26,6 +26,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return new[] { "Group" }; }
             }
 
+            public override void Draw()
+            {
+                DrawFieldWithHotKey("Group", ref group, ref groupKeyCode, ref groupModifiers, EditorStyles.label, 17);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!group) return new Shortcut[0];
@@ -34,11 +39,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     new Shortcut("Group GameObjects", "Everywhere", groupModifiers, groupKeyCode),
                 };
-            }
-
-            public override void Draw()
-            {
-                DrawFieldWithHotKey("Group", ref group, ref groupKeyCode, ref groupModifiers, EditorStyles.label, 17);
             }
         }
     }

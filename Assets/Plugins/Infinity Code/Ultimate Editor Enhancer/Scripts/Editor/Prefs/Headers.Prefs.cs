@@ -2,6 +2,7 @@
 /*     https://infinity-code.com    */
 
 using UnityEditor;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {

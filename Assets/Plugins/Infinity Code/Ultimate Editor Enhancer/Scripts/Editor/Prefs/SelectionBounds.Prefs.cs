@@ -23,6 +23,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
+            public override void Draw()
+            {
+                selectionBounds = EditorGUILayout.ToggleLeft("Display Bounds of Selected Renderers (Hotkey - CapsLock)", selectionBounds);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!selectionBounds) return new Shortcut[0];
@@ -31,12 +36,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     new Shortcut("Display Bounds of Selected Renderers", "Scene View", "CapsLock"),
                 };
-            }
-
-            public override void Draw()
-            {
-                selectionBounds = EditorGUILayout.ToggleLeft("Display Bounds of Selected Renderers (Hotkey - CapsLock)",
-                    selectionBounds);
             }
         }
     }

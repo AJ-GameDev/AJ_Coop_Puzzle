@@ -4,10 +4,11 @@
 using System.Reflection;
 using InfinityCode.UltimateEditorEnhancer.InspectorTools;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class ReorderableListInterceptor : StatedInterceptor<ReorderableListInterceptor>
+    public class ReorderableListInterceptor: StatedInterceptor<ReorderableListInterceptor>
     {
         private static int indentLevel;
 

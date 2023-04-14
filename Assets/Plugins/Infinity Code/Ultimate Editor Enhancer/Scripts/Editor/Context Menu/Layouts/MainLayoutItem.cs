@@ -8,8 +8,8 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 {
     public abstract class MainLayoutItem
     {
-        protected Rect rect;
         protected LayoutWindow wnd;
+        protected Rect rect;
 
         public LayoutWindow window
         {
@@ -33,10 +33,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
         }
 
         public abstract void OnGUI();
-
-        public abstract void Prepare(GameObject[] targets, Vector2 position, ref Vector2 offset,
-            ref bool flipHorizontal, ref bool flipVertical);
-
+        public abstract void Prepare(GameObject[] targets, Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical);
         public abstract void SetPosition(Vector2 position, Vector2 offset, bool flipHorizontal, bool flipVertical);
         public abstract void Show();
     }

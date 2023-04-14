@@ -39,7 +39,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
             IList list = Compatibility.GetGameViews();
             if (list == null || list.Count == 0) return;
-
+            
             EditorWindow gameView = list[0] as EditorWindow;
             if (gameView == null || !gameView.maximized) return;
 
@@ -56,8 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static void OnInvoke()
         {
             Event e = Event.current;
-            if (Prefs.switcherWindows && e.keyCode == Prefs.switcherWindowsKeyCode &&
-                e.modifiers == Prefs.switcherWindowsModifiers) OnSwitch();
+            if (Prefs.switcherWindows && e.keyCode == Prefs.switcherWindowsKeyCode && e.modifiers == Prefs.switcherWindowsModifiers) OnSwitch();
         }
 
         private static void OnPlayModeStateChanged(PlayModeStateChange mode)
@@ -102,8 +101,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             {
                 SwitchToGameView(maximized);
             }
-            else if (window is PinAndClose || window == QuickAccess.activeWindow ||
-                     window == ObjectToolbar.activeWindow)
+            else if (window is PinAndClose || window == QuickAccess.activeWindow || window == ObjectToolbar.activeWindow)
             {
                 SwitchToGameView(maximized);
             }
@@ -162,10 +160,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static void SwitchToSceneView(bool maximized)
         {
             if (SceneView.sceneViews == null || SceneView.sceneViews.Count == 0) return;
-
+            
             EditorWindow sceneView = SceneView.sceneViews[0] as EditorWindow;
             if (sceneView == null) return;
-
+            
             if (maximized) sceneView.maximized = true;
             sceneView.Focus();
             if (EditorApplication.isPlaying) EditorApplication.isPaused = true;

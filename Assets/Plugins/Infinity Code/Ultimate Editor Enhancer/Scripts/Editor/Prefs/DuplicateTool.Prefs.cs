@@ -24,8 +24,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             public override void Draw()
             {
-                hideDuplicateToolTemp =
-                    EditorGUILayout.ToggleLeft("Hide Temporary Objects of Duplicate Tool", hideDuplicateToolTemp);
+                hideDuplicateToolTemp = EditorGUILayout.ToggleLeft("Hide Temporary Objects of Duplicate Tool", hideDuplicateToolTemp);
             }
         }
     }

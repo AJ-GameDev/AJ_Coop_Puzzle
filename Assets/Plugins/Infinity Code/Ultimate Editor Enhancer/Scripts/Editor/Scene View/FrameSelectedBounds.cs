@@ -61,7 +61,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         {
                             bounds.Encapsulate(fourCorners[k]);
                         }
-
                         isFirst = false;
                     }
                     else
@@ -105,8 +104,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (!Prefs.frameSelectedBounds) return false;
 
             Event e = Event.current;
-            if (e.type != EventType.KeyDown || e.keyCode != KeyCode.F || e.modifiers != EventModifiers.Shift)
-                return false;
+            if (e.type != EventType.KeyDown || e.keyCode != KeyCode.F || e.modifiers != EventModifiers.Shift) return false;
             if (SceneView.lastActiveSceneView == null) return false;
             return true;
         }

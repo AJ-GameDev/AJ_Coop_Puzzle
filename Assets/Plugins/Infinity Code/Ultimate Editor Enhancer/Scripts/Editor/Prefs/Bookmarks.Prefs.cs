@@ -25,6 +25,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return Order.bookmarks; }
             }
 
+            public override void Draw()
+            {
+                DrawFieldWithHotKey("Bookmarks", ref bookmarksHotKey, ref bookmarksKeyCode, ref bookmarksModifiers, EditorStyles.label, 17);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!bookmarksHotKey) return new Shortcut[0];
@@ -33,12 +38,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     new Shortcut("Open Bookmarks", "Everywhere", bookmarksModifiers, bookmarksKeyCode),
                 };
-            }
-
-            public override void Draw()
-            {
-                DrawFieldWithHotKey("Bookmarks", ref bookmarksHotKey, ref bookmarksKeyCode, ref bookmarksModifiers,
-                    EditorStyles.label, 17);
             }
         }
     }

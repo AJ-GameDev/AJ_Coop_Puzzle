@@ -19,9 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_getCustomEditorToolsForTypeMethod == null)
-                    _getCustomEditorToolsForTypeMethod =
-                        type.GetMethod("GetCustomEditorToolsForType", Reflection.StaticLookup);
+                if (_getCustomEditorToolsForTypeMethod == null) _getCustomEditorToolsForTypeMethod = type.GetMethod("GetCustomEditorToolsForType", Reflection.StaticLookup);
                 return _getCustomEditorToolsForTypeMethod;
             }
         }

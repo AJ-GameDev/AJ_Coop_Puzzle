@@ -29,24 +29,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 #endif
         }
 
-        private void OnGUI()
-        {
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            EditorGUILayout.LabelField(
-                @"Ultimate Editor Enhancer has detected that you are using uContext in the project.
-These assets are incompatible but upgradable.
-To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", EditorStyles.wordWrappedLabel);
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-
-            MigrateSettings(1);
-            MigrateSceneReferences(2);
-            DeleteFolders(3);
-            RemoveDefineSymbols(4);
-            FinalMessage();
-
-            EditorGUILayout.EndScrollView();
-        }
-
         private static void DeleteFolders(int step)
         {
             EditorGUILayout.LabelField($"{step}. Delete Assets / Plugins / Infinity Code / uContext folder");
@@ -76,16 +58,11 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
         private static void MigrateSceneReferences(int step)
         {
             EditorGUILayout.LabelField($"{step}. Migrate scene references:");
-            EditorGUILayout.LabelField(
-                $"{step}.1. Open a scene that contains hierarchy backgrounds, bookmarks for objects in the scene, or view states and click Update References button.",
-                EditorStyles.wordWrappedLabel);
+            EditorGUILayout.LabelField($"{step}.1. Open a scene that contains hierarchy backgrounds, bookmarks for objects in the scene, or view states and click Update References button.", EditorStyles.wordWrappedLabel);
             if (GUILayout.Button("Update References")) UpdateReferences();
-            EditorGUILayout.LabelField($"{step}.2. Repeat step {step}.1 for every scene that has scene references.",
-                EditorStyles.wordWrappedLabel);
+            EditorGUILayout.LabelField($"{step}.2. Repeat step {step}.1 for every scene that has scene references.", EditorStyles.wordWrappedLabel);
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField(
-                "Note: If you skip this step, all hierarchy backgrounds and bookmarks will be lost.\nView states can be restored by selecting the GameObject containing them and using Missing Script Fixer.",
-                EditorStyles.wordWrappedLabel);
+            EditorGUILayout.LabelField("Note: If you skip this step, all hierarchy backgrounds and bookmarks will be lost.\nView states can be restored by selecting the GameObject containing them and using Missing Script Fixer.", EditorStyles.wordWrappedLabel);
 
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         }
@@ -105,6 +82,23 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         }
 
+        private void OnGUI()
+        {
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            EditorGUILayout.LabelField(@"Ultimate Editor Enhancer has detected that you are using uContext in the project.
+These assets are incompatible but upgradable.
+To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", EditorStyles.wordWrappedLabel);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+            MigrateSettings(1);
+            MigrateSceneReferences(2);
+            DeleteFolders(3);
+            RemoveDefineSymbols(4);
+            FinalMessage();
+
+            EditorGUILayout.EndScrollView();
+        }
+
         private static void RemoveDefineSymbols(int step)
         {
 #if UCONTEXT_PRO
@@ -116,16 +110,14 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
             EditorGUILayout.LabelField($"{step}. Open Player Settings and remove {symbolStr} define symbols");
             if (GUILayout.Button("Remove Symbol(s)"))
             {
-                string symbols =
-                    PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+                string symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
                 if (!string.IsNullOrEmpty(symbols))
                 {
                     List<string> keys = symbols.Split(';').ToList();
                     keys.Remove("UCONTEXT");
                     keys.Remove("UCONTEXT_PRO");
 
-                    PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup,
-                        string.Join(";", keys));
+                    PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, string.Join(";", keys));
                 }
             }
 
@@ -149,6 +141,7 @@ To properly upgrade uContext to Ultimate Editor Enhancer, follow these steps:", 
                 }
                 catch
                 {
+                    
                 }
             }
         }

@@ -31,12 +31,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
 
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            if (GUILayout.Button(TempContent.Get("<", "Close Points"), EditorStyles.toolbarButton,
-                    GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(TempContent.Get("<", "Close Points"), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
             {
                 enabled = false;
             }
-
             GUILayout.Label("Points");
 
             GUILayout.EndHorizontal();
@@ -63,8 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
 
                 keys[i] = key;
 
-                if (i < keys.Length - 1 &&
-                    GUILayout.Button(TempContent.Get("+", "Insert Key"), EditorStyles.miniButton))
+                if (i < keys.Length - 1 && GUILayout.Button(TempContent.Get("+", "Insert Key"), EditorStyles.miniButton))
                 {
                     addTime = (keys[i].time + keys[i + 1].time) / 2;
                 }
@@ -88,8 +85,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
             {
                 int index = AnimationUtilityRef.AddInbetweenKey(curve, addTime);
                 Type type = Reflection.GetEditorType("CurveUtility");
-                Reflection.InvokeStaticMethod(type, "SetKeyModeFromContext",
-                    new[] { typeof(AnimationCurve), typeof(int) }, new object[] { curve, index });
+                Reflection.InvokeStaticMethod(type, "SetKeyModeFromContext", new[] {typeof(AnimationCurve), typeof(int)}, new object[] {curve, index});
                 AnimationUtilityRef.UpdateTangentsFromModeSurrounding(curve, index);
                 CurveEditorWindowRef.RefreshShownCurves(window);
                 CurveEditorWindowRef.SendEvent(window, "CurveChanged", false);
@@ -106,8 +102,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Improvements
             if (!Prefs.improveCurveEditor) return;
             if (Event.current.type != EventType.Repaint) return;
 
-            GUI.skin.button.Draw(frameButtonRect,
-                TempContent.Get(EditorIconContents.rectTransformBlueprint.image, "Frame All Points"), -1);
+            GUI.skin.button.Draw(frameButtonRect, TempContent.Get(EditorIconContents.rectTransformBlueprint.image, "Frame All Points"), -1);
 
             if (!enabled)
             {

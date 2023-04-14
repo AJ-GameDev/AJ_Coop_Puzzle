@@ -11,27 +11,21 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
     public class FavoriteWindows : PopupWindowItem, IValidatableLayoutItem
     {
         private GUIContent[] contents;
-        private GUIContent editFavoritesContent;
+        private List<FavoriteWindowItem> records;
         private GUIContent labelContent;
         private Vector2 labelSize;
-        private List<FavoriteWindowItem> records;
+        private GUIContent editFavoritesContent;
 
         public override float order
         {
             get { return 95; }
         }
 
-        public bool Validate()
-        {
-            return Prefs.favoriteWindowsInContextMenu && ReferenceManager.favoriteWindows.Count > 0;
-        }
-
         protected override void CalcSize()
         {
             labelSize = EditorStyles.whiteLabel.CalcSize(labelContent);
             Vector2 editSize = EditorStyles.whiteLabel.CalcSize(editFavoritesContent);
-            _size = new Vector2(labelSize.x + editSize.x,
-                Mathf.Max(labelSize.y, editSize.y) + GUI.skin.label.margin.bottom);
+            _size = new Vector2(labelSize.x + editSize.x, Mathf.Max(labelSize.y, editSize.y) + GUI.skin.label.margin.bottom);
 
             GUIStyle style = Styles.buttonWithToggleAlignLeft;
             int marginBottom = style.margin.bottom;
@@ -62,7 +56,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
                 Settings.OpenFavoriteWindowsSettings();
                 EditorMenu.Close();
             }
-
             EditorGUILayout.EndHorizontal();
 
             for (int i = 0; i < records.Count; i++)
@@ -89,6 +82,11 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.PopupWindows
             labelContent = new GUIContent("Favorite Windows:");
             editFavoritesContent = EditorGUIUtility.IconContent("d_Preset.Context");
             editFavoritesContent.tooltip = "Edit Favorite Windows";
+        }
+
+        public bool Validate()
+        {
+            return Prefs.favoriteWindowsInContextMenu && ReferenceManager.favoriteWindows.Count > 0;
         }
     }
 }

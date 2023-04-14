@@ -31,20 +31,19 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
+            public override void Draw()
+            {
+                DrawFieldWithHotKey("Replace", ref replace, ref replaceKeyCode, ref replaceModifiers, EditorStyles.label, 17);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!replace) return new Shortcut[0];
 
                 return new[]
                 {
-                    new Shortcut("Replace Selected GameObjects", "Everywhere", replaceModifiers, replaceKeyCode),
+                    new Shortcut("Replace Selected GameObjects", "Everywhere", replaceModifiers, replaceKeyCode), 
                 };
-            }
-
-            public override void Draw()
-            {
-                DrawFieldWithHotKey("Replace", ref replace, ref replaceKeyCode, ref replaceModifiers,
-                    EditorStyles.label, 17);
             }
         }
     }

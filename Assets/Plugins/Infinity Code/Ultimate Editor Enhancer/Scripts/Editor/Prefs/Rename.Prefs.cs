@@ -12,17 +12,17 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class RenameManager : StandalonePrefManager<RenameManager>, IHasShortcutPref
         {
+            public override void Draw()
+            {
+                renameByShortcut = EditorGUILayout.ToggleLeft("Rename By Shortcut (F2)", renameByShortcut);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 return new[]
                 {
                     new Shortcut("Rename Selected Items", "Everywhere", "F2"),
                 };
-            }
-
-            public override void Draw()
-            {
-                renameByShortcut = EditorGUILayout.ToggleLeft("Rename By Shortcut (F2)", renameByShortcut);
             }
         }
     }

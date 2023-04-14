@@ -21,8 +21,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static ObjectToolbar _instance;
         private static Item showItemLate;
 
-        private static Type[] ignoreTypes =
-        {
+        private static Type[] ignoreTypes = {
             typeof(DefaultAsset),
             typeof(SceneAsset),
             typeof(TerrainData)
@@ -31,53 +30,29 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private AutoSizePopupWindow _activeWindow;
         private GUIContent _addComponentContent;
         private Rect _areaRect;
-        private GUIStyle _headerHoverStyle;
-
+        
         private GUIStyle _headerStyle;
+        private GUIStyle _headerHoverStyle;
         private GUIStyle _relatedContentStyle;
         private GUIStyle _selectedContentStyle;
         private GUIStyle _selectedRelatedContentStyle;
         private Vector2 _size = new Vector2(200, 20);
         private int activeIndex = -1;
         private Texture2D background;
-        private float componentsWidth;
         private bool invertVertical = false;
         private bool isMultiple;
         private bool isSelectionChanged;
         private List<Item> items;
         private GUIContent labelContent;
-        private string lastTargetName;
-        private GUIContent minimizedButtonContent;
         private bool needMoveWindow;
-        private GUIContent normalButtonContent;
         private List<Item> relatedItems;
 
         private Object[] targets;
         private bool visible;
-
-        static ObjectToolbar()
-        {
-            FloatToolbarManager.Add(new ObjectToolbar());
-        }
-
-        public ObjectToolbar()
-        {
-            _instance = this;
-            items = new List<Item>();
-            relatedItems = new List<Item>();
-
-            WindowManager.OnWindowFocused += OnWindowFocused;
-            QuickAccess.OnVisibleChanged += SetDirty;
-            QuickAccess.OnCollapseChanged += SetDirty;
-            Selection.selectionChanged += OnSelectionChanged;
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-
-            OnSelectionChanged();
-            KeyManager.KeyBinding binding = KeyManager.AddBinding();
-            binding.OnValidate += OnValidateKey;
-            binding.OnPress += OnInvokeKey;
-        }
+        private float componentsWidth;
+        private string lastTargetName;
+        private GUIContent minimizedButtonContent;
+        private GUIContent normalButtonContent;
 
         private GUIContent addComponentContent
         {
@@ -129,7 +104,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         public static bool isMinimized
         {
             get { return LocalSettings.hideObjectToolbar; }
-            set { LocalSettings.hideObjectToolbar = value; }
+            set { LocalSettings.hideObjectToolbar = value; } 
         }
 
         private GUIStyle relatedContentStyle
@@ -236,6 +211,30 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             }
         }
 
+        static ObjectToolbar()
+        {
+            FloatToolbarManager.Add(new ObjectToolbar());
+        }
+
+        public ObjectToolbar()
+        {
+            _instance = this;
+            items = new List<Item>();
+            relatedItems = new List<Item>();
+
+            WindowManager.OnWindowFocused += OnWindowFocused;
+            QuickAccess.OnVisibleChanged += SetDirty;
+            QuickAccess.OnCollapseChanged += SetDirty;
+            Selection.selectionChanged += OnSelectionChanged;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+            OnSelectionChanged();
+            KeyManager.KeyBinding binding = KeyManager.AddBinding();
+            binding.OnValidate += OnValidateKey;
+            binding.OnPress += OnInvokeKey; 
+        }
+
         ~ObjectToolbar()
         {
             _instance = null;
@@ -330,8 +329,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 normalButtonContent = new GUIContent("▼", "Minimize Object Toolbar");
             }
 
-            Rect headerRect = GUILayoutUtility.GetRect(labelContent, headerStyle, GUILayout.Width(rect.width + 2),
-                GUILayout.Height(20));
+            Rect headerRect = GUILayoutUtility.GetRect(labelContent, headerStyle, GUILayout.Width(rect.width + 2), GUILayout.Height(20));
             GUIContent buttonContent = isMinimized ? minimizedButtonContent : normalButtonContent;
             Rect buttonRect = new Rect(headerRect);
             buttonRect.width = 20;
@@ -364,6 +362,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             buttonRect.x += 20;
             buttonRect.width = 20;
 
+            
 
             return headerRect;
         }
@@ -461,8 +460,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                             string assetPath = AssetDatabase.GetAssetPath(go);
                             AssetImporter importer = AssetImporter.GetAtPath(assetPath);
 
-                            if (importer == null || importer.GetType() == PrefabImporterRef.type)
-                                InitComponents(target as GameObject);
+                            if (importer == null || importer.GetType() == PrefabImporterRef.type) InitComponents(target as GameObject);
                             else InitObject(target);
                         }
                     }
@@ -669,6 +667,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 Debug.LogException(e);
             }
+
         }
 
         protected override void OnPositionChanged(Rect sceneRect)
@@ -716,14 +715,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             Event e = Event.current;
             if (e.modifiers != EventModifiers.Alt) return false;
             int keyCode = (int)e.keyCode;
-            return (keyCode >= (int)KeyCode.Alpha1 && keyCode <= (int)KeyCode.Alpha9) ||
-                   (keyCode >= (int)KeyCode.Keypad1 && keyCode <= (int)KeyCode.Keypad9);
+            return (keyCode >= (int)KeyCode.Alpha1 && keyCode <= (int)KeyCode.Alpha9) || (keyCode >= (int)KeyCode.Keypad1 && keyCode <= (int)KeyCode.Keypad9);
         }
 
         protected override void PrepareHeaderContextMenu(GenericMenuEx menu)
         {
-            if (targets.All(t => t is GameObject))
-                GameObjectUtils.ShowContextMenu(false, targets.Select(t => t as GameObject).ToArray());
+            if (targets.All(t => t is GameObject)) GameObjectUtils.ShowContextMenu(false, targets.Select(t => t as GameObject).ToArray());
         }
 
         protected override void PrepareToolbar(Rect sceneRect)
@@ -743,8 +740,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         bool hasNewComponents = components.Length > items.Count;
                         GenerateLayout();
                         UpdateRect(sceneRect);
-                        foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
-                            pinAndClose.Repaint();
+                        foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>()) pinAndClose.Repaint();
                         if (hasNewComponents && Prefs.objectToolbarOpenBestComponent) ShowItem(items.Count - 1);
                         return;
                     }
@@ -755,8 +751,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                         {
                             GenerateLayout();
                             UpdateRect(sceneRect);
-                            foreach (PinAndClose pinAndClose in
-                                     UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>()) pinAndClose.Repaint();
+                            foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>()) pinAndClose.Repaint();
                             return;
                         }
                     }
@@ -769,8 +764,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     float labelWidth = EditorStyles.label.CalcSize(labelContent).x + 10;
                     _size.x = Mathf.Max(labelWidth, componentsWidth);
                     UpdateRect(sceneRect);
-                    foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>())
-                        pinAndClose.Repaint();
+                    foreach (PinAndClose pinAndClose in UnityEngine.Resources.FindObjectsOfTypeAll<PinAndClose>()) pinAndClose.Repaint();
                 }
             }
         }
@@ -923,10 +917,10 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         public class Item
         {
             public GUIContent content;
-            public int index;
-            public bool related;
             public Object target;
+            public int index;
             public float width;
+            public bool related;
 
             public Item(GUIContent content, Object target, int index, float width)
             {

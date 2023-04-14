@@ -7,5 +7,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
 {
     public class HideInIntegrityAttribute : Attribute
     {
+
     }
 }

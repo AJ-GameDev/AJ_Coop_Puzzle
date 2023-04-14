@@ -11,17 +11,12 @@ namespace InfinityCode.UltimateEditorEnhancer
     {
         private static GenericMenuEx _instance;
 
-        public List<GenericMenuItem> items;
-
-        public GenericMenuEx()
-        {
-            items = new List<GenericMenuItem>();
-        }
-
         public static GenericMenuEx instance
         {
             get { return _instance; }
         }
+
+        public List<GenericMenuItem> items;
 
         public GenericMenuItem this[int index]
         {
@@ -31,6 +26,11 @@ namespace InfinityCode.UltimateEditorEnhancer
         public int count
         {
             get { return items.Count; }
+        }
+
+        public GenericMenuEx()
+        {
+            items = new List<GenericMenuItem>();
         }
 
         public void Add(string label, GenericMenu.MenuFunction action)

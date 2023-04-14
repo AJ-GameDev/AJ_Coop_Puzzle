@@ -7,5 +7,6 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public class HideInPreview : MonoBehaviour
     {
+
     }
 }

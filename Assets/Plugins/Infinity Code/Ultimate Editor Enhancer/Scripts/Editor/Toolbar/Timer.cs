@@ -20,8 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
         private static void DrawIcon()
         {
-            if (GUILayoutUtils.Button(new GUIContent(Icons.timer, "Timescale"), Styles.appToolbarButtonLeft,
-                    GUILayout.Width(30)) == ButtonEvent.click)
+            if (GUILayoutUtils.Button(new GUIContent(Icons.timer, "Timescale"), Styles.appToolbarButtonLeft, GUILayout.Width(30)) == ButtonEvent.click)
             {
                 Event e = Event.current;
 
@@ -40,7 +39,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             int hour = totalSec / 3600;
             int min = totalSec / 60 % 60;
             int sec = totalSec % 60;
-            int ms = Mathf.RoundToInt((time - (int)time) * 1000);
+            int ms = Mathf.RoundToInt((time - (int) time) * 1000);
 
             float width = 68;
 
@@ -59,8 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (ms < 10) StaticStringBuilder.Append("0");
             StaticStringBuilder.Append(ms);
 
-            if (content == null)
-                content = new GUIContent(StaticStringBuilder.GetString(true), "Time since the start of the game.");
+            if (content == null) content = new GUIContent(StaticStringBuilder.GetString(true), "Time since the start of the game.");
             else content.text = StaticStringBuilder.GetString(true);
 
             Rect rect = GUILayoutUtility.GetRect(content, EditorStyles.textField, GUILayout.Width(width));

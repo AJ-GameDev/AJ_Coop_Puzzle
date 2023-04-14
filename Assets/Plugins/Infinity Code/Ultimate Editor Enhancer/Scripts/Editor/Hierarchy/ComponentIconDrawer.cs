@@ -44,15 +44,13 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (!Prefs.hierarchyIcons) return;
 
             Event e = Event.current;
-            if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHoverWithModifiers &&
-                e.modifiers != Prefs.hierarchyIconsModifiers)
+            if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHoverWithModifiers && e.modifiers != Prefs.hierarchyIconsModifiers)
             {
                 if (!ehVisible)
                 {
                     EnhancedHierarchy.SetRightMargin(ehRightMargin);
                     ehVisible = true;
                 }
-
                 return;
             }
 
@@ -146,8 +144,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             if (rect.yMax > Screen.currentResolution.height - 10) rect.y -= rect.height - 50;
 
             if (rect.x < 5) rect.x = 5;
-            else if (rect.xMax > Screen.currentResolution.width - 5)
-                rect.x = Screen.currentResolution.width - 5 - rect.width;
+            else if (rect.xMax > Screen.currentResolution.width - 5) rect.x = Screen.currentResolution.width - 5 - rect.width;
 #endif
 
             Selection.activeGameObject = prevTarget;
@@ -234,8 +231,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                     thumbnail,
                     ObjectNames.NicifyVariableName(component.GetType().Name)
                 );
-                if (thumbnail.name == "cs Script Icon" || thumbnail.name == "d_cs Script Icon")
-                    GameObjectUtils.GetPsIconContent(content);
+                if (thumbnail.name == "cs Script Icon" || thumbnail.name == "d_cs Script Icon") GameObjectUtils.GetPsIconContent(content);
 
                 item = new Item(content);
                 item.OnClick += () => ShowComponent(component, rect);
@@ -258,10 +254,10 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
         internal class Item
         {
-            public GUIContent content;
             public Action OnClick;
             public Action OnDrag;
             public Action OnRightClick;
+            public GUIContent content;
 
             public Item(GUIContent content)
             {

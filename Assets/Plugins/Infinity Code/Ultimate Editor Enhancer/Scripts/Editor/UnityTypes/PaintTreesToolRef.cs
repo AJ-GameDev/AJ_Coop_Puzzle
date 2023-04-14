@@ -45,12 +45,11 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 if (_type == null)
                 {
 #if UNITY_2021_2_OR_NEWER
-                    _type = Reflection.GetEditorType("TerrainTools.PaintTreesTool");
+                    _type = Reflection.GetEditorType("TerrainTools.PaintTreesTool"); 
 #else
                     _type = Reflection.GetEditorType("Experimental.TerrainAPI.PaintTreesTool");
 #endif
                 }
-
                 return _type;
             }
         }

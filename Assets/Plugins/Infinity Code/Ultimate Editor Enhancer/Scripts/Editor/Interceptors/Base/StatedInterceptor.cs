@@ -3,7 +3,7 @@
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public abstract class StatedInterceptor<T> : GenericInterceptor<T> where T : StatedInterceptor<T>
+    public abstract class StatedInterceptor<T> : GenericInterceptor<T> where T: StatedInterceptor<T>
     {
         public abstract bool state { get; }
 

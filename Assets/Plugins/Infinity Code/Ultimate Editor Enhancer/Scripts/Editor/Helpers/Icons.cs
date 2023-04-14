@@ -1,6 +1,7 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer
@@ -180,8 +181,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_collapse == null)
-                    _collapse = ResourcesCache.GetIcon(Styles.isProSkin ? "Collapse-White" : "Collapse-Black");
+                if (_collapse == null) _collapse = ResourcesCache.GetIcon(Styles.isProSkin ? "Collapse-White" : "Collapse-Black");
                 return _collapse;
             }
         }
@@ -192,6 +192,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (_collection == null) _collection = ResourcesCache.GetIcon("Collection");
                 return _collection;
+
             }
         }
 
@@ -235,8 +236,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_duplicateTool == null)
-                    _duplicateTool = ResourcesCache.GetIcon(Styles.isProSkin ? "DuplicateToolPro" : "DuplicateTool");
+                if (_duplicateTool == null) _duplicateTool = ResourcesCache.GetIcon(Styles.isProSkin ? "DuplicateToolPro" : "DuplicateTool");
                 return _duplicateTool;
             }
         }
@@ -245,8 +245,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_duplicateToolActive == null)
-                    _duplicateToolActive = ResourcesCache.GetIcon(Styles.isProSkin ? "Duplicate" : "DuplicateToolPro");
+                if (_duplicateToolActive == null) _duplicateToolActive = ResourcesCache.GetIcon(Styles.isProSkin ? "Duplicate" : "DuplicateToolPro");
                 return _duplicateToolActive;
             }
         }
@@ -255,8 +254,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_expand == null)
-                    _expand = ResourcesCache.GetIcon(Styles.isProSkin ? "Expand-White" : "Expand-Black");
+                if (_expand == null) _expand = ResourcesCache.GetIcon(Styles.isProSkin ? "Expand-White" : "Expand-Black");
                 return _expand;
             }
         }
@@ -274,8 +272,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_focusToolbar == null)
-                    _focusToolbar = ResourcesCache.GetIcon(Styles.isProSkin ? "FocusToolbarPro" : "FocusToolbar");
+                if (_focusToolbar == null) _focusToolbar = ResourcesCache.GetIcon(Styles.isProSkin ? "FocusToolbarPro" : "FocusToolbar");
                 return _focusToolbar;
             }
         }
@@ -361,8 +358,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
         }
 
-        public static Texture open
-        {
+        public static Texture open {
             get
             {
                 if (_open == null) _open = ResourcesCache.GetIcon("Open");
@@ -401,8 +397,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_pivotTool == null)
-                    _pivotTool = ResourcesCache.GetIcon(Styles.isProSkin ? "PivotToolActive" : "PivotTool");
+                if (_pivotTool == null) _pivotTool = ResourcesCache.GetIcon(Styles.isProSkin ? "PivotToolActive" : "PivotTool");
                 return _pivotTool;
             }
         }
@@ -492,7 +487,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_timer == null) _timer = ResourcesCache.GetIcon(Styles.isProSkin ? "Timer" : "Timer-Black");
+                if (_timer == null) _timer = ResourcesCache.GetIcon(Styles.isProSkin? "Timer" : "Timer-Black");
                 return _timer;
             }
         }
@@ -501,8 +496,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_upDown == null)
-                    _upDown = ResourcesCache.GetIcon(Styles.isProSkin ? "Up-Down-White" : "Up-Down-Black");
+                if (_upDown == null) _upDown = ResourcesCache.GetIcon(Styles.isProSkin ? "Up-Down-White": "Up-Down-Black");
                 return _upDown;
             }
         }
@@ -520,7 +514,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             get
             {
-                if (_windows == null) _windows = ResourcesCache.GetIcon(Styles.isProSkin ? "Windows" : "Windows-Black");
+                if (_windows == null) _windows = ResourcesCache.GetIcon(Styles.isProSkin? "Windows": "Windows-Black");
                 return _windows;
             }
         }

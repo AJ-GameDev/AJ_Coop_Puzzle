@@ -29,8 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_type == null)
-                    _type = Reflection.GetEditorTypeFromAssembly("GUILayoutGroup", "UnityEngine", "UnityEngine");
+                if (_type == null) _type = Reflection.GetEditorTypeFromAssembly("GUILayoutGroup", "UnityEngine", "UnityEngine");
                 return _type;
             }
         }

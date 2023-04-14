@@ -20,11 +20,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             }
         }
 
-        public static int GetToolCount()
-        {
-            return 7;
-        }
-
 #if UNITY_2021_1_OR_NEWER
 
         private static FieldInfo _rootField;
@@ -42,6 +37,11 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             return rootField.GetValue(toolbar) as VisualElement;
         }
-#endif
+#endif 
+
+        public static int GetToolCount()
+        {
+            return 7;
+        }
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using InfinityCode.UltimateEditorEnhancer.HierarchyTools;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public class GameObjectHierarchySettings : AutoSizePopupWindow
     {
-        public static Color[] colors =
-        {
+        public static Color[] colors = {
             Color.gray, Color.blue, Color.cyan, Color.green,
             Color.yellow, new Color32(0xFF, 0xAA, 0, 255), Color.red, new Color32(0xAA, 0x00, 0xFF, 255)
         };
@@ -29,19 +29,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static GUIStyle seperatorStyle = "sv_iconselector_sep";
         private static GUIContent[] smallIcons;
         private static Object[] targets;
-
-        private void OnEnable()
-        {
-            labelIcons = GetTextures("sv_icon_name", "", 0, 8);
-            smallIcons = GetTextures("sv_icon_dot", "_sml", 0, 16);
-            noneButtonContent = EditorGUIUtility.IconContent("sv_icon_none");
-            noneButtonContent.text = "None";
-        }
-
-        protected override void OnDestroy()
-        {
-            targets = null;
-        }
 
         private void DrawBackgrounds()
         {
@@ -70,7 +57,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Color color = colors[i];
                 DrawIconButton(icon, null, true, () => SetBackground(color));
             }
-
             GUILayout.EndHorizontal();
             GUILayout.Space(5f);
 
@@ -107,6 +93,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (EditorGUI.EndChangeCheck()) SetRecursive();
 
             EditorGUIUtility.labelWidth = labelWidth;
+            
         }
 
         private void DrawIconButton(GUIContent content, Texture2D selectedIcon, bool labelIcon, Action OnSelected)
@@ -156,7 +143,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 GUIContent icon = labelIcons[i];
                 DrawIconButton(icon, texture2D, true, () => SetIcon((Texture2D)icon.image));
             }
-
             GUILayout.EndHorizontal();
             GUILayout.Space(5f);
 
@@ -167,10 +153,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 GUIContent icon = labelIcons[i];
                 DrawIconButton(icon, texture2D, true, () => SetIcon((Texture2D)icon.image));
             }
-
             GUILayout.EndHorizontal();
             GUILayout.Space(3f);
-
+            
             GUILayout.Label("", seperatorStyle);
 
             GUILayout.BeginHorizontal();
@@ -180,11 +165,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 GUIContent icon = smallIcons[i];
                 DrawIconButton(icon, texture2D, false, () => SetIcon((Texture2D)icon.image));
             }
-
             GUILayout.Space(3f);
             GUILayout.EndHorizontal();
             GUILayout.Space(6f);
-
+            
             GUILayout.BeginHorizontal();
             GUILayout.Space(9f);
             for (int i = smallIcons.Length / 2; i < smallIcons.Length; ++i)
@@ -192,7 +176,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 GUIContent icon = smallIcons[i];
                 DrawIconButton(icon, texture2D, false, () => SetIcon((Texture2D)icon.image));
             }
-
             GUILayout.Space(3f);
             GUILayout.EndHorizontal();
 
@@ -201,7 +184,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 int objectPickerID = GUIUtility.GetControlID("Other_Button".GetHashCode(), FocusType.Keyboard) + 1000;
                 EditorGUIUtility.ShowObjectPicker<Texture2D>(null, false, "", objectPickerID);
             }
-
             GUILayout.Space(6f);
             GUILayout.Label("", seperatorStyle);
 
@@ -224,15 +206,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 guiContentArray[index] = EditorGUIUtility.IconContent(baseName + (startIndex + index) + postFix);
             }
-
             return guiContentArray;
         }
 
         protected override void OnContentGUI()
         {
             Event e = Event.current;
-            if (e.type == EventType.Repaint)
-                backgroundStyle.Draw(new Rect(0, 0, position.width, position.height), false, false, false, false);
+            if (e.type == EventType.Repaint) backgroundStyle.Draw(new Rect(0, 0, position.width, position.height), false, false, false, false);
 
             if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape)
             {
@@ -243,6 +223,19 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             DrawIcons();
             DrawBackgrounds();
+        }
+
+        protected override void OnDestroy()
+        {
+            targets = null;
+        }
+
+        private void OnEnable()
+        {
+            labelIcons = GetTextures("sv_icon_name", "", 0, 8);
+            smallIcons = GetTextures("sv_icon_dot", "_sml", 0, 16);
+            noneButtonContent = EditorGUIUtility.IconContent("sv_icon_none");
+            noneButtonContent.text = "None";
         }
 
         private void RemoveBackground()
@@ -287,8 +280,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     EditorUtility.SetDirty(sceneReferences);
                 }
 
-                SceneReferences.HierarchyBackground background =
-                    sceneReferences.hierarchyBackgrounds.FirstOrDefault(b => b.gameObject == target);
+                SceneReferences.HierarchyBackground background = sceneReferences.hierarchyBackgrounds.FirstOrDefault(b => b.gameObject == target);
                 if (background == null)
                 {
                     background = new SceneReferences.HierarchyBackground
@@ -311,7 +303,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private void SetIcon(Texture2D icon)
         {
             Undo.RecordObjects(targets, "Set Icon On GameObject");
-
+            
             foreach (Object target in targets)
             {
                 EditorGUIUtilityRef.SetIconForObject(target, icon);
@@ -340,7 +332,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static GameObjectHierarchySettings ShowAtPosition(Object target, Rect rect)
         {
-            return ShowAtPosition(new[] { target }, rect);
+            return ShowAtPosition(new []{ target }, rect);
         }
 
         public static GameObjectHierarchySettings ShowAtPosition(Object[] targets, Rect rect)

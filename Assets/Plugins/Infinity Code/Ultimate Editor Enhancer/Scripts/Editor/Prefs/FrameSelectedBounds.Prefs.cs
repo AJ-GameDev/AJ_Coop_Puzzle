@@ -23,6 +23,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
+            public override void Draw()
+            {
+                frameSelectedBounds = EditorGUILayout.ToggleLeft("Frame Selected Bounds", frameSelectedBounds);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!frameSelectedBounds) return new Shortcut[0];
@@ -31,11 +36,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     new Shortcut("Frame Selected Bounds", "Scene View", "SHIFT + F"),
                 };
-            }
-
-            public override void Draw()
-            {
-                frameSelectedBounds = EditorGUILayout.ToggleLeft("Frame Selected Bounds", frameSelectedBounds);
             }
         }
     }

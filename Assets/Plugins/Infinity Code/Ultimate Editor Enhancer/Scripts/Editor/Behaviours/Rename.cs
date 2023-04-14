@@ -98,8 +98,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             }
             else
             {
-                foreach (GameObject go in gameObjects.Where(g => g.scene.name != null)
-                             .OrderBy(g => g.transform.GetSiblingIndex()))
+                foreach (GameObject go in gameObjects.Where(g => g.scene.name != null).OrderBy(g => g.transform.GetSiblingIndex()))
                 {
                     go.name = ReplaceTokens(go, name);
                 }
@@ -115,18 +114,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             EditorWindow wnd = EditorWindow.focusedWindow;
             if (wnd == null) return false;
             Type type = wnd.GetType();
-            return type == typeof(SceneView) ||
-                   type == InspectorWindowRef.type ||
-                   type == typeof(ComponentWindow) ||
+            return type == typeof(SceneView) || 
+                   type == InspectorWindowRef.type || 
+                   type == typeof(ComponentWindow) || 
                    type == typeof(LayoutWindow) ||
                    type == ConsoleWindowRef.type ||
-                   (type == SceneHierarchyWindowRef.type && Selection.gameObjects.Length > 1) ||
+                   (type == SceneHierarchyWindowRef.type && Selection.gameObjects.Length > 1) || 
                    (type == typeof(PinAndClose) && (wnd as PinAndClose).targetWindow is ComponentWindow);
         }
 
         private static string ReplaceTokens(GameObject go, string name)
         {
-            return Regex.Replace(name, @"{[\w\d:-]+}", delegate(Match match)
+            return Regex.Replace(name, @"{[\w\d:-]+}", delegate (Match match)
             {
                 string v = match.Value.Trim('{', '}');
                 if (char.ToUpperInvariant(v[0]) == 'C')
@@ -141,7 +140,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 
                         if (index == int.MinValue) index = 1;
                     }
-
                     int i = index++;
                     return i.ToString();
                 }
@@ -179,7 +177,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             if (targets == null || targets.Length == 0) return;
 
             gameObjects = targets;
-
+            
             if (targets.Length == 1)
             {
                 dialog = InputDialog.Show("Enter a new GameObject name", gameObjects[0].name, OnRename);

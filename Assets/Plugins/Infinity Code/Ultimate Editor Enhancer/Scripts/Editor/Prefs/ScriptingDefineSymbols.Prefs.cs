@@ -34,8 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             public override void Draw()
             {
                 EditorGUI.BeginChangeCheck();
-                addScriptingDefineSymbols =
-                    EditorGUILayout.ToggleLeft("Add Scripting Define Symbols", addScriptingDefineSymbols);
+                addScriptingDefineSymbols = EditorGUILayout.ToggleLeft("Add Scripting Define Symbols", addScriptingDefineSymbols);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (OnAddSymbolsChanged != null) OnAddSymbolsChanged();

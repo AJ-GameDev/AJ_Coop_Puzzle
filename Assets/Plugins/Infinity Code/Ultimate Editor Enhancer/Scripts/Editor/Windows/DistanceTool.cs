@@ -13,12 +13,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public class DistanceTool : EditorWindow
     {
-        public enum TargetType
-        {
-            transform,
-            point
-        }
-
         public const int LINEHEIGHT = 24;
         private const string DistanceStyleID = "sv_label_3";
         private const string IndexStyleID = "sv_label_1";
@@ -30,13 +24,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static Target pickTarget;
         private static bool lastPointUnderCursor;
 
-        [SerializeField] private List<Target> targets;
-
         private bool hasPrev = false;
 
         private Vector3 prevPosition;
         private ReorderableList reorderableList;
         private Vector2 scrollPosition;
+
+        [SerializeField]
+        private List<Target> targets;
 
         private float totalDistance;
         private bool useX = true;
@@ -88,60 +83,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
 
                 return _indexStyle;
-            }
-        }
-
-        private void OnEnable()
-        {
-            SceneViewManager.AddListener(OnSceneView, SceneViewOrder.normal, true);
-        }
-
-        private void OnDestroy()
-        {
-            pickTarget = null;
-            SceneViewManager.RemoveListener(OnSceneView);
-        }
-
-        private void OnGUI()
-        {
-            if (targets == null) targets = new List<Target>();
-
-            if (reorderableList == null)
-            {
-                reorderableList = new ReorderableList(targets, typeof(Transform), true, true, true, true);
-                reorderableList.drawHeaderCallback += DrawHeader;
-                reorderableList.drawElementCallback += DrawElement;
-                reorderableList.onAddCallback += AddItem;
-                reorderableList.onRemoveCallback += RemoveItem;
-                reorderableList.elementHeightCallback += GetElementHeight;
-                reorderableList.elementHeight = 48;
-            }
-
-            axisMul = new Vector3(useX ? 1 : 0, useY ? 1 : 0, useZ ? 1 : 0);
-
-            totalDistance = 0;
-            hasPrev = false;
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            reorderableList.DoLayoutList();
-            EditorGUILayout.EndScrollView();
-
-            DrawUseCursorPosition();
-
-            if (pickTarget != null)
-            {
-                EditorGUILayout.HelpBox("Press Enter to finish pick.", MessageType.Info);
-            }
-
-            BottomToolbar();
-
-            ProcessEvents();
-
-            if (isDirty)
-            {
-                isDirty = false;
-                SceneView.RepaintAll();
-                Repaint();
             }
         }
 
@@ -263,8 +204,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawUseCursorPosition()
         {
-            lastPointUnderCursor =
-                EditorGUILayout.ToggleLeft("Last point is the cursor in Scene View", lastPointUnderCursor);
+            lastPointUnderCursor = EditorGUILayout.ToggleLeft("Last point is the cursor in Scene View", lastPointUnderCursor);
 
             if (!lastPointUnderCursor) return;
 
@@ -295,8 +235,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             if (SceneView.lastActiveSceneView.in2DMode)
             {
-                Vector3 p = SceneView.lastActiveSceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x,
-                    Screen.height - e.mousePosition.y - 40));
+                Vector3 p = SceneView.lastActiveSceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, Screen.height - e.mousePosition.y - 40));
                 p.z = 0;
                 return p;
             }
@@ -309,7 +248,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     HandleUtilityRef.FindNearestVertex(e.mousePosition, out p);
                     return p;
                 }
-
                 return SceneViewManager.lastWorldPosition;
             }
 
@@ -327,12 +265,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 DrawLine(prevPosition, point);
             }
-
+            
             if (!SceneView.lastActiveSceneView.in2DMode && KeyManager.IsKeyDown(KeyCode.V))
             {
                 float handleSize = HandleUtility.GetHandleSize(point);
-                Handles.RectangleHandleCap(-1, point, sceneView.camera.transform.rotation, handleSize * 0.125f,
-                    Event.current.type);
+                Handles.RectangleHandleCap(-1, point, sceneView.camera.transform.rotation, handleSize * 0.125f, Event.current.type);
             }
 
             if (e.type == EventType.MouseDown && e.modifiers == EventModifiers.None)
@@ -374,6 +311,60 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             return LINEHEIGHT * 2 - 4;
         }
 
+        private void OnDestroy()
+        {
+            pickTarget = null;
+            SceneViewManager.RemoveListener(OnSceneView);
+        }
+
+        private void OnEnable()
+        {
+            SceneViewManager.AddListener(OnSceneView, SceneViewOrder.normal, true);
+        }
+
+        private void OnGUI()
+        {
+            if (targets == null) targets = new List<Target>();
+
+            if (reorderableList == null)
+            {
+                reorderableList = new ReorderableList(targets, typeof(Transform), true, true, true, true);
+                reorderableList.drawHeaderCallback += DrawHeader;
+                reorderableList.drawElementCallback += DrawElement;
+                reorderableList.onAddCallback += AddItem;
+                reorderableList.onRemoveCallback += RemoveItem;
+                reorderableList.elementHeightCallback += GetElementHeight;
+                reorderableList.elementHeight = 48;
+            }
+
+            axisMul = new Vector3(useX ? 1 : 0, useY ? 1 : 0, useZ ? 1 : 0);
+
+            totalDistance = 0;
+            hasPrev = false;
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+            reorderableList.DoLayoutList();
+            EditorGUILayout.EndScrollView();
+
+            DrawUseCursorPosition();
+
+            if (pickTarget != null)
+            {
+                EditorGUILayout.HelpBox("Press Enter to finish pick.", MessageType.Info);
+            }
+
+            BottomToolbar();
+
+            ProcessEvents();
+
+            if (isDirty)
+            {
+                isDirty = false;
+                SceneView.RepaintAll();
+                Repaint();
+            }
+        }
+
         private void OnPickSceneView(SceneView sceneView)
         {
             Event e = Event.current;
@@ -395,8 +386,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 }
                 else if (sceneView.in2DMode)
                 {
-                    Vector3 point = sceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x,
-                        Screen.height - e.mousePosition.y - 40));
+                    Vector3 point = sceneView.camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, Screen.height - e.mousePosition.y - 40));
                     point.z = 0;
                     pickTarget.point = point;
                     Repaint();
@@ -528,21 +518,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public Transform transform;
             public Vector3 point;
 
-            public Target()
-            {
-            }
-
-            public Target(TargetType type)
-            {
-                this.type = type;
-            }
-
-            public Target(Transform transform)
-            {
-                type = TargetType.transform;
-                this.transform = transform;
-            }
-
             public Vector3 position
             {
                 get
@@ -556,6 +531,28 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 get { return type != TargetType.transform || transform != null; }
             }
+
+            public Target()
+            {
+
+            }
+
+            public Target(TargetType type)
+            {
+                this.type = type;
+            }
+
+            public Target(Transform transform)
+            {
+                type = TargetType.transform;
+                this.transform = transform;
+            }
+        }
+
+        public enum TargetType
+        {
+            transform,
+            point
         }
     }
 }

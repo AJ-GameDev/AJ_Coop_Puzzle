@@ -15,17 +15,10 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             get { return 900; }
         }
 
-        public bool Validate()
-        {
-            return SceneView.lastActiveSceneView != null || (EditorWindow.focusedWindow != null &&
-                                                             EditorWindow.focusedWindow.GetType() == GameViewRef.type);
-        }
-
         protected override void Init()
         {
             bool maximized;
-            if (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow.GetType() == GameViewRef.type)
-                maximized = WindowsHelper.IsMaximized(EditorWindow.focusedWindow);
+            if (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow.GetType() == GameViewRef.type) maximized = WindowsHelper.IsMaximized(EditorWindow.focusedWindow);
             else maximized = WindowsHelper.IsMaximized(SceneView.lastActiveSceneView);
 
             if (maximized)
@@ -46,22 +39,24 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             {
                 if (EditorMenu.lastWindow != null && EditorMenu.lastWindow.GetType() == GameViewRef.type)
                 {
-                    if (Event.current.shift && FullscreenEditor.isPresent &&
-                        !WindowsHelper.IsMaximized(EditorMenu.lastWindow))
-                        FullscreenEditor.MakeFullscreen(EditorMenu.lastWindow);
+                    if (Event.current.shift && FullscreenEditor.isPresent && !WindowsHelper.IsMaximized(EditorMenu.lastWindow)) FullscreenEditor.MakeFullscreen(EditorMenu.lastWindow);
                     else WindowsHelper.ToggleMaximized(EditorMenu.lastWindow);
                 }
                 else
                 {
-                    if (Event.current.shift && FullscreenEditor.isPresent &&
-                        !WindowsHelper.IsMaximized(SceneView.lastActiveSceneView))
-                        FullscreenEditor.MakeFullscreen(SceneView.lastActiveSceneView);
+                    if (Event.current.shift && FullscreenEditor.isPresent && !WindowsHelper.IsMaximized(SceneView.lastActiveSceneView)) FullscreenEditor.MakeFullscreen(SceneView.lastActiveSceneView);
                     else WindowsHelper.ToggleMaximized(SceneView.lastActiveSceneView);
                 }
             }
             catch
             {
+                
             }
+        }
+
+        public bool Validate()
+        {
+            return SceneView.lastActiveSceneView != null || (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow.GetType() == GameViewRef.type);
         }
     }
 }

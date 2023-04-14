@@ -20,19 +20,19 @@ namespace InfinityCode.UltimateEditorEnhancer
                 this.shortcut = shortcut;
             }
 
-            public Shortcut(string action, string context, EventModifiers modifiers) : this(action, context,
-                ModifierToString(modifiers))
+            public Shortcut(string action, string context, EventModifiers modifiers): this(action, context, ModifierToString(modifiers))
             {
+
             }
 
-            public Shortcut(string action, string context, EventModifiers modifiers, KeyCode keyCode) : this(action,
-                context, ModifierToString(modifiers, keyCode))
+            public Shortcut(string action, string context, EventModifiers modifiers, KeyCode keyCode) : this(action, context, ModifierToString(modifiers, keyCode))
             {
+
             }
 
-            public Shortcut(string action, string context, EventModifiers modifiers, string extra) : this(action,
-                context, ModifierToString(modifiers, extra))
+            public Shortcut(string action, string context, EventModifiers modifiers, string extra) : this(action, context, ModifierToString(modifiers, extra))
             {
+
             }
         }
     }

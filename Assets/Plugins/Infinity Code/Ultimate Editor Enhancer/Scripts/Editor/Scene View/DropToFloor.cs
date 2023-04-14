@@ -11,12 +11,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
     [InitializeOnLoad]
     public static class DropToFloor
     {
-        public enum CountRays
-        {
-            five = 0,
-            one = 1
-        }
-
         public static Dictionary<Transform, float> movedObjects;
         public static List<Vector3> points;
 
@@ -71,8 +65,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         private static void OnInvoke()
         {
-            GameObject[] targets = Selection.gameObjects.Where(g => g.scene.name != null)
-                .OrderBy(g => g.transform.position.y).ToArray();
+            GameObject[] targets = Selection.gameObjects.Where(g => g.scene.name != null).OrderBy(g => g.transform.position.y).ToArray();
 
             Undo.SetCurrentGroupName("Drop To Floor");
             int group = Undo.GetCurrentGroup();
@@ -95,8 +88,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static bool OnValidate()
         {
             Event e = Event.current;
-            if (!Prefs.dropToFloor || e.keyCode != Prefs.dropToFloorKeyCode ||
-                e.modifiers != (Prefs.dropToFloorModifiers | EventModifiers.FunctionKey)) return false;
+            if (!Prefs.dropToFloor || e.keyCode != Prefs.dropToFloorKeyCode || e.modifiers != (Prefs.dropToFloorModifiers | EventModifiers.FunctionKey)) return false;
 
             if (Selection.gameObjects.Length == 0) return false;
             if (Selection.gameObjects.All(g => g.scene.name == null)) return false;
@@ -116,10 +108,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     hitPoint.y += shift;
                     return 1;
                 }
-
                 return 0;
             }
-
             return -1;
         }
 
@@ -174,6 +164,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 points.Clear();
                 points.Add(p);
             }
+        }
+
+        public enum CountRays
+        {
+            five = 0,
+            one = 1
         }
     }
 }

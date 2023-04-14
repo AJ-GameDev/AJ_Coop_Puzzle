@@ -18,9 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool searchByProject = true;
         public static bool searchByComponents = false;
         public static bool searchByWindow = true;
-
-        public static string searchDoNotShowOnWindows =
-            "UnityEditor.ProfilerWindow;UnityEditor.SettingsWindow;InfinityCode.UltimateEditorEnhancer.Windows.BookmarkWindow";
+        public static string searchDoNotShowOnWindows = "UnityEditor.ProfilerWindow;UnityEditor.SettingsWindow;InfinityCode.UltimateEditorEnhancer.Windows.BookmarkWindow";
 
         public static KeyCode searchKeyCode = KeyCode.F;
         public static KeyCode searchScriptKeyCode = KeyCode.T;
@@ -41,10 +39,8 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (string.IsNullOrEmpty(searchDoNotShowOnWindows)) return false;
             if (_searchDoNotShowOnWindows == null)
             {
-                _searchDoNotShowOnWindows =
-                    searchDoNotShowOnWindows.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++)
-                    _searchDoNotShowOnWindows[i] = _searchDoNotShowOnWindows[i].Trim();
+                _searchDoNotShowOnWindows = searchDoNotShowOnWindows.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++) _searchDoNotShowOnWindows[i] = _searchDoNotShowOnWindows[i].Trim();
             }
 
             if (_searchDoNotShowOnWindows.Length == 0) return false;
@@ -76,36 +72,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -45; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!search) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Show Search Window", "Everywhere", searchModifiers, searchKeyCode),
-                    new Shortcut("Switch Search Source", "Search", "Tab"),
-                    new Shortcut("Prev Item", "Search", "Up"),
-                    new Shortcut("Next Item", "Search", "Down"),
-                    new Shortcut("Perform Default Action", "Search", "Enter or Double Click"),
-                    new Shortcut("Perform Alternative Action", "Search",
-#if !UNITY_EDITOR_OSX
-                        "CTRL + Enter"
-#else
-                        "CMD + Enter"
-#endif
-                    ),
-                    new Shortcut("Close Window", "Search", "Escape"),
-                    new Shortcut("Start Drag Item", "Search", "Drag Item"),
-                    new Shortcut("Show Context Menu For Item", "Search", "RMB"),
-                };
-            }
-
             public override void Draw()
             {
-                DrawFieldWithHotKey("Search", ref search, ref searchKeyCode, ref searchModifiers, EditorStyles.label,
-                    0);
-                DrawFieldWithHotKey("Search For Scripts", ref searchScript, ref searchScriptKeyCode,
-                    ref searchScriptModifiers, EditorStyles.label, 0);
+                DrawFieldWithHotKey("Search", ref search, ref searchKeyCode, ref searchModifiers, EditorStyles.label, 0);
+                DrawFieldWithHotKey("Search For Scripts", ref searchScript, ref searchScriptKeyCode, ref searchScriptModifiers, EditorStyles.label, 0);
 
                 EditorGUI.BeginDisabledGroup(!search);
 
@@ -115,10 +85,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (_searchDoNotShowOnWindows == null)
                 {
-                    _searchDoNotShowOnWindows =
-                        searchDoNotShowOnWindows.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++)
-                        _searchDoNotShowOnWindows[i] = _searchDoNotShowOnWindows[i].Trim();
+                    _searchDoNotShowOnWindows = searchDoNotShowOnWindows.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < _searchDoNotShowOnWindows.Length; i++) _searchDoNotShowOnWindows[i] = _searchDoNotShowOnWindows[i].Trim();
                 }
 
                 EditorGUILayout.LabelField("Do Not Show On Windows");
@@ -130,17 +98,17 @@ namespace InfinityCode.UltimateEditorEnhancer
                     EditorGUILayout.BeginHorizontal();
                     _searchDoNotShowOnWindows[i] = EditorGUILayout.TextField(_searchDoNotShowOnWindows[i]);
                     if (GUILayout.Button("X", GUILayout.ExpandWidth(false))) removeIndex = i;
-                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.EndHorizontal(); 
                 }
 
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Space(16);
+                GUILayout.Space(16); 
                 if (GUILayout.Button("Add"))
                 {
-                    ArrayUtility.Add(ref _searchDoNotShowOnWindows, "");
+                    ArrayUtility.Add(ref _searchDoNotShowOnWindows, ""); 
                 }
 
-                if (GUILayout.Button(!searchWaitWindowChanged ? "Pick" : "Stop Pick", GUILayout.Width(200)))
+                if (GUILayout.Button(!searchWaitWindowChanged? "Pick": "Stop Pick", GUILayout.Width(200)))
                 {
                     searchWaitWindowChanged = !searchWaitWindowChanged;
                     if (searchWaitWindowChanged)
@@ -153,13 +121,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                         EditorApplication.update -= WaitWindowChanged;
                     }
                 }
-
                 EditorGUILayout.EndHorizontal();
 
                 if (searchWaitWindowChanged)
                 {
-                    EditorGUILayout.HelpBox("Set the focus on the window you want to add to the black list.",
-                        MessageType.Info);
+                    EditorGUILayout.HelpBox("Set the focus on the window you want to add to the black list.", MessageType.Info);
                 }
 
                 if (removeIndex != -1)
@@ -182,10 +148,33 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.EndDisabledGroup();
             }
 
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!search) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Show Search Window", "Everywhere", searchModifiers, searchKeyCode), 
+                    new Shortcut("Switch Search Source", "Search", "Tab"),
+                    new Shortcut("Prev Item", "Search", "Up"), 
+                    new Shortcut("Next Item", "Search", "Down"),
+                    new Shortcut("Perform Default Action", "Search", "Enter or Double Click"),
+                    new Shortcut("Perform Alternative Action", "Search",
+#if !UNITY_EDITOR_OSX
+                        "CTRL + Enter"
+#else
+                        "CMD + Enter"
+#endif
+                        ),
+                    new Shortcut("Close Window", "Search", "Escape"),
+                    new Shortcut("Start Drag Item", "Search", "Drag Item"),
+                    new Shortcut("Show Context Menu For Item", "Search", "RMB"),
+                };
+            }
+
             private static void UpdateSearchDoNotShowOnWindow()
             {
-                searchDoNotShowOnWindows = string.Join(";",
-                    _searchDoNotShowOnWindows.Where(s => !string.IsNullOrEmpty(s)).ToArray());
+                searchDoNotShowOnWindows = string.Join(";", _searchDoNotShowOnWindows.Where(s => !string.IsNullOrEmpty(s)).ToArray());
             }
 
             private void WaitWindowChanged()

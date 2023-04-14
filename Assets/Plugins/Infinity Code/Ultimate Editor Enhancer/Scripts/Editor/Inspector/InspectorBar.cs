@@ -14,18 +14,18 @@ using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 {
-    public class InspectorBar : InspectorInjector
+    public class InspectorBar: InspectorInjector
     {
         private const string ELEMENT_NAME = "InspectorBar";
-
-        private const int LINE_HEIGHT = 20;
-        private const int LAST_LINE_OFFSET = 70;
 
         private static InspectorBar instance;
 
         public static Vector2 lastPosition = Vector2.zero;
         public static Func<Component, Component[]> OnInitRelatedComponents;
         public static Action<EditorWindow, List<Component>> OnDrawRelatedComponents;
+
+        private const int LINE_HEIGHT = 20;
+        private const int LAST_LINE_OFFSET = 70;
 
         private static GUIContent _collapseContent;
         private static GUIContent _expandContent;
@@ -34,25 +34,13 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private static Dictionary<EditorWindow, VisualElementWrapper> visualElements;
         private static GUIContent openPrefabContent;
 
-        InspectorBar()
-        {
-            EditorApplication.delayCall += InitInspector;
-            WindowManager.OnWindowFocused += OnWindowFocused;
-            WindowManager.OnMaximizedChanged += OnMaximizedChanged;
-            Selection.selectionChanged += OnSelectionChanged;
-            contentCache = new Dictionary<int, ContentWrapper>();
-            //relatedComponents = new List<Component>();
-            visualElements = new Dictionary<EditorWindow, VisualElementWrapper>();
-        }
-
         //private static List<Component> relatedComponents;
 
         private static GUIContent collapseContent
         {
             get
             {
-                if (_collapseContent == null)
-                    _collapseContent = new GUIContent(Icons.collapse, "Collapse all components");
+                if (_collapseContent == null) _collapseContent = new GUIContent(Icons.collapse, "Collapse all components");
                 return _collapseContent;
             }
         }
@@ -89,6 +77,17 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
                 return _selectedContentStyle;
             }
+        }
+
+        InspectorBar()
+        {
+            EditorApplication.delayCall += InitInspector;
+            WindowManager.OnWindowFocused += OnWindowFocused;
+            WindowManager.OnMaximizedChanged += OnMaximizedChanged;
+            Selection.selectionChanged += OnSelectionChanged;
+            contentCache = new Dictionary<int, ContentWrapper>();
+            //relatedComponents = new List<Component>();
+            visualElements = new Dictionary<EditorWindow, VisualElementWrapper>();
         }
 
         private static void DrawBar(EditorWindow wnd, VisualElement editorsList)
@@ -184,8 +183,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             }
         }
 
-        private static void DrawIcon(EditorWindow wnd, VisualElement editorsList, int elementIndex, ref int editorIndex,
-            Editor[] editors)
+        private static void DrawIcon(EditorWindow wnd, VisualElement editorsList, int elementIndex, ref int editorIndex, Editor[] editors)
         {
             VisualElement el = editorsList[elementIndex];
             if (el.GetType().Name != "EditorElement") return;
@@ -212,8 +210,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             GUIStyle style = isActive ? normalStyle : selectedContentStyle;
 
             float maxWidth = wnd.position.width;
-            Rect rect = GetRect(wrapper.width,
-                maxWidth - (elementIndex == editorsList.childCount - 2 ? LAST_LINE_OFFSET : 0));
+            Rect rect = GetRect(wrapper.width, maxWidth - (elementIndex == editorsList.childCount - 2 ? LAST_LINE_OFFSET : 0));
 
             bool state = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
@@ -233,11 +230,9 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
             if (Updater.hasNewVersion)
             {
-                GUIContent updateContent = TempContent.Get(Icons.updateAvailable,
-                    "Update Available.\nClick to open the built-in update system.");
+                GUIContent updateContent = TempContent.Get(Icons.updateAvailable, "Update Available.\nClick to open the built-in update system.");
                 float updateContentWidth = style.CalcSize(updateContent).x;
-                rect = new Rect(wnd.position.width - updateContentWidth - helpContentWidth, lastPosition.y,
-                    updateContentWidth, LINE_HEIGHT);
+                rect = new Rect(wnd.position.width - updateContentWidth - helpContentWidth, lastPosition.y, updateContentWidth, LINE_HEIGHT);
 
                 if (GUI.Button(rect, updateContent, style)) Updater.OpenWindow();
             }
@@ -346,7 +341,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 
             if (!Prefs.inspectorBar) return true;
 
-            if (editorsList.childCount < 2) return false;
+            if (editorsList.childCount < 2) return false; 
             VisualElement elements = editorsList[0];
 
             Editor[] editors = EditorElementRef.GetEditors(elements);
@@ -378,8 +373,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             InjectBar(wnd);
         }
 
-        private static void ProcessIconEvents(EditorWindow wnd, VisualElement editorsList, int elementIndex,
-            int editorIndex, ButtonEvent buttonEvent, bool isActive, Editor editor)
+        private static void ProcessIconEvents(EditorWindow wnd, VisualElement editorsList, int elementIndex, int editorIndex, ButtonEvent buttonEvent, bool isActive, Editor editor)
         {
             Event e = Event.current;
             if (buttonEvent == ButtonEvent.hover)
@@ -390,8 +384,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             {
                 if (e.button == 0)
                 {
-                    if (e.command || e.control || e.shift)
-                        ToggleVisible(wnd, editorsList, elementIndex, editorIndex, !isActive);
+                    if (e.command || e.control || e.shift) ToggleVisible(wnd, editorsList, elementIndex, editorIndex, !isActive);
                     else
                     {
                         if (!isActive) SetSoloVisible(wnd, editorsList, elementIndex, editorIndex, false);
@@ -432,8 +425,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             return ret;
         }
 
-        private static void SetSoloVisible(EditorWindow wnd, VisualElement element, int index, int editorIndex,
-            bool show)
+        private static void SetSoloVisible(EditorWindow wnd, VisualElement element, int index, int editorIndex, bool show)
         {
             if (show)
             {
@@ -455,6 +447,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                         if (IsTransform(el)) el.style.marginTop = 7;
                         object inspectorElement = EditorElementRef.GetInspectorElement(el);
                         EditorElementRef.SetElementVisible(inspectorElement, false);
+
                     }
                     else el.style.display = DisplayStyle.None;
                 }
@@ -464,8 +457,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             }
         }
 
-        private static void ToggleVisible(EditorWindow wnd, VisualElement element, int index, int editorIndex,
-            bool show)
+        private static void ToggleVisible(EditorWindow wnd, VisualElement element, int index, int editorIndex, bool show)
         {
             VisualElement el = element[index];
             if (show)
@@ -486,10 +478,8 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                         el.style.marginTop = 7;
                         break;
                     }
-
                     if (el.style.display == DisplayStyle.Flex) break;
                 }
-
                 ActiveEditorTracker tracker = InspectorWindowRef.GetTracker(wnd);
                 tracker.SetVisible(editorIndex, 1);
             }
@@ -498,25 +488,24 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         internal class ContentWrapper
         {
             public GUIContent content;
-
             //public Component[] relatedComponents;
             public float width;
         }
 
         internal class VisualElementWrapper
         {
-            public int rowCount;
             public VisualElement visualElement;
+            public int rowCount;
+
+            public IStyle style
+            {
+                get { return visualElement.style; }
+            }
 
             public VisualElementWrapper(VisualElement visualElement, int rowCount)
             {
                 this.visualElement = visualElement;
                 this.rowCount = rowCount;
-            }
-
-            public IStyle style
-            {
-                get { return visualElement.style; }
             }
         }
     }

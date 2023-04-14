@@ -25,6 +25,21 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
         private static Vector3 _lastWorldPosition;
         private static EditorWindow _lastWindow;
 
+        public static EditorWindow lastWindow
+        {
+            get { return _lastWindow; }
+        }
+
+        public static Vector3 lastWorldPosition
+        {
+            get { return _lastWorldPosition; }
+        }
+
+        public static bool isOpened
+        {
+            get { return _isOpened; }
+        }
+
         static EditorMenu()
         {
             AssetPreview.SetPreviewTextureCacheSize(32000);
@@ -33,8 +48,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
             binding.OnValidate += () =>
             {
                 if (!Prefs.contextMenuOnHotKey) return false;
-                if (EditorApplication.isPlaying && Prefs.contextMenuDisableInPlayMode &&
-                    EditorWindow.focusedWindow.GetType() == GameViewRef.type) return false;
+                if (EditorApplication.isPlaying && Prefs.contextMenuDisableInPlayMode && EditorWindow.focusedWindow.GetType() == GameViewRef.type) return false;
                 if (Event.current.keyCode != Prefs.contextMenuHotKey) return false;
                 if (Event.current.modifiers != Prefs.contextMenuHotKeyModifiers) return false;
                 return true;
@@ -63,21 +77,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
             CloseAllFloatingWindows();
         }
 
-        public static EditorWindow lastWindow
-        {
-            get { return _lastWindow; }
-        }
-
-        public static Vector3 lastWorldPosition
-        {
-            get { return _lastWorldPosition; }
-        }
-
-        public static bool isOpened
-        {
-            get { return _isOpened; }
-        }
-
         private static void CloseAllFloatingWindows()
         {
             try
@@ -86,7 +85,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
                 foreach (Windows.PopupWindow wnd in windows)
                 {
                     if (wnd == null) continue;
-                    if (wnd is AutoSizePopupWindow pw && !pw.closeOnLossFocus && !pw.closeOnCompileOrPlay) continue;
+                    if (wnd is AutoSizePopupWindow pw && !pw.closeOnLossFocus && !pw.closeOnCompileOrPlay) continue; 
                     try
                     {
                         wnd.Close();
@@ -101,7 +100,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus
                 Log.Add(e);
             }
 
-            ObjectToolbar.CloseActiveWindow();
+            ObjectToolbar.CloseActiveWindow(); 
         }
 
         private static void CheckOpened()

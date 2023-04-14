@@ -1,6 +1,7 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+using System;
 using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
@@ -24,8 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             EditorGUIDoTextFieldInterceptor.OnPostfix += OnPostfix;
         }
 
-        private static void OnPrefix(TextEditor editor, int id, ref Rect position, ref string text, GUIStyle style,
-            string allowedletters, ref bool changed, bool reset, bool multiline, bool passwordfield)
+        private static void OnPrefix(TextEditor editor, int id, ref Rect position, ref string text, GUIStyle style, string allowedletters, ref bool changed, bool reset, bool multiline, bool passwordfield)
         {
             if (!Prefs.expandLongTextFields) return;
 
@@ -38,8 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             position.width -= buttonRect.width + 2;
         }
 
-        private static void OnPostfix(TextEditor editor, int id, ref Rect position, ref string text, GUIStyle style,
-            string allowedletters, ref bool changed, bool reset, bool multiline, bool passwordfield)
+        private static void OnPostfix(TextEditor editor, int id, ref Rect position, ref string text, GUIStyle style, string allowedletters, ref bool changed, bool reset, bool multiline, bool passwordfield)
         {
             if (!Prefs.expandLongTextFields) return;
 
@@ -57,9 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             if (GUI.Button(buttonRect, TempContent.Get(Icons.upDown, "Expand Text Field")))
             {
                 targetID = id;
-                LongTextEditorWindow.OpenWindow(text,
-                        new Rect(position.x - 3, position.y - 2, position.width + buttonWidth + 5, position.height + 2))
-                    .OnClose += s => { restoreText = s; };
+                LongTextEditorWindow.OpenWindow(text, new Rect(position.x - 3, position.y - 2, position.width + buttonWidth + 5, position.height + 2)).OnClose += s => { restoreText = s; };
             }
         }
     }

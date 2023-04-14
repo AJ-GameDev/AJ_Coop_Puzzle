@@ -8,19 +8,18 @@ using UnityEngine;
 namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 {
     public abstract class MainLayoutItem<T, U> : MainLayoutItem
-        where T : MainLayoutItem<T, U>
-        where U : LayoutItem
+        where T: MainLayoutItem<T, U>
+        where U: LayoutItem
     {
-        protected int countActiveItems;
         protected List<U> items;
+        protected int countActiveItems;
 
         public override bool isActive
         {
             get { return countActiveItems > 0; }
         }
 
-        protected abstract void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal,
-            ref bool flipVertical);
+        protected abstract void CalculateRect(ref Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical);
 
         protected abstract bool CheckPrefs();
 
@@ -30,8 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
             items = Reflection.GetInheritedItems<U>();
         }
 
-        public override void Prepare(GameObject[] targets, Vector2 position, ref Vector2 offset,
-            ref bool flipHorizontal, ref bool flipVertical)
+        public override void Prepare(GameObject[] targets, Vector2 position, ref Vector2 offset, ref bool flipHorizontal, ref bool flipVertical)
         {
             if (wnd != null) wnd.Close();
 
@@ -62,6 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Layouts
 
         protected virtual void PrepareItemLate(U item)
         {
+
         }
     }
 }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor;
 
 namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 {
@@ -19,9 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_gameObjectCreateDropdownButtonMethod == null)
-                    _gameObjectCreateDropdownButtonMethod = type.GetMethod("GameObjectCreateDropdownButton",
-                        Reflection.InstanceLookup, null, new Type[0], null);
+                if (_gameObjectCreateDropdownButtonMethod == null) _gameObjectCreateDropdownButtonMethod = type.GetMethod("GameObjectCreateDropdownButton", Reflection.InstanceLookup, null, new Type[0], null);
                 return _gameObjectCreateDropdownButtonMethod;
             }
         }
@@ -30,9 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_setFocusAndEnsureSelectedItemMethod == null)
-                    _setFocusAndEnsureSelectedItemMethod = type.GetMethod("SetFocusAndEnsureSelectedItem",
-                        Reflection.InstanceLookup, null, new Type[0], null);
+                if (_setFocusAndEnsureSelectedItemMethod == null) _setFocusAndEnsureSelectedItemMethod = type.GetMethod("SetFocusAndEnsureSelectedItem", Reflection.InstanceLookup, null, new Type[0], null);
                 return _setFocusAndEnsureSelectedItemMethod;
             }
         }
@@ -41,9 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_setScenesExpandedMethod == null)
-                    _setScenesExpandedMethod = type.GetMethod("SetScenesExpanded", Reflection.InstanceLookup, null,
-                        new[] { typeof(List<string>) }, null);
+                if (_setScenesExpandedMethod == null) _setScenesExpandedMethod = type.GetMethod("SetScenesExpanded", Reflection.InstanceLookup, null, new[] {typeof(List<string>)}, null);
                 return _setScenesExpandedMethod;
             }
         }
@@ -73,7 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void SetScenesExpanded(object instance, List<string> scenes)
         {
-            setScenesExpandedMethod.Invoke(instance, new object[] { scenes });
+            setScenesExpandedMethod.Invoke(instance, new object[] {scenes});
         }
 
         public static void GameObjectCreateDropdownButton(object instance)

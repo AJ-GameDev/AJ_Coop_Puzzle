@@ -1,6 +1,12 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+#if UNITY_2021_2_OR_NEWER
+using UnityEditor.SceneManagement;
+#else
+using UnityEditor.Experimental.SceneManagement;
+#endif
+
 
 using System;
 using System.Linq;
@@ -10,12 +16,6 @@ using InfinityCode.UltimateEditorEnhancer.Windows;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-#if UNITY_2021_2_OR_NEWER
-using UnityEditor.SceneManagement;
-#else
-using UnityEditor.Experimental.SceneManagement;
-#endif
-
 
 namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 {
@@ -111,8 +111,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                             .Append(component.GetType().Name)
                             .Append(")");
 
-                        contents[i] = new GUIContent(StaticStringBuilder.GetString(true),
-                            GameObjectUtils.GetGameObjectPath(component.gameObject).ToString());
+                        contents[i] = new GUIContent(StaticStringBuilder.GetString(true), GameObjectUtils.GetGameObjectPath(component.gameObject).ToString());
                     }
                 }
             }
@@ -176,7 +175,6 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                     field.SetValue(targets[i], objects[index]);
                     EditorUtility.SetDirty(targets[i]);
                 }
-
                 Undo.CollapseUndoOperations(group);
                 GUI.changed = true;
             };

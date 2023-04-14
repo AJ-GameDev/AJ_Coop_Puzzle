@@ -14,7 +14,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public static Func<bool> OpenAtStartupValidate;
         public static Action OnInitLate;
+
+        private string copyright = "Infinity Code " + DateTime.Now.Year;
         private static bool showAtStartup = true;
+        private Vector2 scrollPosition;
         private static bool inited;
         public static GUIStyle headerStyle;
         private static Texture2D docTexture;
@@ -31,50 +34,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static GUIStyle copyrightStyle;
         private static Welcome wnd;
 
-        private string copyright = "Infinity Code " + DateTime.Now.Year;
-        private Vector2 scrollPosition;
-
         static Welcome()
         {
             EditorApplication.update -= GetShowAtStartup;
             EditorApplication.update += GetShowAtStartup;
-        }
-
-        private void OnEnable()
-        {
-            wnd = this;
-            wnd.minSize = new Vector2(500, 300);
-            wnd.maxSize = new Vector2(500, 300);
-        }
-
-        private void OnDestroy()
-        {
-            wnd = null;
-            EditorPrefs.SetBool(ShowAtStartupPrefs, false);
-
-            Resources.Unload(gettingStartedTexture);
-            Resources.Unload(docTexture);
-            Resources.Unload(forumTexture);
-            Resources.Unload(proFeaturesTexture);
-            Resources.Unload(settingsTexture);
-            Resources.Unload(shortcutsTexture);
-            Resources.Unload(supportTexture);
-            Resources.Unload(updateTexture);
-            Resources.Unload(urlTexture);
-            Resources.Unload(videoTexture);
-        }
-
-        private void OnGUI()
-        {
-            if (!inited) Init();
-
-            try
-            {
-                DrawContent();
-            }
-            catch
-            {
-            }
         }
 
         public static bool DrawButton(Texture2D texture, string title, string body = "", int space = 10)
@@ -98,8 +61,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Rect rect = GUILayoutUtility.GetLastRect();
                 EditorGUIUtility.AddCursorRect(rect, MouseCursor.Link);
 
-                bool returnValue = Event.current.type == EventType.MouseDown &&
-                                   rect.Contains(Event.current.mousePosition);
+                bool returnValue = Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition);
 
                 GUILayout.Space(space);
 
@@ -107,6 +69,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
             catch
             {
+
             }
 
             return false;
@@ -121,8 +84,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             GUILayout.Space(10);
 
-            if (DrawButton(gettingStartedTexture, "Getting Started",
-                    "A quick tour of the main features of Ultimate Editor Enhancer"))
+            if (DrawButton(gettingStartedTexture, "Getting Started", "A quick tour of the main features of Ultimate Editor Enhancer"))
             {
                 GettingStarted.OpenWindow();
             }
@@ -132,8 +94,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Shortcuts.OpenWindow();
             }
 
-            if (DrawButton(settingsTexture, "Settings",
-                    "Customize Ultimate Editor Enhancer to fit your workflow perfectly"))
+            if (DrawButton(settingsTexture, "Settings", "Customize Ultimate Editor Enhancer to fit your workflow perfectly"))
             {
                 SettingsService.OpenProjectSettings("Project/Ultimate Editor Enhancer");
             }
@@ -168,8 +129,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Links.OpenReviews();
             }
 
-            if (DrawButton(updateTexture, "Check Updates",
-                    "Perhaps a new version is already waiting for you. Check it!"))
+            if (DrawButton(updateTexture, "Check Updates", "Perhaps a new version is already waiting for you. Check it!"))
             {
                 Updater.OpenWindow();
             }
@@ -217,6 +177,44 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (OnInitLate != null) OnInitLate();
 
             inited = true;
+        }
+
+        private void OnDestroy()
+        {
+            wnd = null;
+            EditorPrefs.SetBool(ShowAtStartupPrefs, false);
+
+            Resources.Unload(gettingStartedTexture);
+            Resources.Unload(docTexture);
+            Resources.Unload(forumTexture);
+            Resources.Unload(proFeaturesTexture);
+            Resources.Unload(settingsTexture);
+            Resources.Unload(shortcutsTexture);
+            Resources.Unload(supportTexture);
+            Resources.Unload(updateTexture);
+            Resources.Unload(urlTexture);
+            Resources.Unload(videoTexture);
+        }
+
+        private void OnEnable()
+        {
+            wnd = this;
+            wnd.minSize = new Vector2(500, 300);
+            wnd.maxSize = new Vector2(500, 300);
+        }
+
+        private void OnGUI()
+        {
+            if (!inited) Init();
+
+            try
+            {
+                DrawContent();
+            }
+            catch
+            {
+
+            }
         }
 
         private static void OpenAtStartup()

@@ -80,14 +80,14 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 int maxRecords = Mathf.Min(count, 999);
 
-                for (int i = 0; i < maxRecords; i++)
+                for (int i = 0; i < maxRecords; i++) 
                 {
                     LogEntriesRef.GetEntryInternal(i, nativeEntry);
                     int mode = LogEntryRef.GetMode(nativeEntry);
-                    if (mode != ERROR_MODE && mode != ERROR_MODE2 &&
+                    if (mode != ERROR_MODE && mode != ERROR_MODE2 && 
                         mode != EXCEPTION_MODE && mode != EXCEPTION_MODE2) continue;
 
-
+                    
                     int instanceID = LogEntryRef.GetInstanceID(nativeEntry);
                     if (instanceID == 0) continue;
 
@@ -107,7 +107,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     List<Entry> localEntries;
                     int id = target.GetInstanceID();
                     if (entries.TryGetValue(id, out localEntries)) localEntries.Add(entry);
-                    else entries.Add(id, new List<Entry> { entry });
+                    else entries.Add(id, new List<Entry> {entry});
                 }
 
                 EditorApplication.RepaintHierarchyWindow();
@@ -124,8 +124,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class Entry
         {
-            private int index;
             public string message;
+            private int index;
 
             public Entry(object nativeEntry, int index)
             {

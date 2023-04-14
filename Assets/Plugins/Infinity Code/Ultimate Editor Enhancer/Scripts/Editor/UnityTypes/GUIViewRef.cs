@@ -11,11 +11,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
     {
         private static Type _type;
 
-        private static PropertyInfo _currentProp;
-        private static MethodInfo _sendEventMethod;
-
-        private static PropertyInfo _windowBackendProp;
-
         public static Type type
         {
             get
@@ -24,6 +19,9 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 return _type;
             }
         }
+
+        private static PropertyInfo _currentProp;
+        private static MethodInfo _sendEventMethod;
 
         public static PropertyInfo currentProp
         {
@@ -38,19 +36,18 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_sendEventMethod == null)
-                    _sendEventMethod = type.GetMethod("SendEvent", Reflection.InstanceLookup, null,
-                        new[] { typeof(Event) }, null);
+                if (_sendEventMethod == null) _sendEventMethod = type.GetMethod("SendEvent", Reflection.InstanceLookup, null, new []{typeof(Event)}, null);
                 return _sendEventMethod;
             }
         }
+
+        private static PropertyInfo _windowBackendProp;
 
         public static PropertyInfo windowBackendProp
         {
             get
             {
-                if (_windowBackendProp == null)
-                    _windowBackendProp = type.GetProperty("windowBackend", Reflection.InstanceLookup);
+                if (_windowBackendProp == null) _windowBackendProp = type.GetProperty("windowBackend", Reflection.InstanceLookup);
                 return _windowBackendProp;
             }
         }
@@ -62,7 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void SendEvent(object view, Event e)
         {
-            sendEventMethod.Invoke(view, new object[] { e });
+            sendEventMethod.Invoke(view, new object[] {e});
         }
     }
 }

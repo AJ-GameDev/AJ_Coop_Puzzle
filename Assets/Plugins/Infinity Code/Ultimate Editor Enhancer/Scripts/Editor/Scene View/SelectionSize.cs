@@ -160,9 +160,9 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         internal class Point
         {
-            public float distance;
-            public string label;
             public Vector3 pos;
+            public string label;
+            public float distance;
         }
     }
 }

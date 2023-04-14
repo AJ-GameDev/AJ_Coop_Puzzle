@@ -26,8 +26,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
 
             GUIContent content = EditorIconContents.consoleErrorIconSmall;
             StaticStringBuilder.Clear();
-            StaticStringBuilder.Append(
-                entries[0].message.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+            StaticStringBuilder.Append(entries[0].message.Split(new[] {"\n"}, StringSplitOptions.RemoveEmptyEntries)[0]);
             if (entries.Count > 1) StaticStringBuilder.Append("\n+").Append(entries.Count - 1).Append(" errors");
 
             content.tooltip = StaticStringBuilder.GetString(true);

@@ -27,107 +27,25 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static double lastClickTime;
         private static bool focusOnTextField = false;
 
-        static SceneHistory()
-        {
-            EditorSceneManager.sceneClosed += OnSceneClosed;
-        }
-
         private static List<SceneHistoryItem> items
         {
             get { return ReferenceManager.sceneHistory; }
         }
 
-        private void OnEnable()
+        static SceneHistory()
         {
-            filteredRecords = null;
-            if (items.Count > 0) selectedItem = items[selectedIndex];
-
-            showContent = new GUIContent(Styles.isProSkin ? Icons.openNewWhite : Icons.openNewBlack, "Open Scene");
-            closeContent = new GUIContent(Styles.isProSkin ? Icons.closeWhite : Icons.closeBlack, "Remove");
-
-            foreach (SceneHistoryItem item in items)
-            {
-                item.CheckExists();
-            }
-
-            focusOnTextField = true;
-        }
-
-        private void OnDestroy()
-        {
-            filteredRecords = null;
-            filter = "";
-        }
-
-        private void OnGUI()
-        {
-            if (showContentStyle == null || showContentStyle.normal.background == null)
-            {
-                showContentStyle = new GUIStyle(Styles.transparentButton)
-                {
-                    margin =
-                    {
-                        top = 6,
-                        left = 6
-                    }
-                };
-            }
-
-            if (noBookmarkTexture == null)
-            {
-                noBookmarkTexture = Styles.isProSkin ? (Texture2D)Icons.starWhite : (Texture2D)Icons.starBlack;
-            }
-
-            if (ProcessEvents())
-            {
-                Close();
-                return;
-            }
-
-            Toolbar();
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-
-            int removeIndex = -1;
-
-            if (filteredRecords == null)
-            {
-                for (int i = 0; i < items.Count; i++)
-                {
-                    SceneHistoryItem item = items[i];
-                    if (DrawRow(item)) removeIndex = i;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < filteredRecords.Count; i++)
-                {
-                    SceneHistoryItem item = filteredRecords[i];
-                    if (DrawRow(item)) removeIndex = items.IndexOf(item);
-                }
-            }
-
-            if (removeIndex != -1)
-            {
-                items.RemoveAt(removeIndex);
-                ReferenceManager.Save();
-                if (filteredRecords != null) UpdateFilteredRecords();
-            }
-
-            EditorGUILayout.EndScrollView();
+            EditorSceneManager.sceneClosed += OnSceneClosed;
         }
 
         private static bool CheckPlaymode(string path)
         {
             if (EditorApplication.isPlaying)
             {
-                if (EditorUtility.DisplayDialog("Opening the scene during play mode",
-                        "Opening the scene cannot be used during play mode.", "Stop play mode", "Cancel"))
+                if (EditorUtility.DisplayDialog("Opening the scene during play mode", "Opening the scene cannot be used during play mode.", "Stop play mode", "Cancel"))
                 {
                     EditorApplication.isPlaying = false;
                     EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
                 }
-
                 return false;
             }
 
@@ -152,8 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             GUIContent content = TempContent.Get(item.name, item.path);
-            ButtonEvent ev = GUILayoutUtils.Button(content, EditorStyles.label, GUILayout.Height(20),
-                GUILayout.MaxWidth(position.width - 30));
+            ButtonEvent ev = GUILayoutUtils.Button(content, EditorStyles.label, GUILayout.Height(20), GUILayout.MaxWidth(position.width - 30));
             if (ProcessRowEvents(item, ev))
             {
                 Close();
@@ -179,8 +96,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             EditorGUI.EndDisabledGroup();
 
-            if (GUILayout.Button(closeContent, Styles.transparentButton, GUILayout.ExpandWidth(false),
-                    GUILayout.Height(12)))
+            if (GUILayout.Button(closeContent, Styles.transparentButton, GUILayout.ExpandWidth(false), GUILayout.Height(12)))
             {
                 ret = true;
             }
@@ -200,6 +116,85 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
 
             return false;
+        }
+
+        private void OnDestroy()
+        {
+            filteredRecords = null;
+            filter = "";
+        }
+
+        private void OnEnable()
+        {
+            filteredRecords = null;
+            if (items.Count > 0) selectedItem = items[selectedIndex];
+
+            showContent = new GUIContent(Styles.isProSkin ? Icons.openNewWhite : Icons.openNewBlack, "Open Scene");
+            closeContent = new GUIContent(Styles.isProSkin ? Icons.closeWhite : Icons.closeBlack, "Remove");
+
+            foreach (SceneHistoryItem item in items)
+            {
+                item.CheckExists();
+            }
+
+            focusOnTextField = true;
+        }
+
+        private void OnGUI()
+        {
+            if (showContentStyle == null || showContentStyle.normal.background == null)
+            {
+                showContentStyle = new GUIStyle(Styles.transparentButton)
+                {
+                    margin =
+                    {
+                        top = 6,
+                        left = 6
+                    }
+                };
+            }
+
+            if (noBookmarkTexture == null)
+            {
+                noBookmarkTexture = Styles.isProSkin ? (Texture2D) Icons.starWhite : (Texture2D) Icons.starBlack;
+            }
+
+            if (ProcessEvents())
+            {
+                Close();
+                return;
+            }
+            Toolbar();
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+            int removeIndex = -1;
+
+            if (filteredRecords == null)
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    SceneHistoryItem item = items[i];
+                    if (DrawRow(item)) removeIndex = i; 
+                }
+            }
+            else
+            {
+                for (int i = 0; i < filteredRecords.Count; i++)
+                {
+                    SceneHistoryItem item = filteredRecords[i];
+                    if (DrawRow(item)) removeIndex = items.IndexOf(item);
+                }
+            }
+
+            if (removeIndex != -1)
+            {
+                items.RemoveAt(removeIndex);
+                ReferenceManager.Save();
+                if (filteredRecords != null) UpdateFilteredRecords();
+            }
+
+            EditorGUILayout.EndScrollView();
         }
 
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -366,7 +361,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 if (selectedIndex < 0) selectedIndex = items.Count - 1;
                 selectedItem = items[selectedIndex];
             }
-
             Event.current.Use();
             Repaint();
         }
@@ -411,8 +405,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 focusOnTextField = false;
             }
 
-            if (GUILayout.Button("?", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-                Links.OpenDocumentation("recent-scenes");
+            if (GUILayout.Button("?", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) Links.OpenDocumentation("recent-scenes");
 
             EditorGUILayout.EndHorizontal();
         }
@@ -427,8 +420,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             string pattern = SearchableItem.GetPattern(filter);
 
-            filteredRecords = items.Where(i => i.UpdateAccuracy(pattern) > 0).OrderByDescending(i => i.accuracy)
-                .ToList();
+            filteredRecords = items.Where(i => i.UpdateAccuracy(pattern) > 0).OrderByDescending(i => i.accuracy).ToList();
             if (!filteredRecords.Contains(selectedItem))
             {
                 if (filteredRecords.Count > 0) selectedItem = filteredRecords[0];

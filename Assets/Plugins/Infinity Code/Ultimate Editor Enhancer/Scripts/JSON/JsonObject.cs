@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.JSON
 {
@@ -14,14 +15,6 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
     public class JsonObject : JsonItem
     {
         private Dictionary<string, JsonItem> _table;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public JsonObject()
-        {
-            _table = new Dictionary<string, JsonItem>();
-        }
 
         /// <summary>
         /// Dictionary of items
@@ -54,6 +47,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public JsonObject()
+        {
+            _table = new Dictionary<string, JsonItem>();
+        }
+
+        /// <summary>
         /// Adds element to the dictionary
         /// </summary>
         /// <param name="name">Key</param>
@@ -65,8 +66,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public void Add(string name, object value)
         {
-            if (value is string || value is bool || value is int || value is long || value is short || value is float ||
-                value is double) _table[name] = new JsonValue(value);
+            if (value is string || value is bool || value is int || value is long || value is short || value is float || value is double) _table[name] = new JsonValue(value);
             else if (value is UnityEngine.Object)
             {
                 _table[name] = new JsonValue((value as UnityEngine.Object).GetInstanceID());
@@ -120,8 +120,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             return obj;
         }
 
-        public override object Deserialize(Type type,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public override object Deserialize(Type type, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             IEnumerable<MemberInfo> members = Reflection.GetMembers(type, bindingFlags);
             return Deserialize(type, members, bindingFlags);
@@ -133,23 +132,20 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         /// <param name="type">Type</param>
         /// <param name="members">Members of variable</param>
         /// <returns>Object</returns>
-        public object Deserialize(Type type, IEnumerable<MemberInfo> members,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public object Deserialize(Type type, IEnumerable<MemberInfo> members, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             object v = Activator.CreateInstance(type);
             DeserializeObject(v, members, bindingFlags);
             return v;
         }
 
-        public void DeserializeObject(object obj,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public void DeserializeObject(object obj, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             IEnumerable<MemberInfo> members = Reflection.GetMembers(obj.GetType(), bindingFlags);
             DeserializeObject(obj, members);
         }
 
-        public void DeserializeObject(object obj, IEnumerable<MemberInfo> members,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public void DeserializeObject(object obj, IEnumerable<MemberInfo> members, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             foreach (MemberInfo member in members)
             {
@@ -163,7 +159,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 else continue;
 #endif
 
-                if (memberType == MemberTypes.Property && !((PropertyInfo)member).CanWrite) continue;
+                if (memberType == MemberTypes.Property && !((PropertyInfo) member).CanWrite) continue;
                 JsonItem item;
 
 #if !NETFX_CORE
@@ -182,12 +178,9 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 {
                     if (_table.TryGetValue(member.Name, out item))
                     {
-                        Type t = memberType == MemberTypes.Field
-                            ? ((FieldInfo)member).FieldType
-                            : ((PropertyInfo)member).PropertyType;
-                        if (memberType == MemberTypes.Field)
-                            ((FieldInfo)member).SetValue(obj, item.Deserialize(t, bindingFlags));
-                        else ((PropertyInfo)member).SetValue(obj, item.Deserialize(t, bindingFlags), null);
+                        Type t = memberType == MemberTypes.Field ? ((FieldInfo) member).FieldType : ((PropertyInfo) member).PropertyType;
+                        if (memberType == MemberTypes.Field) ((FieldInfo) member).SetValue(obj, item.Deserialize(t, bindingFlags));
+                        else ((PropertyInfo) member).SetValue(obj, item.Deserialize(t, bindingFlags), null);
                         continue;
                     }
                 }
@@ -198,12 +191,9 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                     {
                         if (_table.TryGetValue(alias.aliases[j], out item))
                         {
-                            Type t = memberType == MemberTypes.Field
-                                ? ((FieldInfo)member).FieldType
-                                : ((PropertyInfo)member).PropertyType;
-                            if (memberType == MemberTypes.Field)
-                                ((FieldInfo)member).SetValue(obj, item.Deserialize(t, bindingFlags));
-                            else ((PropertyInfo)member).SetValue(obj, item.Deserialize(t, bindingFlags), null);
+                            Type t = memberType == MemberTypes.Field ? ((FieldInfo) member).FieldType : ((PropertyInfo) member).PropertyType;
+                            if (memberType == MemberTypes.Field) ((FieldInfo) member).SetValue(obj, item.Deserialize(t, bindingFlags));
+                            else ((PropertyInfo) member).SetValue(obj, item.Deserialize(t, bindingFlags), null);
                             break;
                         }
                     }
@@ -333,7 +323,6 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 DeserializeObject(obj);
                 return obj;
             }
-
             return Deserialize(type);
         }
     }

@@ -24,8 +24,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_visualTreeProp == null)
-                    _visualTreeProp = type.GetProperty("visualTree", Reflection.InstanceLookup);
+                if (_visualTreeProp == null) _visualTreeProp = type.GetProperty("visualTree", Reflection.InstanceLookup);
                 return _visualTreeProp;
             }
         }

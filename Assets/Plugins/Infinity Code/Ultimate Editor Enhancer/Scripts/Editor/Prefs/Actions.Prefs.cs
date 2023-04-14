@@ -29,9 +29,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.BeginDisabledGroup(!actions);
                 EditorGUI.indentLevel++;
-                actionsAddComponent =
-                    EditorGUILayout.ToggleLeft("Add Component Action For Single GameObject In Actions",
-                        actionsAddComponent);
+                actionsAddComponent = EditorGUILayout.ToggleLeft("Add Component Action For Single GameObject In Actions", actionsAddComponent);
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
             }

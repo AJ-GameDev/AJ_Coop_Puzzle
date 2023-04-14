@@ -39,19 +39,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return Order.selectionHistory; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!selectionHistory) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Set Prev GameObject Selection", "Everywhere", selectionHistoryModifiers,
-                        selectionHistoryPrevKeyCode),
-                    new Shortcut("Set Next GameObject Selection", "Everywhere", selectionHistoryModifiers,
-                        selectionHistoryNextKeyCode),
-                };
-            }
-
             public override void Draw()
             {
                 selectionHistory = EditorGUILayout.ToggleLeft("Selection History", selectionHistory);
@@ -62,15 +49,13 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(17);
                 GUILayout.Label("Set Prev Selection", GUILayout.Width(modifierLabelWidth - 15));
-                selectionHistoryPrevKeyCode =
-                    (KeyCode)EditorGUILayout.EnumPopup(selectionHistoryPrevKeyCode, GUILayout.ExpandWidth(false));
+                selectionHistoryPrevKeyCode = (KeyCode)EditorGUILayout.EnumPopup(selectionHistoryPrevKeyCode, GUILayout.ExpandWidth(false));
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(17);
                 GUILayout.Label("Set Next Selection", GUILayout.Width(modifierLabelWidth - 15));
-                selectionHistoryNextKeyCode =
-                    (KeyCode)EditorGUILayout.EnumPopup(selectionHistoryNextKeyCode, GUILayout.ExpandWidth(false));
+                selectionHistoryNextKeyCode = (KeyCode)EditorGUILayout.EnumPopup(selectionHistoryNextKeyCode, GUILayout.ExpandWidth(false));
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
@@ -81,6 +66,17 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.indentLevel--;
 
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!selectionHistory) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Set Prev GameObject Selection", "Everywhere", selectionHistoryModifiers, selectionHistoryPrevKeyCode),
+                    new Shortcut("Set Next GameObject Selection", "Everywhere", selectionHistoryModifiers, selectionHistoryNextKeyCode),
+                };
             }
         }
     }

@@ -25,9 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_showMethod == null)
-                    _showMethod = type.GetMethod("Show", Reflection.StaticLookup, null,
-                        new[] { typeof(Rect), typeof(GameObject[]) }, null);
+                if (_showMethod == null) _showMethod = type.GetMethod("Show", Reflection.StaticLookup, null, new[] {typeof(Rect), typeof(GameObject[])}, null);
 
                 return _showMethod;
             }
@@ -35,7 +33,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static bool Show(Rect rect, GameObject[] gameObjects)
         {
-            return (bool)showMethod.Invoke(null, new object[] { rect, gameObjects });
+            return (bool)showMethod.Invoke(null, new object [] {rect, gameObjects});
         }
     }
 }

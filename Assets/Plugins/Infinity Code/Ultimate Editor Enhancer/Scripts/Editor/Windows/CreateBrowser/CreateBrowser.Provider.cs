@@ -13,11 +13,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             public List<Item> items;
 
-            public Provider()
-            {
-                Cache();
-            }
-
             public int count
             {
                 get { return items.Count; }
@@ -26,6 +21,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public abstract float order { get; }
 
             public abstract string title { get; }
+
+            public Provider()
+            {
+                Cache();
+            }
 
             public abstract void Cache();
 

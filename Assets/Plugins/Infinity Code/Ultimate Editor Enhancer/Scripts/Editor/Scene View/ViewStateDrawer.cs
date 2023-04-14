@@ -36,7 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 return;
             }
 
-            if (e.type == EventType.Layout &&
+            if (e.type == EventType.Layout && 
                 (viewStates == null || EditorApplication.timeSinceStartup - lastUpdateTime > 10))
             {
                 viewStates = Object.FindObjectsOfType<ViewState>();
@@ -99,8 +99,8 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 viewStyle = new GUIStyle
                 {
-                    imagePosition = ImagePosition.ImageAbove,
-                    alignment = TextAnchor.MiddleCenter,
+                    imagePosition = ImagePosition.ImageAbove, 
+                    alignment = TextAnchor.MiddleCenter, 
                     normal =
                     {
                         textColor = Color.white
@@ -146,11 +146,11 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
         internal class ViewStateWrapper
         {
+            public ViewState state;
             public Camera camera;
+            public Vector2 screenPoint;
             public float distance;
             public Vector3 position;
-            public Vector2 screenPoint;
-            public ViewState state;
 
             public string title
             {

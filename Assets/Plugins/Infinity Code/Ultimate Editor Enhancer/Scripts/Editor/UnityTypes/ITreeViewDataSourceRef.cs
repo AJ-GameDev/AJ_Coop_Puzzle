@@ -15,9 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_isExpandedMethod == null)
-                    _isExpandedMethod = type.GetMethod("IsExpanded", Reflection.InstanceLookup, null,
-                        new[] { typeof(int) }, null);
+                if (_isExpandedMethod == null) _isExpandedMethod = type.GetMethod("IsExpanded", Reflection.InstanceLookup, null, new []{typeof(int)}, null);
                 return _isExpandedMethod;
             }
         }
@@ -26,15 +24,14 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_type == null) _type = Reflection.GetEditorType("IMGUI.Controls.ITreeViewDataSource");
-                ;
+                if (_type == null) _type = Reflection.GetEditorType("IMGUI.Controls.ITreeViewDataSource"); ;
                 return _type;
             }
         }
 
         public static bool IsExpanded(object instance, int id)
         {
-            return (bool)isExpandedMethod.Invoke(instance, new object[] { id });
+            return (bool)isExpandedMethod.Invoke(instance, new object[] {id});
         }
     }
 }

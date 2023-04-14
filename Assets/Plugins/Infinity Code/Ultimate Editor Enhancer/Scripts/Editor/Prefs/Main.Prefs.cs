@@ -51,46 +51,18 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -100; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                List<Shortcut> shortcuts = new List<Shortcut>();
-
-                if (contextMenuOnRightClick)
-                {
-                    shortcuts.Add(new Shortcut("Show Context Menu", "Scene View", rightClickModifiers, "RMB"));
-                }
-
-                shortcuts.Add(new Shortcut("Show Context Menu", "Everywhere", contextMenuHotKeyModifiers,
-                    contextMenuHotKey));
-
-                if (pickGameObject)
-                {
-                    shortcuts.Add(new Shortcut("Pick GameObject and Show Context Menu", "Scene View",
-                        pickGameObjectModifiers, "RMB"));
-                }
-
-                shortcuts.Add(new Shortcut("Close Context Menu", "Context Menu", "Escape"));
-                shortcuts.Add(new Shortcut("Close Context Menu", "Everywhere", "LMB or RMB"));
-
-                return shortcuts;
-            }
-
             public override void Draw()
             {
                 DrawRightClickContent();
-                DrawFieldWithHotKey("Show Context Menu By Hot Key", ref contextMenuOnHotKey, ref contextMenuHotKey,
-                    ref contextMenuHotKeyModifiers);
+                DrawFieldWithHotKey("Show Context Menu By Hot Key", ref contextMenuOnHotKey, ref contextMenuHotKey, ref contextMenuHotKeyModifiers);
 
-                contextMenuDisableInPlayMode = EditorGUILayout.ToggleLeft("Disable Context Menu In Play Mode",
-                    contextMenuDisableInPlayMode);
-                contextMenuPauseInPlayMode =
-                    EditorGUILayout.ToggleLeft("Pause In Play Mode", contextMenuPauseInPlayMode);
+                contextMenuDisableInPlayMode = EditorGUILayout.ToggleLeft("Disable Context Menu In Play Mode", contextMenuDisableInPlayMode);
+                contextMenuPauseInPlayMode = EditorGUILayout.ToggleLeft("Pause In Play Mode", contextMenuPauseInPlayMode);
             }
 
             private static void DrawRightClickContent()
             {
-                contextMenuOnRightClick =
-                    EditorGUILayout.ToggleLeft("Show Context Menu By Right Click", contextMenuOnRightClick);
+                contextMenuOnRightClick = EditorGUILayout.ToggleLeft("Show Context Menu By Right Click", contextMenuOnRightClick);
                 EditorGUI.BeginDisabledGroup(!contextMenuOnRightClick);
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(spaceBeforeModifiers);
@@ -107,12 +79,32 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (contextMenuOnRightClick && pickGameObject && rightClickModifiers == pickGameObjectModifiers)
                 {
-                    EditorGUILayout.HelpBox(
-                        "The modifiers for the right click and the pick GameObject must be different.",
-                        MessageType.Error);
+                    EditorGUILayout.HelpBox("The modifiers for the right click and the pick GameObject must be different.", MessageType.Error);
                 }
 
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                List<Shortcut> shortcuts = new List<Shortcut>();
+
+                if (contextMenuOnRightClick)
+                {
+                    shortcuts.Add(new Shortcut("Show Context Menu", "Scene View", rightClickModifiers, "RMB"));
+                }
+
+                shortcuts.Add(new Shortcut("Show Context Menu", "Everywhere", contextMenuHotKeyModifiers, contextMenuHotKey));
+
+                if (pickGameObject)
+                {
+                    shortcuts.Add(new Shortcut("Pick GameObject and Show Context Menu", "Scene View", pickGameObjectModifiers, "RMB"));
+                }
+
+                shortcuts.Add(new Shortcut("Close Context Menu", "Context Menu", "Escape"));
+                shortcuts.Add(new Shortcut("Close Context Menu", "Everywhere", "LMB or RMB"));
+
+                return shortcuts;
             }
         }
     }

@@ -10,10 +10,8 @@ using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class HelpIconButtonInterceptor : StatedInterceptor<HelpIconButtonInterceptor>
+    public class HelpIconButtonInterceptor: StatedInterceptor<HelpIconButtonInterceptor>
     {
-        private static Dictionary<Type, bool> typeCache = new Dictionary<Type, bool>();
-
         protected override MethodInfo originalMethod
         {
             get => EditorGUIRef.helpIconButtonMethod;
@@ -33,6 +31,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
         {
             get => Prefs.hideEmptyHelpButton;
         }
+
+        private static Dictionary<Type, bool> typeCache = new Dictionary<Type, bool>();
 
         private static bool HelpIconButtonPrefix(Rect position, Object[] objs)
         {

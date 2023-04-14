@@ -1,17 +1,16 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
-
-using InfinityCode.UltimateEditorEnhancer.UnityTypes;
-using InfinityCode.UltimateEditorEnhancer.Windows;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UI;
 #if UNITY_2021_2_OR_NEWER
 using UnityEditor.SceneManagement;
 #else
 using UnityEditor.Experimental.SceneManagement;
 #endif
+using InfinityCode.UltimateEditorEnhancer.UnityTypes;
+using InfinityCode.UltimateEditorEnhancer.Windows;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace InfinityCode.UltimateEditorEnhancer.Behaviors
 {
@@ -35,8 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             Vector2 size = Styles.tooltip.CalcSize(content);
 
             Handles.BeginGUI();
-            Vector3 screenPoint = new Vector3(Event.current.mousePosition.x,
-                sceneView.position.height - Event.current.mousePosition.y);
+            Vector3 screenPoint = new Vector3(Event.current.mousePosition.x, sceneView.position.height - Event.current.mousePosition.y);
             if (screenPoint.y > 100 / pixelPerPoint)
             {
                 screenPoint.y -= size.y + 0 / pixelPerPoint;
@@ -46,8 +44,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                 screenPoint.y += size.y + 20 / pixelPerPoint;
             }
 
-            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2,
-                size.x, size.y);
+            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height / pixelPerPoint - screenPoint.y - size.y / 2, size.x, size.y);
             GUI.Label(rect, content, Styles.tooltip);
 
             Handles.EndGUI();
@@ -111,6 +108,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
             instance.transform.SetParent(parent, false);
             instance.transform.position = SceneViewManager.lastWorldPosition;
             e.Use();
+
         }
 
         private static void OnDragGameObjectUpdated()
@@ -211,8 +209,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                     if (importer != null && importer.textureType == TextureImporterType.Sprite)
                     {
                         DragAndDrop.AcceptDrag();
-                        SetReferenceValue(image, "m_Sprite",
-                            AssetDatabase.LoadAssetAtPath<Sprite>(DragAndDrop.paths[0]));
+                        SetReferenceValue(image, "m_Sprite", AssetDatabase.LoadAssetAtPath<Sprite>(DragAndDrop.paths[0]));
                         e.Use();
                         return;
                     }

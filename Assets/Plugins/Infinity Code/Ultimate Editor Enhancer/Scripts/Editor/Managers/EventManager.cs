@@ -8,7 +8,7 @@ using UnityEngine;
 namespace InfinityCode.UltimateEditorEnhancer
 {
     [InitializeOnLoad]
-    public class EventManager : BindingManager<EventManager.EventBinding>
+    public class EventManager: BindingManager<EventManager.EventBinding>
     {
         public const string ClosePopupEvent = "ClosePopup";
         public const string ToggleWindowsEvent = "ToggleWindows";
@@ -60,8 +60,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public class EventBinding
         {
-            private string eventName;
             public Action<EventBinding> OnInvoke;
+            private string eventName;
 
             internal EventBinding(string eventName)
             {

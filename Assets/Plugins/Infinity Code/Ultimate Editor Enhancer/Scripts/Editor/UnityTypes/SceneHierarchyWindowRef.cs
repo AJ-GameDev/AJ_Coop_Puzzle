@@ -23,8 +23,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_hasSearchFilterFocusField == null)
-                    _hasSearchFilterFocusField = type.GetProperty("hasSearchFilterFocus", Reflection.InstanceLookup);
+                if (_hasSearchFilterFocusField == null) _hasSearchFilterFocusField = type.GetProperty("hasSearchFilterFocus", Reflection.InstanceLookup);
                 return _hasSearchFilterFocusField;
             }
         }
@@ -33,8 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_lastInteractedHierarchyField == null)
-                    _lastInteractedHierarchyField = type.GetField("s_LastInteractedHierarchy", Reflection.StaticLookup);
+                if (_lastInteractedHierarchyField == null) _lastInteractedHierarchyField = type.GetField("s_LastInteractedHierarchy", Reflection.StaticLookup);
                 return _lastInteractedHierarchyField;
             }
         }
@@ -43,8 +41,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_searchFilterField == null)
-                    _searchFilterField = type.GetField("m_SearchFilter", Reflection.InstanceLookup);
+                if (_searchFilterField == null) _searchFilterField = type.GetField("m_SearchFilter", Reflection.InstanceLookup);
                 return _searchFilterField;
             }
         }
@@ -53,9 +50,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_searchFieldGUIMethod == null)
-                    _searchFieldGUIMethod = type.GetMethod("SearchFieldGUI", Reflection.InstanceLookup, null,
-                        new Type[0], null);
+                if (_searchFieldGUIMethod == null) _searchFieldGUIMethod = type.GetMethod("SearchFieldGUI", Reflection.InstanceLookup, null, new Type[0], null);
                 return _searchFieldGUIMethod;
             }
         }
@@ -64,9 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_setExpandedRecursiveMethod == null)
-                    _setExpandedRecursiveMethod = type.GetMethod("SetExpandedRecursive", Reflection.InstanceLookup,
-                        null, new[] { typeof(int), typeof(bool) }, null);
+                if (_setExpandedRecursiveMethod == null) _setExpandedRecursiveMethod = type.GetMethod("SetExpandedRecursive", Reflection.InstanceLookup, null, new[] { typeof(int), typeof(bool) }, null);
                 return _setExpandedRecursiveMethod;
             }
         }
@@ -75,8 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_setSearchFilterMethod == null)
-                    _setSearchFilterMethod = type.GetMethod("SetSearchFilter", Reflection.InstanceLookup);
+                if (_setSearchFilterMethod == null) _setSearchFilterMethod = type.GetMethod("SetSearchFilter", Reflection.InstanceLookup);
                 return _setSearchFilterMethod;
             }
         }
@@ -85,8 +77,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_sceneHierarchyField == null)
-                    _sceneHierarchyField = type.GetField("m_SceneHierarchy", Reflection.InstanceLookup);
+                if (_sceneHierarchyField == null) _sceneHierarchyField = type.GetField("m_SceneHierarchy", Reflection.InstanceLookup);
                 return _sceneHierarchyField;
             }
         }
@@ -95,8 +86,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_searchModeField == null)
-                    _searchModeField = type.GetField("m_SearchMode", Reflection.InstanceLookup);
+                if (_searchModeField == null) _searchModeField = type.GetField("m_SearchMode", Reflection.InstanceLookup);
                 return _searchModeField;
             }
         }
@@ -127,12 +117,12 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static int GetSearchMode(EditorWindow instance)
         {
-            return (int)searchModeField.GetValue(instance);
+            return (int) searchModeField.GetValue(instance);
         }
 
         public static bool HasSearchFilterFocus(EditorWindow instance)
         {
-            return (bool)hasSearchFilterFocusProp.GetValue(instance);
+            return (bool) hasSearchFilterFocusProp.GetValue(instance);
         }
 
         public static void SearchFieldGUI(EditorWindow instance)
@@ -142,7 +132,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void SetExpandedRecursive(object instance, int id, bool expand)
         {
-            setExpandedRecursiveMethod.Invoke(instance, new object[] { id, expand });
+            setExpandedRecursiveMethod.Invoke(instance, new object[] {id, expand});
         }
 
         public static void SetSearchFilter(EditorWindow instance, string value, int mode = -1)

@@ -20,8 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             if (!Prefs.addScriptingDefineSymbols) return;
 
-            string symbols =
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+            string symbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
             if (!string.IsNullOrEmpty(symbols))
             {
                 string[] keys = symbols.Split(';');

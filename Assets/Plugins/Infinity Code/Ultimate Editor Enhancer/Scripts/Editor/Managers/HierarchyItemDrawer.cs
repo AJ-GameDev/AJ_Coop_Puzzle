@@ -18,6 +18,9 @@ namespace InfinityCode.UltimateEditorEnhancer
         private static bool isStopped;
         private static HierarchyItem item;
 
+        public static EditorWindow lastInteractedHierarchy { get; private set; }
+        public static string searchFilter { get; private set; }
+
         static HierarchyItemDrawer()
         {
             EditorApplication.hierarchyWindowItemOnGUI -= OnHierarchyItemGUI;
@@ -25,16 +28,13 @@ namespace InfinityCode.UltimateEditorEnhancer
             item = new HierarchyItem();
         }
 
-        public static EditorWindow lastInteractedHierarchy { get; private set; }
-        public static string searchFilter { get; private set; }
-
         private static void OnHierarchyItemGUI(int id, Rect rect)
         {
             if (listeners == null) return;
 
             if (isDirty)
             {
-                listeners.Sort(delegate(Listener i1, Listener i2)
+                listeners.Sort(delegate (Listener i1, Listener i2)
                 {
                     if (i1.order == i2.order) return 0;
                     if (i1.order > i2.order) return 1;
@@ -61,7 +61,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         Log.Add(e);
                     }
                 }
-
                 if (isStopped) break;
             }
 
@@ -83,7 +82,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     return;
                 }
             }
-
             listeners.Add(new Listener
             {
                 id = id,
@@ -103,9 +101,9 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private class Listener
         {
-            public Action<HierarchyItem> action;
             public int hash;
             public string id;
+            public Action<HierarchyItem> action;
             public float order;
         }
     }

@@ -20,38 +20,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
         private static PropertyInfo snapValueInUnityUnitsProp;
         private static PropertyInfo SnapModifierProp;
 
-        static ProGrids()
-        {
-            Assembly assembly = Reflection.GetAssembly("Unity.ProGrids.Editor");
-            if (assembly == null) return;
-
-            Type editorType = assembly.GetType("UnityEditor.ProGrids.ProGridsEditor");
-            if (editorType == null) return;
-
-            isEnabledMethod = Reflection.GetMethod(editorType, "IsEnabled", Reflection.StaticLookup);
-            snapEnabledMethod = Reflection.GetMethod(editorType, "SnapEnabled", Reflection.StaticLookup);
-            snapToGridMethod = Reflection.GetMethod(editorType, "SnapToGrid", new[] { typeof(Transform[]) },
-                Reflection.InstanceLookup);
-            instanceField = editorType.GetField("s_Instance", Reflection.StaticLookup);
-            menuOpenField = editorType.GetField("menuOpen", Reflection.InstanceLookup);
-            snapValueInUnityUnitsProp = editorType.GetProperty("SnapValueInUnityUnits", Reflection.InstanceLookup);
-            snapValueInGridUnitsProp = editorType.GetProperty("SnapValueInGridUnits", Reflection.InstanceLookup);
-            SnapModifierProp = editorType.GetProperty("SnapModifier", Reflection.InstanceLookup);
-
-            if (isEnabledMethod == null ||
-                snapEnabledMethod == null ||
-                instanceField == null ||
-                menuOpenField == null ||
-                snapValueInGridUnitsProp == null ||
-                snapValueInUnityUnitsProp == null ||
-                SnapModifierProp == null)
-            {
-                return;
-            }
-
-            isPresent = true;
-        }
-
         public static bool isEnabled
         {
             get { return isPresent && (bool)isEnabledMethod.Invoke(null, null); }
@@ -100,6 +68,37 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
             }
         }
 
+        static ProGrids()
+        {
+            Assembly assembly = Reflection.GetAssembly("Unity.ProGrids.Editor");
+            if (assembly == null) return;
+
+            Type editorType = assembly.GetType("UnityEditor.ProGrids.ProGridsEditor");
+            if (editorType == null) return;
+
+            isEnabledMethod = Reflection.GetMethod(editorType, "IsEnabled", Reflection.StaticLookup);
+            snapEnabledMethod = Reflection.GetMethod(editorType, "SnapEnabled", Reflection.StaticLookup);
+            snapToGridMethod = Reflection.GetMethod(editorType, "SnapToGrid", new []{typeof(Transform[])}, Reflection.InstanceLookup);
+            instanceField = editorType.GetField("s_Instance", Reflection.StaticLookup);
+            menuOpenField = editorType.GetField("menuOpen", Reflection.InstanceLookup);
+            snapValueInUnityUnitsProp = editorType.GetProperty("SnapValueInUnityUnits", Reflection.InstanceLookup);
+            snapValueInGridUnitsProp = editorType.GetProperty("SnapValueInGridUnits", Reflection.InstanceLookup);
+            SnapModifierProp = editorType.GetProperty("SnapModifier", Reflection.InstanceLookup);
+
+            if (isEnabledMethod == null ||
+                snapEnabledMethod == null ||
+                instanceField == null ||
+                menuOpenField == null ||
+                snapValueInGridUnitsProp == null ||
+                snapValueInUnityUnitsProp == null ||
+                SnapModifierProp == null)
+            {
+                return;
+            }
+
+            isPresent = true;
+        }
+
         private static float Snap(float val, float round)
         {
             return round * Mathf.Round(val / round);
@@ -119,14 +118,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Integration
 
         public static void SnapToGrid(Transform transform)
         {
-            SnapToGrid(new[] { transform });
+            SnapToGrid(new []{ transform });
         }
 
         public static void SnapToGrid(Transform[] transforms)
         {
             if (!snapEnabled) return;
             object instance = instanceField.GetValue(null);
-            snapToGridMethod.Invoke(instance, new object[] { transforms });
+            snapToGridMethod.Invoke(instance, new object[]{ transforms });
         }
     }
 }

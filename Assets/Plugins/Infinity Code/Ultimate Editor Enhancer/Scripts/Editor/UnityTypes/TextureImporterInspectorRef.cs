@@ -15,8 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_onApplyRevertGUIMethod == null)
-                    _onApplyRevertGUIMethod = type.GetMethod("OnApplyRevertGUI", Reflection.InstanceLookup);
+                if (_onApplyRevertGUIMethod == null) _onApplyRevertGUIMethod = type.GetMethod("OnApplyRevertGUI", Reflection.InstanceLookup);
                 return _onApplyRevertGUIMethod;
             }
         }

@@ -12,16 +12,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             private GameObject _gameObject;
 
-            public GameObjectRecord(GameObject gameObject)
-            {
-                _gameObject = gameObject;
-
-                search = new[]
-                {
-                    gameObject.name
-                };
-            }
-
             public GameObject gameObject
             {
                 get => _gameObject;
@@ -44,6 +34,16 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public override string type
             {
                 get => "gameobject";
+            }
+
+            public GameObjectRecord(GameObject gameObject)
+            {
+                _gameObject = gameObject;
+
+                search = new[]
+                {
+                    gameObject.name
+                };
             }
 
             public override void Dispose()

@@ -17,9 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_isGameObjectHiddenMethod == null)
-                    _isGameObjectHiddenMethod = type.GetMethod("IsGameObjectHidden", Reflection.StaticLookup, null,
-                        new[] { typeof(GameObject) }, null);
+                if (_isGameObjectHiddenMethod == null) _isGameObjectHiddenMethod = type.GetMethod("IsGameObjectHidden", Reflection.StaticLookup, null, new[] {typeof(GameObject)}, null);
                 return _isGameObjectHiddenMethod;
             }
         }
@@ -36,7 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         public static bool IsGameObjectHidden(GameObject gameObject)
         {
             if (gameObject == null) return false;
-            return (bool)isGameObjectHiddenMethod.Invoke(null, new object[] { gameObject });
+            return (bool)isGameObjectHiddenMethod.Invoke(null, new object[] {gameObject});
         }
     }
 }

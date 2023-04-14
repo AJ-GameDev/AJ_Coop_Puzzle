@@ -25,9 +25,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_spaceBetweenIconAndTextField == null)
-                    _spaceBetweenIconAndTextField =
-                        type.GetField("k_SpaceBetweenIconAndText", Reflection.InstanceLookup);
+                if (_spaceBetweenIconAndTextField == null) _spaceBetweenIconAndTextField = type.GetField("k_SpaceBetweenIconAndText", Reflection.InstanceLookup);
                 return _spaceBetweenIconAndTextField;
             }
         }

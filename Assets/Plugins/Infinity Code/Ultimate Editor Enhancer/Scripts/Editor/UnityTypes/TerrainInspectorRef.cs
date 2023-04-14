@@ -27,9 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_activeTerrainInspectorInstanceField == null)
-                    _activeTerrainInspectorInstanceField =
-                        type.GetField("s_activeTerrainInspectorInstance", Reflection.StaticLookup);
+                if (_activeTerrainInspectorInstanceField == null) _activeTerrainInspectorInstanceField = type.GetField("s_activeTerrainInspectorInstance", Reflection.StaticLookup);
                 return _activeTerrainInspectorInstanceField;
             }
         }
@@ -38,15 +36,14 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_activeTerrainInspectorField == null)
-                    _activeTerrainInspectorField = type.GetField("s_activeTerrainInspector", Reflection.StaticLookup);
+                if (_activeTerrainInspectorField == null) _activeTerrainInspectorField = type.GetField("s_activeTerrainInspector", Reflection.StaticLookup);
                 return _activeTerrainInspectorField;
             }
         }
 
 #if UNITY_2020_2_OR_NEWER
         private static PropertyInfo _brushSizeProp;
-
+        
 
         private static PropertyInfo brushSizeProp
         {
@@ -56,7 +53,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 return _brushSizeProp;
             }
         }
-#else
+#else        
         private static FieldInfo _sizeField;
 
         private static FieldInfo sizeField
@@ -73,8 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_selectedToolProp == null)
-                    _selectedToolProp = type.GetProperty("selectedTool", Reflection.InstanceLookup);
+                if (_selectedToolProp == null) _selectedToolProp = type.GetProperty("selectedTool", Reflection.InstanceLookup);
                 return _selectedToolProp;
             }
         }

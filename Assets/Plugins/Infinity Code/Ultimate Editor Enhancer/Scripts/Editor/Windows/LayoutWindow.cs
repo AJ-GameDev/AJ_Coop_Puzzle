@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
-    public class LayoutWindow : PopupWindow
+    public class LayoutWindow: PopupWindow
     {
         private MainLayoutItem item;
 
@@ -48,3 +48,4 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         }
     }
 }
+ 

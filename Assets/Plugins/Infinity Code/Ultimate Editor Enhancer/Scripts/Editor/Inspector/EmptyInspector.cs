@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
 {
-    public class EmptyInspector : InspectorInjector
+    public class EmptyInspector: InspectorInjector
     {
         private const string ELEMENT_NAME = "EmptyInspector";
         private const string SEARCHFIELD_NAME = "UEEEmptyInspectorSearchField";
@@ -37,10 +37,8 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
         private VisualElement CreateContainer(VisualElement parent)
         {
             VisualElement el = new VisualElement();
-            el.style.borderBottomWidth =
-                el.style.borderTopWidth = el.style.borderLeftWidth = el.style.borderRightWidth = 1;
-            el.style.borderBottomColor = el.style.borderTopColor =
-                el.style.borderLeftColor = el.style.borderRightColor = Color.gray;
+            el.style.borderBottomWidth = el.style.borderTopWidth = el.style.borderLeftWidth = el.style.borderRightWidth = 1;
+            el.style.borderBottomColor = el.style.borderTopColor = el.style.borderLeftColor = el.style.borderRightColor = Color.gray;
             el.style.marginLeft = 3;
             el.style.marginRight = 5;
             parent.Add(el);
@@ -64,8 +62,7 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
             filterText = GUILayoutUtils.ToolbarSearchField(filterText);
             if (EditorGUI.EndChangeCheck()) UpdateFilteredItems();
 
-            if (GUILayout.Button(TempContent.Get("?", "Help"), EditorStyles.toolbarButton,
-                    GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(TempContent.Get("?", "Help"), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
             {
                 Links.OpenDocumentation("empty-inspector");
             }
@@ -195,8 +192,8 @@ namespace InfinityCode.UltimateEditorEnhancer.InspectorTools
                     {
                         container[j].style.display = DisplayStyle.Flex;
                     }
-                }
 
+                }
                 return;
             }
 

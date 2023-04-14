@@ -33,8 +33,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 if (Prefs.hierarchyIconsDisplayRule == HierarchyIconsDisplayRule.onHover || !item.hovered) return;
             }
 
-            if (offTexture == null)
-                offTexture = Styles.isProSkin ? (Texture2D)Icons.starWhite : (Texture2D)Icons.starBlack;
+            if (offTexture == null) offTexture = Styles.isProSkin ? (Texture2D)Icons.starWhite : (Texture2D)Icons.starBlack;
 
             Rect rect = item.rect;
             Rect r = new Rect(rect.xMax - 16, rect.y, 16, rect.height);

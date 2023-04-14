@@ -14,14 +14,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
     [CustomEditor(typeof(MonoBehaviour), isFallback = true)]
     public class MissedScriptEditor : Editor
     {
-        private static BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance |
-                                            BindingFlags.DeclaredOnly;
+        private static BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+        [NonSerialized]
+        private List<ReplaceCandidate> candidates;
+
+        [NonSerialized]
+        private ReplaceCandidate bestCandidate;
 
         private static MonoScript[] _scripts;
-
-        [NonSerialized] private ReplaceCandidate bestCandidate;
-
-        [NonSerialized] private List<ReplaceCandidate> candidates;
 
         public static MonoScript[] scripts
         {
@@ -35,8 +36,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
         private static IEnumerable<FieldInfo> GetFields(Type type)
         {
             if (type == null) return new FieldInfo[0];
-            return type.GetFields(flags).Concat(GetFields(type.BaseType))
-                .Where(f => !f.IsDefined(typeof(HideInInspector), true));
+            return type.GetFields(flags).Concat(GetFields(type.BaseType)).Where(f => !f.IsDefined(typeof(HideInInspector), true));
         }
 
         private void InitCandidates()
@@ -98,8 +98,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                             if (typeof(float).IsAssignableFrom(field.FieldType)) match += 1;
                             break;
                         case SerializedPropertyType.Integer:
-                            if (typeof(int).IsAssignableFrom(field.FieldType) ||
-                                typeof(uint).IsAssignableFrom(field.FieldType) || field.FieldType.IsEnum) match += 1;
+                            if (typeof(int).IsAssignableFrom(field.FieldType) || typeof(uint).IsAssignableFrom(field.FieldType) || field.FieldType.IsEnum) match += 1;
                             break;
                         case SerializedPropertyType.ObjectReference:
                             if (!field.FieldType.IsValueType) match += 1;
@@ -162,14 +161,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                 {
                 }
             }
-
             GUI.enabled = true;
 
             if (bestCandidate != null)
             {
-                EditorGUILayout.HelpBox(
-                    "Ultimate Editor Enhancer has determined that the best replacement candidate for this missing script is " +
-                    bestCandidate.script.name + ". Replace it?", MessageType.Warning);
+                EditorGUILayout.HelpBox("Ultimate Editor Enhancer has determined that the best replacement candidate for this missing script is " + bestCandidate.script.name + ". Replace it?", MessageType.Warning);
                 if (GUILayout.Button("Use " + bestCandidate.script.name))
                 {
                     SetScript(bestCandidate);
@@ -182,8 +178,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
                     for (int i = 0; i < Mathf.Min(candidates.Count, 10); i++)
                     {
                         ReplaceCandidate candidate = candidates[i];
-                        menu.AddItem(new GUIContent(candidate.script.name + " [" + candidate.similarity + "%]"), false,
-                            () => SetScript(candidate));
+                        menu.AddItem(new GUIContent(candidate.script.name + " [" + candidate.similarity + "%]"), false, () => SetScript(candidate));
                     }
 
                     menu.ShowAsContext();

@@ -48,7 +48,6 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
                 if (enabled) Disable();
                 return false;
             }
-
             Object target = targets[0];
             if (!Validate(target))
             {
@@ -58,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             if (!inited) Init();
 
             EditorGUI.BeginChangeCheck();
-            enabled = GUI.Toggle(rectangle, enabled, content, enabled ? activeStyle : style);
+            enabled = GUI.Toggle(rectangle, enabled, content, enabled? activeStyle: style);
             if (EditorGUI.EndChangeCheck())
             {
                 if (enabled) Enable(target as Transform);
@@ -153,20 +152,17 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
                     {
                         if (Math.Abs(size.x - newSize.x) > float.Epsilon)
                         {
-                            if (Math.Abs(originalSize.x) > float.Epsilon)
-                                size = originalSize * newSize.x / originalSize.x;
+                            if (Math.Abs(originalSize.x) > float.Epsilon) size = originalSize * newSize.x / originalSize.x;
                             else size.x = 1;
                         }
                         else if (Math.Abs(size.y - newSize.y) > float.Epsilon)
                         {
-                            if (Math.Abs(originalSize.y) > float.Epsilon)
-                                size = originalSize * newSize.y / originalSize.y;
+                            if (Math.Abs(originalSize.y) > float.Epsilon) size = originalSize * newSize.y / originalSize.y;
                             else size.y = 1;
                         }
                         else if (Math.Abs(size.z - newSize.z) > float.Epsilon)
                         {
-                            if (Math.Abs(originalSize.z) > float.Epsilon)
-                                size = originalSize * newSize.z / originalSize.z;
+                            if (Math.Abs(originalSize.z) > float.Epsilon) size = originalSize * newSize.z / originalSize.z;
                             else size.z = 1;
                         }
                     }
@@ -190,9 +186,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
 
 
             const int proportionalWidth = 20;
-            if (GUI.Button(
-                    new Rect(rect.x + EditorGUIUtility.labelWidth - proportionalWidth, rect.y, proportionalWidth,
-                        rect.height), proportional ? linkedContent : unlinkedContent, GUIStyle.none))
+            if (GUI.Button(new Rect(rect.x + EditorGUIUtility.labelWidth - proportionalWidth, rect.y, proportionalWidth, rect.height), proportional? linkedContent: unlinkedContent, GUIStyle.none))
             {
                 proportional = !proportional;
                 originalScale = target.lossyScale;
@@ -202,17 +196,13 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             scaleType = GUILayout.Toolbar(scaleType, sizeTypeTexts);
             if (scaleType == 1)
             {
-                EditorGUILayout.HelpBox("The world size is calculated based on the contained Renderers.",
-                    MessageType.None);
+                EditorGUILayout.HelpBox("The world size is calculated based on the contained Renderers.", MessageType.None);
             }
-
             EditorGUI.EndDisabledGroup();
 
             if (!canUseSize)
             {
-                EditorGUILayout.HelpBox(
-                    "The world size is not available because the current and child GameObjects do not contain a Renderer.",
-                    MessageType.None);
+                EditorGUILayout.HelpBox("The world size is not available because the current and child GameObjects do not contain a Renderer.", MessageType.None);
             }
         }
 
@@ -234,8 +224,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
         {
             inited = true;
 
-            content = new GUIContent(EditorIconContents.toolHandleGlobal.image,
-                "Display transform values in world space.");
+            content = new GUIContent(EditorIconContents.toolHandleGlobal.image, "Display transform values in world space.");
             linkedContent = new GUIContent(EditorIconContents.linked.image, "Disable constrained proportions");
             unlinkedContent = new GUIContent(EditorIconContents.unlinked.image, "Enable constrained proportions");
 
@@ -249,7 +238,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             {
                 normal =
                 {
-                    background = Resources.CreateSinglePixelTexture(110, 204, 204, 77)
+                    background = Resources.CreateSinglePixelTexture( 110, 204, 204, 77)
                 }
             };
         }
@@ -259,8 +248,8 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             target = transform;
             rotation = target.rotation.eulerAngles;
             position = target.position;
-            scale = target.lossyScale;
-
+            scale =  target.lossyScale;
+            
             inited = true;
         }
 

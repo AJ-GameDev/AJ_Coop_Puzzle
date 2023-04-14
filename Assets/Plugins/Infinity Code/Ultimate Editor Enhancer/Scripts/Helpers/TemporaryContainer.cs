@@ -24,7 +24,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 UnityEditor.Undo.RegisterCreatedObjectUndo(go, "Create Temporary Container");
 #endif
             }
-
             return temporaryContainer.gameObject;
         }
     }

@@ -106,8 +106,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         {
             if (!Prefs.showViewStateToolbarIcon || selectedState == null) return;
 
-            if (GUILayout.Button(new GUIContent(Icons.focusToolbar, "Restore View"), Styles.appToolbarButtonLeft,
-                    GUILayout.Width(30)))
+            if (GUILayout.Button(new GUIContent(Icons.focusToolbar, "Restore View"), Styles.appToolbarButtonLeft, GUILayout.Width(30)))
             {
                 OnRestoreSelectedInvoke();
             }

@@ -19,8 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_endGettingEntriesMethod == null)
-                    _endGettingEntriesMethod = Reflection.GetMethod(type, "EndGettingEntries", Reflection.StaticLookup);
+                if (_endGettingEntriesMethod == null) _endGettingEntriesMethod = Reflection.GetMethod(type, "EndGettingEntries", Reflection.StaticLookup);
                 return _endGettingEntriesMethod;
             }
         }
@@ -38,18 +37,16 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_getEntryMethod == null)
-                    _getEntryMethod = type.GetMethod("GetEntryInternal", Reflection.StaticLookup);
+                if (_getEntryMethod == null) _getEntryMethod = type.GetMethod("GetEntryInternal", Reflection.StaticLookup);
                 return _getEntryMethod;
             }
         }
 
-        private static MethodInfo rowGotDoubleClickedMethod
-        {
+        private static MethodInfo rowGotDoubleClickedMethod 
+        { 
             get
             {
-                if (_rowGotDoubleClickedMethod == null)
-                    _rowGotDoubleClickedMethod = type.GetMethod("RowGotDoubleClicked", Reflection.StaticLookup);
+                if (_rowGotDoubleClickedMethod == null) _rowGotDoubleClickedMethod = type.GetMethod("RowGotDoubleClicked", Reflection.StaticLookup);
                 return _rowGotDoubleClickedMethod;
             }
         }
@@ -58,9 +55,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_startGettingEntriesMethod == null)
-                    _startGettingEntriesMethod =
-                        Reflection.GetMethod(type, "StartGettingEntries", Reflection.StaticLookup);
+                if (_startGettingEntriesMethod == null) _startGettingEntriesMethod = Reflection.GetMethod(type, "StartGettingEntries", Reflection.StaticLookup);
                 return _startGettingEntriesMethod;
             }
         }
@@ -74,7 +69,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                     _type = Reflection.GetEditorType("LogEntries", "UnityEditorInternal");
                     if (_type == null) _type = Reflection.GetEditorType("LogEntries");
                 }
-
                 return _type;
             }
         }
@@ -86,17 +80,17 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static int GetCount()
         {
-            return (int)getCountMethod.Invoke(null, null);
+            return (int) getCountMethod.Invoke(null, null);
         }
 
         public static bool GetEntryInternal(int row, object outputEntry)
         {
-            return (bool)getEntryMethod.Invoke(null, new object[] { row, outputEntry });
+            return (bool) getEntryMethod.Invoke(null, new object[] {row, outputEntry});
         }
 
         public static void RowGotDoubleClicked(int index)
         {
-            rowGotDoubleClickedMethod.Invoke(null, new object[] { index });
+            rowGotDoubleClickedMethod.Invoke(null, new object[] {index});
         }
 
         public static int StartGettingEntries()

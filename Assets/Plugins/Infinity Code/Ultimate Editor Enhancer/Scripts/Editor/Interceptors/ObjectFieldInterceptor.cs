@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 {
-    public class ObjectFieldInterceptor : StatedInterceptor<ObjectFieldInterceptor>
+    public class ObjectFieldInterceptor: StatedInterceptor<ObjectFieldInterceptor>
     {
         public delegate void GUIDelegate(Rect position,
             Rect dropRect,
@@ -44,8 +44,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 #endif
                         , BindingFlags.Public | BindingFlags.NonPublic);
 
-                    Type[] parameters =
-                    {
+                    Type[] parameters = {
                         typeof(Rect),
                         typeof(Rect),
                         typeof(int),
@@ -107,15 +106,14 @@ namespace InfinityCode.UltimateEditorEnhancer.Interceptors
 #if UNITY_2022_1_OR_NEWER
             ,GUIStyle buttonStyle
 #endif
-        )
+            )
         {
             if (OnGUIBefore != null)
             {
 #if !DECM2
                 Type additionalType = null;
 #endif
-                OnGUIBefore(position, dropRect, id, obj, objBeingEdited, objType, additionalType, property, validator,
-                    allowSceneObjects, style);
+                OnGUIBefore(position, dropRect, id, obj, objBeingEdited, objType, additionalType, property, validator, allowSceneObjects, style);
             }
         }
     }

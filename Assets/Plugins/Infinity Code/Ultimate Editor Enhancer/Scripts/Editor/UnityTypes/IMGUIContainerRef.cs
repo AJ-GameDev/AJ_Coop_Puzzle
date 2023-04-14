@@ -15,8 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_onGUIHandlerField == null)
-                    _onGUIHandlerField = type.GetField("m_OnGUIHandler", Reflection.InstanceLookup);
+                if (_onGUIHandlerField == null) _onGUIHandlerField = type.GetField("m_OnGUIHandler", Reflection.InstanceLookup);
                 return _onGUIHandlerField;
             }
         }

@@ -17,9 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_addInbetweenKeyMethod == null)
-                    _addInbetweenKeyMethod = type.GetMethod("AddInbetweenKey", Reflection.StaticLookup, null,
-                        new[] { typeof(AnimationCurve), typeof(float) }, null);
+                if (_addInbetweenKeyMethod == null) _addInbetweenKeyMethod = type.GetMethod("AddInbetweenKey", Reflection.StaticLookup, null, new[] { typeof(AnimationCurve), typeof(float) }, null);
                 return _addInbetweenKeyMethod;
             }
         }
@@ -33,21 +31,19 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_updateTangentsFromModeSurroundingMethod == null)
-                    _updateTangentsFromModeSurroundingMethod = type.GetMethod("UpdateTangentsFromModeSurrounding",
-                        Reflection.StaticLookup, null, new[] { typeof(AnimationCurve), typeof(int) }, null);
+                if (_updateTangentsFromModeSurroundingMethod == null) _updateTangentsFromModeSurroundingMethod = type.GetMethod("UpdateTangentsFromModeSurrounding", Reflection.StaticLookup, null, new[] { typeof(AnimationCurve), typeof(int) }, null);
                 return _updateTangentsFromModeSurroundingMethod;
             }
         }
 
         public static int AddInbetweenKey(AnimationCurve curve, float time)
         {
-            return (int)addInbetweenKeyMethod.Invoke(null, new object[] { curve, time });
+            return (int) addInbetweenKeyMethod.Invoke(null, new object[] {curve, time});
         }
 
         public static void UpdateTangentsFromModeSurrounding(AnimationCurve curve, int index)
         {
-            updateTangentsFromModeSurroundingMethod.Invoke(null, new object[] { curve, index });
+            updateTangentsFromModeSurroundingMethod.Invoke(null, new object[] {curve, index});
         }
     }
 }

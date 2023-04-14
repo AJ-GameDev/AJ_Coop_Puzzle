@@ -4,13 +4,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
-    public partial class CreateBrowser : EditorWindow
+    public partial class CreateBrowser: EditorWindow
     {
+        public Action<CreateBrowser> OnClose;
+        public Action<string> OnSelectCreate;
+        public Action<string> OnSelectPrefab;
+
+        public string helpMessage;
+
         private static CreateBrowser instance;
         private static Item selectedItem;
         private static FolderItem selectedFolder;
@@ -19,109 +26,20 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static Rect? scrollRect;
         private static Vector2 scrollPosition;
         private static double loadTimer;
-        private static bool allowSelect;
-
-        public string helpMessage;
 
         public string createLabel = "Create";
         public string prefabsLabel = "Prefabs";
-        private List<Item> filterItems;
-        public Action<CreateBrowser> OnClose;
-        public Action<string> OnSelectCreate;
-        public Action<string> OnSelectPrefab;
+        
+        private bool resetSelection = true;
+        private int selectedIndex = 0;
+
+        [NonSerialized]
+        private string searchText;
 
         private List<Provider> providers;
-
-        private bool resetSelection = true;
-
-        [NonSerialized] private string searchText;
-
-        private int selectedIndex = 0;
+        private List<Item> filterItems;
         private int totalItems;
-
-        private void OnEnable()
-        {
-            wantsMouseMove = true;
-            instance = this;
-            filterItems = new List<Item>();
-
-            InitProviders();
-
-            selectedIndex = 0;
-            foreach (Provider provider in providers)
-            {
-                if (provider.items.Count == 0) continue;
-                selectedItem = provider.items[0];
-                break;
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (OnClose != null) OnClose(this);
-
-            if (providers != null)
-            {
-                foreach (Provider p in providers) p.Dispose();
-            }
-
-            filterItems = null;
-
-            instance = null;
-            OnSelectCreate = null;
-            OnClose = null;
-            OnSelectPrefab = null;
-            selectedFolder = null;
-            selectedItem = null;
-            previewPrefab = null;
-            previewEditor = null;
-            if (previewEditor != null)
-            {
-                DestroyImmediate(previewEditor);
-                previewEditor = null;
-            }
-        }
-
-        private void OnGUI()
-        {
-            if (!ProcessEvents()) return;
-
-            EditorGUILayout.BeginHorizontal();
-            bool filterChanged = DrawFilterTextField();
-            if (GUILayoutUtils.ToolbarButton("?")) Links.OpenDocumentation("object-placer");
-            EditorGUILayout.EndHorizontal();
-
-            PrefabItem currentPrefab = selectedItem as PrefabItem;
-            Event e = Event.current;
-            allowSelect = e.type == EventType.MouseMove && !e.control && !e.command && scrollRect.HasValue &&
-                          scrollRect.Value.Contains(e.mousePosition);
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-
-            loadTimer = EditorApplication.timeSinceStartup;
-
-            if (filterItems.Count == 0 && string.IsNullOrEmpty(searchText))
-            {
-                if (selectedFolder == null) DrawRootItems();
-                else DrawSubItems();
-            }
-            else DrawFilteredItems();
-
-            EditorGUILayout.EndScrollView();
-
-            if (e.type != EventType.Layout && e.type != EventType.Used)
-            {
-                scrollRect = GUILayoutUtility.GetLastRect();
-            }
-
-            if (currentPrefab != null) currentPrefab.DrawPreview();
-
-            if (!string.IsNullOrEmpty(helpMessage)) EditorGUILayout.HelpBox(helpMessage, MessageType.Info);
-
-            if (filterChanged) UpdateFilterItems();
-
-            if (GUI.changed) Repaint();
-        }
+        private static bool allowSelect;
 
         private bool DrawFilterTextField()
         {
@@ -205,6 +123,89 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             totalItems = providers.Sum(p => p.count);
         }
 
+        private void OnDestroy()
+        {
+            if (OnClose != null) OnClose(this);
+
+            if (providers != null)
+            {
+                foreach (Provider p in providers) p.Dispose();
+            }
+
+            filterItems = null;
+
+            instance = null;
+            OnSelectCreate = null;
+            OnClose = null;
+            OnSelectPrefab = null;
+            selectedFolder = null;
+            selectedItem = null;
+            previewPrefab = null;
+            previewEditor = null;
+            if (previewEditor != null)
+            {
+                DestroyImmediate(previewEditor);
+                previewEditor = null;
+            }
+        }
+
+        private void OnEnable()
+        {
+            wantsMouseMove = true;
+            instance = this;
+            filterItems = new List<Item>();
+
+            InitProviders();
+
+            selectedIndex = 0;
+            foreach (Provider provider in providers)
+            {
+                if (provider.items.Count == 0) continue;
+                selectedItem = provider.items[0];
+                break;
+            }
+        }
+
+        private void OnGUI()
+        {
+            if (!ProcessEvents()) return;
+
+            EditorGUILayout.BeginHorizontal();
+            bool filterChanged = DrawFilterTextField();
+            if (GUILayoutUtils.ToolbarButton("?")) Links.OpenDocumentation("object-placer");
+            EditorGUILayout.EndHorizontal();
+
+            PrefabItem currentPrefab = selectedItem as PrefabItem;
+            Event e = Event.current;
+            allowSelect = e.type == EventType.MouseMove && !e.control && !e.command && scrollRect.HasValue && scrollRect.Value.Contains(e.mousePosition);
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+            loadTimer = EditorApplication.timeSinceStartup;
+
+            if (filterItems.Count == 0 && string.IsNullOrEmpty(searchText))
+            {
+                if (selectedFolder == null) DrawRootItems();
+                else DrawSubItems();
+            }
+            else DrawFilteredItems();
+
+            EditorGUILayout.EndScrollView();
+
+            if (e.type != EventType.Layout && e.type != EventType.Used)
+            {
+                scrollRect = GUILayoutUtility.GetLastRect();
+            }
+
+            if (currentPrefab != null) currentPrefab.DrawPreview();
+
+            if (!string.IsNullOrEmpty(helpMessage)) EditorGUILayout.HelpBox(helpMessage, MessageType.Info);
+
+            if (filterChanged) UpdateFilterItems();
+
+            if (GUI.changed) Repaint();
+        }
+
         public static CreateBrowser OpenWindow()
         {
             instance = GetWindow<CreateBrowser>(true, "Create Browser");
@@ -252,7 +253,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     nextStart += provider.count;
                 }
             }
-
             selectedItem = f;
             Event.current.Use();
             Repaint();
@@ -354,7 +354,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     remain -= provider.count;
                 }
             }
-
             Event.current.Use();
             Repaint();
         }
@@ -368,8 +367,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
             foreach (Provider provider in providers) provider.Filter(pattern, filterItems);
 
-            filterItems = filterItems.OrderByDescending(i => i.accuracy).Take(Prefs.createBrowserMaxFilterItems)
-                .ToList();
+            filterItems = filterItems.OrderByDescending(i => i.accuracy).Take(Prefs.createBrowserMaxFilterItems).ToList();
 
             selectedIndex = filterItems.IndexOf(selectedItem);
             if (selectedIndex == -1)

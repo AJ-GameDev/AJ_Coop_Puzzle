@@ -18,9 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_intersectRayMeshMethod == null)
                 {
-                    _intersectRayMeshMethod = Reflection.GetMethod(type, "IntersectRayMesh",
-                        new[] { typeof(Ray), typeof(Mesh), typeof(Matrix4x4), typeof(RaycastHit).MakeByRefType() },
-                        Reflection.StaticLookup);
+                    _intersectRayMeshMethod = Reflection.GetMethod(type, "IntersectRayMesh", new []{typeof(Ray), typeof(Mesh), typeof(Matrix4x4), typeof(RaycastHit).MakeByRefType()}, Reflection.StaticLookup);
                 }
 
                 return _intersectRayMeshMethod;
@@ -36,8 +34,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_findNearestVertexMethod == null)
                 {
-                    _findNearestVertexMethod =
- Reflection.GetMethod(type, "FindNearestVertex", new[] { typeof(Vector2), typeof(Transform[]), typeof(Vector3).MakeByRefType() }, Reflection.StaticLookup);
+                    _findNearestVertexMethod = Reflection.GetMethod(type, "FindNearestVertex", new[] { typeof(Vector2), typeof(Transform[]), typeof(Vector3).MakeByRefType() }, Reflection.StaticLookup);
                 }
 
                 return _findNearestVertexMethod;
@@ -60,7 +57,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                 null
             };
             bool ret = (bool)intersectRayMeshMethod.Invoke(null, obj);
-            hit = (RaycastHit)obj[3];
+            hit = (RaycastHit) obj[3];
             return ret;
         }
 
@@ -73,6 +70,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             findNearestVertexMethod.Invoke(null, p);
             position = (Vector3) p[2];
 #endif
+
         }
     }
 }

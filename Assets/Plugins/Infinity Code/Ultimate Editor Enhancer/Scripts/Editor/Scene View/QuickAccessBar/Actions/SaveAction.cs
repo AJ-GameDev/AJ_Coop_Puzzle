@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace InfinityCode.UltimateEditorEnhancer.SceneTools.QuickAccessActions
 {
     [Title("Save Scenes")]
-    public class SaveAction : QuickAccessAction
+    public class SaveAction: QuickAccessAction
     {
         private GUIContent _activeContent;
         private GUIContent _content;

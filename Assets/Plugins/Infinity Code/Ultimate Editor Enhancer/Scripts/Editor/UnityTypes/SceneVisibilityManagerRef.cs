@@ -20,9 +20,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_hideMethod == null)
-                    _hideMethod = type.GetMethod("Hide", Reflection.InstanceLookup, null,
-                        new[] { typeof(GameObject), typeof(bool) }, null);
+                if (_hideMethod == null) _hideMethod = type.GetMethod("Hide", Reflection.InstanceLookup, null, new[] { typeof(GameObject), typeof(bool) }, null);
                 return _hideMethod;
             }
         }
@@ -47,9 +45,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_showMethod == null)
-                    _showMethod = type.GetMethod("Show", Reflection.InstanceLookup, null,
-                        new[] { typeof(GameObject), typeof(bool) }, null);
+                if (_showMethod == null) _showMethod = type.GetMethod("Show", Reflection.InstanceLookup, null, new[] {typeof(GameObject), typeof(bool) }, null);
                 return _showMethod;
             }
         }
@@ -58,9 +54,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_toggleVisibilityMethod == null)
-                    _toggleVisibilityMethod = type.GetMethod("ToggleVisibility", Reflection.InstanceLookup, null,
-                        new[] { typeof(GameObject), typeof(bool) }, null);
+                if (_toggleVisibilityMethod == null) _toggleVisibilityMethod = type.GetMethod("ToggleVisibility", Reflection.InstanceLookup, null, new[] {typeof(GameObject), typeof(bool)}, null);
                 return _toggleVisibilityMethod;
             }
         }
@@ -88,13 +82,13 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         public static void Show(object instance, GameObject gameObject, bool includeChildren)
         {
             if (gameObject == null) return;
-            showMethod.Invoke(instance, new object[] { gameObject, includeChildren });
+            showMethod.Invoke(instance, new object[] {gameObject, includeChildren});
         }
 
         public static void ToggleVisibility(object instance, GameObject target, bool visible)
         {
             if (target == null) return;
-            toggleVisibilityMethod.Invoke(instance, new object[] { target, visible });
+            toggleVisibilityMethod.Invoke(instance, new object[] {target, visible});
         }
     }
 }

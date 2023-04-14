@@ -55,24 +55,21 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return modifier;
             }
 
-            protected static void DrawFieldWithHotKey(string label, ref bool field, ref KeyCode hotKey,
-                ref EventModifiers modifiers, GUIStyle labelStyle = null, int spaceBeforeLabels = spaceBeforeModifiers)
+            protected static void DrawFieldWithHotKey(string label, ref bool field, ref KeyCode hotKey, ref EventModifiers modifiers, GUIStyle labelStyle = null, int spaceBeforeLabels = spaceBeforeModifiers)
             {
                 if (labelStyle == null) labelStyle = EditorStyles.label;
                 field = EditorGUILayout.ToggleLeft(label, field, labelStyle);
                 EditorGUI.BeginDisabledGroup(!field);
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(spaceBeforeLabels);
-                GUILayout.Label("Hot Key",
-                    GUILayout.Width(EditorGUI.indentLevel == 0 ? modifierLabelWidth : modifierLabelWidth - 15));
+                GUILayout.Label("Hot Key", GUILayout.Width(EditorGUI.indentLevel == 0? modifierLabelWidth: modifierLabelWidth - 15));
                 hotKey = (KeyCode)EditorGUILayout.EnumPopup(hotKey, GUILayout.ExpandWidth(false));
                 modifiers = DrawModifiers(modifiers);
                 EditorGUILayout.EndHorizontal();
                 EditorGUI.EndDisabledGroup();
             }
 
-            protected static void DrawFieldWithModifiers(string label, ref bool field, ref EventModifiers modifiers,
-                int labelWidth = labelWidth)
+            protected static void DrawFieldWithModifiers(string label, ref bool field, ref EventModifiers modifiers, int labelWidth = labelWidth)
             {
                 EditorGUILayout.BeginHorizontal();
                 field = EditorGUILayout.ToggleLeft(label, field, GUILayout.Width(labelWidth));

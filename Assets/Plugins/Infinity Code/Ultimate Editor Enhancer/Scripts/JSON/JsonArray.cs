@@ -13,16 +13,8 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
     /// </summary>
     public class JsonArray : JsonItem
     {
-        private int _count;
         private List<JsonItem> _items;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public JsonArray()
-        {
-            _items = new List<JsonItem>();
-        }
+        private int _count;
 
         public List<JsonItem> items
         {
@@ -50,6 +42,14 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         public override JsonItem this[string key]
         {
             get { return Get(key); }
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public JsonArray()
+        {
+            _items = new List<JsonItem>();
         }
 
         /// <summary>
@@ -85,8 +85,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             return obj;
         }
 
-        public override object Deserialize(Type type,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        public override object Deserialize(Type type, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             if (_count == 0) return null;
 
@@ -124,8 +123,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
                 if (_items[0] is JsonObject)
                 {
-                    IEnumerable<MemberInfo> members =
-                        Reflection.GetMembers(listType, BindingFlags.Instance | BindingFlags.Public);
+                    IEnumerable<MemberInfo> members = Reflection.GetMembers(listType, BindingFlags.Instance | BindingFlags.Public);
                     for (int i = 0; i < _count; i++)
                     {
                         JsonItem child = _items[i];
@@ -269,6 +267,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         {
             if (Reflection.IsValueType(type)) return Activator.CreateInstance(type);
             return null;
+
         }
     }
 }

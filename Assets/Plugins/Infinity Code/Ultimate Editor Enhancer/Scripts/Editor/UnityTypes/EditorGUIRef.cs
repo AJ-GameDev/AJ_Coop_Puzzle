@@ -27,8 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_activeEditorField == null)
-                    _activeEditorField = type.GetField("activeEditor", Reflection.StaticLookup);
+                if (_activeEditorField == null) _activeEditorField = type.GetField("activeEditor", Reflection.StaticLookup);
                 return _activeEditorField;
             }
         }
@@ -39,8 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_doNumberFieldMethod == null)
                 {
-                    Type[] parameters =
-                    {
+                    Type[] parameters = {
                         RecycledTextEditorRef.type,
                         typeof(Rect),
                         typeof(Rect),
@@ -58,8 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         typeof(double)
                     };
 
-                    _doNumberFieldMethod =
-                        type.GetMethod("DoNumberField", Reflection.StaticLookup, null, parameters, null);
+                    _doNumberFieldMethod = type.GetMethod("DoNumberField", Reflection.StaticLookup, null, parameters, null);
                 }
 
                 return _doNumberFieldMethod;
@@ -72,9 +69,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_doObjectFoldoutMethod == null)
                 {
-                    _doObjectFoldoutMethod = Reflection.GetMethod(type, "DoObjectFoldout",
-                        new[] { typeof(bool), typeof(Rect), typeof(Rect), typeof(Object[]), typeof(int) },
-                        Reflection.StaticLookup);
+                    _doObjectFoldoutMethod = Reflection.GetMethod(type, "DoObjectFoldout", new[] { typeof(bool), typeof(Rect), typeof(Rect), typeof(Object[]), typeof(int) }, Reflection.StaticLookup);
                 }
 
                 return _doObjectFoldoutMethod;
@@ -87,8 +82,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_doPopupMethod == null)
                 {
-                    Type[] parameters =
-                    {
+                    Type[] parameters = {
                         typeof(Rect),
                         typeof(int),
                         typeof(int),
@@ -133,7 +127,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         null
                     );
                 }
-
                 return _doTextFieldMethod;
             }
         }
@@ -160,7 +153,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         null
                     );
                 }
-
                 return _dragNumberValueMethod;
             }
         }
@@ -169,10 +161,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_getInspectorTitleBarObjectFoldoutRenderRectMethod == null)
-                    _getInspectorTitleBarObjectFoldoutRenderRectMethod = type.GetMethod(
-                        "GetInspectorTitleBarObjectFoldoutRenderRect", Reflection.StaticLookup, null,
-                        new[] { typeof(Rect), typeof(GUIStyle) }, null);
+                if (_getInspectorTitleBarObjectFoldoutRenderRectMethod == null) _getInspectorTitleBarObjectFoldoutRenderRectMethod = type.GetMethod("GetInspectorTitleBarObjectFoldoutRenderRect", Reflection.StaticLookup, null, new[] { typeof(Rect), typeof(GUIStyle) }, null);
                 return _getInspectorTitleBarObjectFoldoutRenderRectMethod;
             }
         }
@@ -190,7 +179,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         new[] { typeof(int) },
                         null);
                 }
-
                 return _hasKeyboardFocusMethod;
             }
         }
@@ -201,13 +189,11 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_helpIconButtonMethod == null)
                 {
-                    Type[] parameters =
-                    {
+                    Type[] parameters = {
                         typeof(Rect),
                         typeof(Object[])
                     };
-                    _helpIconButtonMethod =
-                        type.GetMethod("HelpIconButton", Reflection.StaticLookup, null, parameters, null);
+                    _helpIconButtonMethod = type.GetMethod("HelpIconButton", Reflection.StaticLookup, null, parameters, null);
                 }
 
                 return _helpIconButtonMethod;
@@ -220,8 +206,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_isEditingTextFieldMethod == null)
                 {
-                    _isEditingTextFieldMethod =
-                        Reflection.GetMethod(type, "IsEditingTextField", Reflection.StaticLookup);
+                    _isEditingTextFieldMethod = Reflection.GetMethod(type, "IsEditingTextField", Reflection.StaticLookup);
                 }
 
                 return _isEditingTextFieldMethod;
@@ -232,8 +217,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_recycledEditorField == null)
-                    _recycledEditorField = type.GetField("s_RecycledEditor", Reflection.StaticLookup);
+                if (_recycledEditorField == null) _recycledEditorField = type.GetField("s_RecycledEditor", Reflection.StaticLookup);
                 return _recycledEditorField;
             }
         }
@@ -282,7 +266,10 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
             public bool hasResult
             {
-                get { return this.success || this.expression != null; }
+                get
+                {
+                    return this.success || this.expression != null;
+                }
             }
         }
     }

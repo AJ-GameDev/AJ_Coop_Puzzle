@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using InfinityCode.UltimateEditorEnhancer.JSON;
+using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static string folder;
         private static Slide[] slides;
         private static List<Slide> flatSlides;
+        private int totalSlides;
         private static Slide activeSlide;
         private static Slide[] activeSlides;
         private static Slide first;
@@ -27,56 +29,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static bool needReload = true;
         private static string filterText;
         private static bool resetSelection;
-        private int totalSlides;
-
-        private void OnEnable()
-        {
-            folder = Resources.assetFolder + "Textures/Getting Started/";
-            string content = File.ReadAllText(folder + "_Content.json", Encoding.UTF8);
-
-            slides = Json.Deserialize<Slide[]>(content);
-
-            Slide prev = null;
-            totalSlides = 0;
-            flatSlides = new List<Slide>();
-            InitSlides(slides, null, ref totalSlides, ref prev);
-
-            last = prev;
-            first = activeSlide;
-
-            first.prev = last;
-            last.next = first;
-
-            minSize = new Vector2(904, 454);
-            maxSize = new Vector2(904, 454);
-
-            UpdateTitle();
-            SetSlide(activeSlide);
-        }
-
-        private void OnDisable()
-        {
-            if (slides != null)
-            {
-                foreach (Slide slide in slides) slide.Dispose();
-                slides = null;
-            }
-
-            activeSlide = null;
-            activeSlides = null;
-            first = null;
-            flatSlides = null;
-            last = null;
-            slides = null;
-            treeView = null;
-            treeViewState = null;
-        }
-
-        public void OnGUI()
-        {
-            DrawTableOfContent();
-            DrawActiveSlide();
-        }
 
         private void DrawActiveSlide()
         {
@@ -114,8 +66,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Repaint();
             }
 
-            if (activeSlide.texture != null)
-                GUI.DrawTexture(new Rect(302, 2, position.width - 304, position.height - 4), activeSlide.texture);
+            if (activeSlide.texture != null) GUI.DrawTexture(new Rect(302, 2, position.width - 304, position.height - 4), activeSlide.texture);
             if (contents == null) contents = new[] { new GUIContent("?", "Open Documentation") };
             int ti = GUI.Toolbar(buttonsRect, -1, contents);
             if (ti != -1) Links.OpenDocumentation(activeSlide.help);
@@ -163,7 +114,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                             parent = parent.parent;
                         }
-
                         return p.UpdateAccuracy(pattern) > 0;
                     }).OrderByDescending(p => p.accuracy).ToArray();
                 }
@@ -207,11 +157,60 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
         }
 
+        private void OnDisable()
+        {
+            if (slides != null)
+            {
+                foreach (Slide slide in slides) slide.Dispose();
+                slides = null;
+            }
+
+            activeSlide = null;
+            activeSlides = null;
+            first = null;
+            flatSlides = null;
+            last = null;
+            slides = null;
+            treeView = null;
+            treeViewState = null;
+        }
+
+        private void OnEnable()
+        {
+            folder = Resources.assetFolder + "Textures/Getting Started/";
+            string content = File.ReadAllText(folder + "_Content.json", Encoding.UTF8);
+
+            slides = Json.Deserialize<Slide[]>(content);
+
+            Slide prev = null;
+            totalSlides = 0;
+            flatSlides = new List<Slide>();
+            InitSlides(slides, null, ref totalSlides, ref prev);
+            
+            last = prev;
+            first = activeSlide;
+
+            first.prev = last;
+            last.next = first;
+
+            minSize = new Vector2(904, 454);
+            maxSize = new Vector2(904, 454);
+
+            UpdateTitle();
+            SetSlide(activeSlide);
+        }
+
+        public void OnGUI()
+        {
+            DrawTableOfContent();
+            DrawActiveSlide();
+        }
+
         [MenuItem(WindowsHelper.MenuPath + "Getting Started", false, 121)]
         public static void OpenWindow()
         {
             GettingStarted wnd = GetWindow<GettingStarted>(true, "Getting Started", true);
-            SetSlide(activeSlide);
+            SetSlide(activeSlide); 
             wnd.UpdateTitle();
         }
 
@@ -220,7 +219,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             if (string.IsNullOrEmpty(slide.image))
             {
                 if (slide.slides == null) return;
-
+                
                 bool success = false;
                 for (int i = 0; i < slide.slides.Length; i++)
                 {
@@ -234,36 +233,34 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (!success) return;
             }
-
             activeSlide = slide;
             if (treeView != null)
             {
-                treeView.SetSelection(new List<int> { slide.id });
+                treeView.SetSelection(new List<int>{ slide.id });
                 treeView.FrameItem(slide.id);
             }
         }
 
         private void UpdateTitle()
         {
-            titleContent = new GUIContent("Getting Started. Frame " + activeSlide.index + " / " + totalSlides +
-                                          " (click to continue)");
+            titleContent = new GUIContent("Getting Started. Frame " + activeSlide.index + " / " + totalSlides + " (click to continue)");
         }
 
         public class Slide : SearchableItem
         {
-            private Texture2D _texture;
-            public float added;
-            public string help;
-            public int id;
+            public string title;
             public string image;
+            public string help;
+            public Slide[] slides;
             public int index;
+            public float added;
+            public float updated;
 
             public Slide next;
             public Slide parent;
             public Slide prev;
-            public Slide[] slides;
-            public string title;
-            public float updated;
+            private Texture2D _texture;
+            public int id;
 
             public Texture2D texture
             {
@@ -336,8 +333,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     Slide slide = slides[i];
                     GSTreeViewItem item = new GSTreeViewItem
                     {
-                        id = slide.id,
-                        depth = depth,
+                        id = slide.id, 
+                        depth = depth, 
                         displayName = slide.title,
                         slide = slide
                     };

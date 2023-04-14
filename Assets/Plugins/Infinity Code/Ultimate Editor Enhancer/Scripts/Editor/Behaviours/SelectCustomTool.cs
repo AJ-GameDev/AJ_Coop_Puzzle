@@ -48,19 +48,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
         private static bool OnValidateShortcut()
         {
             Event e = Event.current;
-            if (e.keyCode != Prefs.switchCustomToolKeyCode || e.modifiers != Prefs.switchCustomToolModifiers)
-                return false;
+            if (e.keyCode != Prefs.switchCustomToolKeyCode || e.modifiers != Prefs.switchCustomToolModifiers) return false;
             return !EditorGUIRef.IsEditingTextField();
         }
 
         private static void Select()
         {
             List<Type> tools = EditorToolUtilityRef.GetCustomEditorToolsForType(null);
-
+            
             if (tools.Any(t => t == GetActiveToolType()))
             {
                 int index = tools.IndexOf(lastCustomTool) + 1;
-                SetTool(tools[index < tools.Count ? index : 0]);
+                SetTool(tools[index < tools.Count? index: 0]);
             }
             else
             {

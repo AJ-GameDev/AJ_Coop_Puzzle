@@ -15,40 +15,8 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
     /// </summary>
     public class JsonValue : JsonItem
     {
-        /// <summary>
-        /// Type of value
-        /// </summary>
-        public enum ValueType
-        {
-            DOUBLE,
-            LONG,
-            STRING,
-            BOOLEAN,
-            NULL
-        }
-
         private ValueType _type;
         private object _value;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="value">Value</param>
-        public JsonValue(object value)
-        {
-            this.value = value;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="value">Value</param>
-        /// <param name="type">Type of value</param>
-        public JsonValue(object value, ValueType type)
-        {
-            _value = value;
-            _type = type;
-        }
 
         public override JsonItem this[string key]
         {
@@ -85,12 +53,12 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 else if (value is double)
                 {
                     _type = ValueType.DOUBLE;
-                    _value = (double)value;
+                    _value = (double) value;
                 }
                 else if (value is float)
                 {
                     _type = ValueType.DOUBLE;
-                    _value = (double)(float)value;
+                    _value = (double) (float) value;
                 }
                 else if (value is bool)
                 {
@@ -119,8 +87,27 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             get { return _type; }
         }
 
-        public override object Deserialize(Type type,
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value">Value</param>
+        public JsonValue(object value)
+        {
+            this.value = value;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="type">Type of value</param>
+        public JsonValue(object value, ValueType type)
+        {
+            _value = value;
+            _type = type;
+        }
+
+        public override object Deserialize(Type type, BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public)
         {
             return Value(type);
         }
@@ -134,8 +121,8 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         {
             if (_type == ValueType.STRING) WriteString(b);
             else if (_type == ValueType.NULL) b.Append("null");
-            else if (_type == ValueType.BOOLEAN) b.Append((bool)_value ? "true" : "false");
-            else if (_type == ValueType.DOUBLE) b.Append(((double)value).ToString(Culture.cultureInfo));
+            else if (_type == ValueType.BOOLEAN) b.Append((bool) _value ? "true" : "false");
+            else if (_type == ValueType.DOUBLE) b.Append(((double) value).ToString(Culture.cultureInfo));
             else b.Append(value);
         }
 
@@ -146,7 +133,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 
         public override string ToString()
         {
-            if (type == ValueType.DOUBLE) return ((double)value).ToString(Culture.cultureInfo);
+            if (type == ValueType.DOUBLE) return ((double) value).ToString(Culture.cultureInfo);
             return value.ToString();
         }
 
@@ -167,7 +154,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
             else if (_type == ValueType.DOUBLE)
             {
                 if (t == typeof(double)) return Convert.ChangeType(_value, t, Culture.numberFormat);
-                if (t == typeof(float)) return Convert.ChangeType((double)_value, t, Culture.numberFormat);
+                if (t == typeof(float)) return Convert.ChangeType((double) _value, t, Culture.numberFormat);
             }
             else if (_type == ValueType.LONG)
             {
@@ -175,13 +162,13 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
 #if UNITY_EDITOR
                 if (t.IsSubclassOf(typeof(UnityEngine.Object)))
                 {
-                    return UnityEditor.EditorUtility.InstanceIDToObject((int)(long)_value);
+                    return UnityEditor.EditorUtility.InstanceIDToObject((int) (long) _value);
                 }
 #endif
 
                 try
                 {
-                    return Convert.ChangeType((long)_value, t);
+                    return Convert.ChangeType((long) _value, t);
                 }
                 catch (Exception e)
                 {
@@ -197,13 +184,13 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                 }
                 else
                 {
-                    MethodInfo method =
-                        Reflection.GetMethod(t, "Parse", new[] { typeof(string), typeof(IFormatProvider) });
+                    MethodInfo method = Reflection.GetMethod(t, "Parse", new[] { typeof(string), typeof(IFormatProvider) });
                     if (method != null) return method.Invoke(null, new object[] { value, Culture.numberFormat });
 
                     method = Reflection.GetMethod(t, "Parse", new[] { typeof(string) });
                     return method.Invoke(null, new[] { value });
                 }
+                
             }
 
             StringBuilder builder = new StringBuilder();
@@ -254,7 +241,7 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
                         break;
                     default:
                         b.Append("\\u");
-                        b.Append(((int)c).ToString("X4", NumberFormatInfo.InvariantInfo));
+                        b.Append(((int) c).ToString("X4", NumberFormatInfo.InvariantInfo));
                         break;
                 }
             }
@@ -266,6 +253,18 @@ namespace InfinityCode.UltimateEditorEnhancer.JSON
         public static implicit operator string(JsonValue val)
         {
             return val.ToString();
+        }
+
+        /// <summary>
+        /// Type of value
+        /// </summary>
+        public enum ValueType
+        {
+            DOUBLE,
+            LONG,
+            STRING,
+            BOOLEAN,
+            NULL
         }
     }
 }

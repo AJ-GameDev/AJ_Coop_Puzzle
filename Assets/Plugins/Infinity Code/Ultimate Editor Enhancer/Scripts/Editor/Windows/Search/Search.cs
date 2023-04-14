@@ -1,6 +1,11 @@
 ﻿/*           INFINITY CODE          */
 /*     https://infinity-code.com    */
 
+#if UNITY_2021_2_OR_NEWER
+using UnityEditor.SceneManagement;
+#else
+using UnityEditor.Experimental.SceneManagement;
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -9,11 +14,6 @@ using System.Linq;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
-#if UNITY_2021_2_OR_NEWER
-using UnityEditor.SceneManagement;
-#else
-using UnityEditor.Experimental.SceneManagement;
-#endif
 
 namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
@@ -38,10 +38,12 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         private static string[] searchModeLabels = { "Everywhere", "By Hierarchy", "By Project" };
 
         public string searchText;
-        public int setSelectionIndex = -1;
-        private bool resetSelection;
-
+        
         private Vector2 scrollPosition;
+        private bool resetSelection;
+        public int setSelectionIndex = -1;
+
+        public static Search instance { get; private set; }
 
         static Search()
         {
@@ -52,109 +54,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             binding = KeyManager.AddBinding();
             binding.OnValidate += OnValidateScript;
             binding.OnPress += OnInvokeScript;
-        }
-
-        public static Search instance { get; private set; }
-
-        private void OnEnable()
-        {
-            bestRecords = new Record[maxRecords];
-            countBestRecords = 0;
-            bestRecordIndex = 0;
-
-            CacheScene();
-            if (Prefs.searchByProject) CacheProject();
-            if (Prefs.searchByWindow) CacheWindows();
-        }
-
-        protected void OnDestroy()
-        {
-            bestRecords = null;
-        }
-
-        protected override void OnGUI()
-        {
-            if (focusedWindow != instance)
-            {
-                if (isDragStarted)
-                {
-                    if (DragAndDrop.objectReferences.Length == 0) isDragStarted = false;
-                    else Repaint();
-                }
-
-                if (!isDragStarted)
-                {
-                    EventManager.BroadcastClosePopup();
-                    return;
-                }
-            }
-
-            if (EditorApplication.isCompiling)
-            {
-                EventManager.BroadcastClosePopup();
-                return;
-            }
-
-            if (sceneRecords == null) CacheScene();
-            if (projectRecords == null) CacheProject();
-            if (windowRecords == null) CacheWindows();
-
-            if (!ProcessEvents()) return;
-
-            DrawHeader();
-
-            GUI.SetNextControlName("UEESearchTextField");
-            EditorGUI.BeginChangeCheck();
-            searchText = GUILayoutUtils.ToolbarSearchField(searchText);
-            bool changed = EditorGUI.EndChangeCheck();
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                if (resetSelection)
-                {
-                    TextEditor recycledEditor = EditorGUIRef.GetRecycledEditor() as TextEditor;
-                    if (recycledEditor != null)
-                    {
-                        if (setSelectionIndex == -1)
-                        {
-                            recycledEditor.MoveTextEnd();
-                        }
-                        else
-                        {
-                            recycledEditor.MoveTextStart();
-                            setSelectionIndex = -1;
-                        }
-                    }
-
-                    resetSelection = false;
-                    Repaint();
-                }
-            }
-
-            if (focusOnTextField && Event.current.type == EventType.Repaint)
-            {
-                GUI.FocusControl("UEESearchTextField");
-                focusOnTextField = false;
-                if (!string.IsNullOrEmpty(searchText)) resetSelection = true;
-            }
-
-            if (changed || needUpdateBestRecords) UpdateBestRecords();
-
-            if (string.IsNullOrEmpty(searchText)) DrawHint();
-            else if (countBestRecords == 0) DrawNothingFound();
-            else DrawBestRecords();
-        }
-
-        private static bool OnValidate()
-        {
-            if (!Prefs.search) return false;
-            Event e = Event.current;
-
-            if (e.keyCode != Prefs.searchKeyCode) return false;
-            if (e.modifiers != Prefs.searchModifiers) return false;
-
-            if (Prefs.SearchDoNotShowOnWindows()) return false;
-            return true;
         }
 
         private static void CachePrefabWithComponents(Dictionary<int, Record> tempRecords, GameObject go)
@@ -188,7 +87,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 foreach (KeyValuePair<int, Record> pair in projectRecords) pair.Value.used = false;
             }
 
-            char[] validPrefix = { 'A', 's', 's', 'e', 't', 's', '/' };
+            char[] validPrefix = {'A', 's', 's', 'e', 't', 's', '/'};
 
             for (int i = 0; i < assets.Length; i++)
             {
@@ -261,8 +160,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 Dictionary<int, Record> tempRecords = new Dictionary<int, Record>();
                 try
                 {
-                    if (Prefs.searchByComponents)
-                        CachePrefabWithComponents(tempRecords, prefabStage.prefabContentsRoot);
+                    if (Prefs.searchByComponents) CachePrefabWithComponents(tempRecords, prefabStage.prefabContentsRoot);
                     else CachePrefabWithoutComponents(tempRecords, prefabStage.prefabContentsRoot);
                 }
                 catch (Exception e)
@@ -400,8 +298,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 windowRecords.Add(submenu.GetHashCode(), new WindowRecord(submenu, submenu.Substring(lastSlash + 1)));
             }
 
-            windowRecords.Add("Project Settings...".GetHashCode(),
-                new WindowRecord("Edit/Project Settings...", "Project Settings"));
+            windowRecords.Add("Project Settings...".GetHashCode(), new WindowRecord("Edit/Project Settings...", "Project Settings"));
             windowRecords.Add("Preferences...".GetHashCode(), new WindowRecord("Edit/Preferences...", "Preferences"));
         }
 
@@ -426,8 +323,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             int selectedIndex = -1;
             int selectedState = -1;
 
-            scrollPosition = GUI.BeginScrollView(new Rect(0, 40, position.width, position.height - 40), scrollPosition,
-                new Rect(0, 0, position.width - 40, countBestRecords * 20));
+            scrollPosition = GUI.BeginScrollView(new Rect(0, 40, position.width, position.height - 40), scrollPosition, new Rect(0, 0, position.width - 40, countBestRecords * 20));
 
             for (int i = 0; i < countBestRecords; i++)
             {
@@ -484,14 +380,101 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private void DrawHint()
         {
-            GUI.Label(new Rect(0, 15, position.width, position.height),
-                "Enter the name of the object you are looking for.\nSupports fuzzy search, and you can enter a query in part.\nTo search by object type, enter \"query:type\".\n\nUse Tab to quickly switch between searching\neverywhere, in the hierarchy, and in the project.",
-                Styles.centeredLabel);
+            GUI.Label(new Rect(0, 15, position.width, position.height), "Enter the name of the object you are looking for.\nSupports fuzzy search, and you can enter a query in part.\nTo search by object type, enter \"query:type\".\n\nUse Tab to quickly switch between searching\neverywhere, in the hierarchy, and in the project.", Styles.centeredLabel);
         }
 
         private void DrawNothingFound()
         {
             GUI.Label(new Rect(0, 0, position.width, position.height), "Nothing found.", Styles.centeredLabel);
+        }
+
+        protected void OnDestroy()
+        {
+            bestRecords = null;
+        }
+
+        private void OnEnable()
+        {
+            bestRecords = new Record[maxRecords];
+            countBestRecords = 0;
+            bestRecordIndex = 0;
+
+            CacheScene();
+            if (Prefs.searchByProject) CacheProject();
+            if (Prefs.searchByWindow) CacheWindows();
+        }
+
+        protected override void OnGUI()
+        {
+            if (focusedWindow != instance)
+            {
+                if (isDragStarted)
+                {
+                    if (DragAndDrop.objectReferences.Length == 0) isDragStarted = false;
+                    else Repaint();
+                }
+
+                if (!isDragStarted)
+                {
+                    EventManager.BroadcastClosePopup();
+                    return;
+                }
+            }
+
+            if (EditorApplication.isCompiling)
+            {
+                EventManager.BroadcastClosePopup();
+                return;
+            }
+
+            if (sceneRecords == null) CacheScene();
+            if (projectRecords == null) CacheProject();
+            if (windowRecords == null) CacheWindows();
+
+            if (!ProcessEvents()) return;
+
+            DrawHeader();
+
+            GUI.SetNextControlName("UEESearchTextField");
+            EditorGUI.BeginChangeCheck();
+            searchText = GUILayoutUtils.ToolbarSearchField(searchText);
+            bool changed = EditorGUI.EndChangeCheck();
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (resetSelection)
+                {
+                    TextEditor recycledEditor = EditorGUIRef.GetRecycledEditor() as TextEditor;
+                    if (recycledEditor != null)
+                    {
+                        if (setSelectionIndex == -1)
+                        {
+                            recycledEditor.MoveTextEnd();
+                        }
+                        else
+                        {
+                            recycledEditor.MoveTextStart();
+                            setSelectionIndex = -1;
+                        }
+                    }
+                    
+                    resetSelection = false;
+                    Repaint();
+                }
+            }
+
+            if (focusOnTextField && Event.current.type == EventType.Repaint)
+            {
+                GUI.FocusControl("UEESearchTextField");
+                focusOnTextField = false;
+                if (!string.IsNullOrEmpty(searchText)) resetSelection = true;
+            }
+
+            if (changed || needUpdateBestRecords) UpdateBestRecords();
+
+            if (string.IsNullOrEmpty(searchText)) DrawHint();
+            else if (countBestRecords == 0) DrawNothingFound();
+            else DrawBestRecords();
         }
 
         public static void OnInvoke()
@@ -505,8 +488,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
 #if !UNITY_EDITOR_OSX
             if (rect.y < 5) rect.y = 5;
-            else if (rect.yMax > Screen.currentResolution.height - 40)
-                rect.y = Screen.currentResolution.height - 40 - rect.height;
+            else if (rect.yMax > Screen.currentResolution.height - 40) rect.y = Screen.currentResolution.height - 40 - rect.height;
 #endif
 
             Show(rect);
@@ -519,6 +501,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             instance.searchText = ":script";
             instance.setSelectionIndex = 0;
             searchMode = 2;
+        }
+
+        private static bool OnValidate()
+        {
+            if (!Prefs.search) return false;
+            Event e = Event.current;
+
+            if (e.keyCode != Prefs.searchKeyCode) return false;
+            if (e.modifiers != Prefs.searchModifiers) return false;
+
+            if (Prefs.SearchDoNotShowOnWindows()) return false;
+            return true;
         }
 
         private static bool OnValidateScript()
@@ -679,7 +673,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             string assetType;
             string search = SearchableItem.GetPattern(searchText, out assetType);
 
-            IEnumerable<KeyValuePair<int, Record>> tempBestRecords;
+            IEnumerable <KeyValuePair<int, Record>> tempBestRecords;
 
             if (searchMode == 0)
             {
@@ -693,19 +687,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (currentMode != 0) search = search.Substring(1);
 
-                if (Prefs.searchByWindow && currentMode == 0)
-                    tempBestRecords =
-                        tempBestRecords.Concat(windowRecords.Where(r => r.Value.Update(search, assetType) > 0));
-                if (currentMode == 0 || currentMode == 1)
-                    tempBestRecords =
-                        tempBestRecords.Concat(sceneRecords.Where(r => r.Value.Update(search, assetType) > 0));
-                if (Prefs.searchByProject && currentMode == 0 || currentMode == 2)
-                    tempBestRecords =
-                        tempBestRecords.Concat(projectRecords.Where(r => r.Value.Update(search, assetType) > 0));
+                if (Prefs.searchByWindow && currentMode == 0) tempBestRecords = tempBestRecords.Concat(windowRecords.Where(r => r.Value.Update(search, assetType) > 0));
+                if (currentMode == 0 || currentMode == 1) tempBestRecords = tempBestRecords.Concat(sceneRecords.Where(r => r.Value.Update(search, assetType) > 0));
+                if (Prefs.searchByProject && currentMode == 0 || currentMode == 2) tempBestRecords = tempBestRecords.Concat(projectRecords.Where(r => r.Value.Update(search, assetType) > 0));
             }
             else
             {
-                tempBestRecords = searchMode == 1 ? sceneRecords : projectRecords;
+                tempBestRecords = searchMode == 1? sceneRecords: projectRecords;
                 tempBestRecords = tempBestRecords.Where(r => r.Value.Update(search, assetType) > 0);
             }
 

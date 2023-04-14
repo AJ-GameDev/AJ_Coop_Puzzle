@@ -27,8 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
         public override void Invoke()
         {
-            List<GameObject> items = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects()
-                .ToList();
+            List<GameObject> items = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList();
             GenericMenuEx menu = GenericMenuEx.Start();
 
             for (int i = 0; i < items.Count; i++) GetChilds(items[i].transform, menu, "");

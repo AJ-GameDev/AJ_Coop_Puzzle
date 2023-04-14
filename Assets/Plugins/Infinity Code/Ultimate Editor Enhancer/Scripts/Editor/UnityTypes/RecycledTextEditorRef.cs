@@ -16,8 +16,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_endEditingMethod == null)
-                    _endEditingMethod = type.GetMethod("EndEditing", Reflection.InstanceLookup);
+                if (_endEditingMethod == null) _endEditingMethod = type.GetMethod("EndEditing", Reflection.InstanceLookup);
                 return _endEditingMethod;
             }
         }
@@ -35,7 +34,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
                         new[] { typeof(int) },
                         null);
                 }
-
                 return _isEditingControlMethod;
             }
         }

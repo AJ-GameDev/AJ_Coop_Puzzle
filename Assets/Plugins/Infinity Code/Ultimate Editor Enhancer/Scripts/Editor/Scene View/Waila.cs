@@ -25,12 +25,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
         private static GUIStyle _labelStyle;
         private static GUIStyle tooltipStyle;
 
-        static Waila()
-        {
-            SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.waila, true);
-            targets = new List<GameObject>();
-        }
-
 
         public static GUIStyle labelStyle
         {
@@ -49,6 +43,12 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
                 return _labelStyle;
             }
+        }
+
+        static Waila()
+        {
+            SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.waila, true);
+            targets = new List<GameObject>();
         }
 
         public static void Close()
@@ -72,7 +72,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 tooltipStyle.padding = new RectOffset(8, 8, 8, 8);
                 tooltipStyle.alignment = TextAnchor.MiddleLeft;
             }
-
             Vector2 size = tooltipStyle.CalcSize(tooltip);
             Vector2 position = Event.current.mousePosition - new Vector2(size.x / 2, size.y + 10);
             Rect rect = new Rect(position, size + new Vector2(4, 0));
@@ -100,8 +99,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (collider == null) return;
 
             RaycastHit hit;
-            if (collider.Raycast(HandleUtility.GUIPointToWorldRay(Event.current.mousePosition), out hit,
-                    float.PositiveInfinity))
+            if (collider.Raycast(HandleUtility.GUIPointToWorldRay(Event.current.mousePosition), out hit, float.PositiveInfinity))
             {
                 tooltipText += "\nWorld Position: " + hit.point.ToString("F2");
             }
@@ -118,7 +116,6 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                     return;
                 }
             }
-
             if (!Prefs.waila) return;
 
             Event e = Event.current;
@@ -147,8 +144,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
                 {
                     DrawTooltip();
 
-                    if (e.type == EventType.MouseDown && e.modifiers == Prefs.wailaShowNameUnderCursorModifiers &&
-                        GUIUtility.hotControl != 0)
+                    if (e.type == EventType.MouseDown && e.modifiers == Prefs.wailaShowNameUnderCursorModifiers && GUIUtility.hotControl != 0)
                     {
                         Selection.activeGameObject = targets[0];
                         SceneViewManager.AddListener(RestoreSelection);
@@ -169,6 +165,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             {
                 if (e.keyCode == Prefs.wailaSmartSelectionKeyCode && e.modifiers == Prefs.wailaSmartSelectionModifiers)
                 {
+                    
                     SmartSelection.ShowSmartSelection();
                     e.Use();
                 }
@@ -195,8 +192,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
             if (OnUpdateTooltipsExternal != null && OnUpdateTooltipsExternal())
             {
             }
-            else if (Prefs.wailaShowNameUnderCursor &&
-                     Event.current.modifiers == Prefs.wailaShowNameUnderCursorModifiers)
+            else if (Prefs.wailaShowNameUnderCursor && Event.current.modifiers == Prefs.wailaShowNameUnderCursorModifiers)
             {
                 UpdateTooltip();
             }

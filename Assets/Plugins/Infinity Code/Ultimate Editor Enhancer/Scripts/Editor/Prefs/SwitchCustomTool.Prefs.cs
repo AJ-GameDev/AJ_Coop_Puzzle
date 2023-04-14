@@ -25,16 +25,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                List<Shortcut> shortcuts = new List<Shortcut>
-                {
-                    new Shortcut("Select Next Custom Tool", "Everywhere", switchCustomToolModifiers,
-                        switchCustomToolKeyCode)
-                };
-                return shortcuts;
-            }
-
             public override void Draw()
             {
                 GUILayout.Label("Select Next Custom Tool");
@@ -42,8 +32,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 float oldLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = labelWidth + 5;
-                switchCustomToolKeyCode =
-                    (KeyCode)EditorGUILayout.EnumPopup("Hot Key", switchCustomToolKeyCode, GUILayout.Width(420));
+                switchCustomToolKeyCode = (KeyCode)EditorGUILayout.EnumPopup("Hot Key", switchCustomToolKeyCode, GUILayout.Width(420));
                 EditorGUIUtility.labelWidth = oldLabelWidth;
 
                 EditorGUILayout.BeginHorizontal();
@@ -53,6 +42,15 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUI.indentLevel--;
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                List<Shortcut> shortcuts = new List<Shortcut>
+                {
+                    new Shortcut("Select Next Custom Tool", "Everywhere", switchCustomToolModifiers, switchCustomToolKeyCode)
+                };
+                return shortcuts;
             }
         }
     }

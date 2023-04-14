@@ -24,7 +24,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static int leftToolbarCount = 0;
         private static Item[] leftToolbarItems;
-
+        
         private static int rightToolbarCount = 0;
         private static Item[] rightToolbarItems;
 
@@ -39,7 +39,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void AddItem(ref Item[] items, ref int count, string key, Action action, int order)
         {
-            if (items == null)
+            if (items == null) 
             {
                 items = new Item[8];
             }
@@ -84,7 +84,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return;
             }
 
-            currentToolbar = (ScriptableObject)toolbars[0];
+            currentToolbar = (ScriptableObject) toolbars[0];
             if (currentToolbar == null) return;
 
 #if UNITY_2021_1_OR_NEWER

@@ -5,7 +5,7 @@ using System;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
-    public class DisallowNestedEditor : Attribute
+    public class DisallowNestedEditor: Attribute
     {
     }
 }

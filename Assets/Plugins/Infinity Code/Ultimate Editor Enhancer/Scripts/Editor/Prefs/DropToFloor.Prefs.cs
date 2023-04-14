@@ -25,33 +25,14 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             public override IEnumerable<string> keywords
             {
-                get
-                {
+                get 
+                { 
                     return new[]
                     {
                         "Drop To Floor",
                         "Advanced"
                     };
                 }
-            }
-
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                List<Shortcut> shortcuts = new List<Shortcut>();
-
-                if (dropToFloor)
-                {
-                    shortcuts.Add(new Shortcut("Drop Selected GameObject To Floor", "Scene View", dropToFloorModifiers,
-                        dropToFloorKeyCode));
-                }
-
-                if (advancedDropToFloor)
-                {
-                    shortcuts.Add(new Shortcut("Drop Selected GameObject To Floor (Advanced)", "Scene View",
-                        advancedDropToFloorModifiers, dropToFloorKeyCode));
-                }
-
-                return shortcuts;
             }
 
             public override void Draw()
@@ -63,8 +44,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 float oldLabelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = labelWidth + 5;
-                dropToFloorKeyCode =
-                    (KeyCode)EditorGUILayout.EnumPopup("Hot Key", dropToFloorKeyCode, GUILayout.Width(420));
+                dropToFloorKeyCode = (KeyCode)EditorGUILayout.EnumPopup("Hot Key", dropToFloorKeyCode, GUILayout.Width(420));
                 EditorGUIUtility.labelWidth = oldLabelWidth;
 
                 EditorGUILayout.BeginHorizontal();
@@ -81,6 +61,23 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.indentLevel--;
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                List<Shortcut> shortcuts = new List<Shortcut>();
+
+                if (dropToFloor)
+                {
+                    shortcuts.Add(new Shortcut("Drop Selected GameObject To Floor", "Scene View", dropToFloorModifiers, dropToFloorKeyCode));
+                }
+
+                if (advancedDropToFloor)
+                {
+                    shortcuts.Add(new Shortcut("Drop Selected GameObject To Floor (Advanced)", "Scene View", advancedDropToFloorModifiers, dropToFloorKeyCode));
+                }
+
+                return shortcuts;
             }
         }
     }

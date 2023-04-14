@@ -17,8 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_addMethod == null)
-                    _addMethod = type.GetMethod("Add", Reflection.StaticLookup, null, new[] { typeof(Object) }, null);
+                if (_addMethod == null) _addMethod = type.GetMethod("Add", Reflection.StaticLookup, null, new[] { typeof(Object) }, null);
                 return _addMethod;
             }
         }

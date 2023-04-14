@@ -12,11 +12,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         private const string GridSizePref = Prefs.Prefix + "Bookmarks.GridSize";
         private const int gridMargin = 10;
-        private static int gridSize = 47;
-        private static GUIStyle selectedStyle;
-        private int maxGridSize = 128;
 
         private int minGridSize = 47;
+        private int maxGridSize = 128;
+        private static int gridSize = 47;
+        private static GUIStyle selectedStyle;
 
         private bool DrawCell(BookmarkItem item, Rect rect)
         {
@@ -66,8 +66,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             {
                 int row = i / countCols;
                 int col = i % countCols;
-                Rect r = new Rect(col * (gridSize + gridMargin * 2) + marginLeft, row * rowHeight + rect.y,
-                    gridSize + gridMargin * 2, rowHeight);
+                Rect r = new Rect(col * (gridSize + gridMargin * 2) + marginLeft, row * rowHeight + rect.y, gridSize + gridMargin * 2, rowHeight);
                 if (!DrawCell(item, r)) removeItem = item;
                 i++;
             }
@@ -91,7 +90,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         Selection.activeObject = item.target;
                         EditorGUIUtility.PingObject(item.target);
                     }
-
                     e.Use();
                 }
                 else if (e.button == 1)

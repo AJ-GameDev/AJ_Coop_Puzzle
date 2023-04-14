@@ -22,7 +22,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 #endif
                     _type = Reflection.GetEditorType(name);
                 }
-
                 return _type;
             }
         }

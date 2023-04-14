@@ -26,31 +26,21 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             public override IEnumerable<string> keywords
             {
-                get
-                {
-                    return new[] { "Create Browser", "Prefabs Folder Blacklist" }.Concat(
-                        ObjectPlacerManager.GetKeywords());
-                }
+                get { return new[] { "Create Browser", "Prefabs Folder Blacklist" }.Concat(ObjectPlacerManager.GetKeywords()); }
             }
 
             public override void Draw()
             {
                 ObjectPlacerManager.Draw(null);
 
-                createBrowserDefaultTarget =
-                    (CreateBrowserTarget)EditorGUILayout.EnumPopup("Default Target", createBrowserDefaultTarget);
-                createBrowserAlternativeTarget =
-                    (CreateBrowserTarget)EditorGUILayout.EnumPopup("Alternative Target",
-                        createBrowserAlternativeTarget);
+                createBrowserDefaultTarget = (CreateBrowserTarget)EditorGUILayout.EnumPopup("Default Target", createBrowserDefaultTarget);
+                createBrowserAlternativeTarget = (CreateBrowserTarget)EditorGUILayout.EnumPopup("Alternative Target", createBrowserAlternativeTarget);
                 createBrowserPreviewIcons = EditorGUILayout.Toggle("Preview Icons", createBrowserPreviewIcons);
-                createBrowserPreviewSelection =
-                    EditorGUILayout.Toggle("Preview Selection", createBrowserPreviewSelection);
+                createBrowserPreviewSelection = EditorGUILayout.Toggle("Preview Selection", createBrowserPreviewSelection);
                 createBrowserMaxFilterItems = EditorGUILayout.IntField("Max Filter Items", createBrowserMaxFilterItems);
 
                 EditorGUILayout.LabelField("Prefabs Folder Blacklist", EditorStyles.label);
-                if (createBrowserBlacklists == null)
-                    createBrowserBlacklists =
-                        createBrowserBlacklist.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                if (createBrowserBlacklists == null) createBrowserBlacklists = createBrowserBlacklist.Split(new []{";"}, StringSplitOptions.RemoveEmptyEntries);
 
                 int removeIndex = -1;
                 EditorGUI.indentLevel++;

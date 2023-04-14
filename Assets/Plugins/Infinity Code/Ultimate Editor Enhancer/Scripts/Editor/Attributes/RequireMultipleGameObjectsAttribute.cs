@@ -9,6 +9,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
     {
         public RequireMultipleGameObjectsAttribute()
         {
+
         }
 
         public override bool Validate()
@@ -21,6 +22,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Attributes
     {
         public RequireSingleGameObjectAttribute()
         {
+
         }
 
         public override bool Validate()

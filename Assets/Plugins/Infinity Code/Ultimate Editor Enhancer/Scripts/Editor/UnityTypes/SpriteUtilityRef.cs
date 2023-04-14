@@ -15,9 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_cleanUpMethod == null)
-                    _cleanUpMethod = type.GetMethod("CleanUp", Reflection.StaticLookup, null, new[] { typeof(bool) },
-                        null);
+                if (_cleanUpMethod == null) _cleanUpMethod = type.GetMethod("CleanUp", Reflection.StaticLookup, null, new[] {typeof(bool)}, null);
                 return _cleanUpMethod;
             }
         }
@@ -33,7 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void CleanUp(bool deleteTempSceneObject)
         {
-            cleanUpMethod.Invoke(null, new object[] { deleteTempSceneObject });
+            cleanUpMethod.Invoke(null, new object[] {deleteTempSceneObject});
         }
     }
 }

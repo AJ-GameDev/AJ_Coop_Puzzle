@@ -12,13 +12,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         {
             private static Texture2D windowIcon;
 
-            public WindowRecord(string submenu, string label)
-            {
-                _tooltip = submenu;
-                _label = submenu;
-                search = new[] { label };
-            }
-
             protected override Texture2D assetPreview
             {
                 get
@@ -41,6 +34,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             public override string type
             {
                 get => "window";
+            }
+
+            public WindowRecord(string submenu, string label)
+            {
+                _tooltip = submenu;
+                _label = submenu;
+                search = new[] { label };
             }
 
             protected override void ShowContextMenu(int index)

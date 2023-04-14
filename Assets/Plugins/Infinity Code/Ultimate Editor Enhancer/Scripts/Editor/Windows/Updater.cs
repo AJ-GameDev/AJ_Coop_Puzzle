@@ -18,16 +18,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 {
     public class Updater : EditorWindow
     {
-        public enum Channel
-        {
-            stable = 10,
-            stablePrevious = 15,
-            releaseCandidate = 20,
-            beta = 30,
-            alpha = 40,
-            working = 50
-        }
-
         private const string packageID = "Ultimate Editor Enhancer";
         private const string lastVersionKey = Prefs.Prefix + "LastVersion";
         private const string lastVersionCheckKey = Prefs.Prefix + "LastVersionCheck";
@@ -37,59 +27,11 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
         public static bool hasNewVersion = false;
 
         private static Channel channel = Channel.stable;
-        private static string lastVersionID;
-        private GUIContent helpContent;
         private string invoiceNumber;
         private Vector2 scrollPosition;
         private List<Item> updates;
-
-        private void OnEnable()
-        {
-            if (EditorPrefs.HasKey(invoiceNumberKey)) invoiceNumber = EditorPrefs.GetString(invoiceNumberKey);
-            else invoiceNumber = "";
-
-            if (EditorPrefs.HasKey(channelKey)) channel = (Channel)EditorPrefs.GetInt(channelKey);
-            else channel = Channel.stable;
-
-            helpContent = new GUIContent(Icons.help,
-                "You can find out your Invoice Number in the email confirming the purchase, or page the user in Unity Asset Store.\nClick to go to the Unity Asset Store.");
-        }
-
-        private void OnDestroy()
-        {
-            SavePrefs();
-        }
-
-        private void OnGUI()
-        {
-            EditorGUILayout.BeginHorizontal();
-            invoiceNumber = EditorGUILayout.TextField("Invoice Number:", invoiceNumber).Trim(' ');
-
-            GUIStyle helpStyle = new GUIStyle();
-            helpStyle.margin = new RectOffset(2, 2, 2, 2);
-
-            if (helpContent != null && GUILayout.Button(helpContent, helpStyle, GUILayout.ExpandWidth(false)))
-            {
-                Process.Start("https://assetstore.unity.com/orders");
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            channel = (Channel)EditorGUILayout.EnumPopup("Channel:", channel);
-            GUILayout.Label("Current version: " + Version.version);
-
-            if (GUILayout.Button("Check new versions")) CheckNewVersions();
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-
-            if (updates != null)
-            {
-                foreach (Item update in updates) update.Draw();
-                if (updates.Count == 0) GUILayout.Label("No updates");
-            }
-
-            EditorGUILayout.EndScrollView();
-        }
+        private static string lastVersionID;
+        private GUIContent helpContent;
 
         private void CheckNewVersions()
         {
@@ -139,7 +81,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             WebClient client = new WebClient();
 
             client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            client.UploadDataCompleted += delegate(object sender, UploadDataCompletedEventArgs response)
+            client.UploadDataCompleted += delegate (object sender, UploadDataCompletedEventArgs response)
             {
                 if (response.Error != null)
                 {
@@ -172,8 +114,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 hasNewVersion = CompareVersions();
                 EditorApplication.update += SetLastVersion;
             };
-            client.UploadDataAsync(new Uri("http://infinity-code.com/products_update/getlastversion.php"), "POST",
-                Encoding.UTF8.GetBytes("c=" + (int)channel + "&package=" + UnityWebRequest.EscapeURL(packageID)));
+            client.UploadDataAsync(new Uri("http://infinity-code.com/products_update/getlastversion.php"), "POST", Encoding.UTF8.GetBytes("c=" + (int)channel + "&package=" + UnityWebRequest.EscapeURL(packageID)));
         }
 
         private static bool CompareVersions()
@@ -193,7 +134,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 vs[3] = "000" + vs[3];
                 vs[3] = vs[3].Substring(vs[3].Length - 4, 4);
             }
-
             v = vs[0] + "." + vs[1] + vs[2] + vs[3];
             double result;
             if (!double.TryParse(v, NumberStyles.AllowDecimalPoint, Culture.numberFormat, out result)) result = 1;
@@ -237,6 +177,53 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             foreach (XmlNode node in firstChild.ChildNodes) updates.Add(new Item(node));
         }
 
+        private void OnEnable()
+        {
+            if (EditorPrefs.HasKey(invoiceNumberKey)) invoiceNumber = EditorPrefs.GetString(invoiceNumberKey);
+            else invoiceNumber = "";
+
+            if (EditorPrefs.HasKey(channelKey)) channel = (Channel)EditorPrefs.GetInt(channelKey);
+            else channel = Channel.stable;
+
+            helpContent = new GUIContent(Icons.help, "You can find out your Invoice Number in the email confirming the purchase, or page the user in Unity Asset Store.\nClick to go to the Unity Asset Store.");
+        }
+
+        private void OnDestroy()
+        {
+            SavePrefs();
+        }
+
+        private void OnGUI()
+        {
+            EditorGUILayout.BeginHorizontal();
+            invoiceNumber = EditorGUILayout.TextField("Invoice Number:", invoiceNumber).Trim(' ');
+
+            GUIStyle helpStyle = new GUIStyle();
+            helpStyle.margin = new RectOffset(2, 2, 2, 2);
+
+            if (helpContent != null && GUILayout.Button(helpContent, helpStyle, GUILayout.ExpandWidth(false)))
+            {
+                Process.Start("https://assetstore.unity.com/orders");
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            channel = (Channel)EditorGUILayout.EnumPopup("Channel:", channel);
+            GUILayout.Label("Current version: " + Version.version);
+
+            if (GUILayout.Button("Check new versions")) CheckNewVersions();
+
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+            if (updates != null)
+            {
+                foreach (Item update in updates) update.Draw();
+                if (updates.Count == 0) GUILayout.Label("No updates");
+            }
+
+            EditorGUILayout.EndScrollView();
+        }
+
         [MenuItem(WindowsHelper.MenuPath + "Check Updates", false, 123)]
         public static void OpenWindow()
         {
@@ -257,7 +244,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         private static string Unescape(string str)
         {
-            return Regex.Replace(str, @"&(\w+);", delegate(Match match)
+            return Regex.Replace(str, @"&(\w+);", delegate (Match match)
             {
                 string v = match.Groups[1].Value;
                 if (v == "amp") return "&";
@@ -271,13 +258,32 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
         public class Item
         {
+            private string version;
+            private int type;
+            private string changelog;
+            private string download;
+            private string date;
+
             private static GUIStyle _changelogStyle;
             private static GUIStyle _titleStyle;
-            private string changelog;
-            private string date;
-            private string download;
-            private int type;
-            private string version;
+
+            private static GUIStyle changelogStyle
+            {
+                get
+                {
+                    if (_changelogStyle == null) _changelogStyle = new GUIStyle(EditorStyles.label) {wordWrap = true};
+                    return _changelogStyle;
+                }
+            }
+
+            private static GUIStyle titleStyle
+            {
+                get
+                {
+                    if (_titleStyle == null) _titleStyle = new GUIStyle(EditorStyles.boldLabel) {alignment = TextAnchor.MiddleCenter};
+                    return _titleStyle;
+                }
+            }
 
             public Item(XmlNode node)
             {
@@ -296,30 +302,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                 version = string.Join(".", vars2);
             }
 
-            private static GUIStyle changelogStyle
-            {
-                get
-                {
-                    if (_changelogStyle == null) _changelogStyle = new GUIStyle(EditorStyles.label) { wordWrap = true };
-                    return _changelogStyle;
-                }
-            }
-
-            private static GUIStyle titleStyle
-            {
-                get
-                {
-                    if (_titleStyle == null)
-                        _titleStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter };
-                    return _titleStyle;
-                }
-            }
-
-            public string typeStr
-            {
-                get { return Enum.GetName(typeof(Channel), type); }
-            }
-
             public void Draw()
             {
                 GUILayout.BeginVertical(GUI.skin.box);
@@ -336,8 +318,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 if (GUILayout.Button("Copy download link", GUILayout.ExpandWidth(false)))
                 {
-                    EditorGUIUtility.systemCopyBuffer =
-                        "http://infinity-code.com/products_update/download.php?k=" + download;
+                    EditorGUIUtility.systemCopyBuffer = "http://infinity-code.com/products_update/download.php?k=" + download;
                     EditorUtility.DisplayDialog("Success",
                         "Download link is copied to the clipboard.\nOpen a browser and paste the link into the address bar.",
                         "OK");
@@ -347,6 +328,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 GUILayout.EndVertical();
             }
+
+            public string typeStr
+            {
+                get { return Enum.GetName(typeof(Channel), type); }
+            }
+        }
+
+        public enum Channel
+        {
+            stable = 10,
+            stablePrevious = 15,
+            releaseCandidate = 20,
+            beta = 30,
+            alpha = 40,
+            working = 50
         }
     }
 }

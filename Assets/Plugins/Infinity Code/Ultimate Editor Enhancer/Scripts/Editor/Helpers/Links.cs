@@ -8,12 +8,8 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static class Links
     {
-        public const string assetStore =
-            "https://assetstore.unity.com/packages/tools/utilities/ultimate-editor-enhancer-141831";
-
-        public const string changelog =
-            "https://infinity-code.com/products_update/get-changelog.php?asset=Ultimate%20Editor%20Enhancer&from=1.0";
-
+        public const string assetStore = "https://assetstore.unity.com/packages/tools/utilities/ultimate-editor-enhancer-141831";
+        public const string changelog = "https://infinity-code.com/products_update/get-changelog.php?asset=Ultimate%20Editor%20Enhancer&from=1.0";
         public const string documentation = "https://infinity-code.com/documentation/ultimate-editor-enhancer.html";
         public const string forum = "https://forum.infinity-code.com";
         public const string homepage = "https://infinity-code.com/assets/ultimate-editor-enhancer";

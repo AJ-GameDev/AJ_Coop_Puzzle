@@ -22,12 +22,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
 #if !UNITY_EDITOR_OSX
         public static EventModifiers createViewStateFromSelectionModifiers = EventModifiers.Control;
-        public static EventModifiers restoreViewStateFromSelectionModifiers =
-            EventModifiers.Control | EventModifiers.Shift;
+        public static EventModifiers restoreViewStateFromSelectionModifiers = EventModifiers.Control | EventModifiers.Shift;
 #else
         public static EventModifiers createViewStateFromSelectionModifiers = EventModifiers.Command;
-        public static EventModifiers restoreViewStateFromSelectionModifiers =
- EventModifiers.Command | EventModifiers.Shift;
+        public static EventModifiers restoreViewStateFromSelectionModifiers = EventModifiers.Command | EventModifiers.Shift;
 #endif
 
         public class ViewGalleryManager : StandalonePrefManager<ViewGalleryManager>, IHasShortcutPref
@@ -50,6 +48,14 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -40; }
             }
 
+            public override void Draw()
+            {
+                DrawFieldWithHotKey("View Gallery", ref viewGalleryHotKey, ref viewGalleryKeyCode, ref viewGalleryModifiers, EditorStyles.label, 17);
+                DrawFieldWithHotKey("Create View State For Selection", ref createViewStateFromSelection, ref createViewStateFromSelectionKeyCode, ref createViewStateFromSelectionModifiers, EditorStyles.label, 17);
+                DrawFieldWithHotKey("Restore View State For Selection", ref restoreViewStateFromSelection, ref restoreViewStateFromSelectionKeyCode, ref restoreViewStateFromSelectionModifiers, EditorStyles.label, 17);
+                showViewStateInScene = EditorGUILayout.ToggleLeft("Show View State In SceneView (Hot Key - ALT)", showViewStateInScene);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!viewGalleryHotKey) return new Shortcut[0];
@@ -57,26 +63,10 @@ namespace InfinityCode.UltimateEditorEnhancer
                 return new[]
                 {
                     new Shortcut("Open View Gallery", "Everywhere", viewGalleryModifiers, viewGalleryKeyCode),
-                    new Shortcut("Create View State For Selection", "Everywhere", createViewStateFromSelectionModifiers,
-                        createViewStateFromSelectionKeyCode),
-                    new Shortcut("Restore View State For Selection", "Everywhere",
-                        restoreViewStateFromSelectionModifiers, restoreViewStateFromSelectionKeyCode),
+                    new Shortcut("Create View State For Selection", "Everywhere", createViewStateFromSelectionModifiers, createViewStateFromSelectionKeyCode),
+                    new Shortcut("Restore View State For Selection", "Everywhere", restoreViewStateFromSelectionModifiers, restoreViewStateFromSelectionKeyCode),
                     new Shortcut("Show ViewState In SceneView", "Scene View", EventModifiers.Alt),
                 };
-            }
-
-            public override void Draw()
-            {
-                DrawFieldWithHotKey("View Gallery", ref viewGalleryHotKey, ref viewGalleryKeyCode,
-                    ref viewGalleryModifiers, EditorStyles.label, 17);
-                DrawFieldWithHotKey("Create View State For Selection", ref createViewStateFromSelection,
-                    ref createViewStateFromSelectionKeyCode, ref createViewStateFromSelectionModifiers,
-                    EditorStyles.label, 17);
-                DrawFieldWithHotKey("Restore View State For Selection", ref restoreViewStateFromSelection,
-                    ref restoreViewStateFromSelectionKeyCode, ref restoreViewStateFromSelectionModifiers,
-                    EditorStyles.label, 17);
-                showViewStateInScene = EditorGUILayout.ToggleLeft("Show View State In SceneView (Hot Key - ALT)",
-                    showViewStateInScene);
             }
         }
     }

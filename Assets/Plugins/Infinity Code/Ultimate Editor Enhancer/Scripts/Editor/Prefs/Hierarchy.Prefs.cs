@@ -7,6 +7,7 @@ using InfinityCode.UltimateEditorEnhancer.Interceptors;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace InfinityCode.UltimateEditorEnhancer
 {
@@ -18,10 +19,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         public static bool hierarchyEnableGameObject = true;
         public static bool hierarchyErrorIcons = true;
         public static bool hierarchyIcons = true;
-
-        public static HierarchyIconsDisplayRule hierarchyIconsDisplayRule =
-            HierarchyIconsDisplayRule.onHoverWithModifiers;
-
+        public static HierarchyIconsDisplayRule hierarchyIconsDisplayRule = HierarchyIconsDisplayRule.onHoverWithModifiers;
         public static bool hierarchyOverrideMainIcon = true;
         public static bool hierarchySoloVisibility = true;
 
@@ -40,11 +38,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             public override IEnumerable<string> keywords
             {
-                get
-                {
-                    return new[]
-                        { "Hierarchy Icons", "Max Items", "Show error icon if GameObject has an error or exception" };
-                }
+                get { return new[] { "Hierarchy Icons", "Max Items", "Show error icon if GameObject has an error or exception" }; }
             }
 
             public override float order
@@ -52,20 +46,9 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -46; }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!hierarchyIcons) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Show Component Icons", "Hierarchy", hierarchyIconsModifiers)
-                };
-            }
-
             public override void Draw()
             {
-                hierarchyEnableGameObject =
-                    EditorGUILayout.ToggleLeft("Enable / Disable GameObject", hierarchyEnableGameObject);
+                hierarchyEnableGameObject = EditorGUILayout.ToggleLeft("Enable / Disable GameObject", hierarchyEnableGameObject);
                 EditorGUI.BeginDisabledGroup(!unsafeFeatures);
                 EditorGUI.BeginChangeCheck();
                 _hierarchyTypeFilter = EditorGUILayout.ToggleLeft("Filter By Type", _hierarchyTypeFilter);
@@ -77,9 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 DrawHierarchyIcons();
 
                 hierarchyBookmarks = EditorGUILayout.ToggleLeft("Show Bookmark Button", hierarchyBookmarks);
-                hierarchyErrorIcons =
-                    EditorGUILayout.ToggleLeft("Show Error Icon When GameObject Has an Error or Exception",
-                        hierarchyErrorIcons);
+                hierarchyErrorIcons = EditorGUILayout.ToggleLeft("Show Error Icon When GameObject Has an Error or Exception", hierarchyErrorIcons);
                 hierarchySoloVisibility = EditorGUILayout.ToggleLeft("Solo Visibility", hierarchySoloVisibility);
                 hierarchyTree = EditorGUILayout.ToggleLeft("Tree", hierarchyTree);
             }
@@ -87,8 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             private static void DrawBestComponents()
             {
                 EditorGUI.BeginChangeCheck();
-                hierarchyOverrideMainIcon =
-                    EditorGUILayout.ToggleLeft("Show Best Component Icon Before Name", hierarchyOverrideMainIcon);
+                hierarchyOverrideMainIcon = EditorGUILayout.ToggleLeft("Show Best Component Icon Before Name", hierarchyOverrideMainIcon);
                 if (!EditorGUI.EndChangeCheck()) return;
 
                 Object[] windows = UnityEngine.Resources.FindObjectsOfTypeAll(SceneHierarchyWindowRef.type);
@@ -113,8 +93,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 hierarchyIconsMaxItems = EditorGUILayout.IntField("Max Items", hierarchyIconsMaxItems);
                 if (hierarchyIconsMaxItems < 1) hierarchyIconsMaxItems = 1;
 
-                hierarchyIconsDisplayRule =
-                    (HierarchyIconsDisplayRule)EditorGUILayout.EnumPopup("Display Rule", hierarchyIconsDisplayRule);
+                hierarchyIconsDisplayRule = (HierarchyIconsDisplayRule)EditorGUILayout.EnumPopup("Display Rule", hierarchyIconsDisplayRule);
 
                 EditorGUI.indentLevel--;
             }
@@ -127,8 +106,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.BeginDisabledGroup(!hierarchyRowBackground);
 
                 EditorGUI.BeginChangeCheck();
-                hierarchyRowBackgroundStyle =
-                    (HierarchyRowBackgroundStyle)EditorGUILayout.EnumPopup("Style", hierarchyRowBackgroundStyle);
+                hierarchyRowBackgroundStyle = (HierarchyRowBackgroundStyle)EditorGUILayout.EnumPopup("Style", hierarchyRowBackgroundStyle);
                 if (EditorGUI.EndChangeCheck())
                 {
                     BackgroundDrawer.backgroundTexture = null;
@@ -137,6 +115,16 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.EndDisabledGroup();
                 EditorGUI.indentLevel--;
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!hierarchyIcons) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Show Component Icons", "Hierarchy", hierarchyIconsModifiers)
+                };
             }
         }
 

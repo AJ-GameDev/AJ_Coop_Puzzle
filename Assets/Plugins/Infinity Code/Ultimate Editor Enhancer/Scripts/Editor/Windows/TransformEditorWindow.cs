@@ -15,71 +15,21 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         private static TransformEditorWindow _instance;
 
-        [SerializeField] private Transform[] transforms;
-
-        private TransformEditorTool activeTool;
-        private int activeToolIndex = -1;
+        [SerializeField]
+        private Transform[] transforms;
 
         private Editor editor;
+        private TransformEditorTool[] tools;
+        private TransformEditorTool activeTool;
+        private GUIContent[] toolContents;
+        private int activeToolIndex = -1;
         private GUIStyle leftStyle;
         private GUIStyle midStyle;
         private GUIStyle rightStyle;
-        private GUIContent[] toolContents;
-        private TransformEditorTool[] tools;
 
         public static TransformEditorWindow instance
         {
             get { return _instance; }
-        }
-
-        private void OnEnable()
-        {
-            _instance = this;
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            _instance = null;
-            transforms = null;
-
-            if (activeTool != null)
-            {
-                try
-                {
-                    activeTool.OnDisable();
-                }
-                catch (Exception e)
-                {
-                    Log.Add(e);
-                }
-
-                activeTool = null;
-            }
-
-            if (tools != null)
-            {
-                for (int i = 0; i < tools.Length; i++)
-                {
-                    try
-                    {
-                        tools[i].Dispose();
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Add(e);
-                    }
-                }
-
-                tools = null;
-            }
-
-            if (editor != null)
-            {
-                DestroyImmediate(editor);
-                editor = null;
-            }
         }
 
         private void CacheTools()
@@ -161,6 +111,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                         {
                             Log.Add(e);
                         }
+                        
                     }
                 }
             }
@@ -204,6 +155,54 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
             }
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _instance = null;
+            transforms = null;
+
+            if (activeTool != null)
+            {
+                try
+                {
+                    activeTool.OnDisable();
+                }
+                catch (Exception e)
+                {
+                    Log.Add(e);
+                }
+                activeTool = null;
+            }
+
+            if (tools != null)
+            {
+                for (int i = 0; i < tools.Length; i++)
+                {
+                    try
+                    {
+                        tools[i].Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Add(e);
+                    }
+                }
+                tools = null;
+            }
+
+            if (editor != null)
+            {
+                DestroyImmediate(editor);
+                editor = null;
+            }
+        }
+
+        private void OnEnable()
+        {
+            _instance = this;
+        }
+
         public static TransformEditorWindow ShowPopup(Transform[] transforms, Rect? rect = null)
         {
             if (transforms == null || transforms.Length == 0) return null;
@@ -223,7 +222,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
                     position.y -= 20;
                     wnd.adjustHeight = AutoSize.bottom;
                 }
-
                 Vector2 size = new Vector2(Prefs.defaultWindowSize.x, 20);
                 rect = new Rect(position - new Vector2(size.x / 2, 0), size);
             }

@@ -42,8 +42,7 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
 
             if (!ProGrids.snapEnabled)
             {
-                menu.Add("Snap To Grid", EditorSnapSettings.gridSnapEnabled,
-                    () => EditorSnapSettings.gridSnapEnabled = !EditorSnapSettings.gridSnapEnabled);
+                menu.Add("Snap To Grid", EditorSnapSettings.gridSnapEnabled, () => EditorSnapSettings.gridSnapEnabled = !EditorSnapSettings.gridSnapEnabled);
                 menu.AddSeparator(string.Empty);
             }
 
@@ -67,15 +66,17 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                 menu.Add("Selection/Z (" + boundsSize.z + ")", () => SetSnapValue(boundsSize.z));
             }
 
-            float[] values = { 0.1f, 0.25f, 0.5f, 1, 1.5f, 2, 3, 4, 8 };
+            float[] values = {0.1f, 0.25f, 0.5f, 1, 1.5f, 2, 3, 4, 8};
             float snapValue = SnapHelper.value;
             foreach (float v in values)
             {
                 menu.Add(v.ToString(), Math.Abs(snapValue - v) < float.Epsilon, () => SetSnapValue(v));
             }
 
-            menu.Add("Set Custom Value",
-                () => { InputDialog.Show("Enter snapping value", snapValue.ToString(), OnSnapValueEntered); });
+            menu.Add("Set Custom Value", () =>
+            {
+                InputDialog.Show("Enter snapping value", snapValue.ToString(), OnSnapValueEntered);
+            });
 
             menu.Show();
         }

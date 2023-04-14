@@ -39,9 +39,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (groups.Length == 0) return;
 
             Transform firstParent = targets[0].transform.parent;
-            string activeGroup = (firstParent != null && firstParent.tag == "Collection")
-                ? firstParent.gameObject.name
-                : null;
+            string activeGroup = (firstParent != null && firstParent.tag == "Collection")? firstParent.gameObject.name: null;
 
             menu.Add("Collections/None", string.IsNullOrEmpty(activeGroup), () => MoveToGroup(targets, null));
 
@@ -198,8 +196,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             foreach (GameObject go in targets)
             {
-                if (go != null && PrefabUtility.IsPartOfNonAssetPrefabInstance(go) &&
-                    PrefabUtility.IsOutermostPrefabInstanceRoot(go))
+                if (go != null && PrefabUtility.IsPartOfNonAssetPrefabInstance(go) && PrefabUtility.IsOutermostPrefabInstanceRoot(go))
                 {
                     return true;
                 }
@@ -222,15 +219,17 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         private static void CreateNewTag(object data)
         {
-            InputDialog.Show("Enter a new tag", "", tag => { SetCustomTag(data as GameObject[], tag); });
+            InputDialog.Show("Enter a new tag", "", tag =>
+            {
+                SetCustomTag(data as GameObject[], tag);
+            });
         }
 
         public static bool CreateTag(string tag)
         {
             if (string.IsNullOrEmpty(tag)) return false;
 
-            SerializedObject tagManager =
-                new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty tagsProp = tagManager.FindProperty("tags");
 
             for (int i = 0; i < tagsProp.arraySize; i++)
@@ -335,8 +334,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             if (Math.Abs(lossyScale.x) < float.Epsilon) lossyScale.x = 1;
             if (Math.Abs(lossyScale.y) < float.Epsilon) lossyScale.y = 1;
             if (Math.Abs(lossyScale.z) < float.Epsilon) lossyScale.z = 1;
-            t.localScale = new Vector3(localScale.x / lossyScale.x, localScale.y / lossyScale.y,
-                localScale.z / lossyScale.z);
+            t.localScale = new Vector3(localScale.x / lossyScale.x, localScale.y / lossyScale.y, localScale.z / lossyScale.z);
 
             Bounds bounds = new Bounds();
             bool isFirst = true;
@@ -389,7 +387,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             return StaticStringBuilder.GetString(true);
         }
 
-        public static T GetRoot<T>(T t) where T : Transform
+        public static T GetRoot<T>(T t) where T: Transform
         {
             while (t.parent != null && t.parent is T) t = t.parent as T;
             return t;
@@ -434,7 +432,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     "VideoClip"
                 };
             }
-
+            
             return typeNames;
         }
 
@@ -594,12 +592,11 @@ namespace InfinityCode.UltimateEditorEnhancer
                 menu.Add("Group %g", () => Group.GroupTargets(targets));
             }
 
-            if (targets.Any(t => t.transform.childCount > 0))
-                menu.Add("Ungroup", () =>
-                {
-                    Ungroup.UngroupTargets(targets);
-                    EditorMenu.Close();
-                });
+            if (targets.Any(t => t.transform.childCount > 0)) menu.Add("Ungroup", () =>
+            {
+                Ungroup.UngroupTargets(targets);
+                EditorMenu.Close();
+            });
 
             if (OnPrepareGameObjectMenu != null) OnPrepareGameObjectMenu(menu, targets);
 
@@ -615,8 +612,7 @@ namespace InfinityCode.UltimateEditorEnhancer
         {
             foreach (GameObject go in targets)
             {
-                if (go != null && PrefabUtility.IsPartOfNonAssetPrefabInstance(go) &&
-                    PrefabUtility.IsOutermostPrefabInstanceRoot(go))
+                if (go != null && PrefabUtility.IsPartOfNonAssetPrefabInstance(go) && PrefabUtility.IsOutermostPrefabInstanceRoot(go))
                 {
                     PrefabUtility.UnpackPrefabInstance(go, unpackMode, InteractionMode.UserAction);
                 }

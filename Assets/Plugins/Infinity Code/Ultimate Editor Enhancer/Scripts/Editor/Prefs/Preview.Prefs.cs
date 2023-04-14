@@ -37,21 +37,20 @@ namespace InfinityCode.UltimateEditorEnhancer
                 get { return -33; }
             }
 
+            public override void Draw()
+            {
+                DrawFieldWithHotKey("Preview", ref preview, ref previewKeyCode, ref previewModifiers, EditorStyles.label, 17);
+            }
+
             public IEnumerable<Shortcut> GetShortcuts()
             {
                 if (!preview) return new Shortcut[0];
 
-                return new[]
+                return new []
                 {
                     new Shortcut("Preview of Cameras", "Scene View", previewModifiers, previewKeyCode),
                     new Shortcut("Set View", "Preview of Cameras", "F"),
                 };
-            }
-
-            public override void Draw()
-            {
-                DrawFieldWithHotKey("Preview", ref preview, ref previewKeyCode, ref previewModifiers,
-                    EditorStyles.label, 17);
             }
         }
     }

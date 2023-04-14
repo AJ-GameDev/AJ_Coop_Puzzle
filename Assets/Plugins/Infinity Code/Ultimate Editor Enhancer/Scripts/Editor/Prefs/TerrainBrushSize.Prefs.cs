@@ -34,19 +34,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
             }
 
-            public IEnumerable<Shortcut> GetShortcuts()
-            {
-                if (!terrainBrushSize) return new Shortcut[0];
-
-                return new[]
-                {
-                    new Shortcut("Change size of Terrain Brush", "Scene View", terrainBrushSizeModifiers,
-                        "Mouse Wheel"),
-                    new Shortcut("Fast Change size of Terrain Brush", "Scene View", terrainBrushSizeBoostModifiers,
-                        "Mouse Wheel"),
-                };
-            }
-
             public override void Draw()
             {
                 terrainBrushSize = EditorGUILayout.ToggleLeft("Terrain Brush Size", terrainBrushSize);
@@ -64,6 +51,17 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.indentLevel--;
 
                 EditorGUI.EndDisabledGroup();
+            }
+
+            public IEnumerable<Shortcut> GetShortcuts()
+            {
+                if (!terrainBrushSize) return new Shortcut[0];
+
+                return new[]
+                {
+                    new Shortcut("Change size of Terrain Brush", "Scene View", terrainBrushSizeModifiers, "Mouse Wheel"),
+                    new Shortcut("Fast Change size of Terrain Brush", "Scene View", terrainBrushSizeBoostModifiers, "Mouse Wheel"),
+                };
             }
         }
     }

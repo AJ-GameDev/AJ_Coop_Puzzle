@@ -8,15 +8,15 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public class GenericMenuItem
     {
+        public float order;
+        public GUIContent content;
+        public bool on;
         public GenericMenu.MenuFunction action;
         public GenericMenu.MenuFunction2 action2;
-        public GUIContent content;
-        public bool disabled;
-        public bool on;
-        public float order;
-        public string path;
-        public bool separator;
         public object userdata;
+        public bool separator;
+        public string path;
+        public bool disabled;
 
         public void Dispose()
         {

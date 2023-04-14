@@ -15,8 +15,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_inspector3DMethod == null)
-                    _inspector3DMethod = type.GetMethod("Inspector3D", Reflection.InstanceLookup);
+                if (_inspector3DMethod == null) _inspector3DMethod = type.GetMethod("Inspector3D", Reflection.InstanceLookup);
                 return _inspector3DMethod;
             }
         }

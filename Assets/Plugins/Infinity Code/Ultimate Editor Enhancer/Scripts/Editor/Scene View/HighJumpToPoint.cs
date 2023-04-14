@@ -31,8 +31,7 @@ namespace InfinityCode.UltimateEditorEnhancer.SceneTools
 
             if (!isJump && Prefs.alternativeJumpShortcut && EditorWindow.mouseOverWindow is SceneView)
             {
-                bool isAlternativeShortcut = e.type == EventType.KeyUp && (e.control || e.command) &&
-                                             (e.keyCode == KeyCode.LeftShift || e.keyCode == KeyCode.RightShift);
+                bool isAlternativeShortcut = e.type == EventType.KeyUp && (e.control || e.command) && (e.keyCode == KeyCode.LeftShift || e.keyCode == KeyCode.RightShift);
                 if (isAlternativeShortcut)
                 {
                     double timeDelta = EditorApplication.timeSinceStartup - lastShiftPressed;

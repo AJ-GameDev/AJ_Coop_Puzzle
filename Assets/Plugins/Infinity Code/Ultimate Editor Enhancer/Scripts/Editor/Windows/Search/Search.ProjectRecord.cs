@@ -13,10 +13,80 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
     {
         internal class ProjectRecord : Record
         {
+            internal string path;
+
             private Object _asset;
             private string _type;
             private bool isMissed;
-            internal string path;
+
+            public Object asset
+            {
+                get
+                {
+                    if (_asset == null && !isMissed)
+                    {
+                        _asset = AssetDatabase.LoadAssetAtPath<Object>(path);
+                        isMissed = _asset == null;
+                    }
+                    return _asset;
+                }
+            }
+
+            public override string label
+            {
+                get
+                {
+                    if (_label == null)
+                    {
+                        int len = path.Length - 7;
+                        if (path[path.Length - 1] == '/') len--;
+                        _label = path.Substring(7, len);
+
+                        int lastDot = _label.LastIndexOf(".", StringComparison.InvariantCulture);
+                        if (lastDot != -1) _label = _label.Substring(0, lastDot);
+
+                        if (_label.Length > maxLabelLength)
+                        {
+                            int start = _label.IndexOf("/", _label.Length - maxLabelLength + 3, StringComparison.InvariantCulture);
+                            if (start != -1) _label = "..." + _label.Substring(start);
+                            else _label = "..." + _label.Substring(_label.Length - maxLabelLength + 3);
+                        }
+                    }
+
+                    return _label;
+                }
+            }
+
+            public override string tooltip
+            {
+                get
+                {
+                    if (_tooltip == null && asset != null)
+                    {
+                        _tooltip = asset.GetType().Name + "\n" + path.Substring(7);
+                    }
+                    return _tooltip;
+                }
+            }
+
+            public override Object target
+            {
+                get => asset;
+            }
+
+            public override string type
+            {
+                get
+                {
+                    if (_type == null)
+                    {
+                        Type assetType = AssetDatabase.GetMainAssetTypeAtPath(path);
+                        if (assetType != null) _type = assetType.Name.ToLowerInvariant();
+                        else _type = "missed";
+                    }
+                    return _type;
+                }
+            }
 
             public ProjectRecord(string path)
             {
@@ -41,81 +111,8 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 
                 search = new[]
                 {
-                    path.Substring(lastSlash + 1, lastDot == -1 ? path.Length - lastSlash - 1 : lastDot - lastSlash - 1)
+                    path.Substring(lastSlash + 1, lastDot == -1? path.Length - lastSlash - 1: lastDot - lastSlash - 1)
                 };
-            }
-
-            public Object asset
-            {
-                get
-                {
-                    if (_asset == null && !isMissed)
-                    {
-                        _asset = AssetDatabase.LoadAssetAtPath<Object>(path);
-                        isMissed = _asset == null;
-                    }
-
-                    return _asset;
-                }
-            }
-
-            public override string label
-            {
-                get
-                {
-                    if (_label == null)
-                    {
-                        int len = path.Length - 7;
-                        if (path[path.Length - 1] == '/') len--;
-                        _label = path.Substring(7, len);
-
-                        int lastDot = _label.LastIndexOf(".", StringComparison.InvariantCulture);
-                        if (lastDot != -1) _label = _label.Substring(0, lastDot);
-
-                        if (_label.Length > maxLabelLength)
-                        {
-                            int start = _label.IndexOf("/", _label.Length - maxLabelLength + 3,
-                                StringComparison.InvariantCulture);
-                            if (start != -1) _label = "..." + _label.Substring(start);
-                            else _label = "..." + _label.Substring(_label.Length - maxLabelLength + 3);
-                        }
-                    }
-
-                    return _label;
-                }
-            }
-
-            public override string tooltip
-            {
-                get
-                {
-                    if (_tooltip == null && asset != null)
-                    {
-                        _tooltip = asset.GetType().Name + "\n" + path.Substring(7);
-                    }
-
-                    return _tooltip;
-                }
-            }
-
-            public override Object target
-            {
-                get => asset;
-            }
-
-            public override string type
-            {
-                get
-                {
-                    if (_type == null)
-                    {
-                        Type assetType = AssetDatabase.GetMainAssetTypeAtPath(path);
-                        if (assetType != null) _type = assetType.Name.ToLowerInvariant();
-                        else _type = "missed";
-                    }
-
-                    return _type;
-                }
             }
 
             public override void Dispose()
@@ -160,9 +157,9 @@ namespace InfinityCode.UltimateEditorEnhancer.Windows
 #if UNITY_EDITOR_OSX
                     e.modifiers == (EventModifiers.Command | EventModifiers.Shift)
 #else
-                         e.modifiers == (EventModifiers.Control | EventModifiers.Shift)
+                    e.modifiers == (EventModifiers.Control | EventModifiers.Shift)
 #endif
-                        ) state = 3;
+                ) state = 3;
                 else state = 1;
                 return state;
             }

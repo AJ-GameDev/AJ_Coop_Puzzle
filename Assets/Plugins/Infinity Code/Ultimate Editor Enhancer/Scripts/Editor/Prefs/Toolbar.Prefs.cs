@@ -18,7 +18,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 get
                 {
-                    return ToolbarWindowsManager.GetKeywords().Concat(new[]
+                    return ToolbarWindowsManager.GetKeywords().Concat(new []
                     {
                         "Show icon on toolbar if selection has View State",
                         "Timer"
@@ -28,8 +28,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             public override void Draw()
             {
-                showViewStateToolbarIcon =
-                    EditorGUILayout.ToggleLeft("Show Icon If Selection Has View State", showViewStateToolbarIcon);
+                showViewStateToolbarIcon = EditorGUILayout.ToggleLeft("Show Icon If Selection Has View State", showViewStateToolbarIcon);
                 timerMode = (TimerMode)EditorGUILayout.EnumPopup("Timer Mode", timerMode);
                 ToolbarWindowsManager.Draw(null);
             }

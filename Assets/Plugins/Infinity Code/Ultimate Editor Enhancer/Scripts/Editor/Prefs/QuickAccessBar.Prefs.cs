@@ -56,8 +56,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     if (ReferenceManager.quickAccessItems.Count > 0)
                     {
-                        if (!EditorUtility.DisplayDialog("Import Quick Access Items",
-                                "Quick Access Bar already contain items", "Replace", "Ignore")) return;
+                        if (!EditorUtility.DisplayDialog("Import Quick Access Items", "Quick Access Bar already contain items", "Replace", "Ignore")) return;
                     }
 
                     List<QuickAccessItem> items = value.Deserialize<List<QuickAccessItem>>();
@@ -70,14 +69,12 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                             for (int i = 0; i < item.settings.Length; i++)
                             {
-                                item.settings[i] = item.settings[i].Replace("InfinityCode.uContextPro",
-                                        "InfinityCode.UltimateEditorEnhancer")
+                                item.settings[i] = item.settings[i].Replace("InfinityCode.uContextPro", "InfinityCode.UltimateEditorEnhancer")
                                     .Replace("InfinityCode.uContext", "InfinityCode.UltimateEditorEnhancer")
                                     .Replace("uContext-Editor", "UltimateEditorEnhancer-Editor")
                                     .Replace("uContext-Pro-Editor", "UltimateEditorEnhancer-Editor");
 
-                                item.iconSettings = item.iconSettings.Replace("\\", "/")
-                                    .Replace("Infinity Code/uContext Pro", "Infinity Code/Ultimate Editor Enhancer")
+                                item.iconSettings = item.iconSettings.Replace("\\", "/").Replace("Infinity Code/uContext Pro", "Infinity Code/Ultimate Editor Enhancer")
                                     .Replace("Infinity Code/uContext", "Infinity Code/Ultimate Editor Enhancer");
                             }
                         }
@@ -135,14 +132,14 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 if (reorderableList == null)
                 {
-                    reorderableList = new ReorderableList(ReferenceManager.quickAccessItems, typeof(QuickAccessItem),
-                        true, true, true, true);
+                    reorderableList = new ReorderableList(ReferenceManager.quickAccessItems, typeof(QuickAccessItem), true, true, true, true);
                     reorderableList.drawElementCallback += DrawItem;
                     reorderableList.drawHeaderCallback += DrawHeader;
                     reorderableList.elementHeightCallback += GetItemHeight;
                     reorderableList.onAddCallback += AddItem;
                     reorderableList.onRemoveCallback += RemoveItem;
                     reorderableList.onReorderCallback += Reorder;
+
                 }
 
                 ProcessEvents();
@@ -154,12 +151,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 EditorGUI.BeginChangeCheck();
                 quickAccessBar = EditorGUILayout.ToggleLeft("Quick Access Bar", quickAccessBar, EditorStyles.label);
-                LocalSettings.collapseQuickAccessBar =
-                    EditorGUILayout.ToggleLeft("Collapse Bar", LocalSettings.collapseQuickAccessBar);
+                LocalSettings.collapseQuickAccessBar = EditorGUILayout.ToggleLeft("Collapse Bar", LocalSettings.collapseQuickAccessBar);
                 if (EditorGUI.EndChangeCheck()) SceneView.RepaintAll();
 
-                quickAccessBarCloseViewGallery = EditorGUILayout.ToggleLeft("Close View Gallery When Item Selected",
-                    quickAccessBarCloseViewGallery, EditorStyles.label);
+                quickAccessBarCloseViewGallery = EditorGUILayout.ToggleLeft("Close View Gallery When Item Selected", quickAccessBarCloseViewGallery, EditorStyles.label);
 
                 EditorGUILayout.BeginHorizontal();
                 quickAccessBarIndentMin = EditorGUILayout.FloatField("Intend Min", quickAccessBarIndentMin);
@@ -231,7 +226,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     item.iconSettings = string.Empty;
                     item.ResetContent();
                 }
-
                 lineRect.y += LINE_HEIGHT;
 
                 if (item.icon == QuickAccessItemIcon.editorIconContent)
@@ -269,8 +263,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                     if (GUI.Button(r, "Select"))
                     {
-                        objectPickerID = GUIUtility.GetControlID("Select_Button".GetHashCode(), FocusType.Keyboard) +
-                                         1000;
+                        objectPickerID = GUIUtility.GetControlID("Select_Button".GetHashCode(), FocusType.Keyboard) + 1000;
                         EditorGUIUtility.ShowObjectPicker<Texture>(null, false, "", objectPickerID);
                         objectPickerTextureTarget = item;
                     }
@@ -318,13 +311,10 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (item.type != QuickAccessItemType.flexibleSpace)
                 {
-                    string label = item.expanded || string.IsNullOrEmpty(item.tooltip)
-                        ? item.typeName
-                        : item.tooltip + " (" + item.typeName + ")";
+                    string label = item.expanded || string.IsNullOrEmpty(item.tooltip) ? item.typeName : item.tooltip + " (" + item.typeName + ")";
                     item.expanded = EditorGUI.Foldout(lineRect, item.expanded, label);
                 }
                 else EditorGUI.LabelField(lineRect, item.typeName);
-
                 lineRect.y += LINE_HEIGHT;
 
                 if (!item.expanded)
@@ -338,8 +328,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (item.isButton)
                 {
-                    item.visibleRules =
-                        (SceneViewVisibleRules)EditorGUI.EnumPopup(lineRect, "Visible", item.visibleRules);
+                    item.visibleRules = (SceneViewVisibleRules)EditorGUI.EnumPopup(lineRect, "Visible", item.visibleRules);
                     lineRect.y += LINE_HEIGHT;
 
                     if (item.canHaveIcon)
@@ -403,8 +392,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     int count = 0;
                     GenericMenuEx menu = GenericMenuEx.Start();
 
-                    MethodInfo[] methods =
-                        methodType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                    MethodInfo[] methods = methodType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
                     foreach (MethodInfo method in methods)
                     {
                         if (method.GetParameters().Length == 0 && !method.IsSpecialName)
@@ -421,10 +409,8 @@ namespace InfinityCode.UltimateEditorEnhancer
                             count++;
                         }
                     }
-
                     if (count > 0) menu.Show();
                 }
-
                 EditorGUI.EndDisabledGroup();
             }
 
@@ -436,14 +422,12 @@ namespace InfinityCode.UltimateEditorEnhancer
                 EditorGUI.BeginChangeCheck();
                 try
                 {
-                    item.scriptableObject =
-                        EditorGUI.ObjectField(lineRect, "Object", item.scriptableObject, typeof(ScriptableObject),
-                            false) as ScriptableObject;
+                    item.scriptableObject = EditorGUI.ObjectField(lineRect, "Object", item.scriptableObject, typeof(ScriptableObject), false) as ScriptableObject;
                 }
                 catch
                 {
-                }
 
+                }
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (item.scriptableObject != null)
@@ -470,8 +454,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
                 if (GUI.Button(r, "Select"))
                 {
-                    IEnumerable providers =
-                        Reflection.InvokeStaticMethod(typeof(SettingsService), "FetchSettingsProviders") as IEnumerable;
+                    IEnumerable providers = Reflection.InvokeStaticMethod(typeof(SettingsService), "FetchSettingsProviders") as IEnumerable;
                     if (providers != null)
                     {
                         List<string> paths = new List<string>();
@@ -528,8 +511,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 else if (item.type == QuickAccessItemType.action) DrawActionFields(item, ref lineRect);
                 else if (item.type == QuickAccessItemType.space) DrawSpaceFields(item, ref lineRect);
                 else if (item.type == QuickAccessItemType.settings) DrawSettingsFields(item, ref lineRect);
-                else if (item.type == QuickAccessItemType.scriptableObject)
-                    DrawScriptableObjectFields(item, ref lineRect);
+                else if (item.type == QuickAccessItemType.scriptableObject) DrawScriptableObjectFields(item, ref lineRect);
             }
 
             private void DrawWindowFields(QuickAccessItem item, ref Rect lineRect)
@@ -561,7 +543,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 }
 
                 lineRect.y += LINE_HEIGHT;
-                item.windowMode = (QuickAccessWindowMode)EditorGUI.EnumPopup(lineRect, "Mode", item.windowMode);
+                item.windowMode = (QuickAccessWindowMode) EditorGUI.EnumPopup(lineRect, "Mode", item.windowMode);
 
                 if (item.windowMode != QuickAccessWindowMode.popup)
                 {
@@ -577,8 +559,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                     lineRect.y += LINE_HEIGHT;
 
                     EditorGUIUtility.labelWidth += 50;
-                    item.useCustomWindowSize =
-                        EditorGUI.Toggle(lineRect, "Custom Window Size", item.useCustomWindowSize);
+                    item.useCustomWindowSize = EditorGUI.Toggle(lineRect, "Custom Window Size", item.useCustomWindowSize);
                     EditorGUIUtility.labelWidth -= 50;
 
                     if (item.useCustomWindowSize)
@@ -686,9 +667,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 {
                     Type t = type;
                     TitleAttribute titleAttribute = t.GetCustomAttribute<TitleAttribute>();
-                    string label = titleAttribute != null
-                        ? titleAttribute.displayName
-                        : ObjectNames.NicifyVariableName(t.Name);
+                    string label = titleAttribute != null ? titleAttribute.displayName : ObjectNames.NicifyVariableName(t.Name);
                     menu.Add(label, () =>
                     {
                         item.tooltip = label;
@@ -697,7 +676,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                         GUI.changed = true;
                     });
                 }
-
                 menu.Show();
             }
 
@@ -775,7 +753,6 @@ namespace InfinityCode.UltimateEditorEnhancer
                     windowPickerTarget.icon = QuickAccessItemIcon.text;
                     windowPickerTarget.iconSettings = GameObjectUtils.GetPsIconLabel(windowPickerTarget.tooltip, 3);
                 }
-
                 windowPickerTarget.ResetContent();
                 ReferenceManager.Save();
 

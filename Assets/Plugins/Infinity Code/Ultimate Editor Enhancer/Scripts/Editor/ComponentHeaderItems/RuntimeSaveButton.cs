@@ -33,20 +33,19 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
             {
                 Component c = target as Component;
                 if (c == null) return true;
-
+                
                 SerializedObject so = new SerializedObject(target);
                 SerializedProperty p = so.GetIterator();
                 if (p.Next(true))
                 {
                     do
                     {
-                        savedFields[c.GetInstanceID() + FIELD_SEPARATOR + p.propertyPath] =
-                            SerializedPropertyHelper.GetBoxedValue(p.Copy());
-                    } while (p.NextVisible(true));
+                        savedFields[c.GetInstanceID() + FIELD_SEPARATOR + p.propertyPath] = SerializedPropertyHelper.GetBoxedValue(p.Copy());
+                    }
+                    while (p.NextVisible(true));
                 }
 
-                Debug.Log(
-                    $"{c.gameObject.name}/{ObjectNames.NicifyVariableName(target.GetType().Name)} component state saved.");
+                Debug.Log($"{c.gameObject.name}/{ObjectNames.NicifyVariableName(target.GetType().Name)} component state saved.");
             }
 
             return true;
@@ -65,11 +64,10 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
 
             SerializedProperty prop = property.Copy();
 
-            menu.AddItem(TempContent.Get("Save Field Value"), false,
-                () =>
-                {
-                    savedFields[instanceID + FIELD_SEPARATOR + path] = SerializedPropertyHelper.GetBoxedValue(prop);
-                });
+            menu.AddItem(TempContent.Get("Save Field Value"), false, () =>
+            {
+                savedFields[instanceID + FIELD_SEPARATOR + path] = SerializedPropertyHelper.GetBoxedValue(prop);
+            });
         }
 
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -91,7 +89,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ComponentHeader
 
             foreach (KeyValuePair<string, object> pair in savedFields)
             {
-                string[] parts = pair.Key.Split(new[] { FIELD_SEPARATOR }, StringSplitOptions.None);
+                string[] parts = pair.Key.Split(new[]{FIELD_SEPARATOR}, StringSplitOptions.None);
                 int id;
                 if (!int.TryParse(parts[0], out id)) continue;
 

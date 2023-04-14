@@ -8,7 +8,7 @@ using UnityEngine;
 namespace InfinityCode.UltimateEditorEnhancer.Editors
 {
     [CustomEditor(typeof(Documentation))]
-    public class DocumentationEditor : Editor
+    public class DocumentationEditor: Editor
     {
         private static void DrawDocumentation()
         {
@@ -59,9 +59,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Editors
 
         private void DrawRateAndReview()
         {
-            EditorGUILayout.HelpBox(
-                "Please don't forget to leave a review on the store page if you liked Ultimate Editor Enhancer, this helps us a lot!",
-                MessageType.Warning);
+            EditorGUILayout.HelpBox("Please don't forget to leave a review on the store page if you liked Ultimate Editor Enhancer, this helps us a lot!", MessageType.Warning);
 
             if (GUILayout.Button("Rate & Review"))
             {

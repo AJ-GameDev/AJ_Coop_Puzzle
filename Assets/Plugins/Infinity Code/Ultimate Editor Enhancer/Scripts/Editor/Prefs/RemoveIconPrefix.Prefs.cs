@@ -17,8 +17,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
         public static string RemoveIconPrefix(string text)
         {
-            if (_removeIconPrefix == null)
-                _removeIconPrefix = removeIconPrefix.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            if (_removeIconPrefix == null) _removeIconPrefix = removeIconPrefix.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string p in _removeIconPrefix)
             {
@@ -48,8 +47,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             public override void Draw()
             {
-                if (_removeIconPrefix == null)
-                    _removeIconPrefix = removeIconPrefix.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                if (_removeIconPrefix == null) _removeIconPrefix = removeIconPrefix.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
                 EditorGUILayout.LabelField("Remove Component Icon Prefix");
 
@@ -91,6 +89,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             {
                 removeIconPrefix = string.Join(";", _removeIconPrefix.Where(s => !string.IsNullOrEmpty(s)).ToArray());
             }
+
         }
     }
 }

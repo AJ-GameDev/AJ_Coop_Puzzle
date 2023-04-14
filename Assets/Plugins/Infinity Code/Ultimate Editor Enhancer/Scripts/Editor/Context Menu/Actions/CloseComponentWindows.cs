@@ -13,12 +13,6 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
             get { return 850; }
         }
 
-        public bool Validate()
-        {
-            ComponentWindow[] windows = UnityEngine.Resources.FindObjectsOfTypeAll<ComponentWindow>();
-            return windows.Length > 0;
-        }
-
         protected override void Init()
         {
             guiContent = new GUIContent(Icons.closeWindows, "Close All Component Windows");
@@ -38,6 +32,12 @@ namespace InfinityCode.UltimateEditorEnhancer.EditorMenus.Actions
                     Object.DestroyImmediate(windows[i]);
                 }
             }
+        }
+
+        public bool Validate()
+        {
+            ComponentWindow[] windows = UnityEngine.Resources.FindObjectsOfTypeAll<ComponentWindow>();
+            return windows.Length > 0;
         }
     }
 }

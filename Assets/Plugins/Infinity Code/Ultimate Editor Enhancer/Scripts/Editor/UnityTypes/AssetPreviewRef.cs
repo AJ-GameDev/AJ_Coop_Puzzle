@@ -24,8 +24,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
             {
                 if (_getMiniTypeThumbnailFromClassIDMethod == null)
                 {
-                    _getMiniTypeThumbnailFromClassIDMethod = Reflection.GetMethod(type,
-                        "GetMiniTypeThumbnailFromClassID", new[] { typeof(int) }, Reflection.StaticLookup);
+                    _getMiniTypeThumbnailFromClassIDMethod = Reflection.GetMethod(type, "GetMiniTypeThumbnailFromClassID", new[] { typeof(int) }, Reflection.StaticLookup);
                 }
 
                 return _getMiniTypeThumbnailFromClassIDMethod;

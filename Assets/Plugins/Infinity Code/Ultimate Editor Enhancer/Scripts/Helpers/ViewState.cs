@@ -4,9 +4,9 @@
 using System;
 using UnityEngine;
 
-namespace InfinityCode.UltimateEditorEnhancer
+namespace InfinityCode.UltimateEditorEnhancer 
 {
-    public class ViewState : MonoBehaviour
+    public class ViewState: MonoBehaviour
     {
         public Vector3 pivot;
         public float size;

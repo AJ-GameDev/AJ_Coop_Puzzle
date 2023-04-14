@@ -27,7 +27,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             ComponentWindow.ShowPopup(command.context as Component);
         }
 
-        [MenuItem("CONTEXT/Component/Open As Utility Window", false, 23)]
+        [MenuItem("CONTEXT/Component/Open As Utility Window", false, 23)] 
         private static void OpenAsUtilityWindow(MenuCommand command)
         {
             ComponentWindow.ShowUtility(command.context as Component, false);

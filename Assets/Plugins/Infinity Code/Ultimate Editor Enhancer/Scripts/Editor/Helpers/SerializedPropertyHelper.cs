@@ -2,6 +2,9 @@
 /*     https://infinity-code.com    */
 
 using System;
+using System.Collections;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -57,7 +60,7 @@ namespace InfinityCode.UltimateEditorEnhancer
                 case SerializedPropertyType.ObjectReference:
                     return prop.objectReferenceValue;
                 case SerializedPropertyType.LayerMask:
-                    return (LayerMask)prop.intValue;
+                    return (LayerMask) prop.intValue;
                 case SerializedPropertyType.Vector2:
                     return prop.vector2Value;
                 case SerializedPropertyType.Vector3:
@@ -232,6 +235,7 @@ namespace InfinityCode.UltimateEditorEnhancer
             }
             catch
             {
+                
             }
         }
     }

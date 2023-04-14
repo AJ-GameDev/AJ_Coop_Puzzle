@@ -89,10 +89,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             QuickAccessItem bookmarks = new QuickAccessItem(QuickAccessItemType.window)
             {
-                settings = new[]
-                {
-                    "InfinityCode.UltimateEditorEnhancer.Windows.Bookmarks, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-                },
+                settings = new[] { "InfinityCode.UltimateEditorEnhancer.Windows.Bookmarks, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" },
                 icon = QuickAccessItemIcon.texture,
                 iconSettings = Resources.iconsFolder + "Star-White.png",
                 tooltip = "Bookmarks",
@@ -101,10 +98,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             QuickAccessItem viewGallery = new QuickAccessItem(QuickAccessItemType.window)
             {
-                settings = new[]
-                {
-                    "InfinityCode.UltimateEditorEnhancer.Windows.ViewGallery, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-                },
+                settings = new[] { "InfinityCode.UltimateEditorEnhancer.Windows.ViewGallery, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" },
                 icon = QuickAccessItemIcon.editorIconContent,
                 iconSettings = "d_ViewToolOrbit",
                 tooltip = "View Gallery",
@@ -113,10 +107,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             QuickAccessItem distanceTool = new QuickAccessItem(QuickAccessItemType.window)
             {
-                settings = new[]
-                {
-                    "InfinityCode.UltimateEditorEnhancer.Windows.DistanceTool, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-                },
+                settings = new[] { "InfinityCode.UltimateEditorEnhancer.Windows.DistanceTool, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" },
                 icon = QuickAccessItemIcon.texture,
                 iconSettings = Resources.iconsFolder + "Rule.png",
                 tooltip = "Distance Tool",
@@ -134,10 +125,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 
             QuickAccessItem info = new QuickAccessItem(QuickAccessItemType.window)
             {
-                settings = new[]
-                {
-                    "InfinityCode.UltimateEditorEnhancer.Windows.Welcome, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null"
-                },
+                settings = new[] { "InfinityCode.UltimateEditorEnhancer.Windows.Welcome, UltimateEditorEnhancer-Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" },
                 icon = QuickAccessItemIcon.editorIconContent,
                 iconSettings = "_Help",
                 tooltip = "Info",

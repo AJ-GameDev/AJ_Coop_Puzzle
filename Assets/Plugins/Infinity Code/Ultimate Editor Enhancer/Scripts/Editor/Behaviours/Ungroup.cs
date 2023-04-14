@@ -63,7 +63,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Behaviors
                     Undo.SetTransformParent(ct, t.parent, "Update Parent");
                     newSelection.Add(ct.gameObject);
                 }
-
                 Undo.DestroyObjectImmediate(go);
             }
 

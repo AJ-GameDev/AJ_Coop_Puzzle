@@ -8,7 +8,7 @@ using UnityEditor;
 namespace InfinityCode.UltimateEditorEnhancer
 {
     [InitializeOnLoad]
-    public class GlobalEventManager : BindingManager<GlobalEventManager.GlobalEvent>
+    public class GlobalEventManager: BindingManager<GlobalEventManager.GlobalEvent>
     {
         static GlobalEventManager()
         {

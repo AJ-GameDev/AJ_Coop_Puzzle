@@ -46,8 +46,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
             for (int i = 0; i < rootObjects.Length; i++)
             {
                 GameObject g = rootObjects[i];
-                if (!SceneVisibilityStateRef.IsGameObjectHidden(g) && g.transform != current &&
-                    g.hideFlags != HideFlags.HideInHierarchy && g.hideFlags != HideFlags.HideAndDontSave)
+                if (!SceneVisibilityStateRef.IsGameObjectHidden(g) && g.transform != current && g.hideFlags != HideFlags.HideInHierarchy && g.hideFlags != HideFlags.HideAndDontSave)
                 {
                     return true;
                 }
@@ -101,7 +100,7 @@ namespace InfinityCode.UltimateEditorEnhancer.HierarchyTools
                 {
                     Transform t = parent.GetChild(i);
                     if (current == t) continue;
-
+                    
                     GameObject g = t.gameObject;
                     SceneVisibilityManagerRef.Show(instance, g, true);
                 }

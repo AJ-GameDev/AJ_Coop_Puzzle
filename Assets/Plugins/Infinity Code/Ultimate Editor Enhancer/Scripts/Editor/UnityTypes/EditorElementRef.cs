@@ -26,7 +26,6 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 #endif
                     _type = Reflection.GetEditorTypeFromAssembly("UIElements.EditorElement", assembly);
                 }
-
                 return _type;
             }
         }
@@ -47,8 +46,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_m_InspectorElementField == null) _m_InspectorElementField =
- type.GetField("m_InspectorElement", Reflection.InstanceLookup);
+                if (_m_InspectorElementField == null) _m_InspectorElementField = type.GetField("m_InspectorElement", Reflection.InstanceLookup);
                 return _m_InspectorElementField;
             }
         }
@@ -60,8 +58,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_m_InspectorElementProp == null)
-                    _m_InspectorElementProp = type.GetProperty("m_InspectorElement", Reflection.InstanceLookup);
+                if (_m_InspectorElementProp == null) _m_InspectorElementProp = type.GetProperty("m_InspectorElement", Reflection.InstanceLookup);
                 return _m_InspectorElementProp;
             }
         }
@@ -71,8 +68,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
         {
             get
             {
-                if (_setElementVisibleMethod == null)
-                    _setElementVisibleMethod = type.GetMethod("SetElementVisible", Reflection.StaticLookup);
+                if (_setElementVisibleMethod == null) _setElementVisibleMethod = type.GetMethod("SetElementVisible", Reflection.StaticLookup);
                 return _setElementVisibleMethod;
             }
         }
@@ -93,7 +89,7 @@ namespace InfinityCode.UltimateEditorEnhancer.UnityTypes
 
         public static void SetElementVisible(object inspectorElement, bool visible)
         {
-            setElementVisibleMethod.Invoke(null, new[] { inspectorElement, visible });
+            setElementVisibleMethod.Invoke(null, new []{inspectorElement, visible});
         }
     }
 }

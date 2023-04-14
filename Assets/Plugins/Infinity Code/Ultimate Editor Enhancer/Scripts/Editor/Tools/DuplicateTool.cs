@@ -24,19 +24,13 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
         private static GUIStyle style;
 
         private static List<GameObject> tempItems;
-        private static int lastPositionIDX;
-        private Vector3Int count = Vector3Int.zero;
-        private Transform parent;
-        private Bounds sourceBounds;
-        private GameObject[] sourceGameObjects;
-        private Vector3 sourceSize;
         private Vector3 startPosition;
-
-        static DuplicateTool()
-        {
-            SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.late, true);
-            tempItems = new List<GameObject>();
-        }
+        private GameObject[] sourceGameObjects;
+        private Bounds sourceBounds;
+        private Vector3Int count = Vector3Int.zero;
+        private Vector3 sourceSize;
+        private static int lastPositionIDX;
+        private Transform parent;
 
         public override GUIContent toolbarIcon
         {
@@ -48,8 +42,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 if (EditorTools.IsActiveTool(this))
 #endif
                 {
-                    if (activeContent == null)
-                        activeContent = new GUIContent(Icons.duplicateToolActive, "Duplicate Tool");
+                    if (activeContent == null) activeContent = new GUIContent(Icons.duplicateToolActive, "Duplicate Tool");
                     return activeContent;
                 }
 
@@ -58,14 +51,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             }
         }
 
-        private void Reset()
+        static DuplicateTool()
         {
-            foreach (GameObject item in tempItems) DestroyImmediate(item);
-            tempItems.Clear();
-            sourceGameObjects = null;
-            labelContent = null;
-            phase = 0;
-            lastPositionIDX = 0;
+            SceneViewManager.AddListener(OnSceneGUI, SceneViewOrder.late, true);
+            tempItems = new List<GameObject>();
         }
 
         private void Finish()
@@ -84,7 +73,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     {
                         Transform child = t.GetChild(0);
                         Vector3 pos = child.position;
-                        child.SetParent(parent != null ? parent : t.parent, false);
+                        child.SetParent(parent != null? parent: t.parent, false);
                         child.position = pos;
                         child.hideFlags = HideFlags.None;
                         gameObjects.Add(child.gameObject);
@@ -126,8 +115,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
             if (screenPoint.y > size.y + 150) screenPoint.y -= size.y + 50;
             else screenPoint.y += size.y + 150;
 
-            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height - screenPoint.y - size.y / 2, size.x,
-                size.y);
+            Rect rect = new Rect(screenPoint.x - size.x / 2, Screen.height - screenPoint.y - size.y / 2, size.x, size.y);
 
             GUI.Label(rect, labelContent, style);
             Handles.EndGUI();
@@ -190,7 +178,6 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                     lastPositionIDX = ids.x;
                     GUIUtility.hotControl += delta;
                 }
-
                 position = PositionHandle.DoPositionHandle(ids, position, Quaternion.identity);
 
                 Vector3 center = (startPosition + position) / 2;
@@ -215,9 +202,18 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                 }
             }
 
-            Vector3 handlePos = position + UnityEditor.Tools.handleRotation * new Vector3(-.1f, -.1f, -.1f) *
-                HandleUtility.GetHandleSize(position);
+            Vector3 handlePos = position + UnityEditor.Tools.handleRotation * new Vector3(-.1f, -.1f, -.1f) * HandleUtility.GetHandleSize(position);
             Handles.Label(handlePos, Icons.duplicate);
+        }
+
+        private void Reset()
+        {
+            foreach (GameObject item in tempItems) DestroyImmediate(item);
+            tempItems.Clear();
+            sourceGameObjects = null;
+            labelContent = null;
+            phase = 0;
+            lastPositionIDX = 0;
         }
 
         private void UpdatePreviews(Vector3 size)
@@ -243,7 +239,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
 
             count.x = Mathf.RoundToInt(Mathf.Abs(size.x / sourceSize.x));
             count.y = Mathf.RoundToInt(Mathf.Abs(size.y / sourceSize.y));
-            count.z = !isRectTransform ? Mathf.RoundToInt(Mathf.Abs(size.z / sourceSize.z)) : 0;
+            count.z = !isRectTransform? Mathf.RoundToInt(Mathf.Abs(size.z / sourceSize.z)): 0;
 
             int countItems = (count.x + 1) * (count.y + 1) * (count.z + 1) - 1;
             if (tempItems.Count == countItems) return;
@@ -286,11 +282,10 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                             if (Prefs.hideDuplicateToolTemp) item.hideFlags = HideFlags.HideAndDontSave;
                             if (isRectTransform)
                             {
-                                item.transform.SetParent(SelectionBoundsManager.firstGameObject.transform.parent,
-                                    false);
+                                item.transform.SetParent(SelectionBoundsManager.firstGameObject.transform.parent, false);
                                 item.AddComponent<RectTransform>();
                             }
-
+                            
                             item.transform.position = sourcePos;
 
                             foreach (GameObject so in sourceGameObjects)
@@ -306,18 +301,15 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                                 {
                                     dup = Instantiate(so, item.transform, false);
                                 }
-
                                 dup.name = so.name;
                                 dup.transform.position = so.transform.position;
                                 dup.transform.rotation = so.transform.rotation;
                                 dup.transform.localScale = so.transform.localScale;
                             }
-
                             tempItems.Add(item);
                         }
 
-                        item.transform.position = sourcePos + new Vector3(sourceSize.x * x * dx, sourceSize.y * y * dy,
-                            sourceSize.z * z * dz);
+                        item.transform.position = sourcePos + new Vector3(sourceSize.x * x * dx, sourceSize.y * y * dy, sourceSize.z * z * dz);
                         if (snapEnabled)
                         {
                             Vector3 pos = item.transform.position;
@@ -326,7 +318,7 @@ namespace InfinityCode.UltimateEditorEnhancer.Tools
                             offset.Scale(axis);
                             item.transform.position = pos + offset;
                         }
-
+                        
                         i++;
                     }
                 }
